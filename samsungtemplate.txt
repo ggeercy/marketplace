@@ -192,7 +192,7 @@ if ($faqPool) {
 <meta property="og:url" content="<?php echo $canonical_url; ?>">
 <meta property="og:title" content="<?php echo ucwords($title); ?>">
 <meta property="og:description" content="<?php echo $meta_description; ?>">
-<meta property="og:image" content="<?php echo $banner; ?>">
+<meta property="og:image" content="<?php echo $logo; ?>">
 <link rel="icon" type="image/png" sizes="96x96" href="<?php echo $favicon; ?>">
 <link rel="shortcut icon" href="<?php echo $favicon; ?>">
 <link rel="apple-touch-icon" sizes="144x144" href="<?php echo $favicon; ?>">
