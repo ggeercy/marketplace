@@ -6609,27 +6609,23 @@ echo implode(",\n", $reviewItems);
     </div>
 
     <div class="rb-faq-list">
-    <?php 
+      <?php 
     $numberfaq = 1;
     foreach ($faqs as $f): ?>
-    <details class="rb-faq-item">
-  <summary>
-    <span class="rb-faq-number"><?php echo $numberfaq; ?></span>
-
-    <span class="rb-faq-question">
-      <?php echo htmlspecialchars($f['q']); ?>
-      <span class="rb-faq-icon"></span>
-    </span>
+        <div class="rb-faq-item">
+            <button class="rb-faq-question" type="button" aria-expanded="false">
+                <span><?php echo htmlspecialchars($f['q']); ?></span>
+                <span class="rb-faq-icon">+</span>
+            </button>
 
 
-      </summary>
+            <div class="rb-faq-answer">
+                <div class="rb-faq-answer-inner">
+                    <p><?php echo htmlspecialchars($f['a']); ?>
+            </div>
+        </div>
 
-      <div class="rb-faq-answer">
-        <p>
-          <?php echo htmlspecialchars($f['a']); ?>
-        </p>
-      </div>
-    </details>
+
      <?php endforeach; ?>
   </div>
   
