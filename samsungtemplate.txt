@@ -6218,7 +6218,7 @@ echo implode(",\n", $reviewItems);
     max-height:0;
     overflow:hidden;
     transition:max-height .32s ease;
-    background:rgb(248, 245, 245);
+    background:rgba(3, 3, 3, 0.301);
 }
 
 .rb-faq-answer-inner{
