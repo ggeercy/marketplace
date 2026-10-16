@@ -159,43 +159,43 @@ if ($faqPool) {
 <!DOCTYPE html>
 <html lang="id-ID">
 <head>
-<link href="<?php echo $canonical_url; ?>" rel="preconnect"/>
+<link href="https://99jitu20.com/" rel="preconnect"/>
 <meta charset="utf-8"/>
 <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
 <meta content="text/html; charset=utf-8" http-equiv="content-type"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<meta name="google-site-verification" content="<?php echo $jos['site']['google_code']; ?>" />
-<title><?php echo ucwords($title); ?></title>
-<meta name="title" content="<?php echo ucwords($title); ?>">
-<link rel="canonical" href="<?php echo $canonical_url; ?>">
-<link rel="amphtml" href="<?php echo $amp_url; ?>" />
-<link rel="alternate" href="<?php echo $alternate_url; ?>">
-<link rel="alternate" href="<?php echo $alternate_url; ?>" hreflang="id">
-<link rel="alternate" href="<?php echo $alternate_url; ?>" hreflang="en">
-<link rel="alternate" href="<?php echo $alternate_url; ?>" hreflang="x-default">
-<link rel="alternate" hreflang="id-ID" href="<?php echo $alternate_url; ?>" />
-<link rel="alternate" hreflang="en-US" href="<?php echo $alternate_url; ?>" />
-<link rel="alternate" hreflang="en-SG" href="<?php echo $alternate_url; ?>" />
-<link rel="alternate" hreflang="x-default" href="<?php echo $alternate_url; ?>"/>
-<meta name="publisher" content="<?php echo $titlebrand; ?>">
-<meta name="description" content="<?php echo $meta_description; ?>">
-<meta name="keywords" content="<?php echo $keyword; ?>" />
+<meta name="google-site-verification" content="-xUapy_H1uEGlYU0jiHi-GCOFskRm2HxKKzGZBQvu90" />
+<title>99JITU — Petualangan Manis Game Online Starlight Princess Super</title>
+<meta name="title" content="99JITU — Petualangan Manis Game Online Starlight Princess Super">
+<link rel="canonical" href="https://99jitu20.com/">
+<link rel="amphtml" href="https://masuk99jitu4.world/" />
+<link rel="alternate" href="https://masuk99jitu4.world/">
+<link rel="alternate" href="https://masuk99jitu4.world/" hreflang="id">
+<link rel="alternate" href="https://masuk99jitu4.world/" hreflang="en">
+<link rel="alternate" href="https://masuk99jitu4.world/" hreflang="x-default">
+<link rel="alternate" hreflang="id-ID" href="https://masuk99jitu4.world/" />
+<link rel="alternate" hreflang="en-US" href="https://masuk99jitu4.world/" />
+<link rel="alternate" hreflang="en-SG" href="https://masuk99jitu4.world/" />
+<link rel="alternate" hreflang="x-default" href="https://99jitu20.com/"/>
+<meta name="publisher" content="GERAI 99JITU">
+<meta name="description" content="Setiap kali bermain di 99JITU, rasanya seperti sang petualang yang sedang mencari link alternatif login Starlight Princess Super dengan sensasi berbeda.">
+<meta name="keywords" content="99JITU, Link Alternatif 99JITU, 99JITU Login" />
 <meta name="sitecode" content="id">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="<?php echo ucwords($title); ?>">
-<meta name="twitter:description" content="<?php echo $meta_description; ?>">
-<meta name="twitter:url" content="<?php echo $canonical_url; ?>">
-<meta name="twitter:image" content="<?php echo $banner; ?>">
+<meta name="twitter:title" content="99JITU — Petualangan Manis Game Online Starlight Princess Super">
+<meta name="twitter:description" content="Setiap kali bermain di 99JITU, rasanya seperti sang petualang yang sedang mencari link alternatif login Starlight Princess Super dengan sensasi berbeda.">
+<meta name="twitter:url" content="https://99jitu20.com/">
+<meta name="twitter:image" content="https://bossjitu.shop/assets/main99jitu20-com.png">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="<?php echo $titlebrand; ?>">
+<meta property="og:site_name" content="99JITU">
 <meta property="og:locale" content="id_ID">
-<meta property="og:url" content="<?php echo $canonical_url; ?>">
-<meta property="og:title" content="<?php echo ucwords($title); ?>">
-<meta property="og:description" content="<?php echo $meta_description; ?>">
-<meta property="og:image" content="<?php echo $banner; ?>">
-<link rel="icon" type="image/png" sizes="96x96" href="<?php echo $favicon; ?>">
-<link rel="shortcut icon" href="<?php echo $favicon; ?>">
-<link rel="apple-touch-icon" sizes="144x144" href="<?php echo $favicon; ?>">
+<meta property="og:url" content="https://99jitu20.com/">
+<meta property="og:title" content="99JITU — Petualangan Manis Game Online Starlight Princess Super">
+<meta property="og:description" content="Setiap kali bermain di 99JITU, rasanya seperti sang petualang yang sedang mencari link alternatif login Starlight Princess Super dengan sensasi berbeda.">
+<meta property="og:image" content="https://bossjitu.shop/assets/main99jitu20-com.png">
+<link rel="icon" type="image/png" sizes="96x96" href="https://www.demeesterproef50.nl/assets/fav-icon-99jitu.png">
+<link rel="shortcut icon" href="https://www.demeesterproef50.nl/assets/fav-icon-99jitu.png">
+<link rel="apple-touch-icon" sizes="144x144" href="https://www.demeesterproef50.nl/assets/fav-icon-99jitu.png">
 <link href="https://www.samsung.com/etc.clientlibs/samsung/clientlibs/consumer/global/clientlib-site/sites/global/css/fonts.min.8a18f528e82f16d7420d24afc5dbd284.css" rel="stylesheet" type="text/css"/>
 <link href="https://www.samsung.com/etc.clientlibs/samsung/clientlibs/consumer/global/clientlib-site/sites/id.min.d4a873f5ad80fabc15ee8200be9ce4ea.css" rel="stylesheet" type="text/css"/>
 <link href="https://www.samsung.com/etc.clientlibs/samsung/clientlibs/consumer/global/clientlib-dependencies.min.1dd1d47f040029bab499de380db9b346.css" rel="stylesheet" type="text/css"/>
@@ -864,139 +864,275 @@ if (window.location.pathname === '/blog/' || window.location.pathname === '/blog
     </link>
    </link>
   </link>
-
-  <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "<?php echo $titlebrand; ?>",
-  "url": "<?php echo $canonical_url; ?>",
-  "logo": "<?php echo $logo; ?>",
-  "description": "<?php echo $meta_description; ?>",
-  "foundingDate": "2024",
-  "contactPoint": {
-    "@type": "ContactPoint",
-    "telephone": "+62-444-232-2014",
-    "contactType": "customer service",
-    "areaServed": "ID",
-    "availableLanguage": ["Indonesian"]
-  },
-  "sameAs": [
-    "https://facebook.com/<?php echo $titlebrand; ?>",
-    "https://instagram.com/<?php echo $titlebrand; ?>",
-    "https://twitter.com/<?php echo $titlebrand; ?>"
-  ]
-}
-</script>
-
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
+  "@graph": [
     {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "<?php echo $titlebrand; ?>",
-      "item": "<?php echo $canonical_url; ?>"
-    },
-    {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "<?php echo $titlebrand; ?> LOGIN",
-      "item": "<?php echo $canonical_url; ?>"
-    },
-    {
-      "@type": "ListItem",
-      "position": 3,
-      "name": "<?php echo $titlebrand; ?> GAMES",
-      "item": "<?php echo $canonical_url; ?>"
-    }
-  ]
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"FAQPage",
-  "mainEntity":[
-<?php
-$faqItems = [];
-foreach ($faqs as $f) {
-    $faqItems[] = '    {
-      "@type":"Question",
-      "name":"' . htmlspecialchars($f['q']) . '",
-      "acceptedAnswer":{
-        "@type":"Answer",
-        "text":"' . htmlspecialchars($f['a']) . '"
+      "@type": "Organization",
+      "@id": "https://99jitu20.com/#organization",
+      "name": "99JITU",
+      "url": "https://99jitu20.com/",
+      "logo": "https://bossjitu.shop/assets/main99jitu20-com.png",
+      "sameAs": [
+        "https://www.facebook.com/99JITU",
+        "https://www.instagram.com/99JITUofficial",
+        "https://x.com/99JITU",
+        "https://www.youtube.com/@99JITU"
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "customer support",
+        "availableLanguage": [
+          "id",
+          "en"
+        ],
+        "areaServed": "ID"
       }
-    }';
-}
-echo implode(",\n", $faqItems);
-?>
-
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://99jitu20.com/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "99JITU",
+          "item": "https://99jitu20.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "99JITU Login",
+          "item": "https://99jitu20.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "99JITU Daftar",
+          "item": "https://99jitu20.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "name": "TOGEL 4D",
+          "item": "https://99jitu20.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
+          "name": "SITUS TOGEL",
+          "item": "https://99jitu20.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 6,
+          "name": "BANDAR TOGEL ONLINE",
+          "item": "https://99jitu20.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 7,
+          "name": "99 JITU",
+          "item": "https://99jitu20.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 7,
+          "name": "99JITU LOGIN",
+          "item": "https://99jitu20.com/"
+        }
+      ]
+    },
+    {
+      "@type": "Product",
+      "@id": "https://99jitu20.com/#product",
+      "name": "99JITU",
+      "url": "https://99jitu20.com/",
+      "image": [
+        "https://bossjitu.shop/assets/main99jitu20-com.png"
+      ],
+      "description": "Setiap kali bermain di 99JITU, rasanya seperti sang petualang yang sedang mencari link alternatif login Starlight Princess Super dengan sensasi berbeda.",
+      "brand": {
+        "@type": "Brand",
+        "name": "99JITU"
+      },
+      "sku": "Gerai-99JITU16-com",
+      "category": "Agen Bandar Togel 4D",
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "ratingCount": "258159",
+        "bestRating": "5",
+        "worstRating": "1"
+      },
+      "review": [
+        {
+          "@type": "Review",
+          "reviewRating": {
+            "@type": "Rating",
+            "ratingValue": "5",
+            "bestRating": "5"
+          },
+          "author": {
+            "@type": "Person",
+            "name": "Ani Buna, Jonggol"
+          },
+          "reviewBody": "Rekomendasi banget buat yang cari 99JITU Login resmi, sistemnya aman dan pasaran 4D-nya lengkap."
+        },
+        {
+          "@type": "Review",
+          "reviewRating": {
+            "@type": "Rating",
+            "ratingValue": "5",
+            "bestRating": "5"
+          },
+          "author": {
+            "@type": "Person",
+            "name": "Nani Bay, Binjai"
+          },
+          "reviewBody": "99JITU emang bandar togel terpercaya, prosesnya cepat dan layanannya profesional."
+        },
+        {
+          "@type": "Review",
+          "reviewRating": {
+            "@type": "Rating",
+            "ratingValue": "5",
+            "bestRating": "5"
+          },
+          "author": {
+            "@type": "Person",
+            "name": "Chi Gry, Belawan"
+          },
+          "reviewBody": "99JITU Login aman dan transparan, pas banget buat yang suka pasang togel 4D terlengkap."
+        }
+      ]
+    }
   ]
 }
 </script>
 
-  <!-- REVIEW SCHEMA -->
-  <script type="application/ld+json">
-  {
-    "@context":"https://schema.org",
-    "@type":"Product","name":"<?php echo $titlebrand; ?>",
-    "description":"<?php echo $meta_description; ?>",
-    "brand":{
-      "@type":"Brand",
-      "name":"<?php echo $titlebrand; ?>"
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://99jitu20.com/#org",
+      "name": "99JITU Group",
+      "url": "https://99jitu20.com/",
+      "logo": "https://bossjitu.shop/assets/main99jitu20-com.png"
     },
-    "aggregateRating":{
-      "@type":"AggregateRating",
-      "ratingValue":"4.9",
-      "reviewCount":"5"
+    {
+      "@type": "WebSite",
+      "@id": "https://99jitu20.com/#website",
+      "url": "https://99jitu20.com/",
+      "name": "Agen Bandar Togel Online ",
+      "publisher": { "@id": "https://99jitu20.com/#org" },
+      "inLanguage": "id-ID",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://99jitu20.com/?s={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
     },
-    "review":[
-<?php
-$reviewItems = [];
-foreach ($reviews as $r) {
-    $reviewItems[] = '        {
-                "@type":"Review",
-                "author":{"@type":"Person","name":"' . htmlspecialchars($r['name']) . '"},
-                "reviewRating":{"@type":"Rating","ratingValue":"5","bestRating":"5"},
-                "reviewBody":"' . htmlspecialchars($r['quote']) . '"
-              }';
-}
-echo implode(",\n", $reviewItems);
-?>
-
-    ]
-  }
-  </script>
-
- </head>
-
-<style>
-  .nv00-gnb-v4__l0-menu-text,
-  .nv00-gnb-v4__l1-menu-text,
-  .nv00-gnb-v4__l1-featured-link,
-  .nv00-gnb-v4__l1-featured-title {
-    font-size: 14.5px;
-    line-height: 1.4;
-  }
-
-  /* Biar di HP tetap kebaca, naikin dikit */
-  @media (max-width: 768px) {
-    .nv00-gnb-v4__l0-menu-text,
-    .nv00-gnb-v4__l1-menu-text,
-    .nv00-gnb-v4__l1-featured-link,
-    .nv00-gnb-v4__l1-featured-title {
-      font-size: 13px;
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://99jitu20.com/#app",
+      "name": "99JITU App",
+      "applicationCategory": "GameApplication",
+      "operatingSystem": "Android, iOS, Windows",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "IDR"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "ratingCount": "258159"
+      }
     }
-  }
-</style>
-
-
-<body>
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "@id": "https://99jitu20.com/#faqpage",
+  "url": "https://99jitu20.com/",
+  "name": "FAQ 99JITU",
+  "inLanguage": "id-ID",
+  "isPartOf": {
+    "@type": "WebPage",
+    "@id": "https://99jitu20.com/#webpage",
+    "url": "https://99jitu20.com/",
+    "name": "99JITU — Petualangan Manis Game Online Starlight Princess Super"
+  },
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Apa itu 99JITU?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "99JITU adalah gerai pasaran situs toto resmi dan agen bandar togel 4D terbesar di Indonesia yang menyediakan layanan judi digital aman, transparan, dan terpercaya."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Apakah pasaran togel di 99JITU lengkap?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Ya, 99JITU menyediakan variasi pasaran toto dan togel 4D terlengkap dari berbagai pasaran resmi internasional yang populer di masyarakat Indonesia."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Mengapa 99JITU menjadi pilihan utama masyarakat?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Karena 99JITU berkomitmen penuh menjaga privasi member, memberikan jaminan keamanan data, serta menyediakan platform digital yang stabil dan mudah diakses."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Bagaimana cara bergabung di 99JITU?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Anda cukup mengakses link resmi atau alternatif 99JITU, klik tombol daftar, isi formulir pendaftaran dengan data yang valid, dan Anda bisa langsung mulai menikmati layanan yang tersedia."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Metode transaksi apa yang tersedia?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "99JITU mendukung metode transaksi melalui bank lokal dan e-wallet, sehingga pengguna dapat memilih metode yang paling praktis sesuai kebutuhan akses masing-masing."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Berapa minimal transaksi untuk bermain di 99JITU?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "99JITU menawarkan minimal deposit yang sangat terjangkau, yaitu mulai dari Rp 10.000 saja, sehingga dapat diakses oleh seluruh kalangan pemain."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Apakah layanan bantuan pelanggan tersedia 24 jam?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Ya, 99JITU menyediakan layanan Customer Service profesional yang aktif 24 jam nonstop setiap hari melalui fitur Live Chat untuk membantu segala kendala Anda."
+      }
+    }
+  ]
+}
+</script>
+ </head>
+<style>.nv00-gnb-v4__l0-menu-text,.nv00-gnb-v4__l1-featured-link,.nv00-gnb-v4__l1-featured-title,.nv00-gnb-v4__l1-menu-text{font-size:14.5px;line-height:1.4}@media (max-width:768px){.nv00-gnb-v4__l0-menu-text,.nv00-gnb-v4__l1-featured-link,.nv00-gnb-v4__l1-featured-title,.nv00-gnb-v4__l1-menu-text{font-size:13px}}</style>
+ <body>
   <div id="wrap">
 
    <input id="searchDomain" name="searchDomain" type="hidden" value="//searchapi.samsung.com/v6"/>
@@ -1120,8 +1256,8 @@ echo implode(",\n", $reviewItems);
     <div class="nv00-gnb-v4__wrap">
      <div class="nv00-gnb-v4__inner">
       <div class="nv00-gnb-v4__header">
-       <a an-ac="gnb" an-ca="navigation" an-la="Situs Togel Resmi " an-tr="nv00_gnb-product detail-l0-navigation2" aria-label="Situs Togel Resmi " class="nv00-gnb-v4__logo" href="<?php echo $canonical_url; ?>">
-        <img src="<?php echo $logo; ?>" alt="<?php echo $titlebrand; ?>" width="280" height="90"/>
+       <a an-ac="gnb" an-ca="navigation" an-la="Situs Togel Resmi " an-tr="nv00_gnb-product detail-l0-navigation2" aria-label="Situs Togel Resmi " class="nv00-gnb-v4__logo" href="https://99jitu20.com/">
+        <img src="https://bossjitu.shop/assets/99jitu-logo.png" alt="99JITU" width="280" height="90"/>
        </a>
        <div class="nv00-gnb-v4__utility-list nv00-gnb-v4--mobile-only">
         <button an-ac="gnb" an-ca="navigation" an-la="search" an-tr="nv00_gnb-product detail-l0-navigation2" class="nv00-gnb-v4__utility nv00-gnb-v4__utility-search gnb__search-btn-js" data-js-action="search">
@@ -1408,9 +1544,9 @@ echo implode(",\n", $reviewItems);
         <ul aria-label="main menu" class="nv00-gnb-v4__l0-menu-list nv00-gnb-v4__l0-menu-list--left" role="menubar">
          <li class="nv00-gnb-v4__l0-menu">
           <div class="nv00-gnb-v4__l0-menu-title">
-           <a an-ac="gnb" an-ca="navigation" an-la="shop" an-tr="nv00_gnb-product detail-l0-navigation2" class="nv00-gnb-v4__l0-menu-link" data-js-action="l0MenuBtn" href="<?php echo $canonical_url; ?>" role="menuitem">
+           <a an-ac="gnb" an-ca="navigation" an-la="shop" an-tr="nv00_gnb-product detail-l0-navigation2" class="nv00-gnb-v4__l0-menu-link" data-js-action="l0MenuBtn" href="https://99jitu20.com/" role="menuitem">
             <span class="nv00-gnb-v4__l0-menu-text nv00-gnb-v4--pc-only">
-            <?php echo $titlebrand; ?>
+            99JITU
             </span>
             <span class="nv00-gnb-v4__l0-menu-text nv00-gnb-v4--mobile-only">
              Explore Shop
@@ -1425,70 +1561,70 @@ echo implode(",\n", $reviewItems);
          </li>
          <li class="nv00-gnb-v4__l0-menu">
           <div class="nv00-gnb-v4__l0-menu-title">
-           <a an-ac="gnb" an-ca="navigation" an-la="mobile" an-tr="nv00_gnb-product detail-l0-navigation2" class="nv00-gnb-v4__l0-menu-link" data-js-action="l0MenuBtn" href="<?php echo $canonical_url; ?>" role="menuitem">
+           <a an-ac="gnb" an-ca="navigation" an-la="mobile" an-tr="nv00_gnb-product detail-l0-navigation2" class="nv00-gnb-v4__l0-menu-link" data-js-action="l0MenuBtn" href="https://99jitu20.com/" role="menuitem">
             <span class="nv00-gnb-v4__l0-menu-text">
-             <?php echo $titlebrand; ?> Login
+             99JITU Login
             </span>
            </a>
            <button an-ac="gnb" an-ca="navigation" an-la="mobile" an-tr="nv00_gnb-product detail-l0-navigation2" aria-expanded="false" aria-haspopup="true" class="nv00-gnb-v4__l0-menu-toggle-btn" role="menuitem">
             <span class="hidden">
-             <?php echo $titlebrand; ?> Login Togel
+             99JITU Login Togel
             </span>
            </button>
           </div>
          </li>
          <li class="nv00-gnb-v4__l0-menu">
           <div class="nv00-gnb-v4__l0-menu-title">
-           <a an-ac="gnb" an-ca="navigation" an-la="tv and av" an-tr="nv00_gnb-product detail-l0-navigation2" class="nv00-gnb-v4__l0-menu-link" data-js-action="l0MenuBtn" href="<?php echo $canonical_url; ?>" role="menuitem">
+           <a an-ac="gnb" an-ca="navigation" an-la="tv and av" an-tr="nv00_gnb-product detail-l0-navigation2" class="nv00-gnb-v4__l0-menu-link" data-js-action="l0MenuBtn" href="https://99jitu20.com/" role="menuitem">
             <span class="nv00-gnb-v4__l0-menu-text">
-             <?php echo $titlebrand; ?> Daftar
+             99JITU Daftar
             </span>
            </a>
            <button an-ac="gnb" an-ca="navigation" an-la="tv and av" an-tr="nv00_gnb-product detail-l0-navigation2" aria-expanded="false" aria-haspopup="true" class="nv00-gnb-v4__l0-menu-toggle-btn" role="menuitem">
             <span class="hidden">
-             <?php echo $titlebrand; ?> Daftar Online
+             99JITU Daftar Online
             </span>
            </button>
           </div>
          </li>
          <li class="nv00-gnb-v4__l0-menu">
           <div class="nv00-gnb-v4__l0-menu-title">
-           <a an-ac="gnb" an-ca="navigation" an-la="appliances" an-tr="nv00_gnb-product detail-l0-navigation2" class="nv00-gnb-v4__l0-menu-link" data-js-action="l0MenuBtn" href="<?php echo $canonical_url; ?>" role="menuitem">
+           <a an-ac="gnb" an-ca="navigation" an-la="appliances" an-tr="nv00_gnb-product detail-l0-navigation2" class="nv00-gnb-v4__l0-menu-link" data-js-action="l0MenuBtn" href="https://99jitu20.com/" role="menuitem">
             <span class="nv00-gnb-v4__l0-menu-text">
-             <?php echo $titlebrand; ?> Masuk
+             99JITU Masuk
             </span>
            </a>
            <button an-ac="gnb" an-ca="navigation" an-la="appliances" an-tr="nv00_gnb-product detail-l0-navigation2" aria-expanded="false" aria-haspopup="true" class="nv00-gnb-v4__l0-menu-toggle-btn" role="menuitem">
             <span class="hidden">
-             <?php echo $titlebrand; ?> Masuk Situs
+             99JITU Masuk Situs
             </span>
            </button>
           </div>
          </li>
          <li class="nv00-gnb-v4__l0-menu">
           <div class="nv00-gnb-v4__l0-menu-title">
-           <a an-ac="gnb" an-ca="navigation" an-la="monitors" an-tr="nv00_gnb-product detail-l0-navigation2" class="nv00-gnb-v4__l0-menu-link" data-js-action="l0MenuBtn" href="<?php echo $canonical_url; ?>" role="menuitem">
+           <a an-ac="gnb" an-ca="navigation" an-la="monitors" an-tr="nv00_gnb-product detail-l0-navigation2" class="nv00-gnb-v4__l0-menu-link" data-js-action="l0MenuBtn" href="https://99jitu20.com/" role="menuitem">
             <span class="nv00-gnb-v4__l0-menu-text">
-             Link <?php echo $titlebrand; ?>
+             Link 99JITU
             </span>
            </a>
            <button an-ac="gnb" an-ca="navigation" an-la="monitors" an-tr="nv00_gnb-product detail-l0-navigation2" aria-expanded="false" aria-haspopup="true" class="nv00-gnb-v4__l0-menu-toggle-btn" role="menuitem">
             <span class="hidden">
-             Link <?php echo $titlebrand; ?> Online
+             Link 99JITU Online
             </span>
            </button>
           </div>
          </li>
          <li class="nv00-gnb-v4__l0-menu">
           <div class="nv00-gnb-v4__l0-menu-title">
-           <a an-ac="gnb" an-ca="navigation" an-la="wearables" an-tr="nv00_gnb-product detail-l0-navigation2" class="nv00-gnb-v4__l0-menu-link" data-js-action="l0MenuBtn" href="<?php echo $canonical_url; ?>" role="menuitem">
+           <a an-ac="gnb" an-ca="navigation" an-la="wearables" an-tr="nv00_gnb-product detail-l0-navigation2" class="nv00-gnb-v4__l0-menu-link" data-js-action="l0MenuBtn" href="https://99jitu20.com/" role="menuitem">
             <span class="nv00-gnb-v4__l0-menu-text">
-             <?php echo $titlebrand; ?> Bonus
+             99JITU Bonus
             </span>
            </a>
            <button an-ac="gnb" an-ca="navigation" an-la="wearables" an-tr="nv00_gnb-product detail-l0-navigation2" aria-expanded="false" aria-haspopup="true" class="nv00-gnb-v4__l0-menu-toggle-btn" role="menuitem">
             <span class="hidden">
-              <?php echo $titlebrand; ?> Bonus Rollingan
+              99JITU Bonus Rollingan
             </span>
            </button>
           </div>
@@ -1506,7 +1642,7 @@ echo implode(",\n", $reviewItems);
           <div class="nv00-gnb-v4__l1-menu-container">
            <div class="nv00-gnb-v4__l1-menu-container-header nv00-gnb-v4--mobile-only">
             <p class="nv00-gnb-v4__l1-menu-container-title">
-             <?php echo $titlebrand; ?> LOGIN
+             99JITU LOGIN
             </p>
            </div>
           </div>
@@ -1514,7 +1650,7 @@ echo implode(",\n", $reviewItems);
          
          <li class="nv00-gnb-v4__l0-menu">
           <div class="nv00-gnb-v4__l0-menu-title">
-           <a an-ac="gnb" an-ca="navigation" an-la="Daftar Agen Bandar Togel" an-tr="nv00_gnb-product detail-banner-navigation2" aria-label="Agen Bandar Togel Login. Buka di Tab Baru" class="nv00-gnb-v4__l0-menu-link" data-js-action="l0MenuBtn" href="<?php echo $canonical_url; ?>" role="menuitem" target="_blank">
+           <a an-ac="gnb" an-ca="navigation" an-la="Daftar Agen Bandar Togel" an-tr="nv00_gnb-product detail-banner-navigation2" aria-label="Agen Bandar Togel Login. Buka di Tab Baru" class="nv00-gnb-v4__l0-menu-link" data-js-action="l0MenuBtn" href="https://99jitu20.com/" role="menuitem" target="_blank">
             DAFTAR
            </a>
           </div>
@@ -1522,10 +1658,10 @@ echo implode(",\n", $reviewItems);
          <!-- Non-Type Right Menu End -->
         </ul>
         <div class="nv00-gnb-v4__user-menu-list nv00-gnb-v4--mobile-only before-login">
-         <a data-linkinfo="<?php echo $canonical_url; ?>" href="<?php echo $canonical_url; ?>" role="menuitem">
+         <a data-linkinfo="https://99jitu20.com/" href="https://99jitu20.com/" role="menuitem">
           Login/Sign-Up
          </a>
-         <a an-ac="gnb" an-ca="account" an-la="rewards" an-tr="nv00_gnb-account-account" aria-label="Receive up to 5% of your purchase back in points. Samsung Rewards" class="nv00-gnb-v4__user-menu nv00-gnb-v4__user-menu--icon" href="<?php echo $canonical_url; ?>" role="menuitem">
+         <a an-ac="gnb" an-ca="account" an-la="rewards" an-tr="nv00_gnb-account-account" aria-label="Receive up to 5% of your purchase back in points. Samsung Rewards" class="nv00-gnb-v4__user-menu nv00-gnb-v4__user-menu--icon" href="https://99jitu20.com/" role="menuitem">
           Receive up to 5% of your purchase back in points.
           <svg aria-hidden="true" class="icon" focusable="false">
            <use href="#next-regular" xlink:href="#next-regular">
@@ -1548,7 +1684,7 @@ echo implode(",\n", $reviewItems);
            Buka Menu Saya
           </p>
          </a>
-         <a an-ac="gnb" an-ca="account" an-la="rewards" an-tr="nv00_gnb-account-account" aria-label="Receive up to 5% of your purchase back in points. Samsung Rewards" class="nv00-gnb-v4__user-menu nv00-gnb-v4__user-menu--icon" href="<?php echo $canonical_url; ?>" role="menuitem">
+         <a an-ac="gnb" an-ca="account" an-la="rewards" an-tr="nv00_gnb-account-account" aria-label="Receive up to 5% of your purchase back in points. Samsung Rewards" class="nv00-gnb-v4__user-menu nv00-gnb-v4__user-menu--icon" href="https://99jitu20.com/" role="menuitem">
           Receive up to 5% of your purchase back in points.
           <svg aria-hidden="true" class="icon" focusable="false">
            <use href="#next-regular" xlink:href="#next-regular">
@@ -1598,14 +1734,14 @@ echo implode(",\n", $reviewItems);
           <div aria-label="account" class="nv00-gnb-v4__utility-menu-list" role="menu">
            <div class="nv00-gnb-v4__utility-menu-wrap">
             <a class="nv00-gnb-v4__utility-menu nv00-gnb-v4__utility-menu--sign-in nv00-gnb-v4--pc-only"
-              href="<?php echo $canonical_url; ?>"
+              href="https://99jitu20.com/"
               role="menuitem"
               target="_self"
               rel="noopener noreferrer"
-              onclick="event.stopImmediatePropagation(); event.preventDefault(); window.location.href='<?php echo $canonical_url; ?>'; return false;">
+              onclick="event.stopImmediatePropagation(); event.preventDefault(); window.location.href='https://99jitu20.com/'; return false;">
               Login/Sign-Up
             </a>
-            <a class="nv00-gnb-v4__utility-menu nv00-gnb-v4__utility-menu--with-icon nv00-gnb-v4--pc-only" href="<?php echo $canonical_url; ?>" role="menuitem">
+            <a class="nv00-gnb-v4__utility-menu nv00-gnb-v4__utility-menu--with-icon nv00-gnb-v4--pc-only" href="https://99jitu20.com/" role="menuitem">
              Receive up to 5% of your purchase back in points.
              <svg aria-hidden="true" class="icon" focusable="false">
               <use href="#next-regular" xlink:href="#next-regular">
@@ -1621,7 +1757,7 @@ echo implode(",\n", $reviewItems);
             <a an-ac="gnb" an-ca="account" an-la="members" an-tr="nv00_gnb-product detail-account-account" aria-label="members" class="nv00-gnb-v4__utility-menu nv00-gnb-v4__utility-menu" href="https://www.samsung.com/id/members/" role="menuitem">
              Members
             </a>
-            <a an-ac="gnb" an-ca="account" an-la="Togel Online" an-tr="nv00_gnb-product detail-account-account" aria-label="Togel Online" class="nv00-gnb-v4__utility-menu nv00-gnb-v4__utility-menu" href="<?php echo $canonical_url; ?>" role="menuitem">
+            <a an-ac="gnb" an-ca="account" an-la="Togel Online" an-tr="nv00_gnb-product detail-account-account" aria-label="Togel Online" class="nv00-gnb-v4__utility-menu nv00-gnb-v4__utility-menu" href="https://99jitu20.com/" role="menuitem">
               Togel Online
             </a>
            </div>
@@ -1653,7 +1789,7 @@ echo implode(",\n", $reviewItems);
              <p class="user-name">
              </p>
             </a>
-            <a class="nv00-gnb-v4__utility-menu nv00-gnb-v4__utility-menu--with-icon nv00-gnb-v4--pc-only" href="<?php echo $canonical_url; ?>" role="menuitem">
+            <a class="nv00-gnb-v4__utility-menu nv00-gnb-v4__utility-menu--with-icon nv00-gnb-v4--pc-only" href="https://99jitu20.com/" role="menuitem">
              Receive up to 5% of your purchase back in points.
              <svg aria-hidden="true" class="icon" focusable="false">
               <use href="#next-regular" xlink:href="#next-regular">
@@ -2170,7 +2306,7 @@ echo implode(",\n", $reviewItems);
             </p>
             <div class="pd-buying-price__new-price" data-sdf-test="{{priceAnchor.priceWrapper.info.totalPrice}}">
              <div class="pd-buying-price__new-price-inner">
-              <?php echo ucwords($title); ?>
+              99JITU — Petualangan Manis Game Online Starlight Princess Super
              </div>
              <span class="pd-buying-price__monthly-price" data-sdf-test="{{priceAnchor.priceWrapper.info.totalPriceMonthly}}">
               {{priceAnchor.priceWrapper.info.totalPriceMonthly}}
@@ -2201,10 +2337,10 @@ echo implode(",\n", $reviewItems);
             </div>
            </div>
            <div class="pdd39-anchor-nav__cta pd-buying-price__cta">
-            <a href="<?php echo $canonical_url; ?>" class="cta cta--contained cta--emphasis cta--2line add-special-tagging">
+            <a href="https://99jitu20.com/" class="cta cta--contained cta--emphasis cta--2line add-special-tagging">
              Masuk
             </a>
-            <a href="<?php echo $canonical_url; ?>" class="cta cta--contained cta--emphasis cta--2line add-special-tagging">
+            <a href="https://99jitu20.com/" class="cta cta--contained cta--emphasis cta--2line add-special-tagging">
              Daftar
             </a>
            </div>
@@ -2706,7 +2842,7 @@ echo implode(",\n", $reviewItems);
             </div>
            </div>
            <div class="pdd16-step-buying-v2__bottom-price__cta">
-            <a aria-label="Link Title" class="cta cta--contained cta--emphasis" href="<?php echo $canonical_url; ?>">
+            <a aria-label="Link Title" class="cta cta--contained cta--emphasis" href="https://99jitu20.com/">
              Add to cart
             </a>
            </div>
@@ -2866,7 +3002,7 @@ echo implode(",\n", $reviewItems);
              </li>
             </ul>
             <div class="pdd16-step-buying-v2__learn-more-cta">
-             <a aria-label="Link Title" class="cta cta--underline cta--black cta--icon" href="<?php echo $canonical_url; ?>" target="_blank">
+             <a aria-label="Link Title" class="cta cta--underline cta--black cta--icon" href="https://99jitu20.com/" target="_blank">
               Product detail
               <svg aria-hidden="true" class="icon" focusable="false">
                <use href="#outlink-bold" xlink:href="#outlink-bold">
@@ -2974,14 +3110,14 @@ echo implode(",\n", $reviewItems);
             <li class="hdd02-gallery__item swiper-slide" data-type-headline="Galaxy A07 Front Black ">
              <a an-ac="product gallery" an-ca="gallery" an-la="gallery:image" an-tr="hdd02_product info.-product detail-gallery module-gallery" class="hdd02-gallery__image" data-js-action="openPcGalleryPopup" href="javascript:void(0);">
               <div class="image">
-               <img alt="Galaxy A07 Front Black " class="image__main lazy-load responsive-img" data-comp-name="image" data-desktop-src="<?php echo $banner; ?>" data-mobile-src="<?php echo $banner; ?>" role="img"/>
+               <img alt="Galaxy A07 Front Black " class="image__main lazy-load responsive-img" data-comp-name="image" data-desktop-src="https://bossjitu.shop/assets/main99jitu20-com.png" data-mobile-src="https://bossjitu.shop/assets/main99jitu20-com.png" role="img"/>
               </div>
              </a>
             </li>
             <li class="hdd02-gallery__item swiper-slide" data-type-headline="Galaxy A07 Back Black ">
              <a an-ac="product gallery" an-ca="gallery" an-la="gallery:image" an-tr="hdd02_product info.-product detail-gallery module-gallery" class="hdd02-gallery__image" data-js-action="openPcGalleryPopup" href="javascript:void(0);">
               <div class="image">
-               <img alt="Galaxy A07 Back Black " class="image__main lazy-load responsive-img" data-comp-name="image" data-desktop-src="<?php echo $banner; ?>" data-mobile-src="<?php echo $banner; ?>" role="img"/>
+               <img alt="Galaxy A07 Back Black " class="image__main lazy-load responsive-img" data-comp-name="image" data-desktop-src="https://bossjitu.shop/assets/main99jitu20-com.png" data-mobile-src="https://bossjitu.shop/assets/main99jitu20-com.png" role="img"/>
               </div>
              </a>
             </li>
@@ -3091,229 +3227,40 @@ echo implode(",\n", $reviewItems);
            </div>
           </div>
          </div>
-
-<style>
-.vip-ticker-wrap{
-    width:100%;
-    overflow:hidden;
-    border-radius:999px;
-    padding:10px 0;
-    background:
-        linear-gradient(180deg,#181818 0%,#090909 50%,#000000 100%);
-    border-top:1px solid rgba(255,70,70,.45);
-    border-bottom:1px solid rgba(255,70,70,.35);
-    box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.05),
-        0 0 20px rgba(180,0,0,.45),
-        inset 0 0 40px rgba(255,0,0,.08);
-    position:relative;
-}
-
-.vip-ticker-wrap::before{
-    content:"";
-    position:absolute;
-    inset:0;
-    background:
-        linear-gradient(120deg,
-        transparent 0%,
-        rgba(255,255,255,.08) 45%,
-        transparent 70%);
-    animation:vipShine 6s linear infinite;
-}
-
-.vip-ticker-track{
-    display:flex;
-    width:max-content;
-    gap:18px;
-    animation:vipTickerMove 28s linear infinite;
-}
-
-.vip-ticker-wrap:hover .vip-ticker-track{
-    animation-play-state:paused;
-}
-
-.vip-ticker-group{
-    display:flex;
-    align-items:center;
-    gap:18px;
-    flex-shrink:0;
-    padding-right:18px;
-}
-
-.vip-logo,
-.vip-pill,
-.vip-live{
-    height:34px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    white-space:nowrap;
-    border-radius:999px;
-    font-size:13px;
-    font-weight:800;
-    color:#fff;
-    position:relative;
-    overflow:hidden;
-}
-
-.vip-logo{
-    min-width:90px;
-    color:#ffd86b;
-    background:
-        linear-gradient(180deg,#320000,#120000);
-    border:1px solid rgba(255,70,70,.45);
-    box-shadow:
-        0 0 15px rgba(255,0,0,.35);
-}
-
-.vip-pill{
-    padding:0 22px;
-    color:#ffffff;
-    background:
-        linear-gradient(180deg,#1b1b1b,#090909);
-    border:1px solid rgba(255,60,60,.30);
-    box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.05),
-        0 0 12px rgba(255,0,0,.18);
-    text-shadow:0 1px 3px #000;
-}
-
-.vip-pill:hover{
-    border-color:#ffd700;
-    box-shadow:
-        0 0 18px rgba(255,215,0,.35),
-        0 0 25px rgba(255,0,0,.35);
-}
-
-.vip-live{
-    gap:8px;
-    padding:0 18px;
-    color:#fff;
-    background:
-        linear-gradient(90deg,#a80000,#ff2d2d);
-    border:1px solid rgba(255,120,120,.5);
-    box-shadow:
-        0 0 18px rgba(255,0,0,.55);
-}
-
-.vip-live span{
-    width:8px;
-    height:8px;
-    border-radius:50%;
-    background:#00ff66;
-    box-shadow:0 0 10px #00ff66;
-    animation:vipBlink 1s infinite;
-}
-
-.vip-live b{
-    padding:3px 10px;
-    border-radius:999px;
-    font-size:11px;
-    background:rgba(0,0,0,.35);
-    color:#ffd700;
-}
-
-@keyframes vipTickerMove{
-    from{
-        transform:translateX(0);
-    }
-    to{
-        transform:translateX(-50%);
-    }
-}
-
-@keyframes vipBlink{
-    0%,100%{
-        opacity:1;
-    }
-    50%{
-        opacity:.35;
-    }
-}
-
-@keyframes vipShine{
-    0%{
-        transform:translateX(-120%);
-    }
-    100%{
-        transform:translateX(120%);
-    }
-}
-
-@media(max-width:768px){
-
-.vip-ticker-track{
-    animation-duration:20s;
-}
-
-.vip-ticker-group{
-    gap:12px;
-}
-
-.vip-logo,
-.vip-pill,
-.vip-live{
-    height:30px;
-    font-size:11px;
-}
-
-.vip-pill{
-    padding:0 14px;
-}
-
-}
-
-</style>
-
-<div class="vip-ticker-wrap">
-  <div class="vip-ticker-track">
-    <div class="vip-ticker-group">
-      <div class="vip-logo"><?php echo $favicon; ?></div>
-      <div class="vip-pill">Update Terbaru 28 Juni Sampai 31 Desember 2026</div>
-      <div class="vip-pill">888.777 Komentar Member</div>
-      <div class="vip-pill">Rating Pengguna 4.9/5</div>
-      <div class="vip-pill">777 Juta Total Pengguna</div>
-      <div class="vip-live">LIVE CHAT <strong>24/7</strong></div>
-    </div>
-  </div>
-</div>
-
-
-
          <div class="hdd02-gallery__thumbnail">
           <ul class="hdd02-gallery__thumbnail-list" role="list">
            <li class="hdd02-gallery__thumbnail-item" role="listitem">
             <a an-ac="product gallery" an-ca="gallery" an-la="gallery:image" an-tr="hdd02_gallery-product detail-gallery module-gallery" class="hdd02-gallery__thumbnail-item-image" data-js-action="openPcGalleryPopup" href="javascript:void(0);" role="button">
              <div class="image">
-              <img alt="Galaxy A07 Front Black " class="image__main lazy-load" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
+              <img alt="Galaxy A07 Front Black " class="image__main lazy-load" data-comp-name="image" data-src="https://bossjitu.shop/assets/main99jitu20-com.png" role="img"/>
              </div>
             </a>
            </li>
            <li class="hdd02-gallery__thumbnail-item" role="listitem">
             <a an-ac="product gallery" an-ca="gallery" an-la="gallery:image" an-tr="hdd02_gallery-product detail-gallery module-gallery" class="hdd02-gallery__thumbnail-item-image" data-js-action="openPcGalleryPopup" href="javascript:void(0);" role="button">
              <div class="image">
-              <img alt="Galaxy A07 Back Black " class="image__main lazy-load" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
+              <img alt="Galaxy A07 Back Black " class="image__main lazy-load" data-comp-name="image" data-src="https://bossjitu.shop/assets/main99jitu20-com.png" role="img"/>
              </div>
             </a>
            </li>
            <li class="hdd02-gallery__thumbnail-item" role="listitem">
             <a an-ac="product gallery" an-ca="gallery" an-la="gallery:image" an-tr="hdd02_gallery-product detail-gallery module-gallery" class="hdd02-gallery__thumbnail-item-image" data-js-action="openPcGalleryPopup" href="javascript:void(0);" role="button">
              <div class="image">
-              <img alt="Galaxy A07 BackL30 Black " class="image__main lazy-load" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
+              <img alt="Galaxy A07 BackL30 Black " class="image__main lazy-load" data-comp-name="image" data-src="https://bossjitu.shop/assets/main99jitu20-com.png" role="img"/>
              </div>
             </a>
            </li>
            <li class="hdd02-gallery__thumbnail-item" role="listitem">
             <a an-ac="product gallery" an-ca="gallery" an-la="gallery:image" an-tr="hdd02_gallery-product detail-gallery module-gallery" class="hdd02-gallery__thumbnail-item-image" data-js-action="openPcGalleryPopup" href="javascript:void(0);" role="button">
              <div class="image">
-              <img alt="Galaxy A07 BackR30 Black " class="image__main lazy-load" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
+              <img alt="Galaxy A07 BackR30 Black " class="image__main lazy-load" data-comp-name="image" data-src="https://bossjitu.shop/assets/main99jitu20-com.png" role="img"/>
              </div>
             </a>
            </li>
            <li class="hdd02-gallery__thumbnail-item" role="listitem">
             <a an-ac="product gallery" an-ca="gallery" an-la="gallery:image" an-tr="hdd02_gallery-product detail-gallery module-gallery" class="hdd02-gallery__thumbnail-item-image" data-js-action="openPcGalleryPopup" href="javascript:void(0);" role="button">
              <div class="image">
-              <img alt="Galaxy A07 Front2 Black " class="image__main lazy-load" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
+              <img alt="Galaxy A07 Front2 Black " class="image__main lazy-load" data-comp-name="image" data-src="https://bossjitu.shop/assets/main99jitu20-com.png" role="img"/>
              </div>
             </a>
            </li>
@@ -3338,63 +3285,63 @@ echo implode(",\n", $reviewItems);
                 <li class="hdd02-gallery__popup-image-item" role="listitem">
                  <a an-ac="product gallery" an-ca="gallery" an-la="gallery popup:image" an-tr="hdd02_gallery-product detail-gallery image-gallery" class="hdd02-gallery__popup-image-link" data-js-action="changePcGalleryPopup" href="javascript:void(0);" role="button">
                   <div class="image">
-                   <img alt="Galaxy A07 Front Black " class="image__main lazy-load" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
+                   <img alt="Galaxy A07 Front Black " class="image__main lazy-load" data-comp-name="image" data-src="https://bossjitu.shop/assets/main99jitu20-com.png" role="img"/>
                   </div>
                  </a>
                 </li>
                 <li class="hdd02-gallery__popup-image-item" role="listitem">
                  <a an-ac="product gallery" an-ca="gallery" an-la="gallery popup:image" an-tr="hdd02_gallery-product detail-gallery image-gallery" class="hdd02-gallery__popup-image-link" data-js-action="changePcGalleryPopup" href="javascript:void(0);" role="button">
                   <div class="image">
-                   <img alt="Galaxy A07 Back Black " class="image__main lazy-load" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
+                   <img alt="Galaxy A07 Back Black " class="image__main lazy-load" data-comp-name="image" data-src="https://bossjitu.shop/assets/main99jitu20-com.png" role="img"/>
                   </div>
                  </a>
                 </li>
                 <li class="hdd02-gallery__popup-image-item" role="listitem">
                  <a an-ac="product gallery" an-ca="gallery" an-la="gallery popup:image" an-tr="hdd02_gallery-product detail-gallery image-gallery" class="hdd02-gallery__popup-image-link" data-js-action="changePcGalleryPopup" href="javascript:void(0);" role="button">
                   <div class="image">
-                   <img alt="Galaxy A07 BackL30 Black " class="image__main lazy-load" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
+                   <img alt="Galaxy A07 BackL30 Black " class="image__main lazy-load" data-comp-name="image" data-src="https://bossjitu.shop/assets/main99jitu20-com.png" role="img"/>
                   </div>
                  </a>
                 </li>
                 <li class="hdd02-gallery__popup-image-item" role="listitem">
                  <a an-ac="product gallery" an-ca="gallery" an-la="gallery popup:image" an-tr="hdd02_gallery-product detail-gallery image-gallery" class="hdd02-gallery__popup-image-link" data-js-action="changePcGalleryPopup" href="javascript:void(0);" role="button">
                   <div class="image">
-                   <img alt="Galaxy A07 BackR30 Black " class="image__main lazy-load" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
+                   <img alt="Galaxy A07 BackR30 Black " class="image__main lazy-load" data-comp-name="image" data-src="https://bossjitu.shop/assets/main99jitu20-com.png" role="img"/>
                   </div>
                  </a>
                 </li>
                 <li class="hdd02-gallery__popup-image-item" role="listitem">
                  <a an-ac="product gallery" an-ca="gallery" an-la="gallery popup:image" an-tr="hdd02_gallery-product detail-gallery image-gallery" class="hdd02-gallery__popup-image-link" data-js-action="changePcGalleryPopup" href="javascript:void(0);" role="button">
                   <div class="image">
-                   <img alt="Galaxy A07 Front2 Black " class="image__main lazy-load" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
+                   <img alt="Galaxy A07 Front2 Black " class="image__main lazy-load" data-comp-name="image" data-src="https://bossjitu.shop/assets/main99jitu20-com.png" role="img"/>
                   </div>
                  </a>
                 </li>
                 <li class="hdd02-gallery__popup-image-item" role="listitem">
                  <a an-ac="product gallery" an-ca="gallery" an-la="gallery popup:image" an-tr="hdd02_gallery-product detail-gallery image-gallery" class="hdd02-gallery__popup-image-link" data-js-action="changePcGalleryPopup" href="javascript:void(0);" role="button">
                   <div class="image">
-                   <img alt="Galaxy A07 FrontL30 Black " class="image__main lazy-load" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
+                   <img alt="Galaxy A07 FrontL30 Black " class="image__main lazy-load" data-comp-name="image" data-src="https://bossjitu.shop/assets/main99jitu20-com.png" role="img"/>
                   </div>
                  </a>
                 </li>
                 <li class="hdd02-gallery__popup-image-item" role="listitem">
                  <a an-ac="product gallery" an-ca="gallery" an-la="gallery popup:image" an-tr="hdd02_gallery-product detail-gallery image-gallery" class="hdd02-gallery__popup-image-link" data-js-action="changePcGalleryPopup" href="javascript:void(0);" role="button">
                   <div class="image">
-                   <img alt="Galaxy A07 FrontR30 Black " class="image__main lazy-load" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
+                   <img alt="Galaxy A07 FrontR30 Black " class="image__main lazy-load" data-comp-name="image" data-src="https://bossjitu.shop/assets/main99jitu20-com.png" role="img"/>
                   </div>
                  </a>
                 </li>
                 <li class="hdd02-gallery__popup-image-item" role="listitem">
                  <a an-ac="product gallery" an-ca="gallery" an-la="gallery popup:image" an-tr="hdd02_gallery-product detail-gallery image-gallery" class="hdd02-gallery__popup-image-link" data-js-action="changePcGalleryPopup" href="javascript:void(0);" role="button">
                   <div class="image">
-                   <img alt="Galaxy A07 Lside Black " class="image__main lazy-load" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
+                   <img alt="Galaxy A07 Lside Black " class="image__main lazy-load" data-comp-name="image" data-src="https://bossjitu.shop/assets/main99jitu20-com.png" role="img"/>
                   </div>
                  </a>
                 </li>
                 <li class="hdd02-gallery__popup-image-item" role="listitem">
                  <a an-ac="product gallery" an-ca="gallery" an-la="gallery popup:image" an-tr="hdd02_gallery-product detail-gallery image-gallery" class="hdd02-gallery__popup-image-link" data-js-action="changePcGalleryPopup" href="javascript:void(0);" role="button">
                   <div class="image">
-                   <img alt="Galaxy A07 Rside Black " class="image__main lazy-load" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
+                   <img alt="Galaxy A07 Rside Black " class="image__main lazy-load" data-comp-name="image" data-src="https://bossjitu.shop/assets/main99jitu20-com.png" role="img"/>
                   </div>
                  </a>
                 </li>
@@ -3409,12 +3356,12 @@ echo implode(",\n", $reviewItems);
                 <div class="image-content">
                  <div class="default-image">
                   <div class="image">
-                   <img alt="Galaxy A07 Front Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
+                   <img alt="Galaxy A07 Front Black " class="image__main lazy-load-man" data-comp-name="image" data-src="https://bossjitu.shop/assets/main99jitu20-com.png" role="img"/>
                   </div>
                  </div>
                  <div class="zoom-image">
                   <div class="image">
-                   <img alt="Galaxy A07 Front Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
+                   <img alt="Galaxy A07 Front Black " class="image__main lazy-load-man" data-comp-name="image" data-src="https://bossjitu.shop/assets/main99jitu20-com.png" role="img"/>
                   </div>
                   <p aria-hidden="true" class="snackbar">
                    Klik atau ketuk untuk memperkecil
@@ -3424,12 +3371,12 @@ echo implode(",\n", $reviewItems);
                 <div class="image-content">
                  <div class="default-image">
                   <div class="image">
-                   <img alt="Galaxy A07 Back Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
+                   <img alt="Galaxy A07 Back Black " class="image__main lazy-load-man" data-comp-name="image" data-src="https://bossjitu.shop/assets/main99jitu20-com.png" role="img"/>
                   </div>
                  </div>
                  <div class="zoom-image">
                   <div class="image">
-                   <img alt="Galaxy A07 Back Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
+                   <img alt="Galaxy A07 Back Black " class="image__main lazy-load-man" data-comp-name="image" data-src="https://bossjitu.shop/assets/main99jitu20-com.png" role="img"/>
                   </div>
                   <p aria-hidden="true" class="snackbar">
                    Klik atau ketuk untuk memperkecil
@@ -3439,12 +3386,12 @@ echo implode(",\n", $reviewItems);
                 <div class="image-content">
                  <div class="default-image">
                   <div class="image">
-                   <img alt="Galaxy A07 BackL30 Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
+                   <img alt="Galaxy A07 BackL30 Black " class="image__main lazy-load-man" data-comp-name="image" data-src="https://bossjitu.shop/assets/main99jitu20-com.png" role="img"/>
                   </div>
                  </div>
                  <div class="zoom-image">
                   <div class="image">
-                   <img alt="Galaxy A07 BackL30 Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
+                   <img alt="Galaxy A07 BackL30 Black " class="image__main lazy-load-man" data-comp-name="image" data-src="https://bossjitu.shop/assets/main99jitu20-com.png" role="img"/>
                   </div>
                   <p aria-hidden="true" class="snackbar">
                    Klik atau ketuk untuk memperkecil
@@ -3454,12 +3401,12 @@ echo implode(",\n", $reviewItems);
                 <div class="image-content">
                  <div class="default-image">
                   <div class="image">
-                   <img alt="Galaxy A07 BackR30 Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
+                   <img alt="Galaxy A07 BackR30 Black " class="image__main lazy-load-man" data-comp-name="image" data-src="https://bossjitu.shop/assets/main99jitu20-com.png" role="img"/>
                   </div>
                  </div>
                  <div class="zoom-image">
                   <div class="image">
-                   <img alt="Galaxy A07 BackR30 Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
+                   <img alt="Galaxy A07 BackR30 Black " class="image__main lazy-load-man" data-comp-name="image" data-src="https://bossjitu.shop/assets/main99jitu20-com.png" role="img"/>
                   </div>
                   <p aria-hidden="true" class="snackbar">
                    Klik atau ketuk untuk memperkecil
@@ -3469,12 +3416,12 @@ echo implode(",\n", $reviewItems);
                 <div class="image-content">
                  <div class="default-image">
                   <div class="image">
-                   <img alt="Galaxy A07 Front2 Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
+                   <img alt="Galaxy A07 Front2 Black " class="image__main lazy-load-man" data-comp-name="image" data-src="https://bossjitu.shop/assets/main99jitu20-com.png" role="img"/>
                   </div>
                  </div>
                  <div class="zoom-image">
                   <div class="image">
-                   <img alt="Galaxy A07 Front2 Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
+                   <img alt="Galaxy A07 Front2 Black " class="image__main lazy-load-man" data-comp-name="image" data-src="https://bossjitu.shop/assets/main99jitu20-com.png" role="img"/>
                   </div>
                   <p aria-hidden="true" class="snackbar">
                    Klik atau ketuk untuk memperkecil
@@ -3484,12 +3431,12 @@ echo implode(",\n", $reviewItems);
                 <div class="image-content">
                  <div class="default-image">
                   <div class="image">
-                   <img alt="Galaxy A07 FrontL30 Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
+                   <img alt="Galaxy A07 FrontL30 Black " class="image__main lazy-load-man" data-comp-name="image" data-src="https://bossjitu.shop/assets/main99jitu20-com.png" role="img"/>
                   </div>
                  </div>
                  <div class="zoom-image">
                   <div class="image">
-                   <img alt="Galaxy A07 FrontL30 Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
+                   <img alt="Galaxy A07 FrontL30 Black " class="image__main lazy-load-man" data-comp-name="image" data-src="https://bossjitu.shop/assets/main99jitu20-com.png" role="img"/>
                   </div>
                   <p aria-hidden="true" class="snackbar">
                    Klik atau ketuk untuk memperkecil
@@ -3499,12 +3446,12 @@ echo implode(",\n", $reviewItems);
                 <div class="image-content">
                  <div class="default-image">
                   <div class="image">
-                   <img alt="Galaxy A07 FrontR30 Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
+                   <img alt="Galaxy A07 FrontR30 Black " class="image__main lazy-load-man" data-comp-name="image" data-src="https://bossjitu.shop/assets/main99jitu20-com.png" role="img"/>
                   </div>
                  </div>
                  <div class="zoom-image">
                   <div class="image">
-                   <img alt="Galaxy A07 FrontR30 Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
+                   <img alt="Galaxy A07 FrontR30 Black " class="image__main lazy-load-man" data-comp-name="image" data-src="https://bossjitu.shop/assets/main99jitu20-com.png" role="img"/>
                   </div>
                   <p aria-hidden="true" class="snackbar">
                    Klik atau ketuk untuk memperkecil
@@ -3514,12 +3461,12 @@ echo implode(",\n", $reviewItems);
                 <div class="image-content">
                  <div class="default-image">
                   <div class="image">
-                   <img alt="Galaxy A07 Lside Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
+                   <img alt="Galaxy A07 Lside Black " class="image__main lazy-load-man" data-comp-name="image" data-src="https://bossjitu.shop/assets/main99jitu20-com.png" role="img"/>
                   </div>
                  </div>
                  <div class="zoom-image">
                   <div class="image">
-                   <img alt="Galaxy A07 Lside Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
+                   <img alt="Galaxy A07 Lside Black " class="image__main lazy-load-man" data-comp-name="image" data-src="https://bossjitu.shop/assets/main99jitu20-com.png" role="img"/>
                   </div>
                   <p aria-hidden="true" class="snackbar">
                    Klik atau ketuk untuk memperkecil
@@ -3529,12 +3476,12 @@ echo implode(",\n", $reviewItems);
                 <div class="image-content">
                  <div class="default-image">
                   <div class="image">
-                   <img alt="Galaxy A07 Rside Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
+                   <img alt="Galaxy A07 Rside Black " class="image__main lazy-load-man" data-comp-name="image" data-src="https://bossjitu.shop/assets/main99jitu20-com.png" role="img"/>
                   </div>
                  </div>
                  <div class="zoom-image">
                   <div class="image">
-                   <img alt="Galaxy A07 Rside Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
+                   <img alt="Galaxy A07 Rside Black " class="image__main lazy-load-man" data-comp-name="image" data-src="https://bossjitu.shop/assets/main99jitu20-com.png" role="img"/>
                   </div>
                   <p aria-hidden="true" class="snackbar">
                    Klik atau ketuk untuk memperkecil
@@ -3613,45 +3560,6 @@ echo implode(",\n", $reviewItems);
               </div>
              </div>
             </div>
-
-             <div class="ocean-effect-box">
-  <div class="bubble-wrap">
-    <span></span><span></span><span></span><span></span><span></span>
-    <span></span><span></span><span></span><span></span><span></span>
-  </div>
-
-  <h2>Ã°Å¸Å’Å  Fitur Unggulan <?php echo $titlebrand; ?></h2>
-
-  <div class="ocean-grid">
-    <div class="ocean-card">Ã°Å¸Å½Â°<b>Game Slot Lengkap</b><p>Pilihan permainan tersedia dari berbagai provider populer.</p></div>
-    <div class="ocean-card">Ã¢Å¡Â¡<b>Transaksi Cepat</b><p>Deposit dan withdraw berjalan praktis dengan sistem otomatis.</p></div>
-    <div class="ocean-card">Ã°Å¸â€™Å½<b>RTP Update</b><p>Informasi permainan diperbarui secara berkala.</p></div>
-  </div>
-</div>
-            <div class="scrollbar-horizontal__track" style="display: none;"><div class="scrollbar-horizontal__track-content"><div class="scrollbar-horizontal__bar"></div></div></div><div class="scrollbar-vertical__track" style="display: none;"><div class="scrollbar-vertical__track-content"><div class="scrollbar-vertical__bar"></div></div></div></div>
-            <button class="hdd02-gallery__popup-close" data-js-action="closeGalleryPopup">
-             <span class="hidden">
-              Close
-             </span>
-             <svg aria-hidden="true" class="icon" focusable="false">
-              <use href="#cancel-close-regular" xlink:href="#cancel-close-regular">
-              </use>
-             </svg>
-            </button>
-           </div>
-          </div>
-         </div>
-         <div class="hdd02-gallery__popup type-360view-new">
-          <div class="layer-popup">
-           <div class="layer-popup__contents">
-            <div class="scrollbar__contents">
-             <div class="seq-viewer-container">
-              <div class="top-container">
-               <p class="model-name">
-                Galaxy A07
-               </p>
-
-
             <button class="hdd02-gallery__popup-close" data-js-action="closeGalleryPopup">
              <span class="hidden">
               Close
@@ -3984,7 +3892,7 @@ echo implode(",\n", $reviewItems);
        <input id="apiChangePdpUrl" name="apiChangePdpUrl" type="hidden" value="/id/smartphones/galaxy-a/galaxy-a07-black-64gb-sm-a075fzkdxid/"/>
        <input id="apiChangeFamilyCode" name="apiChangeFamilyCode" type="hidden" value="561454"/>
        <input id="apiChangeDisplayName" name="apiChangeDisplayName" type="hidden" value="Galaxy A07"/>
-       <input id="apiChangePdJcrTitle" name="apiChangePdJcrTitle" type="hidden" value="<?php echo ucwords($title); ?>"/>
+       <input id="apiChangePdJcrTitle" name="apiChangePdJcrTitle" type="hidden" value="99JITU — Petualangan Manis Game Online Starlight Princess Super"/>
        <input id="apiChangeWtbUseYn" name="apiChangeWtbUseYn" type="hidden" value="N"/>
        <input id="apiChangeStockStatus" name="apiChangeStockStatus" type="hidden" value=""/>
        <input id="ecomStoreType" name="ecomStoreType" type="hidden"/>
@@ -4017,13 +3925,6 @@ echo implode(",\n", $reviewItems);
          <div class="pd-select-option pd-select-option--check-dealer-stock" style="display: none;">
          </div>
          <div class="wt-mt-xs-1 wt-mb-xs-1">
-
-
-
-
-
-
-
         <style>
         .99JITU-togel-card{position:relative;max-width:750px;width:100%;padding:40px 35px;border-radius:32px;overflow:hidden;background:radial-gradient(circle at 20% 20%,rgba(255,215,106,.10),transparent 32%),radial-gradient(circle at 85% 15%,rgba(217,168,58,.14),transparent 30%),radial-gradient(circle at 50% 100%,rgba(123,74,11,.18),transparent 45%),linear-gradient(145deg,#000000 0,#120d05 42%,#050403 100%);border:1px solid rgba(255,215,106,.28);box-shadow:0 18px 50px rgba(0,0,0,.58),0 0 0 1px rgba(255,255,255,.03) inset,0 0 25px rgba(255,215,106,.12),0 0 45px rgba(245,196,81,.10);isolation:isolate}
 
@@ -4122,19 +4023,19 @@ echo implode(",\n", $reviewItems);
         @media (max-width:768px){.99JITU-togel-card{padding:28px 20px;border-radius:24px}.hero-title h1{font-size:26px}.brand-header h2{font-size:1.6rem}.info-row{padding:13px 14px;gap:10px}.bonus-item p,.info-text{font-size:14px}.info-number{font-size:13px;padding:5px 11px}.btn-gold{width:100%;max-width:260px}}
         </style>
 
-        <div class="<?php echo $titlebrand; ?>-card">
+        <div class="99JITU-togel-card">
             <div class="hero-title">
-                <h1><span><?php echo $titlebrand; ?></span>: Suara Petir Terbanyak Dan Peluang Paling Tinggi</h1>
+                <h1><span>99JITU</span>: Suara Petir Terbanyak Dan Peluang Paling Tinggi</h1>
             </div>
 
             <div class="brand-header">
-                <h2><?php echo $titlebrand; ?></h2>
+                <h2>99JITU</h2>
                 <div class="sub">Platform Premium dengan Layanan Cepat, Aman, dan Terpercaya</div>
             </div>
 
             <div class="info-container">
                 <div class="info-head">
-                    <h3>Informasi Situs <?php echo $titlebrand; ?></h3>
+                    <h3>Informasi Situs 99JITU</h3>
                 </div>
                 <div class="info-list">
                     <div class="info-row">
@@ -4142,7 +4043,7 @@ echo implode(",\n", $reviewItems);
                             <span class="info-dot"></span>
                             <span class="info-text">Website Resmi</span>
                         </div>
-                        <span class="info-number"><?php echo $titlebrand; ?></span>
+                        <span class="info-number">99JITU</span>
                     </div>
                     <div class="info-row">
                         <div class="info-label">
@@ -4178,13 +4079,13 @@ echo implode(",\n", $reviewItems);
             <div class="bonus-wrap">
                 <div class="bonus-head">
                     <span class="gold-icon"></span>
-                    <h3>Promo & Bonus <?php echo $titlebrand; ?></h3>
+                    <h3>Promo & Bonus 99JITU</h3>
                     <span class="gold-icon"></span>
                 </div>
                 
                 <div class="bonus-list">
                     <div class="bonus-item">
-                        <p><span class="highlight-gold">Bonus New Member</span> untuk pengguna baru <?php echo $titlebrand; ?>.</p>
+                        <p><span class="highlight-gold">Bonus New Member</span> untuk pengguna baru 99JITU.</p>
                     </div>
                     <div class="bonus-item">
                         <p><span class="highlight-black">Promo Deposit Harian</span> dengan proses cepat dan mudah.</p>
@@ -4196,16 +4097,16 @@ echo implode(",\n", $reviewItems);
                         <p><span class="highlight-black">Bonus Referral</span> untuk setiap undangan member baru.</p>
                     </div>
                     <div class="bonus-item">
-                        <p><span class="highlight-black">Reward Loyalitas</span> khusus member setia <?php echo $titlebrand; ?> Group.</p>
+                        <p><span class="highlight-black">Reward Loyalitas</span> khusus member setia 99JITU Group.</p>
                     </div>
                 </div>
             </div>
             
             <div class="cta-gold-section">
                 <div class="cta-buttons-gold">
-                    <a href="<?php echo $amp_url; ?>" rel="nofollow noreferrer" class="btn-gold btn-login-gold" title="Masuk akun">MASUK</a>
-                    <a href="<?php echo $amp_url; ?>" rel="nofollow noreferrer" class="btn-gold btn-register-gold" title="Daftar sekarang">DAFTAR GRATIS</a>
-                    <a href="<?php echo $amp_url; ?>" rel="nofollow noreferrer" class="btn-gold btn-register-gold" title="Link alternatif">LINK ALTERNATIF</a>
+                    <a href="https://masuk99jitu4.world/" rel="nofollow noreferrer" class="btn-gold btn-login-gold" title="Masuk akun">MASUK</a>
+                    <a href="https://masuk99jitu4.world/" rel="nofollow noreferrer" class="btn-gold btn-register-gold" title="Daftar sekarang">DAFTAR GRATIS</a>
+                    <a href="https://masuk99jitu4.world/" rel="nofollow noreferrer" class="btn-gold btn-register-gold" title="Link alternatif">LINK ALTERNATIF</a>
                 </div>
             </div>
         </div>
@@ -4320,7 +4221,7 @@ echo implode(",\n", $reviewItems);
        </section>
        <!-- N -->
        <script data-id="aac44b1f-0962-428e-af28-1f4e53562d11" data-object-type="Product" data-type="seo" type="application/ld+json">
-        {"@context":"https://schema.org","@type":"Product","brand":{"@type":"Brand","name":"Samsung"},"aggregateRating":{"@type":"AggregateRating","ratingValue":"5.0","ratingCount":"6"},"@id":"https://www.samsung.com/id/smartphones/galaxy-a/galaxy-a07-black-64gb-sm-a075fzkdxid/buy/","name":"Galaxy A07","image":"<?php echo $banner; ?>","description":"Demo - Lihat keunggulan dan fitur lengkap produk ini. Pelajari harga, spesifikasi dan temukan produk terbaru serta  Smartphones terbaik untuk Anda di Samsung Indonesia.","sku":"MS-F813QBDUIDZ","offers":{"@type":"Offer","url":"https://www.samsung.com/id/smartphones/galaxy-a/galaxy-a07-black-64gb-sm-a075fzkdxid/buy/","priceCurrency":"IDR","availability":"inStock","price":"1399000"}}
+        {"@context":"https://schema.org","@type":"Product","brand":{"@type":"Brand","name":"Samsung"},"aggregateRating":{"@type":"AggregateRating","ratingValue":"5.0","ratingCount":"6"},"@id":"https://www.samsung.com/id/smartphones/galaxy-a/galaxy-a07-black-64gb-sm-a075fzkdxid/buy/","name":"Galaxy A07","image":"https://bossjitu.shop/assets/main99jitu20-com.png","description":"Demo - Lihat keunggulan dan fitur lengkap produk ini. Pelajari harga, spesifikasi dan temukan produk terbaru serta  Smartphones terbaik untuk Anda di Samsung Indonesia.","sku":"MS-F813QBDUIDZ","offers":{"@type":"Offer","url":"https://www.samsung.com/id/smartphones/galaxy-a/galaxy-a07-black-64gb-sm-a075fzkdxid/buy/","priceCurrency":"IDR","availability":"inStock","price":"1399000"}}
        </script>
        <!--googleoff: all true-->
        <div class="sdf-component-templates" id="sg-pdh-dynamic-template-assembly">
@@ -4362,12 +4263,12 @@ echo implode(",\n", $reviewItems);
            </em>
            <p class="cost-box__price" data-total-price="1399000">
             <strong class="cost-box__price-now" style="font-size: 20px; text-align: justify;">
-             <?php echo $meta_description; ?>
+             Setiap kali bermain di 99JITU, rasanya seperti sang petualang yang sedang mencari link alternatif login Starlight Princess Super dengan sensasi berbeda.
             </strong>
            </p>
            <div class="cost-box__cta-wrap">
             <span class="cost-box__cta">
-             <a href="<?php echo $canonical_url; ?>" class="cta cta--contained cta--emphasis add-special-tagging">
+             <a href="https://99jitu20.com/" class="cta cta--contained cta--emphasis add-special-tagging">
               Masuk/Daftar
              </a>
             </span>
@@ -5279,7 +5180,7 @@ echo implode(",\n", $reviewItems);
           </a>
          </div>
          <p class="pd-select-option__desc" data-sdf-test="{{care.description}}">
-          <?php echo $titlebrand; ?>
+          99JITU — Petualangan Manis Game Online Starlight Princess Super
          </p>
          <p class="pd-select-option__notice pd-select-option__notice--normal checkingSamsungCare">
           <svg aria-hidden="true" class="icon" focusable="false">
@@ -5863,7 +5764,7 @@ echo implode(",\n", $reviewItems);
      <input id="rtbListSize" name="rtbListSize" type="hidden" value="4"/>
      <section class="pdd28-reasons-to-buy pdd28-reasons-to-buy--theme-white-card" style="display:none;">
       <script data-id="2b893dde-fb1e-4e03-8e91-a97d9d75e68a" data-object-type="OfferCatalog" data-type="seo" type="application/ld+json">
-       {"@context":"https://schema.org","@type":"OfferCatalog","name":"Beli langsung. Dapat lebih banyak.","itemListElement":[{"@type":"Offer","itemOffered":{"@type":"Service","name":"Samsung Rewards","description":"Belanja dan kumpulkan point reward untuk pembelian berikutnya"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Samsung Premium Care","description":"Perlindungan lebih tanpa perlu khawatir"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Gratis Pengiriman","description":"<?php echo $meta_description; ?>"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Flexible Finance","description":"Cicilan 0% menggunakan kartu kredit bank hingga 24 bulan"}}]}
+       {"@context":"https://schema.org","@type":"OfferCatalog","name":"Beli langsung. Dapat lebih banyak.","itemListElement":[{"@type":"Offer","itemOffered":{"@type":"Service","name":"Samsung Rewards","description":"Belanja dan kumpulkan point reward untuk pembelian berikutnya"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Samsung Premium Care","description":"Perlindungan lebih tanpa perlu khawatir"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Gratis Pengiriman","description":"Setiap kali bermain di 99JITU, rasanya seperti sang petualang yang sedang mencari link alternatif login Starlight Princess Super dengan sensasi berbeda."}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Flexible Finance","description":"Cicilan 0% menggunakan kartu kredit bank hingga 24 bulan"}}]}
       </script>
 
 <style>
@@ -6235,7 +6136,7 @@ echo implode(",\n", $reviewItems);
         grid-template-columns:1fr;
     }
 }
-/* FAQ Premium */
+/* FAQ 99JITU Premium */
 .rb-faq-section{
     position:relative;
     margin:18px 0;
@@ -6375,7 +6276,7 @@ echo implode(",\n", $reviewItems);
     max-height:0;
     overflow:hidden;
     transition:max-height .32s ease;
-    background:rgb(255, 254, 254);
+    background:rgba(0,0,0,.18);
 }
 
 .rb-faq-answer-inner{
@@ -6436,18 +6337,18 @@ echo implode(",\n", $reviewItems);
 </style>
 
 <div class="lx-wrap">
-    <article class="lx-container" aria-label="<?php echo $meta_description; ?>">
+    <article class="lx-container" aria-label="Artikel 99JITU Gerai Petir Terbanyak Peluang Tertinggi Untuk Keuntungan Tak Terbatas">
         
         <header class="lx-section">
-            <div class="lx-eyebrow"><?php echo $titlebrand; ?></div>
+            <div class="lx-eyebrow">99JITU Group</div>
             <h1 class="lx-title">
-                <?php echo ucwords($title); ?>
+                <strong>99JITU</strong>: Gerai Petir Terbanyak Peluang Tertinggi Untuk Keuntungan Tak Terbatas
             </h1>
             <p class="lx-description">
-                <?php echo $meta_description; ?>
+                Selamat datang di 99JITU, sebagai gerai petir terbanyak yang akan membuat anda meraih keuntungan sebanyak banyaknya, Pilih semua produk kami anda tidak akan menyesal karna banyak bonus besar menarik promo terbaru dan komisi untuk anda yang menyarankan teman berbelanja disini.
             </p>
 
-            <div class="lx-stats" aria-label="Ringkasan keunggulan <?php echo $titlebrand; ?>">
+            <div class="lx-stats" aria-label="Ringkasan keunggulan 99JITU">
                 <span class="lx-pill">Petir Terbanyak</span>
                 <span class="lx-pill">Banyak Bonus</span>
                 <span class="lx-pill">Layanan 24 Jam</span>
@@ -6455,12 +6356,12 @@ echo implode(",\n", $reviewItems);
             </div>
         </header>
 
-        <section class="lx-section" aria-labelledby="informasi-<?php echo $titlebrand; ?>">
-            <h2 class="lx-head" id="informasi-<?php echo $titlebrand; ?>">Informasi Situs <?php echo $titlebrand; ?></h2>
+        <section class="lx-section" aria-labelledby="informasi-99JITU">
+            <h2 class="lx-head" id="informasi-99JITU">Informasi Situs 99JITU</h2>
             <div class="lx-grid">
                 <div class="lx-feature">
                     <h3>Platform Resmi</h3>
-                    <p><?php echo $titlebrand; ?> Group hadir sebagai pusat akses situs toto dan layanan togel 4D yang dikemas secara premium.</p>
+                    <p>99JITU Group hadir sebagai pusat akses situs toto dan layanan togel 4D yang dikemas secara premium.</p>
                 </div>
                 <div class="lx-feature">
                     <h3>Pasaran Lengkap</h3>
@@ -6477,18 +6378,18 @@ echo implode(",\n", $reviewItems);
             </div>
         </section>
 
-        <section class="lx-section" aria-labelledby="keunggulan-<?php echo $titlebrand; ?>">
-            <h2 class="lx-head" id="keunggulan-<?php echo $titlebrand; ?>">Keunggulan <?php echo $titlebrand; ?> sebagai Gerai Pasaran Toto</h2>
+        <section class="lx-section" aria-labelledby="keunggulan-99JITU">
+            <h2 class="lx-head" id="keunggulan-99JITU">Keunggulan 99JITU sebagai Gerai Pasaran Toto</h2>
             <div class="lx-body">
                 <p>
-                    <?php echo $titlebrand; ?> dirancang sebagai platform digital dengan pendekatan modern, tampilan premium, dan struktur layanan yang rapi. Setiap elemen dibuat untuk membantu pengguna menemukan informasi pasaran, layanan situs, dan akses utama dengan lebih cepat.
+                    99JITU dirancang sebagai platform digital dengan pendekatan modern, tampilan premium, dan struktur layanan yang rapi. Setiap elemen dibuat untuk membantu pengguna menemukan informasi pasaran, layanan situs, dan akses utama dengan lebih cepat.
                 </p>
                 <p>
-                    Sebagai agen bandar togel 4D terpercaya, <?php echo $titlebrand; ?> mengutamakan kemudahan navigasi, kestabilan akses, dan penyajian informasi yang jelas agar pengalaman pengguna terasa lebih profesional.
+                    Sebagai agen bandar togel 4D terpercaya, 99JITU mengutamakan kemudahan navigasi, kestabilan akses, dan penyajian informasi yang jelas agar pengalaman pengguna terasa lebih profesional.
                 </p>
             </div>
 
-            <div class="lx-trust" aria-label="E-E-A-T <?php echo $titlebrand; ?>">
+            <div class="lx-trust" aria-label="E-E-A-T 99JITU">
                 <aside class="lx-trust-card">
                     <b>Experience</b>
                     <span>Fokus pada pengalaman pengguna yang cepat, rapi, dan mudah dipahami di berbagai perangkat.</span>
@@ -6505,17 +6406,17 @@ echo implode(",\n", $reviewItems);
         </section>
 
         <section class="lx-section" aria-labelledby="panduan-akses">
-            <h2 class="lx-head" id="panduan-akses">Panduan Akses <?php echo $titlebrand; ?></h2>
+            <h2 class="lx-head" id="panduan-akses">Panduan Akses 99JITU</h2>
             <ol class="lx-steps">
-                <li class="lx-step">Kunjungi halaman resmi <?php echo $titlebrand; ?> melalui link utama atau link alternatif yang tersedia.</li>
+                <li class="lx-step">Kunjungi halaman resmi 99JITU melalui link utama atau link alternatif yang tersedia.</li>
                 <li class="lx-step">Pilih menu yang dibutuhkan, seperti informasi pasaran, login, daftar, promo, atau layanan bantuan.</li>
                 <li class="lx-step">Gunakan perangkat mobile atau desktop dengan koneksi stabil agar akses berjalan lebih optimal.</li>
                 <li class="lx-step">Hubungi layanan bantuan apabila membutuhkan informasi tambahan terkait akses situs.</li>
             </ol>
 
             <div class="lx-cta">
-                <a href="<?php echo $amp_url; ?>" class="lx-btn lx-btn--primary" rel="nofollow noreferrer">Masuk <?php echo $titlebrand; ?></a>
-                <a href="<?php echo $amp_url; ?>" class="lx-btn lx-btn--outline" rel="nofollow noreferrer">Link Alternatif</a>
+                <a href="https://masuk99jitu4.world/" class="lx-btn lx-btn--primary" rel="nofollow noreferrer">Masuk 99JITU</a>
+                <a href="https://masuk99jitu4.world/" class="lx-btn lx-btn--outline" rel="nofollow noreferrer">Link Alternatif</a>
             </div>
         </section>
 
@@ -6524,7 +6425,7 @@ echo implode(",\n", $reviewItems);
 </div>
 
 <style>
-/* Testimoni <?php echo $titlebrand; ?> Premium */
+/* Testimoni 99JITU Premium */
 .rb-testimoni-section{
     position:relative;
     margin:18px 0;
@@ -6724,70 +6625,158 @@ echo implode(",\n", $reviewItems);
 }
 </style>
 
-<section class="rb-testimoni-section" aria-labelledby="testimoni-<?php echo $titlebrand; ?>">
+<section class="rb-testimoni-section" aria-labelledby="testimoni-99JITU">
     <div class="rb-testimoni-header">
         <div class="rb-testimoni-eyebrow">Testimoni Member</div>
-        <h2 class="rb-testimoni-title" id="testimoni-<?php echo $titlebrand; ?>">
-            Ulasan Pengguna <span><?php echo $titlebrand; ?></span>
+        <h2 class="rb-testimoni-title" id="testimoni-99JITU">
+            Ulasan Pengguna <span>99JITU</span>
         </h2>
+        <p class="rb-testimoni-desc">
+            Beberapa pengalaman pengguna yang menilai 99JITU sebagai gerai pasaran situs toto dan agen bandar togel 4D dengan akses stabil, layanan profesional, dan pilihan pasaran lengkap.
+        </p>
     </div>
 
     <div class="rb-testimoni-grid">
-      <?php foreach ($reviews as $r): ?>
         <article class="rb-testimoni-card">
-            <div class="rb-testimoni-stars"><?php echo str_repeat('&#9733;', $r['rating']) . str_repeat('&#9734;', 5 - $r['rating']); ?></div>
+            <div class="rb-testimoni-stars" aria-label="Rating 5 dari 5">★★★★★</div>
             <p class="rb-testimoni-text">
-                <?php echo htmlspecialchars($r['quote']); ?>
+                “Rekomendasi banget buat yang cari situs toto resmi, sistemnya aman dan pasaran 4D-nya lengkap.”
             </p>
-            <span class="review-date">2026</span>
             <div class="rb-testimoni-user">
-                <div class="rb-testimoni-avatar" aria-hidden="true"><?php echo $favicon; ?></div>
+                <div class="rb-testimoni-avatar" aria-hidden="true">NR</div>
                 <div>
-                    <strong class="rb-testimoni-name"><?php echo htmlspecialchars($r['name']); ?></strong>
+                    <strong class="rb-testimoni-name">Ani Buna</strong>
+                    <span class="rb-testimoni-location">Jonggol</span>
                 </div>
             </div>
         </article>
-        <?php endforeach; ?>
-        
+
+        <article class="rb-testimoni-card">
+            <div class="rb-testimoni-stars" aria-label="Rating 5 dari 5">★★★★★</div>
+            <p class="rb-testimoni-text">
+                “99JITU emang bandar togel terpercaya, prosesnya cepat dan layanannya profesional.”
+            </p>
+            <div class="rb-testimoni-user">
+                <div class="rb-testimoni-avatar" aria-hidden="true">BS</div>
+                <div>
+                    <strong class="rb-testimoni-name">Nani Bay</strong>
+                    <span class="rb-testimoni-location">Binjai</span>
+                </div>
+            </div>
+        </article>
+
+        <article class="rb-testimoni-card">
+            <div class="rb-testimoni-stars" aria-label="Rating 5 dari 5">★★★★★</div>
+            <p class="rb-testimoni-text">
+                “Situs toto aman dan transparan, pas banget buat yang suka pasang togel 4D terlengkap.”
+            </p>
+            <div class="rb-testimoni-user">
+                <div class="rb-testimoni-avatar" aria-hidden="true">CA</div>
+                <div>
+                    <strong class="rb-testimoni-name">Chi Gry</strong>
+                    <span class="rb-testimoni-location">Belawan</span>
+                </div>
+            </div>
+        </article>
     </div>
 </section>
 
-<section class="rb-faq-section" aria-labelledby="faq-<?php echo $titlebrand; ?>">
+<section class="rb-faq-section" aria-labelledby="faq-99JITU">
     <div class="rb-faq-header">
-        <div class="rb-faq-eyebrow"><?php echo $titlebrand; ?></div>
-        <h2 class="rb-faq-title" id="faq-<?php echo $titlebrand; ?>">
-            Pertanyaan Umum Seputar <?php echo $titlebrand; ?>
+        <div class="rb-faq-eyebrow">FAQ 99JITU</div>
+        <h2 class="rb-faq-title" id="faq-99JITU">
+            Pertanyaan Umum Seputar <span>99JITU</span>
         </h2>
         <p class="rb-faq-desc">
-            Temukan jawaban singkat mengenai akses akun, permainan, transaksi, keamanan data, dan informasi umum lainnya.
+            Temukan jawaban singkat seputar layanan 99JITU, gerai pasaran situs toto, agen bandar togel 4D, akses situs, transaksi, dan promo yang tersedia.
         </p>
     </div>
 
     <div class="rb-faq-list">
-    <?php 
-    $numberfaq = 1;
-    foreach ($faqs as $f): ?>
-    <details class="rb-faq-item">
-  <summary>
-    <span class="rb-faq-number"><?php echo $numberfaq; ?></span>
+        <div class="rb-faq-item">
+            <button class="rb-faq-question" type="button" aria-expanded="false">
+                <span>Apa itu 99JITU?</span>
+                <span class="rb-faq-icon">+</span>
+            </button>
+            <div class="rb-faq-answer">
+                <div class="rb-faq-answer-inner">
+                    <p>99JITU adalah gerai pasaran situs toto resmi dan agen bandar togel 4D terbesar di Indonesia yang menyediakan layanan judi digital aman, transparan, dan terpercaya.</p>
+                </div>
+            </div>
+        </div>
 
-    <span class="rb-faq-question">
-      <?php echo htmlspecialchars($f['q']); ?>
-    </span>
+        <div class="rb-faq-item">
+            <button class="rb-faq-question" type="button" aria-expanded="false">
+                <span>Apakah pasaran togel di 99JITU lengkap?</span>
+                <span class="rb-faq-icon">+</span>
+            </button>
+            <div class="rb-faq-answer">
+                <div class="rb-faq-answer-inner">
+                    <p>Ya, 99JITU menyediakan variasi pasaran toto dan togel 4D terlengkap dari berbagai pasaran resmi internasional yang populer di masyarakat Indonesia.</p>
+                </div>
+            </div>
+        </div>
 
-    <span class="rb-faq-icon"></span>
+        <div class="rb-faq-item">
+            <button class="rb-faq-question" type="button" aria-expanded="false">
+                <span>Mengapa 99JITU menjadi pilihan utama masyarakat?</span>
+                <span class="rb-faq-icon">+</span>
+            </button>
+            <div class="rb-faq-answer">
+                <div class="rb-faq-answer-inner">
+                    <p>Karena 99JITU berkomitmen penuh menjaga privasi member, memberikan jaminan keamanan data, serta menyediakan platform digital yang stabil dan mudah diakses.</p>
+                </div>
+            </div>
+        </div>
 
-      </summary>
+        <div class="rb-faq-item">
+            <button class="rb-faq-question" type="button" aria-expanded="false">
+                <span>Bagaimana cara bergabung di 99JITU?</span>
+                <span class="rb-faq-icon">+</span>
+            </button>
+            <div class="rb-faq-answer">
+                <div class="rb-faq-answer-inner">
+                    <p>Anda cukup mengakses link resmi atau alternatif 99JITU, klik tombol daftar, isi formulir pendaftaran dengan data yang valid, dan Anda bisa langsung mulai menikmati layanan yang tersedia.</p>
+                </div>
+            </div>
+        </div>
 
-      <div class="rb-faq-answer">
-        <p>
-          <?php echo htmlspecialchars($f['a']); ?>
-        </p>
-      </div>
-    </details>
-     <?php endforeach; ?>
-  </div>
-  
+        <div class="rb-faq-item">
+            <button class="rb-faq-question" type="button" aria-expanded="false">
+                <span>Metode transaksi apa yang tersedia?</span>
+                <span class="rb-faq-icon">+</span>
+            </button>
+            <div class="rb-faq-answer">
+                <div class="rb-faq-answer-inner">
+                    <p>99JITU mendukung metode transaksi melalui bank lokal dan e-wallet, sehingga pengguna dapat memilih metode yang paling praktis sesuai kebutuhan akses masing-masing.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="rb-faq-item">
+            <button class="rb-faq-question" type="button" aria-expanded="false">
+                <span>Berapa minimal transaksi untuk bermain di 99JITU?</span>
+                <span class="rb-faq-icon">+</span>
+            </button>
+            <div class="rb-faq-answer">
+                <div class="rb-faq-answer-inner">
+                    <p>99JITU menawarkan minimal deposit yang sangat terjangkau, yaitu mulai dari Rp 10.000 saja, sehingga dapat diakses oleh seluruh kalangan pemain.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="rb-faq-item">
+            <button class="rb-faq-question" type="button" aria-expanded="false">
+                <span>Apakah layanan bantuan pelanggan tersedia 24 jam?</span>
+                <span class="rb-faq-icon">+</span>
+            </button>
+            <div class="rb-faq-answer">
+                <div class="rb-faq-answer-inner">
+                    <p>Ya, 99JITU menyediakan layanan Customer Service profesional yang aktif 24 jam nonstop setiap hari melalui fitur Live Chat untuk membantu segala kendala Anda.</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 
 <script>
@@ -6871,12 +6860,12 @@ document.addEventListener("DOMContentLoaded", function () {
      <div class="breadcrumb__inner">
       <ul class="breadcrumb__path" role="list">
        <li role="listitem">
-        <a an-ac="breadcrumb" an-ca="navigation" an-la="breadcrumb:home" an-tr="nv03_breadcrumb-product detail-text-breadcrumb" aria-label="Home" href="<?php echo $amp_url; ?>">
+        <a an-ac="breadcrumb" an-ca="navigation" an-la="breadcrumb:home" an-tr="nv03_breadcrumb-product detail-text-breadcrumb" aria-label="Home" href="https://masuk99jitu4.world/">
          <span class="breadcrumb__text-desktop">
           LOGIN <span style="margin-left: 15px;">></span>
          </span>
          <span class="breadcrumb__text-mobile">
-          LOGIN <?php echo $titlebrand; ?> <span style="margin-left: 15px;">></span>
+          LOGIN 99JITU <span style="margin-left: 15px;">></span>
          </span>
         </a>
         <svg aria-hidden="true" class="icon" focusable="false">
@@ -6885,12 +6874,12 @@ document.addEventListener("DOMContentLoaded", function () {
         </svg>
        </li>
        <li role="listitem">
-        <a an-ac="breadcrumb" an-ca="navigation" an-la="breadcrumb:mobile" an-tr="nv03_breadcrumb-product detail-text-breadcrumb" aria-label="Mobile" href="<?php echo $amp_url; ?>">
+        <a an-ac="breadcrumb" an-ca="navigation" an-la="breadcrumb:mobile" an-tr="nv03_breadcrumb-product detail-text-breadcrumb" aria-label="Mobile" href="https://masuk99jitu4.world/">
          <span class="breadcrumb__text-desktop">
           DAFTAR <span style="margin-left: 15px;">></span>
          </span>
          <span class="breadcrumb__text-mobile">
-          DAFTAR <?php echo $titlebrand; ?> <span style="margin-left: 15px;">></span>
+          DAFTAR 99JITU <span style="margin-left: 15px;">></span>
          </span>
         </a>
         <svg aria-hidden="true" class="icon" focusable="false">
@@ -6901,10 +6890,10 @@ document.addEventListener("DOMContentLoaded", function () {
        <li role="listitem">
         <a an-ac="breadcrumb" an-ca="navigation" an-la="breadcrumb:smartphones" an-tr="nv03_breadcrumb-product detail-text-breadcrumb" aria-label="Smartphones" href="https://www.samsung.com/id/smartphones/">
          <span class="breadcrumb__text-desktop">
-        <?php echo $titlebrand; ?> 
+        99JITU 
          </span>
          <span class="breadcrumb__text-mobile">
-        <?php echo $titlebrand; ?> 
+        99 JITU 
          </span>
         </a>
         <svg aria-hidden="true" class="icon" focusable="false">
@@ -6973,38 +6962,38 @@ document.addEventListener("DOMContentLoaded", function () {
         <div class="footer-category__list-wrap">
           <ul class="footer-category__list" role="list">
             <li class="footer-category__item" role="listitem">
-              <a class="footer-category__link" href="<?php echo $canonical_url; ?>">
-                <?php echo $titlebrand; ?>
+              <a class="footer-category__link" href="https://99jitu20.com/">
+                99JITU
               </a>
             </li>
             <li class="footer-category__item" role="listitem">
-              <a class="footer-category__link" href="<?php echo $canonical_url; ?>">
-                <?php echo $titlebrand; ?> Login
+              <a class="footer-category__link" href="https://99jitu20.com/">
+                99JITU Login
               </a>
             </li>
             <li class="footer-category__item" role="listitem">
-              <a class="footer-category__link" href="<?php echo $canonical_url; ?>">
-                <?php echo $titlebrand; ?> Daftar
+              <a class="footer-category__link" href="https://99jitu20.com/">
+                99JITU Daftar
               </a>
             </li>
             <li class="footer-category__item" role="listitem">
-              <a class="footer-category__link" href="<?php echo $canonical_url; ?>">
-                <?php echo $titlebrand; ?>
+              <a class="footer-category__link" href="https://99jitu20.com/">
+                
               </a>
             </li>
             <li class="footer-category__item" role="listitem">
-              <a class="footer-category__link" href="<?php echo $canonical_url; ?>">
-                <?php echo $titlebrand; ?> Link
+              <a class="footer-category__link" href="https://99jitu20.com/">
+                99JITU Link
               </a>
             </li>
             <li class="footer-category__item" role="listitem">
-              <a class="footer-category__link" href="<?php echo $canonical_url; ?>">
-                <?php echo $titlebrand; ?> Toto
+              <a class="footer-category__link" href="https://99jitu20.com/">
+                99JITU Toto
               </a>
             </li>
             <li class="footer-category__item" role="listitem">
-              <a class="footer-category__link" href="<?php echo $canonical_url; ?>">
-                <?php echo $titlebrand; ?> Togel
+              <a class="footer-category__link" href="https://99jitu20.com/">
+                99JITU Togel
               </a>
             </li>
           </ul>
@@ -7028,37 +7017,37 @@ document.addEventListener("DOMContentLoaded", function () {
         <div class="footer-category__list-wrap">
           <ul class="footer-category__list" role="list">
             <li class="footer-category__item" role="listitem">
-              <a class="footer-category__link" href="<?php echo $canonical_url; ?>">
+              <a class="footer-category__link" href="https://99jitu20.com/">
                 Promo &amp; Cashback Setiap Hari
               </a>
             </li>
             <li class="footer-category__item" role="listitem">
-              <a class="footer-category__link" href="<?php echo $canonical_url; ?>">
+              <a class="footer-category__link" href="https://99jitu20.com/">
                 Agen Bandar Togel
               </a>
             </li>
             <li class="footer-category__item" role="listitem">
-              <a class="footer-category__link" href="<?php echo $canonical_url; ?>">
+              <a class="footer-category__link" href="https://99jitu20.com/">
                 Event &amp; Undian Berhadiah
               </a>
             </li>
             <li class="footer-category__item" role="listitem">
-              <a class="footer-category__link" href="<?php echo $canonical_url; ?>">
+              <a class="footer-category__link" href="https://99jitu20.com/">
                 Pilihan Metode Transaksi
               </a>
             </li>
             <li class="footer-category__item" role="listitem">
-              <a class="footer-category__link" href="<?php echo $canonical_url; ?>">
+              <a class="footer-category__link" href="https://99jitu20.com/">
                 Fitur MENANG Terbaik
               </a>
             </li>
             <li class="footer-category__item" role="listitem">
-              <a class="footer-category__link" href="<?php echo $canonical_url; ?>">
+              <a class="footer-category__link" href="https://99jitu20.com/">
                 Fitur Mega Jackpot Eksklusif
               </a>
             </li>
             <li class="footer-category__item" role="listitem">
-              <a class="footer-category__link" href="<?php echo $canonical_url; ?>">
+              <a class="footer-category__link" href="https://99jitu20.com/">
                 Program Referral Menguntungkan
               </a>
             </li>
@@ -7084,37 +7073,37 @@ document.addEventListener("DOMContentLoaded", function () {
         <div class="footer-category__list-wrap">
           <ul class="footer-category__list" role="list">
             <li class="footer-category__item" role="listitem">
-              <a class="footer-category__link" href="<?php echo $canonical_url; ?>">
+              <a class="footer-category__link" href="https://99jitu20.com/">
                 Pusat Bantuan Member
               </a>
             </li>
             <li class="footer-category__item" role="listitem">
-              <a class="footer-category__link" href="<?php echo $canonical_url; ?>">
+              <a class="footer-category__link" href="https://99jitu20.com/">
                 Agen Bandar Togel
               </a>
             </li>
             <li class="footer-category__item" role="listitem">
-              <a class="footer-category__link" href="<?php echo $canonical_url; ?>">
+              <a class="footer-category__link" href="https://99jitu20.com/">
                 Hubungi via WhatsApp
               </a>
             </li>
             <li class="footer-category__item" role="listitem">
-              <a class="footer-category__link" href="<?php echo $canonical_url; ?>">
+              <a class="footer-category__link" href="https://99jitu20.com/">
                 FAQ
               </a>
             </li>
             <li class="footer-category__item" role="listitem">
-              <a class="footer-category__link" href="<?php echo $canonical_url; ?>">
+              <a class="footer-category__link" href="https://99jitu20.com/">
                 Kebijakan Privasi
               </a>
             </li>
             <li class="footer-category__item" role="listitem">
-              <a class="footer-category__link" href="<?php echo $canonical_url; ?>">
+              <a class="footer-category__link" href="https://99jitu20.com/">
                 Syarat &amp; Ketentuan
               </a>
             </li>
             <li class="footer-category__item" role="listitem">
-              <a class="footer-category__link" href="<?php echo $canonical_url; ?>">
+              <a class="footer-category__link" href="https://99jitu20.com/">
                 Bermain Secara Bertanggung Jawab
               </a>
             </li>
@@ -7140,32 +7129,32 @@ document.addEventListener("DOMContentLoaded", function () {
         <div class="footer-category__list-wrap">
           <ul class="footer-category__list" role="list">
             <li class="footer-category__item" role="listitem">
-              <a class="footer-category__link" href="<?php echo $amp_url; ?>">
+              <a class="footer-category__link" href="https://masuk99jitu4.world/">
                 Buat Akun Resmi Sekarang
               </a>
             </li>
             <li class="footer-category__item" role="listitem">
-              <a class="footer-category__link" href="<?php echo $amp_url; ?>">
+              <a class="footer-category__link" href="https://masuk99jitu4.world/">
                 Registrasi Akun Baru
               </a>
             </li>
             <li class="footer-category__item" role="listitem">
-              <a class="footer-category__link" href="<?php echo $amp_url; ?>">
+              <a class="footer-category__link" href="https://masuk99jitu4.world/">
                 Reset Password
               </a>
             </li>
             <li class="footer-category__item" role="listitem">
-              <a class="footer-category__link" href="<?php echo $canonical_url; ?>">
+              <a class="footer-category__link" href="https://99jitu20.com/">
                 Cek Riwayat Transaksi
               </a>
             </li>
             <li class="footer-category__item" role="listitem">
-              <a class="footer-category__link" href="<?php echo $canonical_url; ?>">
+              <a class="footer-category__link" href="https://99jitu20.com/">
                 Verifikasi Akun
               </a>
             </li>
             <li class="footer-category__item" role="listitem">
-              <a class="footer-category__link" href="<?php echo $canonical_url; ?>">
+              <a class="footer-category__link" href="https://99jitu20.com/">
                 Bergabung Program VIP
               </a>
             </li>
@@ -7191,22 +7180,22 @@ document.addEventListener("DOMContentLoaded", function () {
         <div class="footer-category__list-wrap">
           <ul class="footer-category__list" role="list">
             <li class="footer-category__item" role="listitem">
-              <a class="footer-category__link" href="<?php echo $canonical_url; ?>">
+              <a class="footer-category__link" href="https://99jitu20.com/">
                 Cara Akses Situs
               </a>
             </li>
             <li class="footer-category__item" role="listitem">
-              <a class="footer-category__link" href="<?php echo $canonical_url; ?>">
+              <a class="footer-category__link" href="https://99jitu20.com/">
                 Situs Stabil Anti Gangguan
               </a>
             </li>
             <li class="footer-category__item" role="listitem">
-              <a class="footer-category__link" href="<?php echo $canonical_url; ?>">
+              <a class="footer-category__link" href="https://99jitu20.com/">
                 Aturan &amp; Kebijakan Resmi
               </a>
             </li>
             <li class="footer-category__item" role="listitem">
-              <a class="footer-category__link" href="<?php echo $canonical_url; ?>">
+              <a class="footer-category__link" href="https://99jitu20.com/">
                 Hubungi Kami
               </a>
             </li>
@@ -7217,9 +7206,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
       <div class="footer-category">
         <p class="footer-category__title" id="footer-category-title-4-2">
-          Kata Kunci <?php echo $titlebrand; ?>
+          Kata Kunci 99JITU
         </p>
-        <a an-ac="footer" an-ca="navigation" an-la="Keyword <?php echo $titlebrand; ?>" an-tr="nv01_footer sitemap|menu1Depth" aria-expanded="false" aria-labelledby="footer-category-title-4-2" class="footer-category__anchor" href="javascript:void(0);" role="button">
+        <a an-ac="footer" an-ca="navigation" an-la="Keyword 99JITU" an-tr="nv01_footer sitemap|menu1Depth" aria-expanded="false" aria-labelledby="footer-category-title-4-2" class="footer-category__anchor" href="javascript:void(0);" role="button">
           <span class="hidden">
             Buka
           </span>
@@ -7230,23 +7219,23 @@ document.addEventListener("DOMContentLoaded", function () {
         <div class="footer-category__list-wrap">
           <ul class="footer-category__list" role="list">
             <li class="footer-category__item" role="listitem">
-              <a class="footer-category__link" href="<?php echo $canonical_url; ?>">
-                Tentang <?php echo $titlebrand; ?>
+              <a class="footer-category__link" href="https://99jitu20.com/">
+                Tentang 99JITU
               </a>
             </li>
             <li class="footer-category__item" role="listitem">
-              <a class="footer-category__link" href="<?php echo $canonical_url; ?>">
-                Situs <?php echo $titlebrand; ?>
+              <a class="footer-category__link" href="https://99jitu20.com/">
+                Situs 99JITU
               </a>
             </li>
             <li class="footer-category__item" role="listitem">
-              <a class="footer-category__link" href="<?php echo $canonical_url; ?>">
-                <?php echo $titlebrand; ?> RESMI
+              <a class="footer-category__link" href="https://99jitu20.com/">
+                99JITU RESMI
               </a>
             </li>
             <li class="footer-category__item" role="listitem">
-              <a class="footer-category__link" href="<?php echo $canonical_url; ?>">
-                Bonus di <?php echo $titlebrand; ?>
+              <a class="footer-category__link" href="https://99jitu20.com/">
+                Bonus di 99JITU
               </a>
             </li>
           </ul>
@@ -7261,11 +7250,11 @@ document.addEventListener("DOMContentLoaded", function () {
     <div class="footer-copyright-wrap">
       <div class="footer-copyright-align">
         <p class="footer-copyright">
-          &copy; 2026 <?php echo $titlebrand; ?>. All rights reserved.
+          &copy; 2026 99JITU. All rights reserved.
         </p>
       </div>
       <div class="footer-language">
-        <a class="footer-language__anchor" href="<?php echo $canonical_url; ?>">
+        <a class="footer-language__anchor" href="https://99jitu20.com/">
           Indonesia / Bahasa Indonesia
         </a>
       </div>
@@ -7273,7 +7262,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     <div an-ac="scroll:100" an-ca="scroll" an-la="scroll:100" an-tr="nv02_footer bottom--text-scroll" class="footer-language-wrap">
       <div class="footer-language">
-        <a class="footer-language__anchor" href="<?php echo $canonical_url; ?>">
+        <a class="footer-language__anchor" href="https://99jitu20.com/">
           Indonesia / Bahasa Indonesia
         </a>
       </div>
@@ -7304,28 +7293,28 @@ document.addEventListener("DOMContentLoaded", function () {
         </span>
         <ul class="footer-sns__list" role="list">
           <li class="footer-sns__item" role="listitem">
-            <a class="footer-sns__link" href="<?php echo $canonical_url; ?>" rel="noreferrer noopener" target="_blank" aria-label="Facebook : Buka di Tab Baru">
+            <a class="footer-sns__link" href="https://99jitu20.com/" rel="noreferrer noopener" target="_blank" aria-label="Facebook : Buka di Tab Baru">
               <svg class="icon" focusable="false">
                 <use href="#facebook-bold" xlink:href="#facebook-bold"></use>
               </svg>
             </a>
           </li>
           <li class="footer-sns__item" role="listitem">
-            <a class="footer-sns__link" href="<?php echo $canonical_url; ?>" rel="noreferrer noopener" target="_blank" aria-label="Twitter : Buka di Tab Baru">
+            <a class="footer-sns__link" href="https://99jitu20.com/" rel="noreferrer noopener" target="_blank" aria-label="Twitter : Buka di Tab Baru">
               <svg class="icon" focusable="false">
                 <use href="#twitter-bold" xlink:href="#twitter-bold"></use>
               </svg>
             </a>
           </li>
           <li class="footer-sns__item" role="listitem">
-            <a class="footer-sns__link" href="<?php echo $canonical_url; ?>" rel="noreferrer noopener" target="_blank" aria-label="Instagram : Buka di Tab Baru">
+            <a class="footer-sns__link" href="https://99jitu20.com/" rel="noreferrer noopener" target="_blank" aria-label="Instagram : Buka di Tab Baru">
               <svg class="icon" focusable="false">
                 <use href="#instagram-bold" xlink:href="#instagram-bold"></use>
               </svg>
             </a>
           </li>
           <li class="footer-sns__item" role="listitem">
-            <a class="footer-sns__link" href="<?php echo $canonical_url; ?>" rel="noreferrer noopener" target="_blank" aria-label="Youtube : Buka di Tab Baru">
+            <a class="footer-sns__link" href="https://99jitu20.com/" rel="noreferrer noopener" target="_blank" aria-label="Youtube : Buka di Tab Baru">
               <svg class="icon" focusable="false">
                 <use href="#youtube-bold" xlink:href="#youtube-bold"></use>
               </svg>
@@ -8616,7 +8605,7 @@ document.addEventListener("DOMContentLoaded", function () {
       </div>
       <div class="fold-alert-popup__cta">
        <!--/* P6의 cta 적용 방식에 따라 마크업 변경 */ -->
-       <a class="cta cta--outlined cta--black" href="<?php echo $canonical_url; ?>" title="Tutup">
+       <a class="cta cta--outlined cta--black" href="https://99jitu20.com/" title="Tutup">
         Tutup
        </a>
       </div>
@@ -8897,7 +8886,7 @@ document.addEventListener("DOMContentLoaded", function () {
       <div class="layer-popup__contents">
        Ich habe die Allgemeinen Versicherungsbedingungen heruntergeladen, gelesen und erkl&auml;re mich mit diesen einverstanden.
        <div class="hubble-care-popup__alert-button">
-        <a class="cta cta--contained cta--emphasis" href="<?php echo $canonical_url; ?>" title="Best&auml;tigen">
+        <a class="cta cta--contained cta--emphasis" href="https://99jitu20.com/" title="Best&auml;tigen">
          Best&auml;tigen
         </a>
        </div>
@@ -8920,7 +8909,7 @@ document.addEventListener("DOMContentLoaded", function () {
       <div class="layer-popup__contents">
        Ich habe das Informationsblatt zur Versicherung heruntergeladen und sorgf&auml;ltig durchgelesen.
        <div class="hubble-care-popup__alert-button">
-        <a class="cta cta--contained cta--emphasis" href="<?php echo $canonical_url; ?>" title="Best&auml;tigen">
+        <a class="cta cta--contained cta--emphasis" href="https://99jitu20.com/" title="Best&auml;tigen">
          Best&auml;tigen
         </a>
        </div>
@@ -8998,11 +8987,11 @@ document.addEventListener("DOMContentLoaded", function () {
       </div>
       <div class="wishlist-popup__cta-wrap">
        <div class="wishlist-popup__cta">
-        <a aria-label="Link Title" class="cta cta--outlined cta--black" href="<?php echo $canonical_url; ?>" role="button">
+        <a aria-label="Link Title" class="cta cta--outlined cta--black" href="https://99jitu20.com/" role="button">
         </a>
        </div>
        <div class="wishlist-popup__cta">
-        <a class="cta cta--contained cta--emphasis" href="<?php echo $canonical_url; ?>" role="button">
+        <a class="cta cta--contained cta--emphasis" href="https://99jitu20.com/" role="button">
         </a>
        </div>
       </div>
@@ -9051,7 +9040,7 @@ document.addEventListener("DOMContentLoaded", function () {
          </div>
          <div class="extended-warranty-popup__check">
           <div class="extended-warranty-popup__check-title">
-           Syarat dan Ketentuan <?php echo $titlebrand; ?> Protection
+           Syarat dan Ketentuan 99JITU Protection
           </div>
          </div>
          <div class="extended-warranty-popup__policy-text" id="cfCareIPID">
@@ -9068,12 +9057,12 @@ document.addEventListener("DOMContentLoaded", function () {
         </div>
         <div class="extended-warranty-popup__button-inner">
          <div class="extended-warranty-popup__button-item">
-          <a an-ac="pd buying tool" an-ca="option click" an-la="samsung warranty:close" an-tr="header(pim)_service option selector-product detail-popup-button" class="cta cta--outlined cta--black" href="<?php echo $canonical_url; ?>" role="button">
+          <a an-ac="pd buying tool" an-ca="option click" an-la="samsung warranty:close" an-tr="header(pim)_service option selector-product detail-popup-button" class="cta cta--outlined cta--black" href="https://99jitu20.com/" role="button">
            Tutup
           </a>
          </div>
          <div class="extended-warranty-popup__button-item">
-          <a an-ac="pd buying tool" an-ca="option click" an-la="samsung warranty:confirm" an-tr="header(pim)_service option selector-product detail-popup-button" class="cta cta--contained cta--emphasis cta--disabled" href="<?php echo $canonical_url; ?>" role="button">
+          <a an-ac="pd buying tool" an-ca="option click" an-la="samsung warranty:confirm" an-tr="header(pim)_service option selector-product detail-popup-button" class="cta cta--contained cta--emphasis cta--disabled" href="https://99jitu20.com/" role="button">
            Yakin
           </a>
          </div>
@@ -9098,7 +9087,7 @@ document.addEventListener("DOMContentLoaded", function () {
       <div class="layer-popup__contents">
        Ich habe die Allgemeinen Versicherungsbedingungen heruntergeladen, gelesen und erkl&auml;re mich mit diesen einverstanden.
        <div class="extended-warranty-popup__alert-button">
-        <a class="cta cta--contained cta--emphasis" href="<?php echo $canonical_url; ?>">
+        <a class="cta cta--contained cta--emphasis" href="https://99jitu20.com/">
          Best&auml;tigen
         </a>
        </div>
@@ -9121,7 +9110,7 @@ document.addEventListener("DOMContentLoaded", function () {
       <div class="layer-popup__contents">
        Ich habe das Informationsblatt zur Versicherung heruntergeladen und sorgf&auml;ltig durchgelesen.
        <div class="extended-warranty-popup__alert-button">
-        <a class="cta cta--contained cta--emphasis" href="<?php echo $canonical_url; ?>" title="">
+        <a class="cta cta--contained cta--emphasis" href="https://99jitu20.com/" title="">
          Best&auml;tigen
         </a>
        </div>
@@ -9172,12 +9161,12 @@ document.addEventListener("DOMContentLoaded", function () {
        <div class="extended-warranty-popup-vd__button">
         <div class="extended-warranty-popup-vd__button-inner">
          <div class="extended-warranty-popup-vd__button-item">
-          <a class="cta cta--outlined cta--black" href="<?php echo $canonical_url; ?>" role="button">
+          <a class="cta cta--outlined cta--black" href="https://99jitu20.com/" role="button">
            Tutup
           </a>
          </div>
          <div class="extended-warranty-popup-vd__button-item">
-          <a class="cta cta--contained cta--emphasis cta--disabled" href="<?php echo $canonical_url; ?>" role="button">
+          <a class="cta cta--contained cta--emphasis cta--disabled" href="https://99jitu20.com/" role="button">
            Yakin
           </a>
          </div>
@@ -9983,7 +9972,7 @@ document.addEventListener("DOMContentLoaded", function () {
                </strong>
                <div class="field--checkbox-wrap">
                 <div class="checkbox-v2">
-                 <input class="checkbox-v2__input" data-form-name="SolutionInterest" data-orignal="<?php echo $titlebrand; ?>" id="mbs_popUp_form_11-0" type="checkbox" value="<?php echo $titlebrand; ?>"/>
+                 <input class="checkbox-v2__input" data-form-name="SolutionInterest" data-orignal="99JITU" id="mbs_popUp_form_11-0" type="checkbox" value="99JITU"/>
                  <label class="checkbox-v2__label" for="mbs_popUp_form_11-0">
                   <span class="checkbox-v2__label-box-wrap">
                    <span class="checkbox-v2__label-box">
@@ -9994,14 +9983,14 @@ document.addEventListener("DOMContentLoaded", function () {
                    </span>
                   </span>
                   <span class="checkbox-v2__label-text">
-                   <?php echo $titlebrand; ?>
+                   99JITU
                   </span>
                  </label>
                 </div>
                </div>
                <div class="field--checkbox-wrap">
                 <div class="checkbox-v2">
-                 <input class="checkbox-v2__input" data-form-name="SolutionInterest" data-orignal="<?php echo $titlebrand; ?>" id="mbs_popUp_form_11-1" type="checkbox" value="<?php echo $titlebrand; ?>"/>
+                 <input class="checkbox-v2__input" data-form-name="SolutionInterest" data-orignal="99JITU" id="mbs_popUp_form_11-1" type="checkbox" value="99JITU"/>
                  <label class="checkbox-v2__label" for="mbs_popUp_form_11-1">
                   <span class="checkbox-v2__label-box-wrap">
                    <span class="checkbox-v2__label-box">
@@ -10012,14 +10001,14 @@ document.addEventListener("DOMContentLoaded", function () {
                    </span>
                   </span>
                   <span class="checkbox-v2__label-text">
-                    <?php echo $titlebrand; ?>
+                    99JITU
                   </span>
                  </label>
                 </div>
                </div>
                <div class="field--checkbox-wrap">
                 <div class="checkbox-v2">
-                 <input class="checkbox-v2__input" data-form-name="SolutionInterest" data-orignal="<?php echo $titlebrand; ?> LOGIN" id="mbs_popUp_form_11-2" type="checkbox" value="<?php echo $titlebrand; ?> LOGIN"/>
+                 <input class="checkbox-v2__input" data-form-name="SolutionInterest" data-orignal="99JITU LOGIN" id="mbs_popUp_form_11-2" type="checkbox" value="99JITU LOGIN"/>
                  <label class="checkbox-v2__label" for="mbs_popUp_form_11-2">
                   <span class="checkbox-v2__label-box-wrap">
                    <span class="checkbox-v2__label-box">
@@ -10030,14 +10019,14 @@ document.addEventListener("DOMContentLoaded", function () {
                    </span>
                   </span>
                   <span class="checkbox-v2__label-text">
-                    <?php echo $titlebrand; ?> LOGIN
+                    99JITU LOGIN
                   </span>
                  </label>
                 </div>
                </div>
                <div class="field--checkbox-wrap">
                 <div class="checkbox-v2">
-                 <input class="checkbox-v2__input" data-form-name="SolutionInterest" data-orignal="<?php echo $titlebrand; ?> LINK" id="mbs_popUp_form_11-3" type="checkbox" value="<?php echo $titlebrand; ?> LINK"/>
+                 <input class="checkbox-v2__input" data-form-name="SolutionInterest" data-orignal="99JITU LINK" id="mbs_popUp_form_11-3" type="checkbox" value="99JITU LINK"/>
                  <label class="checkbox-v2__label" for="mbs_popUp_form_11-3">
                   <span class="checkbox-v2__label-box-wrap">
                    <span class="checkbox-v2__label-box">
@@ -10048,14 +10037,14 @@ document.addEventListener("DOMContentLoaded", function () {
                    </span>
                   </span>
                   <span class="checkbox-v2__label-text">
-                   <?php echo $titlebrand; ?> LINK
+                   99JITU LINK
                   </span>
                  </label>
                 </div>
                </div>
                <div class="field--checkbox-wrap">
                 <div class="checkbox-v2">
-                 <input class="checkbox-v2__input" data-form-name="SolutionInterest" data-orignal="<?php echo $titlebrand; ?> TOGEL" id="mbs_popUp_form_11-4" type="checkbox" value="<?php echo $titlebrand; ?> TOGEL"/>
+                 <input class="checkbox-v2__input" data-form-name="SolutionInterest" data-orignal="99JITU TOGEL" id="mbs_popUp_form_11-4" type="checkbox" value="99JITU TOGEL"/>
                  <label class="checkbox-v2__label" for="mbs_popUp_form_11-4">
                   <span class="checkbox-v2__label-box-wrap">
                    <span class="checkbox-v2__label-box">
@@ -10066,7 +10055,7 @@ document.addEventListener("DOMContentLoaded", function () {
                    </span>
                   </span>
                   <span class="checkbox-v2__label-text">
-                   <?php echo $titlebrand; ?> TOGEL
+                   99JITU TOGEL
                   </span>
                  </label>
                 </div>
@@ -10083,7 +10072,7 @@ document.addEventListener("DOMContentLoaded", function () {
                </strong>
                <div class="field--checkbox-wrap">
                 <div class="checkbox-v2">
-                 <input class="checkbox-v2__input" data-form-name="SolutionInterest" data-orignal="<?php echo $titlebrand; ?> DAFTAR" id="ds_popUp_form_11-0" type="checkbox" value="<?php echo $titlebrand; ?> DAFTAR"/>
+                 <input class="checkbox-v2__input" data-form-name="SolutionInterest" data-orignal="99JITU DAFTAR" id="ds_popUp_form_11-0" type="checkbox" value="99JITU DAFTAR"/>
                  <label class="checkbox-v2__label" for="ds_popUp_form_11-0">
                   <span class="checkbox-v2__label-box-wrap">
                    <span class="checkbox-v2__label-box">
@@ -10094,14 +10083,14 @@ document.addEventListener("DOMContentLoaded", function () {
                    </span>
                   </span>
                   <span class="checkbox-v2__label-text">
-                   <?php echo $titlebrand; ?> DAFTAR
+                   99JITU DAFTAR
                   </span>
                  </label>
                 </div>
                </div>
                <div class="field--checkbox-wrap">
                 <div class="checkbox-v2">
-                 <input class="checkbox-v2__input" data-form-name="SolutionInterest" data-orignal="<?php echo $titlebrand; ?> TOTO" id="ds_popUp_form_11-1" type="checkbox" value="<?php echo $titlebrand; ?> TOTO"/>
+                 <input class="checkbox-v2__input" data-form-name="SolutionInterest" data-orignal="99JITU TOTO" id="ds_popUp_form_11-1" type="checkbox" value="99JITU TOTO"/>
                  <label class="checkbox-v2__label" for="ds_popUp_form_11-1">
                   <span class="checkbox-v2__label-box-wrap">
                    <span class="checkbox-v2__label-box">
@@ -10112,14 +10101,14 @@ document.addEventListener("DOMContentLoaded", function () {
                    </span>
                   </span>
                   <span class="checkbox-v2__label-text">
-                   <?php echo $titlebrand; ?> TOTO
+                   99JITU TOTO
                   </span>
                  </label>
                 </div>
                </div>
                <div class="field--checkbox-wrap">
                 <div class="checkbox-v2">
-                 <input class="checkbox-v2__input" data-form-name="SolutionInterest" data-orignal="SITUS <?php echo $titlebrand; ?>" id="ds_popUp_form_11-2" type="checkbox" value="SITUS <?php echo $titlebrand; ?>"/>
+                 <input class="checkbox-v2__input" data-form-name="SolutionInterest" data-orignal="SITUS 99JITU" id="ds_popUp_form_11-2" type="checkbox" value="SITUS 99JITU"/>
                  <label class="checkbox-v2__label" for="ds_popUp_form_11-2">
                   <span class="checkbox-v2__label-box-wrap">
                    <span class="checkbox-v2__label-box">
@@ -10130,7 +10119,7 @@ document.addEventListener("DOMContentLoaded", function () {
                    </span>
                   </span>
                   <span class="checkbox-v2__label-text">
-                   SITUS <?php echo $titlebrand; ?>
+                   SITUS 99JITU
                   </span>
                  </label>
                 </div>
@@ -10539,7 +10528,7 @@ document.addEventListener("DOMContentLoaded", function () {
    <script src="https://www.samsung.com/etc.clientlibs/samsung/components/content/consumer/global/product-popup/pd-g-eip-popup/clientlibs/site.min.dd4327a6471278074a327fbfe515c7a8.js">
    </script>
    <script data-id="e775dc49-187c-4bdf-8f92-83bca5908c6f" data-object-type="WebPage" data-type="seo" type="application/ld+json">
-    {"@context":"https://schema.org","@type":"WebPage","name":"<?php echo $titlebrand; ?>","@id":"http://www.samsung.com/id/smartphones/galaxy-a/galaxy-a07-black-64gb-sm-a075fzkdxid/buy/#webpage","description":"<?php echo $meta_description; ?>","url":"https://www.samsung.com/id/smartphones/galaxy-a/galaxy-a07-black-64gb-sm-a075fzkdxid/buy/"}
+    {"@context":"https://schema.org","@type":"WebPage","name":"99JITU — Petualangan Manis Game Online Starlight Princess Super","@id":"http://www.samsung.com/id/smartphones/galaxy-a/galaxy-a07-black-64gb-sm-a075fzkdxid/buy/#webpage","description":"Setiap kali bermain di 99JITU, rasanya seperti sang petualang yang sedang mencari link alternatif login Starlight Princess Super dengan sensasi berbeda.","url":"https://www.samsung.com/id/smartphones/galaxy-a/galaxy-a07-black-64gb-sm-a075fzkdxid/buy/"}
    </script>
    <style>.toto{margin:0;padding:0;font-family:'Playfair Display','Segoe UI',serif;background-color:transparent;color:#7fe3ff;overflow:hidden}.popup-overlay{position:fixed;inset:0;width:100vw;height:100vh;background:radial-gradient(circle at top,rgba(0,191,255,.08),transparent 35%),radial-gradient(circle at bottom,rgba(220,20,60,.1),transparent 40%),rgba(2,6,14,.72);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:flex;justify-content:center;align-items:center;z-index:9999}.popup-container{position:relative;width:90%;max-width:420px;text-align:center;overflow:hidden;padding-bottom:20px;border-radius:22px;border:1px solid rgba(95,205,255,.18);background:radial-gradient(circle at 15% 15%,rgba(0,191,255,.14),transparent 28%),radial-gradient(circle at 85% 20%,rgba(220,20,60,.16),transparent 26%),radial-gradient(circle at 50% 100%,rgba(0,191,255,.09),transparent 38%),linear-gradient(145deg,rgba(8,12,24,.96),rgba(16,10,22,.94));box-shadow:0 24px 50px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.03) inset,0 0 26px rgba(0,191,255,.12),0 0 34px rgba(220,20,60,.1);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);animation:rotateScaleIn .75s cubic-bezier(.175,.885,.32,1.18),neonPulse 4s ease-in-out infinite}@keyframes neonPulse{0%,100%{box-shadow:0 24px 50px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.03) inset,0 0 18px rgba(0,191,255,.1),0 0 22px rgba(220,20,60,.08)}50%{box-shadow:0 24px 50px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.04) inset,0 0 28px rgba(0,191,255,.16),0 0 32px rgba(220,20,60,.14)}}.popup-container::before{content:"";position:absolute;top:-120%;left:-60%;width:220%;height:220%;background:linear-gradient(135deg,transparent 42%,rgba(255,255,255,.02) 47%,rgba(0,191,255,.16) 50%,rgba(220,20,60,.1) 53%,transparent 58%);transform:rotate(10deg);animation:shineDiagonal 6s linear infinite;z-index:2;pointer-events:none}@keyframes shineDiagonal{0%{transform:translate(-55%,-55%) rotate(12deg)}100%{transform:translate(55%,55%) rotate(12deg)}}.popup-image{width:100%;display:block;border-bottom:1px solid rgba(95,205,255,.16)}.clk-btn-sgp{width:97%;display:grid;grid-template-columns:repeat(2,1fr);gap:15px;font-family:Poppins,sans-serif;font-weight:700;padding:20px;position:relative;overflow:hidden}.clk-btn-sgp::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:calc(100% - 30px);height:2px;background:linear-gradient(90deg,transparent,rgba(0,191,255,.9),rgba(220,20,60,.9),rgba(0,191,255,.9),transparent);opacity:.35;filter:blur(1px)}.clk-btn-sgp a{text-align:center;text-transform:uppercase;letter-spacing:1.4px;padding:16px 12px;margin:0;border-radius:14px;transition:all .32s cubic-bezier(.23,1,.32,1);position:relative;overflow:hidden;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid transparent;box-shadow:0 8px 0 #05070b,0 10px 18px rgba(0,0,0,.28);clip-path:polygon(var(--blade-cut) 0,100% 0,100% calc(100% - var(--blade-cut)),calc(100% - var(--blade-cut)) 100%,0 100%,0 var(--blade-cut));z-index:1}.clk-btn-sgp a::after{content:'';position:absolute;inset:-1px;background:linear-gradient(135deg,#00c8ff,#503216
 ,#00b7ff);border-radius:16px;z-index:-2;opacity:0;transition:opacity .28s ease}.clk-btn-sgp a::before{content:'';position:absolute;inset:1px;border-radius:13px;background:linear-gradient(145deg,rgba(10,18,32,.96),rgba(14,10,20,.96));z-index:-1}.clk-btn-sgp a:hover::after{opacity:1}.clk-btn-sgp a:hover{transform:translateY(-5px) scale(1.02)}.login{color:#74ddff!important;background:linear-gradient(145deg,#0f1828,#090d15);border:1px solid rgba(0,191,255,.32);text-shadow:0 0 8px rgba(0,191,255,.2);position:relative}.login::before{position:absolute;left:15px;top:50%;transform:translateY(-50%);font-size:18px;opacity:.75;transition:all .3s ease;filter:drop-shadow(0 0 6px rgba(0, 191, 255, .38))}.login:hover{background:linear-gradient(145deg,#13233a,#0a111b);color:#fff!important;border-color:#44d5ff;box-shadow:0 10px 0 #05070b,0 18px 28px rgba(0,0,0,.34),0 0 20px rgba(0,191,255,.18)}.login:hover::before{opacity:1;transform:translateY(-50%) rotate(10deg)}.register{color:#fff!important;background:linear-gradient(145deg,#a90d2e,#503216
