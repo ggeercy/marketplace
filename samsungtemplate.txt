@@ -3265,21 +3265,6 @@ echo implode(",\n", $reviewItems);
 
 </style>
 
-<div class="vip-ticker-wrap">
-  <div class="vip-ticker-track">
-    <div class="vip-ticker-group">
-      <div class="vip-logo"><?php echo $favicon; ?></div>
-      <div class="vip-pill">Update Terbaru 28 Juni Sampai 31 Desember 2026</div>
-      <div class="vip-pill">888.777 Komentar Member</div>
-      <div class="vip-pill">Rating Pengguna 4.9/5</div>
-      <div class="vip-pill">777 Juta Total Pengguna</div>
-      <div class="vip-live">LIVE CHAT <strong>24/7</strong></div>
-    </div>
-  </div>
-</div>
-
-
-
          <div class="hdd02-gallery__thumbnail">
           <ul class="hdd02-gallery__thumbnail-list" role="list">
            <li class="hdd02-gallery__thumbnail-item" role="listitem">
