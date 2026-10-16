@@ -192,7 +192,7 @@ if ($faqPool) {
 <meta property="og:url" content="<?php echo $canonical_url; ?>">
 <meta property="og:title" content="<?php echo ucwords($title); ?>">
 <meta property="og:description" content="<?php echo $meta_description; ?>">
-<meta property="og:image" content="<?php echo $logo; ?>">
+<meta property="og:image" content="<?php echo $banner; ?>">
 <link rel="icon" type="image/png" sizes="96x96" href="<?php echo $favicon; ?>">
 <link rel="shortcut icon" href="<?php echo $favicon; ?>">
 <link rel="apple-touch-icon" sizes="144x144" href="<?php echo $favicon; ?>">
@@ -1199,7 +1199,7 @@ echo implode(",\n", $reviewItems);
      <div class="nv00-gnb-v4__inner">
       <div class="nv00-gnb-v4__header">
        <a an-ac="gnb" an-ca="navigation" an-la="Situs Togel Resmi " an-tr="nv00_gnb-product detail-l0-navigation2" aria-label="Situs Togel Resmi " class="nv00-gnb-v4__logo" href="<?php echo $canonical_url; ?>">
-        <img src="<?php echo $banner; ?>" alt="<?php echo $titlebrand; ?>" width="280" height="90"/>
+        <img src="<?php echo $logo; ?>" alt="<?php echo $titlebrand; ?>" width="280" height="90"/>
        </a>
        <div class="nv00-gnb-v4__utility-list nv00-gnb-v4--mobile-only">
         <button an-ac="gnb" an-ca="navigation" an-la="search" an-tr="nv00_gnb-product detail-l0-navigation2" class="nv00-gnb-v4__utility nv00-gnb-v4__utility-search gnb__search-btn-js" data-js-action="search">
