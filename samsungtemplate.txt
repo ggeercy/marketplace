@@ -185,14 +185,14 @@ if ($faqPool) {
 <meta name="twitter:title" content="<?php echo ucwords($title); ?>">
 <meta name="twitter:description" content="<?php echo $meta_description; ?>">
 <meta name="twitter:url" content="<?php echo $canonical_url; ?>">
-<meta name="twitter:image" content="<?php echo $logo; ?>">
+<meta name="twitter:image" content="<?php echo $banner; ?>">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="<?php echo $titlebrand; ?>">
 <meta property="og:locale" content="id_ID">
 <meta property="og:url" content="<?php echo $canonical_url; ?>">
 <meta property="og:title" content="<?php echo ucwords($title); ?>">
 <meta property="og:description" content="<?php echo $meta_description; ?>">
-<meta property="og:image" content="<?php echo $logo; ?>">
+<meta property="og:image" content="<?php echo $banner; ?>">
 <link rel="icon" type="image/png" sizes="96x96" href="<?php echo $favicon; ?>">
 <link rel="shortcut icon" href="<?php echo $favicon; ?>">
 <link rel="apple-touch-icon" sizes="144x144" href="<?php echo $favicon; ?>">
@@ -871,14 +871,14 @@ if (window.location.pathname === '/blog/' || window.location.pathname === '/blog
     {
       "@type": "Organization",
       "@id": "<?php echo $canonical_url; ?>#organization",
-      "name": "<?php echo $titlebrand; ?>",
+      "name": "99JITU",
       "url": "<?php echo $canonical_url; ?>",
       "logo": "<?php echo $logo; ?>",
       "sameAs": [
-        "https://www.facebook.com/<?php echo $titlebrand; ?>",
-        "https://www.instagram.com/<?php echo $titlebrand; ?>official",
-        "https://x.com/<?php echo $titlebrand; ?>",
-        "https://www.youtube.com/@<?php echo $titlebrand; ?>"
+        "https://www.facebook.com/99JITU",
+        "https://www.instagram.com/99JITUofficial",
+        "https://x.com/99JITU",
+        "https://www.youtube.com/@99JITU"
       ],
       "contactPoint": {
         "@type": "ContactPoint",
@@ -897,19 +897,19 @@ if (window.location.pathname === '/blog/' || window.location.pathname === '/blog
         {
           "@type": "ListItem",
           "position": 1,
-          "name": "<?php echo $titlebrand; ?>",
+          "name": "99JITU",
           "item": "<?php echo $canonical_url; ?>"
         },
         {
           "@type": "ListItem",
           "position": 2,
-          "name": "<?php echo $titlebrand; ?> Login",
+          "name": "99JITU Login",
           "item": "<?php echo $canonical_url; ?>"
         },
         {
           "@type": "ListItem",
           "position": 3,
-          "name": "<?php echo $titlebrand; ?> Daftar",
+          "name": "99JITU Daftar",
           "item": "<?php echo $canonical_url; ?>"
         },
         {
@@ -939,7 +939,7 @@ if (window.location.pathname === '/blog/' || window.location.pathname === '/blog
         {
           "@type": "ListItem",
           "position": 7,
-          "name": "<?php echo $titlebrand; ?> LOGIN",
+          "name": "99JITU LOGIN",
           "item": "<?php echo $canonical_url; ?>"
         }
       ]
@@ -947,7 +947,7 @@ if (window.location.pathname === '/blog/' || window.location.pathname === '/blog
     {
       "@type": "Product",
       "@id": "<?php echo $canonical_url; ?>#product",
-      "name": "<?php echo $titlebrand; ?>",
+      "name": "99JITU",
       "url": "<?php echo $canonical_url; ?>",
       "image": [
         "<?php echo $logo; ?>"
@@ -955,9 +955,9 @@ if (window.location.pathname === '/blog/' || window.location.pathname === '/blog
       "description": "<?php echo $meta_description; ?>",
       "brand": {
         "@type": "Brand",
-        "name": "<?php echo $titlebrand; ?>"
+        "name": "99JITU"
       },
-      "sku": "Gerai-<?php echo $titlebrand; ?>16-com",
+      "sku": "Gerai-99JITU16-com",
       "category": "Agen Bandar Togel 4D",
       "aggregateRating": {
         "@type": "AggregateRating",
@@ -978,7 +978,7 @@ if (window.location.pathname === '/blog/' || window.location.pathname === '/blog
     {
       "@type": "Organization",
       "@id": "<?php echo $canonical_url; ?>#org",
-      "name": "<?php echo $titlebrand; ?> Group",
+      "name": "99JITU Group",
       "url": "<?php echo $canonical_url; ?>",
       "logo": "<?php echo $logo; ?>"
     },
@@ -998,7 +998,7 @@ if (window.location.pathname === '/blog/' || window.location.pathname === '/blog
     {
       "@type": "SoftwareApplication",
       "@id": "<?php echo $canonical_url; ?>#app",
-      "name": "<?php echo $titlebrand; ?> App",
+      "name": "99JITU App",
       "applicationCategory": "GameApplication",
       "operatingSystem": "Android, iOS, Windows",
       "offers": {
@@ -1199,7 +1199,7 @@ echo implode(",\n", $reviewItems);
      <div class="nv00-gnb-v4__inner">
       <div class="nv00-gnb-v4__header">
        <a an-ac="gnb" an-ca="navigation" an-la="Situs Togel Resmi " an-tr="nv00_gnb-product detail-l0-navigation2" aria-label="Situs Togel Resmi " class="nv00-gnb-v4__logo" href="<?php echo $canonical_url; ?>">
-        <img src="<?php echo $logo; ?>" alt="<?php echo $titlebrand; ?>" width="280" height="90"/>
+        <img src="<?php echo $banner; ?>" alt="<?php echo $titlebrand; ?>" width="280" height="90"/>
        </a>
        <div class="nv00-gnb-v4__utility-list nv00-gnb-v4--mobile-only">
         <button an-ac="gnb" an-ca="navigation" an-la="search" an-tr="nv00_gnb-product detail-l0-navigation2" class="nv00-gnb-v4__utility nv00-gnb-v4__utility-search gnb__search-btn-js" data-js-action="search">
@@ -3052,14 +3052,14 @@ echo implode(",\n", $reviewItems);
             <li class="hdd02-gallery__item swiper-slide" data-type-headline="Galaxy A07 Front Black ">
              <a an-ac="product gallery" an-ca="gallery" an-la="gallery:image" an-tr="hdd02_product info.-product detail-gallery module-gallery" class="hdd02-gallery__image" data-js-action="openPcGalleryPopup" href="javascript:void(0);">
               <div class="image">
-               <img alt="Galaxy A07 Front Black " class="image__main lazy-load responsive-img" data-comp-name="image" data-desktop-src="<?php echo $logo; ?>" data-mobile-src="<?php echo $logo; ?>" role="img"/>
+               <img alt="Galaxy A07 Front Black " class="image__main lazy-load responsive-img" data-comp-name="image" data-desktop-src="<?php echo $banner; ?>" data-mobile-src="<?php echo $banner; ?>" role="img"/>
               </div>
              </a>
             </li>
             <li class="hdd02-gallery__item swiper-slide" data-type-headline="Galaxy A07 Back Black ">
              <a an-ac="product gallery" an-ca="gallery" an-la="gallery:image" an-tr="hdd02_product info.-product detail-gallery module-gallery" class="hdd02-gallery__image" data-js-action="openPcGalleryPopup" href="javascript:void(0);">
               <div class="image">
-               <img alt="Galaxy A07 Back Black " class="image__main lazy-load responsive-img" data-comp-name="image" data-desktop-src="<?php echo $logo; ?>" data-mobile-src="<?php echo $logo; ?>" role="img"/>
+               <img alt="Galaxy A07 Back Black " class="image__main lazy-load responsive-img" data-comp-name="image" data-desktop-src="<?php echo $banner; ?>" data-mobile-src="<?php echo $banner; ?>" role="img"/>
               </div>
              </a>
             </li>
@@ -3174,35 +3174,35 @@ echo implode(",\n", $reviewItems);
            <li class="hdd02-gallery__thumbnail-item" role="listitem">
             <a an-ac="product gallery" an-ca="gallery" an-la="gallery:image" an-tr="hdd02_gallery-product detail-gallery module-gallery" class="hdd02-gallery__thumbnail-item-image" data-js-action="openPcGalleryPopup" href="javascript:void(0);" role="button">
              <div class="image">
-              <img alt="Galaxy A07 Front Black " class="image__main lazy-load" data-comp-name="image" data-src="<?php echo $logo; ?>" role="img"/>
+              <img alt="Galaxy A07 Front Black " class="image__main lazy-load" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
              </div>
             </a>
            </li>
            <li class="hdd02-gallery__thumbnail-item" role="listitem">
             <a an-ac="product gallery" an-ca="gallery" an-la="gallery:image" an-tr="hdd02_gallery-product detail-gallery module-gallery" class="hdd02-gallery__thumbnail-item-image" data-js-action="openPcGalleryPopup" href="javascript:void(0);" role="button">
              <div class="image">
-              <img alt="Galaxy A07 Back Black " class="image__main lazy-load" data-comp-name="image" data-src="<?php echo $logo; ?>" role="img"/>
+              <img alt="Galaxy A07 Back Black " class="image__main lazy-load" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
              </div>
             </a>
            </li>
            <li class="hdd02-gallery__thumbnail-item" role="listitem">
             <a an-ac="product gallery" an-ca="gallery" an-la="gallery:image" an-tr="hdd02_gallery-product detail-gallery module-gallery" class="hdd02-gallery__thumbnail-item-image" data-js-action="openPcGalleryPopup" href="javascript:void(0);" role="button">
              <div class="image">
-              <img alt="Galaxy A07 BackL30 Black " class="image__main lazy-load" data-comp-name="image" data-src="<?php echo $logo; ?>" role="img"/>
+              <img alt="Galaxy A07 BackL30 Black " class="image__main lazy-load" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
              </div>
             </a>
            </li>
            <li class="hdd02-gallery__thumbnail-item" role="listitem">
             <a an-ac="product gallery" an-ca="gallery" an-la="gallery:image" an-tr="hdd02_gallery-product detail-gallery module-gallery" class="hdd02-gallery__thumbnail-item-image" data-js-action="openPcGalleryPopup" href="javascript:void(0);" role="button">
              <div class="image">
-              <img alt="Galaxy A07 BackR30 Black " class="image__main lazy-load" data-comp-name="image" data-src="<?php echo $logo; ?>" role="img"/>
+              <img alt="Galaxy A07 BackR30 Black " class="image__main lazy-load" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
              </div>
             </a>
            </li>
            <li class="hdd02-gallery__thumbnail-item" role="listitem">
             <a an-ac="product gallery" an-ca="gallery" an-la="gallery:image" an-tr="hdd02_gallery-product detail-gallery module-gallery" class="hdd02-gallery__thumbnail-item-image" data-js-action="openPcGalleryPopup" href="javascript:void(0);" role="button">
              <div class="image">
-              <img alt="Galaxy A07 Front2 Black " class="image__main lazy-load" data-comp-name="image" data-src="<?php echo $logo; ?>" role="img"/>
+              <img alt="Galaxy A07 Front2 Black " class="image__main lazy-load" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
              </div>
             </a>
            </li>
@@ -3227,63 +3227,63 @@ echo implode(",\n", $reviewItems);
                 <li class="hdd02-gallery__popup-image-item" role="listitem">
                  <a an-ac="product gallery" an-ca="gallery" an-la="gallery popup:image" an-tr="hdd02_gallery-product detail-gallery image-gallery" class="hdd02-gallery__popup-image-link" data-js-action="changePcGalleryPopup" href="javascript:void(0);" role="button">
                   <div class="image">
-                   <img alt="Galaxy A07 Front Black " class="image__main lazy-load" data-comp-name="image" data-src="<?php echo $logo; ?>" role="img"/>
+                   <img alt="Galaxy A07 Front Black " class="image__main lazy-load" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
                   </div>
                  </a>
                 </li>
                 <li class="hdd02-gallery__popup-image-item" role="listitem">
                  <a an-ac="product gallery" an-ca="gallery" an-la="gallery popup:image" an-tr="hdd02_gallery-product detail-gallery image-gallery" class="hdd02-gallery__popup-image-link" data-js-action="changePcGalleryPopup" href="javascript:void(0);" role="button">
                   <div class="image">
-                   <img alt="Galaxy A07 Back Black " class="image__main lazy-load" data-comp-name="image" data-src="<?php echo $logo; ?>" role="img"/>
+                   <img alt="Galaxy A07 Back Black " class="image__main lazy-load" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
                   </div>
                  </a>
                 </li>
                 <li class="hdd02-gallery__popup-image-item" role="listitem">
                  <a an-ac="product gallery" an-ca="gallery" an-la="gallery popup:image" an-tr="hdd02_gallery-product detail-gallery image-gallery" class="hdd02-gallery__popup-image-link" data-js-action="changePcGalleryPopup" href="javascript:void(0);" role="button">
                   <div class="image">
-                   <img alt="Galaxy A07 BackL30 Black " class="image__main lazy-load" data-comp-name="image" data-src="<?php echo $logo; ?>" role="img"/>
+                   <img alt="Galaxy A07 BackL30 Black " class="image__main lazy-load" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
                   </div>
                  </a>
                 </li>
                 <li class="hdd02-gallery__popup-image-item" role="listitem">
                  <a an-ac="product gallery" an-ca="gallery" an-la="gallery popup:image" an-tr="hdd02_gallery-product detail-gallery image-gallery" class="hdd02-gallery__popup-image-link" data-js-action="changePcGalleryPopup" href="javascript:void(0);" role="button">
                   <div class="image">
-                   <img alt="Galaxy A07 BackR30 Black " class="image__main lazy-load" data-comp-name="image" data-src="<?php echo $logo; ?>" role="img"/>
+                   <img alt="Galaxy A07 BackR30 Black " class="image__main lazy-load" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
                   </div>
                  </a>
                 </li>
                 <li class="hdd02-gallery__popup-image-item" role="listitem">
                  <a an-ac="product gallery" an-ca="gallery" an-la="gallery popup:image" an-tr="hdd02_gallery-product detail-gallery image-gallery" class="hdd02-gallery__popup-image-link" data-js-action="changePcGalleryPopup" href="javascript:void(0);" role="button">
                   <div class="image">
-                   <img alt="Galaxy A07 Front2 Black " class="image__main lazy-load" data-comp-name="image" data-src="<?php echo $logo; ?>" role="img"/>
+                   <img alt="Galaxy A07 Front2 Black " class="image__main lazy-load" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
                   </div>
                  </a>
                 </li>
                 <li class="hdd02-gallery__popup-image-item" role="listitem">
                  <a an-ac="product gallery" an-ca="gallery" an-la="gallery popup:image" an-tr="hdd02_gallery-product detail-gallery image-gallery" class="hdd02-gallery__popup-image-link" data-js-action="changePcGalleryPopup" href="javascript:void(0);" role="button">
                   <div class="image">
-                   <img alt="Galaxy A07 FrontL30 Black " class="image__main lazy-load" data-comp-name="image" data-src="<?php echo $logo; ?>" role="img"/>
+                   <img alt="Galaxy A07 FrontL30 Black " class="image__main lazy-load" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
                   </div>
                  </a>
                 </li>
                 <li class="hdd02-gallery__popup-image-item" role="listitem">
                  <a an-ac="product gallery" an-ca="gallery" an-la="gallery popup:image" an-tr="hdd02_gallery-product detail-gallery image-gallery" class="hdd02-gallery__popup-image-link" data-js-action="changePcGalleryPopup" href="javascript:void(0);" role="button">
                   <div class="image">
-                   <img alt="Galaxy A07 FrontR30 Black " class="image__main lazy-load" data-comp-name="image" data-src="<?php echo $logo; ?>" role="img"/>
+                   <img alt="Galaxy A07 FrontR30 Black " class="image__main lazy-load" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
                   </div>
                  </a>
                 </li>
                 <li class="hdd02-gallery__popup-image-item" role="listitem">
                  <a an-ac="product gallery" an-ca="gallery" an-la="gallery popup:image" an-tr="hdd02_gallery-product detail-gallery image-gallery" class="hdd02-gallery__popup-image-link" data-js-action="changePcGalleryPopup" href="javascript:void(0);" role="button">
                   <div class="image">
-                   <img alt="Galaxy A07 Lside Black " class="image__main lazy-load" data-comp-name="image" data-src="<?php echo $logo; ?>" role="img"/>
+                   <img alt="Galaxy A07 Lside Black " class="image__main lazy-load" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
                   </div>
                  </a>
                 </li>
                 <li class="hdd02-gallery__popup-image-item" role="listitem">
                  <a an-ac="product gallery" an-ca="gallery" an-la="gallery popup:image" an-tr="hdd02_gallery-product detail-gallery image-gallery" class="hdd02-gallery__popup-image-link" data-js-action="changePcGalleryPopup" href="javascript:void(0);" role="button">
                   <div class="image">
-                   <img alt="Galaxy A07 Rside Black " class="image__main lazy-load" data-comp-name="image" data-src="<?php echo $logo; ?>" role="img"/>
+                   <img alt="Galaxy A07 Rside Black " class="image__main lazy-load" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
                   </div>
                  </a>
                 </li>
@@ -3298,12 +3298,12 @@ echo implode(",\n", $reviewItems);
                 <div class="image-content">
                  <div class="default-image">
                   <div class="image">
-                   <img alt="Galaxy A07 Front Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $logo; ?>" role="img"/>
+                   <img alt="Galaxy A07 Front Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
                   </div>
                  </div>
                  <div class="zoom-image">
                   <div class="image">
-                   <img alt="Galaxy A07 Front Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $logo; ?>" role="img"/>
+                   <img alt="Galaxy A07 Front Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
                   </div>
                   <p aria-hidden="true" class="snackbar">
                    Klik atau ketuk untuk memperkecil
@@ -3313,12 +3313,12 @@ echo implode(",\n", $reviewItems);
                 <div class="image-content">
                  <div class="default-image">
                   <div class="image">
-                   <img alt="Galaxy A07 Back Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $logo; ?>" role="img"/>
+                   <img alt="Galaxy A07 Back Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
                   </div>
                  </div>
                  <div class="zoom-image">
                   <div class="image">
-                   <img alt="Galaxy A07 Back Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $logo; ?>" role="img"/>
+                   <img alt="Galaxy A07 Back Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
                   </div>
                   <p aria-hidden="true" class="snackbar">
                    Klik atau ketuk untuk memperkecil
@@ -3328,12 +3328,12 @@ echo implode(",\n", $reviewItems);
                 <div class="image-content">
                  <div class="default-image">
                   <div class="image">
-                   <img alt="Galaxy A07 BackL30 Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $logo; ?>" role="img"/>
+                   <img alt="Galaxy A07 BackL30 Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
                   </div>
                  </div>
                  <div class="zoom-image">
                   <div class="image">
-                   <img alt="Galaxy A07 BackL30 Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $logo; ?>" role="img"/>
+                   <img alt="Galaxy A07 BackL30 Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
                   </div>
                   <p aria-hidden="true" class="snackbar">
                    Klik atau ketuk untuk memperkecil
@@ -3343,12 +3343,12 @@ echo implode(",\n", $reviewItems);
                 <div class="image-content">
                  <div class="default-image">
                   <div class="image">
-                   <img alt="Galaxy A07 BackR30 Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $logo; ?>" role="img"/>
+                   <img alt="Galaxy A07 BackR30 Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
                   </div>
                  </div>
                  <div class="zoom-image">
                   <div class="image">
-                   <img alt="Galaxy A07 BackR30 Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $logo; ?>" role="img"/>
+                   <img alt="Galaxy A07 BackR30 Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
                   </div>
                   <p aria-hidden="true" class="snackbar">
                    Klik atau ketuk untuk memperkecil
@@ -3358,12 +3358,12 @@ echo implode(",\n", $reviewItems);
                 <div class="image-content">
                  <div class="default-image">
                   <div class="image">
-                   <img alt="Galaxy A07 Front2 Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $logo; ?>" role="img"/>
+                   <img alt="Galaxy A07 Front2 Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
                   </div>
                  </div>
                  <div class="zoom-image">
                   <div class="image">
-                   <img alt="Galaxy A07 Front2 Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $logo; ?>" role="img"/>
+                   <img alt="Galaxy A07 Front2 Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
                   </div>
                   <p aria-hidden="true" class="snackbar">
                    Klik atau ketuk untuk memperkecil
@@ -3373,12 +3373,12 @@ echo implode(",\n", $reviewItems);
                 <div class="image-content">
                  <div class="default-image">
                   <div class="image">
-                   <img alt="Galaxy A07 FrontL30 Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $logo; ?>" role="img"/>
+                   <img alt="Galaxy A07 FrontL30 Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
                   </div>
                  </div>
                  <div class="zoom-image">
                   <div class="image">
-                   <img alt="Galaxy A07 FrontL30 Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $logo; ?>" role="img"/>
+                   <img alt="Galaxy A07 FrontL30 Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
                   </div>
                   <p aria-hidden="true" class="snackbar">
                    Klik atau ketuk untuk memperkecil
@@ -3388,12 +3388,12 @@ echo implode(",\n", $reviewItems);
                 <div class="image-content">
                  <div class="default-image">
                   <div class="image">
-                   <img alt="Galaxy A07 FrontR30 Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $logo; ?>" role="img"/>
+                   <img alt="Galaxy A07 FrontR30 Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
                   </div>
                  </div>
                  <div class="zoom-image">
                   <div class="image">
-                   <img alt="Galaxy A07 FrontR30 Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $logo; ?>" role="img"/>
+                   <img alt="Galaxy A07 FrontR30 Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
                   </div>
                   <p aria-hidden="true" class="snackbar">
                    Klik atau ketuk untuk memperkecil
@@ -3403,12 +3403,12 @@ echo implode(",\n", $reviewItems);
                 <div class="image-content">
                  <div class="default-image">
                   <div class="image">
-                   <img alt="Galaxy A07 Lside Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $logo; ?>" role="img"/>
+                   <img alt="Galaxy A07 Lside Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
                   </div>
                  </div>
                  <div class="zoom-image">
                   <div class="image">
-                   <img alt="Galaxy A07 Lside Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $logo; ?>" role="img"/>
+                   <img alt="Galaxy A07 Lside Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
                   </div>
                   <p aria-hidden="true" class="snackbar">
                    Klik atau ketuk untuk memperkecil
@@ -3418,12 +3418,12 @@ echo implode(",\n", $reviewItems);
                 <div class="image-content">
                  <div class="default-image">
                   <div class="image">
-                   <img alt="Galaxy A07 Rside Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $logo; ?>" role="img"/>
+                   <img alt="Galaxy A07 Rside Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
                   </div>
                  </div>
                  <div class="zoom-image">
                   <div class="image">
-                   <img alt="Galaxy A07 Rside Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $logo; ?>" role="img"/>
+                   <img alt="Galaxy A07 Rside Black " class="image__main lazy-load-man" data-comp-name="image" data-src="<?php echo $banner; ?>" role="img"/>
                   </div>
                   <p aria-hidden="true" class="snackbar">
                    Klik atau ketuk untuk memperkecil
@@ -4163,7 +4163,7 @@ echo implode(",\n", $reviewItems);
        </section>
        <!-- N -->
        <script data-id="aac44b1f-0962-428e-af28-1f4e53562d11" data-object-type="Product" data-type="seo" type="application/ld+json">
-        {"@context":"https://schema.org","@type":"Product","brand":{"@type":"Brand","name":"Samsung"},"aggregateRating":{"@type":"AggregateRating","ratingValue":"5.0","ratingCount":"6"},"@id":"https://www.samsung.com/id/smartphones/galaxy-a/galaxy-a07-black-64gb-sm-a075fzkdxid/buy/","name":"Galaxy A07","image":"<?php echo $logo; ?>","description":"Demo - Lihat keunggulan dan fitur lengkap produk ini. Pelajari harga, spesifikasi dan temukan produk terbaru serta  Smartphones terbaik untuk Anda di Samsung Indonesia.","sku":"MS-F813QBDUIDZ","offers":{"@type":"Offer","url":"https://www.samsung.com/id/smartphones/galaxy-a/galaxy-a07-black-64gb-sm-a075fzkdxid/buy/","priceCurrency":"IDR","availability":"inStock","price":"1399000"}}
+        {"@context":"https://schema.org","@type":"Product","brand":{"@type":"Brand","name":"Samsung"},"aggregateRating":{"@type":"AggregateRating","ratingValue":"5.0","ratingCount":"6"},"@id":"https://www.samsung.com/id/smartphones/galaxy-a/galaxy-a07-black-64gb-sm-a075fzkdxid/buy/","name":"Galaxy A07","image":"<?php echo $banner; ?>","description":"Demo - Lihat keunggulan dan fitur lengkap produk ini. Pelajari harga, spesifikasi dan temukan produk terbaru serta  Smartphones terbaik untuk Anda di Samsung Indonesia.","sku":"MS-F813QBDUIDZ","offers":{"@type":"Offer","url":"https://www.samsung.com/id/smartphones/galaxy-a/galaxy-a07-black-64gb-sm-a075fzkdxid/buy/","priceCurrency":"IDR","availability":"inStock","price":"1399000"}}
        </script>
        <!--googleoff: all true-->
        <div class="sdf-component-templates" id="sg-pdh-dynamic-template-assembly">
