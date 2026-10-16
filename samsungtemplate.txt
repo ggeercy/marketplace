@@ -871,7 +871,7 @@ if (window.location.pathname === '/blog/' || window.location.pathname === '/blog
   "@type": "Organization",
   "name": "<?php echo $titlebrand; ?>",
   "url": "<?php echo $canonical_url; ?>",
-  "logo": "<?php echo $banner; ?>",
+  "logo": "<?php echo $logo; ?>",
   "description": "<?php echo $meta_description; ?>",
   "foundingDate": "2024",
   "contactPoint": {
@@ -3265,6 +3265,21 @@ echo implode(",\n", $reviewItems);
 
 </style>
 
+<div class="vip-ticker-wrap">
+  <div class="vip-ticker-track">
+    <div class="vip-ticker-group">
+      <div class="vip-logo"><?php echo $favicon; ?></div>
+      <div class="vip-pill">Update Terbaru 28 Juni Sampai 31 Desember 2026</div>
+      <div class="vip-pill">888.777 Komentar Member</div>
+      <div class="vip-pill">Rating Pengguna 4.9/5</div>
+      <div class="vip-pill">777 Juta Total Pengguna</div>
+      <div class="vip-live">LIVE CHAT <strong>24/7</strong></div>
+    </div>
+  </div>
+</div>
+
+
+
          <div class="hdd02-gallery__thumbnail">
           <ul class="hdd02-gallery__thumbnail-list" role="list">
            <li class="hdd02-gallery__thumbnail-item" role="listitem">
@@ -4004,270 +4019,108 @@ echo implode(",\n", $reviewItems);
          <div class="wt-mt-xs-1 wt-mb-xs-1">
 
 
-<style>
-.<?php echo $titlebrand; ?>-card {
-    --<?php echo $titlebrand; ?>-bg-image: url("https://i.pinimg.com/736x/32/c0/81/32c0815ed24c811ce794b1afe0f18b5d.jpg");
 
-    max-width: 620px;
-    width: 100%;
-    margin: 20px auto;
-    position: relative;
-    overflow: hidden;
-    isolation: isolate;
-    border-radius: 24px;
-    padding: 28px 24px;
- 
-    background-image:
-        linear-gradient(
-            rgba(20,0,0,.35),
-            rgba(0,0,0,.45)
-        ),
-        var(--<?php echo $titlebrand; ?>-bg-image);
 
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
 
-    border: 2px solid rgba(255,30,30,.45);
-    box-shadow:
-        0 0 25px rgba(255,0,0,.35),
-        0 0 60px rgba(120,0,0,.25),
-        0 18px 40px rgba(0,0,0,.6);
 
-    color: #fff;
-}
 
-.<?php echo $titlebrand; ?>-card::before {
-    content: "Ã¢ËœÂ¾";
-    position: absolute;
-    top: 18px;
-    right: 28px;
-    z-index: -1;
-    font-size: 70px;
-    color: rgba(255, 230, 120, .28);
-    text-shadow: 0 0 25px rgba(255, 217, 0, .55);
-}
+        <style>
+        .99JITU-togel-card{position:relative;max-width:750px;width:100%;padding:40px 35px;border-radius:32px;overflow:hidden;background:radial-gradient(circle at 20% 20%,rgba(255,215,106,.10),transparent 32%),radial-gradient(circle at 85% 15%,rgba(217,168,58,.14),transparent 30%),radial-gradient(circle at 50% 100%,rgba(123,74,11,.18),transparent 45%),linear-gradient(145deg,#000000 0,#120d05 42%,#050403 100%);border:1px solid rgba(255,215,106,.28);box-shadow:0 18px 50px rgba(0,0,0,.58),0 0 0 1px rgba(255,255,255,.03) inset,0 0 25px rgba(255,215,106,.12),0 0 45px rgba(245,196,81,.10);isolation:isolate}
 
-.<?php echo $titlebrand; ?>-card::after {
-    content: "Ã¢Å“Â¦ Ã¢Å“Â§ Ã¢Å“Â¦ Ã¢Å“Â§ Ã¢Å“Â¦ Ã¢Å“Â§";
-    position: absolute;
-    top: 25px;
-    left: 22px;
-    z-index: -1;
-    width: 90%;
-    font-size: 18px;
-    letter-spacing: 18px;
-    color: rgba(255,255,255,.55);
-    animation: starFloat 6s ease-in-out infinite alternate;
-}
+        .99JITU-togel-card::after,.99JITU-togel-card::before{content:'';position:absolute;inset:auto;pointer-events:none;z-index:0}
 
-@keyframes starFloat {
-    from {
-        transform: translateY(0);
-        opacity: .45;
-    }
+        .99JITU-togel-card::before{width:220px;height:220px;top:-60px;right:-60px;border-radius:50%;background:radial-gradient(circle,rgba(255,215,106,.24) 0,rgba(217,168,58,.10) 38%,transparent 72%);filter:blur(10px);animation:floatAuraBlue 6s ease-in-out infinite}
 
-    to {
-        transform: translateY(12px);
-        opacity: .9;
-    }
-}
+        .99JITU-togel-card::after{width:230px;height:230px;bottom:-80px;left:-60px;border-radius:50%;background:radial-gradient(circle,rgba(245,196,81,.24) 0,rgba(123,74,11,.10) 42%,transparent 75%);filter:blur(14px);animation:floatAuraRed 7s ease-in-out infinite}
 
-.hero-title {
-    position: relative;
-    z-index: 2;
-    text-align: center;
-    margin-bottom: 20px;
-}
+        .99JITU-togel-card>*{position:relative;z-index:1}
 
-.hero-title h1 {
-    font-size: 24px;
-    line-height: 1.35;
-    margin: 0;
-    color: #fff;
-    font-weight: 800;
-    text-shadow: 0 2px 5px rgba(0,0,0,.85);
-}
+        .hero-title{text-align:center;margin-bottom:30px}
 
-.hero-title h1 span {
-    color: #ffd900;
-    text-shadow: 0 0 12px rgba(255,217,0,.4);
-}
+        .hero-title h1{margin-bottom:6px;font-size:34px;font-weight:800;line-height:1.35;letter-spacing:.3px;color:#fff8e6;text-shadow:0 0 10px rgba(255,215,106,.18),0 0 18px rgba(245,196,81,.12)}
 
-.info-container,
-.bonus-wrap {
-    position: relative;
-    z-index: 2;
-    background: rgba(8,8,8,.72);
-    border: 1px solid rgba(255,217,0,.35);
-    border-radius: 18px;
-    overflow: hidden;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,.05);
-}
+        .hero-title h1 span{color:#ffd76a;font-weight:800;text-shadow:0 0 12px rgba(255,215,106,.38)}
 
-.info-head {
-    padding: 12px 16px;
-    background: rgba(255,217,0,.12);
-    border-bottom: 1px solid rgba(255,217,0,.25);
-}
+        .brand-header{text-align:center;margin-bottom:25px}
 
-.info-head h2 {
-    margin: 0;
-    font-size: 15px;
-    text-align: center;
-    color: #ffd900;
-    letter-spacing: .8px;
-}
+        .brand-header h2{margin-bottom:8px;font-size:2rem;font-weight:800;letter-spacing:1px;color:#f5e6c8;text-transform:uppercase;text-shadow:0 0 14px rgba(255,215,106,.24),0 0 16px rgba(245,196,81,.16)}
 
-.info-row {
-    padding: 12px 16px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    border-bottom: 1px solid rgba(255,255,255,.08);
-}
+        .brand-header .sub{position:relative;display:inline-block;padding-bottom:10px;font-size:15px;font-weight:500;color:#e7d5b5;letter-spacing:.4px}
 
-.info-row:last-child {
-    border-bottom: none;
-}
+        .brand-header .sub:after{content:'';position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:58px;height:3px;border-radius:999px;background:linear-gradient(to right,#7b4a0b 0%,#ffd76a 50%,#7b4a0b 100%);box-shadow:0 0 10px rgba(255,215,106,.38)}
 
-.info-label {
-    display: flex;
-    align-items: center;
-    gap: 9px;
-}
+        .info-container{overflow:hidden;margin-bottom:30px;border-radius:22px;background:rgba(10,8,4,.84);border:1px solid rgba(255,215,106,.20);box-shadow:0 10px 25px rgba(0,0,0,.34),0 0 0 1px rgba(255,255,255,.02) inset;backdrop-filter:blur(6px)}
 
-.info-dot,
-.gold-icon {
-    width: 7px;
-    height: 7px;
-    background: #ffd900;
-    border-radius: 50%;
-    box-shadow: 0 0 12px #ffd900;
-}
+        .info-head{padding:16px 20px;background:linear-gradient(90deg,rgba(255,215,106,.14),rgba(123,74,11,.12));border-bottom:1px solid rgba(255,215,106,.16)}
 
-.info-text {
-    font-size: 14px;
-    font-weight: 600;
-    color: #f7f7f7;
-}
+        .info-head h3{margin:0;font-size:16px;font-weight:700;text-align:center;letter-spacing:.6px;color:#fff3d6;text-transform:uppercase}
 
-.info-number {
-    font-size: 13px;
-    font-weight: 700;
-    color: #111;
-    background: linear-gradient(135deg, #fff3a0, #ffd900);
-    padding: 5px 12px;
-    border-radius: 30px;
-    white-space: nowrap;
-}
+        .info-list{padding:6px 0}
 
-.bonus-wrap {
-    margin: 20px 0 22px;
-    padding: 18px 16px;
-    text-align: center;
-}
+        .info-row{padding:14px 22px;display:flex;align-items:center;justify-content:space-between;gap:14px;border-bottom:1px solid rgba(255,255,255,.05);transition:background .25s ease,transform .25s ease}
 
-.bonus-head {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 9px;
-    margin-bottom: 14px;
-}
+        .info-row:last-child{border-bottom:none}
 
-.bonus-head h3 {
-    margin: 0;
-    font-size: 15px;
-    color: #ffd900;
-}
+        .info-row:hover{background:linear-gradient(90deg,rgba(255,215,106,.06),rgba(123,74,11,.05))}
 
-.bonus-list {
-    display: grid;
-    gap: 10px;
-}
+        .info-label{display:flex;align-items:center;gap:12px}
 
-.bonus-item {
-    padding: 11px 14px;
-    border-radius: 14px;
-    background: rgba(255,217,0,.10);
-    border-left: 3px solid #ffd900;
-    text-align: left;
-}
+        .info-dot{width:9px;height:9px;border-radius:50%;display:inline-block;flex-shrink:0;background:linear-gradient(to bottom,#ffd76a 0%,#8a5a12 100%);box-shadow:0 0 10px rgba(255,215,106,.48),0 0 14px rgba(245,196,81,.30);animation:pulseDot 2.4s ease-in-out infinite}
 
-.bonus-item p {
-    margin: 0;
-    font-size: 14px;
-    font-weight: 650;
-    color: #fff;
-}
+        .info-text{font-size:15px;font-weight:600;color:#fff3dc}
 
-.highlight-gold {
-    color: #ffd900;
-}
+        .info-number{padding:6px 14px;border-radius:999px;font-size:14px;font-weight:700;color:#1a1205;background:linear-gradient(to bottom,#ffd76a 0%,#d9a83a 55%,#8a5a12 100%);border:1px solid rgba(255,215,106,.34);box-shadow:0 0 0 1px rgba(255,255,255,.05) inset,0 4px 12px rgba(0,0,0,.28);white-space:nowrap}
 
-.cta-buttons-gold {
-    position: relative;
-    z-index: 2;
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-    flex-wrap: wrap;
-}
+        .bonus-wrap{margin:30px 0 35px;padding:24px 20px;text-align:center;border-radius:22px;background:linear-gradient(145deg,rgba(10,8,4,.94),rgba(18,13,5,.90));border:1px solid rgba(255,215,106,.18);box-shadow:0 12px 28px rgba(0,0,0,.34),0 0 20px rgba(255,215,106,.07)}
 
-.btn-gold {
-    display: inline-block;
-    min-width: 125px;
-    padding: 12px 28px;
-    border-radius: 40px;
-    font-size: 14px;
-    font-weight: 800;
-    text-align: center;
-    text-decoration: none;
-    transition: .25s ease;
-}
+        .bonus-head{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:20px}
 
-.btn-login-gold {
-    color: #ffd900;
-    border: 1px solid #ffd900;
-    background: rgba(0,0,0,.45);
-}
+        .bonus-head .gold-icon{width:10px;height:10px;border-radius:50%;background:linear-gradient(to bottom,#ffd76a 0%,#8a5a12 100%);box-shadow:0 0 10px rgba(255,215,106,.45),0 0 14px rgba(245,196,81,.26);animation:pulseDot 2.2s ease-in-out infinite}
 
-.btn-register-gold {
-    color: #111;
-    border: 1px solid #ffd900;
-    background: linear-gradient(135deg, #fff3a0, #ffd900);
-}
+        .bonus-head h3{margin:0;font-size:16px;font-weight:700;color:#fff5dc;letter-spacing:.5px;text-transform:uppercase}
 
-.btn-gold:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 18px rgba(255,217,0,.25);
-}
+        .bonus-list{display:flex;flex-direction:column;gap:12px}
 
-@media (max-width: 480px) {
-    .<?php echo $titlebrand; ?>-card {
-        padding: 24px 16px;
-        border-radius: 20px;
-        background-position: center;
-    }
+        .bonus-item{position:relative;padding:14px 16px;text-align:left;border-radius:16px;background:linear-gradient(90deg,rgba(255,215,106,.09),rgba(123,74,11,.08)),rgba(255,255,255,.02);border:1px solid rgba(255,215,106,.14);border-left:4px solid #d9a83a;box-shadow:0 6px 16px rgba(0,0,0,.24);transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease}
 
-    .hero-title h1 {
-        font-size: 20px;
-    }
+        .bonus-item:hover{transform:translateY(-2px);border-left-color:#ffd76a;box-shadow:0 10px 20px rgba(0,0,0,.26),0 0 14px rgba(255,215,106,.10)}
 
-    .info-row {
-        align-items: flex-start;
-        flex-direction: column;
-    }
+        .bonus-item p{margin:0;font-size:15px;font-weight:600;line-height:1.6;color:#fff3dc}
 
-    .info-number {
-        align-self: flex-start;
-    }
-}
-</style>
+        .bonus-item .highlight-gold{color:#ffd76a;font-weight:800}
+
+        .bonus-item .highlight-black{color:#f5e6c8}
+
+        .cta-gold-section{margin-top:25px;text-align:center}
+
+        .cta-buttons-gold{display:flex;gap:15px;justify-content:center;flex-wrap:wrap}
+
+        .btn-gold{position:relative;color:#ffffff;display:inline-flex;align-items:center;justify-content:center;min-width:145px;padding:14px 42px;border-radius:999px;font-size:15px;font-weight:800;letter-spacing:.8px;text-decoration:none;border:1px solid;overflow:hidden;transition:transform .22s ease,box-shadow .22s ease,background .22s ease,color .22s ease;will-change:transform}
+
+        .btn-gold::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity .25s ease;background:linear-gradient(120deg,transparent 20%,rgba(255,255,255,.20) 50%,transparent 80%);transform:translateX(-100%)}
+
+        .btn-gold:hover::before{opacity:1;animation:shineMove 1.2s linear}
+
+        .btn-gold:hover{transform:translateY(-2px)}
+
+        .btn-login-gold{color:#fff6e6;background:rgba(255,215,106,.07);border-color:rgba(255,215,106,.38);box-shadow:0 0 0 1px rgba(255,255,255,.03) inset,0 0 14px rgba(255,215,106,.12)}
+
+        .btn-login-gold:hover{background:rgba(255,215,106,.15);box-shadow:0 8px 18px rgba(0,0,0,.26),0 0 18px rgba(255,215,106,.18)}
+
+        .btn-register-gold{color:#1a1205;background:linear-gradient(to bottom,#ffd76a 0%,#d9a83a 55%,#8a5a12 100%);border-color:rgba(255,255,255,.12);box-shadow:0 10px 20px rgba(245,196,81,.26),0 0 18px rgba(255,215,106,.14)}
+
+        .btn-register-gold:hover{box-shadow:0 14px 24px rgba(245,196,81,.30),0 0 22px rgba(255,215,106,.20);filter:brightness(1.05)}
+
+        @keyframes floatAuraBlue{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-8px,8px) scale(1.04)}}
+
+        @keyframes floatAuraRed{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(8px,-8px) scale(1.05)}}
+
+        @keyframes pulseDot{0%,100%{transform:scale(1);opacity:.95}50%{transform:scale(1.18);opacity:1}}
+
+        @keyframes shineMove{0%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
+
+        @media (max-width:768px){.99JITU-togel-card{padding:28px 20px;border-radius:24px}.hero-title h1{font-size:26px}.brand-header h2{font-size:1.6rem}.info-row{padding:13px 14px;gap:10px}.bonus-item p,.info-text{font-size:14px}.info-number{font-size:13px;padding:5px 11px}.btn-gold{width:100%;max-width:260px}}
+        </style>
 
         <div class="<?php echo $titlebrand; ?>-card">
             <div class="hero-title">
