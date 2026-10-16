@@ -871,14 +871,14 @@ if (window.location.pathname === '/blog/' || window.location.pathname === '/blog
     {
       "@type": "Organization",
       "@id": "<?php echo $canonical_url; ?>#organization",
-      "name": "99JITU",
+      "name": "<?php echo $titlebrand; ?>",
       "url": "<?php echo $canonical_url; ?>",
       "logo": "<?php echo $logo; ?>",
       "sameAs": [
-        "https://www.facebook.com/99JITU",
-        "https://www.instagram.com/99JITUofficial",
-        "https://x.com/99JITU",
-        "https://www.youtube.com/@99JITU"
+        "https://www.facebook.com/<?php echo $titlebrand; ?>",
+        "https://www.instagram.com/<?php echo $titlebrand; ?>official",
+        "https://x.com/<?php echo $titlebrand; ?>",
+        "https://www.youtube.com/@<?php echo $titlebrand; ?>"
       ],
       "contactPoint": {
         "@type": "ContactPoint",
@@ -897,19 +897,19 @@ if (window.location.pathname === '/blog/' || window.location.pathname === '/blog
         {
           "@type": "ListItem",
           "position": 1,
-          "name": "99JITU",
+          "name": "<?php echo $titlebrand; ?>",
           "item": "<?php echo $canonical_url; ?>"
         },
         {
           "@type": "ListItem",
           "position": 2,
-          "name": "99JITU Login",
+          "name": "<?php echo $titlebrand; ?> Login",
           "item": "<?php echo $canonical_url; ?>"
         },
         {
           "@type": "ListItem",
           "position": 3,
-          "name": "99JITU Daftar",
+          "name": "<?php echo $titlebrand; ?> Daftar",
           "item": "<?php echo $canonical_url; ?>"
         },
         {
@@ -939,7 +939,7 @@ if (window.location.pathname === '/blog/' || window.location.pathname === '/blog
         {
           "@type": "ListItem",
           "position": 7,
-          "name": "99JITU LOGIN",
+          "name": "<?php echo $titlebrand; ?> LOGIN",
           "item": "<?php echo $canonical_url; ?>"
         }
       ]
@@ -947,7 +947,7 @@ if (window.location.pathname === '/blog/' || window.location.pathname === '/blog
     {
       "@type": "Product",
       "@id": "<?php echo $canonical_url; ?>#product",
-      "name": "99JITU",
+      "name": "<?php echo $titlebrand; ?>",
       "url": "<?php echo $canonical_url; ?>",
       "image": [
         "<?php echo $logo; ?>"
@@ -955,9 +955,9 @@ if (window.location.pathname === '/blog/' || window.location.pathname === '/blog
       "description": "<?php echo $meta_description; ?>",
       "brand": {
         "@type": "Brand",
-        "name": "99JITU"
+        "name": "<?php echo $titlebrand; ?>"
       },
-      "sku": "Gerai-99JITU16-com",
+      "sku": "Gerai-<?php echo $titlebrand; ?>16-com",
       "category": "Agen Bandar Togel 4D",
       "aggregateRating": {
         "@type": "AggregateRating",
@@ -978,7 +978,7 @@ if (window.location.pathname === '/blog/' || window.location.pathname === '/blog
     {
       "@type": "Organization",
       "@id": "<?php echo $canonical_url; ?>#org",
-      "name": "99JITU Group",
+      "name": "<?php echo $titlebrand; ?> Group",
       "url": "<?php echo $canonical_url; ?>",
       "logo": "<?php echo $logo; ?>"
     },
@@ -998,7 +998,7 @@ if (window.location.pathname === '/blog/' || window.location.pathname === '/blog
     {
       "@type": "SoftwareApplication",
       "@id": "<?php echo $canonical_url; ?>#app",
-      "name": "99JITU App",
+      "name": "<?php echo $titlebrand; ?> App",
       "applicationCategory": "GameApplication",
       "operatingSystem": "Android, iOS, Windows",
       "offers": {
