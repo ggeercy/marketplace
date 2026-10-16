@@ -6584,7 +6584,9 @@ echo implode(",\n", $reviewItems);
             </p>
             <span class="review-date">2026</span>
             <div class="rb-testimoni-user">
-                <div class="rb-testimoni-avatar" aria-hidden="true"><?php echo $favicon; ?></div>
+                <div class="rb-testimoni-avatar" aria-hidden="true">
+    <img src="<?php echo $favicon; ?>" alt="Favicon">
+</div>
                 <div>
                     <strong class="rb-testimoni-name"><?php echo htmlspecialchars($r['name']); ?></strong>
                 </div>
