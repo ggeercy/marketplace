@@ -17044,8 +17044,7 @@ html.no-touch .tp-design-tile:hover .tp-design-tile__sort-ctrl {
 
     display: flex;
     justify-content: center;
-    align-items: center;
-    width: 100%
+    align-items: center
 }
 
 .m-product-preview__glider-img img {
