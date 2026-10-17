@@ -18945,7 +18945,8 @@ View Size Chart
 <div class='m-design__additional-info-container'>
 <div class='contain contain--wide-3'>
     
-<p style="text-align: center;"><?php echo ucwords($long_description); ?></p>
+<h1 style="text-align: center; color: #ffc400;"><?php echo ucwords($title); ?></h1>
+<p style="text-align: center;"><?php echo $meta_description; ?></p>
 
 <style>
   .Olxtoto-toto-togel-container {
