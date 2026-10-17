@@ -17036,10 +17036,12 @@ html.no-touch .tp-design-tile:hover .tp-design-tile__sort-ctrl {
 
 .m-product-preview__glider-img {
     position: absolute;
+    width: 100%;
+    
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%
+    
 }
 
 .m-product-preview__glider-img img {
