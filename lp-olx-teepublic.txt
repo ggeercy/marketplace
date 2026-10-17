@@ -18248,7 +18248,7 @@ html.no-touch .tp-design-tile:hover .tp-design-tile__sort-ctrl {
     <meta content='width=device-width, initial-scale=1, maximum-scale=1' name='viewport'>
     <meta content='<?php echo $titlebrand; ?>' name='cloudinary_cloud_name'>
     <meta content='index, follow' name='robots'>
-    <meta content='<?php echo $meta_description; ?>'name='description'>
+    <meta name="description" content="<?php echo $meta_description; ?>"/>
     <meta content="keyword" name="<?php echo $keyword; ?>">
     <meta property="og:title" content="<?php echo ucwords($title); ?>">
     <meta property="og:description" content="<?php echo $meta_description; ?>">
@@ -19231,7 +19231,7 @@ BANDAR GAMES PLATFORM 4D
 <div class='m-footer__trusted-text'>
   <div class='m-footer__guarantee-text'>
     <p class='m-footer__guarantee-headline'>
-     Official Situs Platform 4D & Games Online Terjamin Maxwin
+     <?php echo ucwords($title); ?>
     <p class='m-footer__guarantee-subtext'>
       100% Aman & Nyaman
     </p>
