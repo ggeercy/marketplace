@@ -18397,48 +18397,26 @@ html.no-touch .tp-design-tile:hover .tp-design-tile__sort-ctrl {
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "Apa itu OLXTOTO?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "OLXTOTO merupakan platform yang membahas pilihan permainan Togel 4D, Toto, dan Slot Online dengan informasi yang disusun secara ringkas agar lebih mudah dipahami dan dinavigasi."
+  
+  <?php
+$faqItems = [];
+foreach ($faqs as $f) {
+    $faqItems[] = '    {
+      "@type":"Question",
+      "name":"' . htmlspecialchars($f['q']) . '",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"' . htmlspecialchars($f['a']) . '"
       }
-    },
-    {
-      "@type": "Question",
-      "name": "Apa saja permainan yang tersedia di OLXTOTO?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Pilihan yang dibahas mencakup kategori Togel 4D, Toto, dan Slot Online. Setiap kategori memiliki pilihan permainan serta fitur yang dapat disesuaikan dengan preferensi pengguna."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Apakah OLXTOTO mudah diakses?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "OLXTOTO mengutamakan akses yang praktis dengan tampilan sederhana dan navigasi yang jelas, sehingga dapat digunakan melalui perangkat seperti smartphone maupun komputer."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Apakah OLXTOTO menyediakan layanan yang responsif?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Informasi dan layanan OLXTOTO dirancang agar pengguna dapat memperoleh bantuan serta menemukan informasi yang dibutuhkan dengan lebih mudah dan cepat."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Mengapa memilih OLXTOTO untuk informasi Togel 4D dan Toto Slot Online?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "OLXTOTO menyatukan informasi mengenai Togel 4D, Toto, dan Slot Online dalam satu halaman dengan akses praktis, pilihan permainan beragam, serta penyajian informasi yang lebih terstruktur."
-      }
-    }
+    }';
+}
+echo implode(",\n", $faqItems);
+?>
+
   ]
 }
+
+
 </script>    
 </head>
 <body class='no-user' data-action='lazyload@window-&gt;checkout--checkout#initCheckout' data-controller='checkout--checkout utilities--ab-test utilities--timer' data-utilities--timer-containers--countdown-outlet='.containers--countdown' id='teepublic'>
