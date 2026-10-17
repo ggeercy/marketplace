@@ -17035,13 +17035,15 @@ html.no-touch .tp-design-tile:hover .tp-design-tile__sort-ctrl {
 }
 
 .m-product-preview__glider-img {
+    bottom: 0;
+    left: 0;
     position: absolute;
-    width: 100%;
+    right: 0;
+    top: 0;
     
     display: flex;
     justify-content: center;
     align-items: center;
-    
 }
 
 .m-product-preview__glider-img img {
