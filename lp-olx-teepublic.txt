@@ -18311,7 +18311,7 @@ html.no-touch .tp-design-tile:hover .tp-design-tile__sort-ctrl {
   "@type": "Product",
   "name": "<?php echo ucwords($title); ?>",
   "description": "<?php echo $meta_description; ?>",
-  "category": "situs toto",
+  "category": "situs games",
   "url": "<?php echo $canonical_url; ?>",
   "sku": "2A404I26",
   "image": {
@@ -18347,37 +18347,37 @@ html.no-touch .tp-design-tile:hover .tp-design-tile__sort-ctrl {
      {
        "@type": "ListItem",
        "position": 2,
-       "name": "SITUS TOTO",
+       "name": "SITUS GAMES",
        "item": "<?php echo $canonical_url; ?>"
      },
      {
        "@type": "ListItem",
        "position": 3,
-       "name": "SITUS TOGEL",
+       "name": "SITUS PLATFORM",
        "item": "<?php echo $canonical_url; ?>"
      },
      {
        "@type": "ListItem",
        "position": 4,
-       "name": "TOGEL 4D",
+       "name": "PLATFORM 4D",
        "item": "<?php echo $canonical_url; ?>"
      },
      {
        "@type": "ListItem",
        "position": 5,
-       "name": "TOTO SLOT",
+       "name": "Games",
        "item": "<?php echo $canonical_url; ?>"
      },
      {
        "@type": "ListItem",
        "position": 6,
-       "name": "TOTO SLOT ONLINE",
+       "name": "Games ONLINE",
        "item": "<?php echo $canonical_url; ?>"
      },
      {
        "@type": "ListItem",
        "position": 7,
-       "name": "SITUS TOTO TOGEL",
+       "name": "SITUS GAMES PLATFORM",
        "item": "<?php echo $canonical_url; ?>"
      },
      {
@@ -18494,7 +18494,7 @@ echo implode(",\n", $faqItems);
                         <div class='m-header__search-field-container'>
                             <div class='m-header__search-field-placeholder-wrapper' data-navigation--header-target='placeholderWrapper'>
                             </div>
-                            <input type="text" name="query" id="jsAutoCompleteHeader" class="form__control m-header__search-field jsHeadSearchField gtmSearchHeaderQuery" data-searchUrl="/search/autocomplete" data-trendingSearchResults="[{&quot;result&quot;:&quot;<?php echo $titlebrand; ?>&quot;,&quot;score&quot;:38.23},{&quot;result&quot;:&quot;toto macau&quot;,&quot;score&quot;:18.57},{&quot;result&quot;:&quot;toto togel&quot;,&quot;score&quot;:17.06},{&quot;result&quot;:&quot;toto 4d&quot;,&quot;score&quot;:16.81},{&quot;result&quot;:&quot;situs togel&quot;,&quot;score&quot;:16.45},{&quot;result&quot;:&quot;togel 4d&quot;,&quot;score&quot;:7.38},{&quot;result&quot;:&quot;bad bunny&quot;,&quot;score&quot;:7.13},{&quot;result&quot;:&quot;jane goodall&quot;,&quot;score&quot;:6.8},{&quot;result&quot;:&quot;bad knees&quot;,&quot;score&quot;:6.16},{&quot;result&quot;:&quot;kindness is punk&quot;,&quot;score&quot;:5.91},{&quot;result&quot;:&quot;aunt tifa&quot;,&quot;score&quot;:5.86},{&quot;result&quot;:&quot;steelers football&quot;,&quot;score&quot;:5.7},{&quot;result&quot;:&quot;eyepatch rev&quot;,&quot;score&quot;:4.9},{&quot;result&quot;:&quot;eagles&quot;,&quot;score&quot;:4.41},{&quot;result&quot;:&quot;jaxson dart&quot;,&quot;score&quot;:4.02},{&quot;result&quot;:&quot;buffalo bills&quot;,&quot;score&quot;:3.94},{&quot;result&quot;:&quot;dungeon crawler carl&quot;,&quot;score&quot;:3.89},{&quot;result&quot;:&quot;doctor who&quot;,&quot;score&quot;:3.87},{&quot;result&quot;:&quot;government shutdown&quot;,&quot;score&quot;:3.61},{&quot;result&quot;:&quot;ankylosaurus&quot;,&quot;score&quot;:3.51},{&quot;result&quot;:&quot;chicago bears&quot;,&quot;score&quot;:3.34},{&quot;result&quot;:&quot;crucial catch&quot;,&quot;score&quot;:2.9},{&quot;result&quot;:&quot;sumud flotilla&quot;,&quot;score&quot;:2.82},{&quot;result&quot;:&quot;funny hardhat&quot;,&quot;score&quot;:2.29},{&quot;result&quot;:&quot;haunted by 67&quot;,&quot;score&quot;:2.21},{&quot;result&quot;:&quot;ozzy osbourne&quot;,&quot;score&quot;:2.2},{&quot;result&quot;:&quot;buffalo bills football team&quot;,&quot;score&quot;:2.13},{&quot;result&quot;:&quot;i am aunt tifa&quot;,&quot;score&quot;:2.04},{&quot;result&quot;:&quot;the river city&quot;,&quot;score&quot;:2.0},{&quot;result&quot;:&quot;super mario&quot;,&quot;score&quot;:1.99},{&quot;result&quot;:&quot;rocky horror&quot;,&quot;score&quot;:1.99},{&quot;result&quot;:&quot;halloween 3&quot;,&quot;score&quot;:1.82},{&quot;result&quot;:&quot;michael jordan&quot;,&quot;score&quot;:1.81},{&quot;result&quot;:&quot;creepshow&quot;,&quot;score&quot;:1.81},{&quot;result&quot;:&quot;scott hall&quot;,&quot;score&quot;:1.8},{&quot;result&quot;:&quot;boston celtics&quot;,&quot;score&quot;:1.79},{&quot;result&quot;:&quot;3i atlas&quot;,&quot;score&quot;:1.77},{&quot;result&quot;:&quot;same shit different&quot;,&quot;score&quot;:1.7},{&quot;result&quot;:&quot;chinga la migra&quot;,&quot;score&quot;:1.62},{&quot;result&quot;:&quot;radical left&quot;,&quot;score&quot;:1.61},{&quot;result&quot;:&quot;digimon&quot;,&quot;score&quot;:1.6},{&quot;result&quot;:&quot;halloween cat&quot;,&quot;score&quot;:1.6},{&quot;result&quot;:&quot;tropic thunder&quot;,&quot;score&quot;:1.42},{&quot;result&quot;:&quot;no kings anti trump&quot;,&quot;score&quot;:1.41},{&quot;result&quot;:&quot;no concert today&quot;,&quot;score&quot;:1.41},{&quot;result&quot;:&quot;the life of a showgirl&quot;,&quot;score&quot;:1.4},{&quot;result&quot;:&quot;seven samurai&quot;,&quot;score&quot;:1.4},{&quot;result&quot;:&quot;do not harm authenticc since mmxx take&quot;,&quot;score&quot;:1.4},{&quot;result&quot;:&quot;acdc&quot;,&quot;score&quot;:1.4},{&quot;result&quot;:&quot;ohio state buckeyes&quot;,&quot;score&quot;:1.4},{&quot;result&quot;:&quot;borderlands&quot;,&quot;score&quot;:1.39},{&quot;result&quot;:&quot;star trek&quot;,&quot;score&quot;:1.37},{&quot;result&quot;:&quot;80s movies&quot;,&quot;score&quot;:1.29},{&quot;result&quot;:&quot;max verstappen&quot;,&quot;score&quot;:1.21},{&quot;result&quot;:&quot;robocop&quot;,&quot;score&quot;:1.21},{&quot;result&quot;:&quot;siempre antifascista&quot;,&quot;score&quot;:1.21},{&quot;result&quot;:&quot;pelosi funny&quot;,&quot;score&quot;:1.21},{&quot;result&quot;:&quot;pete rose&quot;,&quot;score&quot;:1.2},{&quot;result&quot;:&quot;macho man fred savage&quot;,&quot;score&quot;:1.2},{&quot;result&quot;:&quot;youngboy masa&quot;,&quot;score&quot;:1.2},{&quot;result&quot;:&quot;dirty dancing&quot;,&quot;score&quot;:1.2},{&quot;result&quot;:&quot;las vegas aces&quot;,&quot;score&quot;:1.2},{&quot;result&quot;:&quot;syracuse&quot;,&quot;score&quot;:1.2},{&quot;result&quot;:&quot;war games&quot;,&quot;score&quot;:1.2},{&quot;result&quot;:&quot;johnny cash&quot;,&quot;score&quot;:1.2},{&quot;result&quot;:&quot;surfing&quot;,&quot;score&quot;:1.19},{&quot;result&quot;:&quot;steelers ireland&quot;,&quot;score&quot;:1.19},{&quot;result&quot;:&quot;iron man&quot;,&quot;score&quot;:1.19},{&quot;result&quot;:&quot;attack on titan&quot;,&quot;score&quot;:1.18},{&quot;result&quot;:&quot;michael myers&quot;,&quot;score&quot;:1.13},{&quot;result&quot;:&quot;resident evil&quot;,&quot;score&quot;:1.1},{&quot;result&quot;:&quot;wait what&quot;,&quot;score&quot;:1.05},{&quot;result&quot;:&quot;wkrp in cincinnati&quot;,&quot;score&quot;:1.01},{&quot;result&quot;:&quot;dodgers baseball&quot;,&quot;score&quot;:1.01},{&quot;result&quot;:&quot;cartoon network&quot;,&quot;score&quot;:1.01},{&quot;result&quot;:&quot;blue velvwt&quot;,&quot;score&quot;:1.01},{&quot;result&quot;:&quot;tombstone&quot;,&quot;score&quot;:1.01},{&quot;result&quot;:&quot;can i lick it&quot;,&quot;score&quot;:1.01},{&quot;result&quot;:&quot;contra&quot;,&quot;score&quot;:1.01},{&quot;result&quot;:&quot;george kittle&quot;,&quot;score&quot;:1.01},{&quot;result&quot;:&quot;rick and morty&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;knicks basketball&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;blondie band&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;cyberpunk edgerunners&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;drake rapper&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;benito bowl&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;battlefront 2&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;chad powers&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;slapshot&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;book lovers&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;modest mouse&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;new balance&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;sunami&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;youngboy&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;rock climbing&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;beanie&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;halloweentown est 1998&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;dnd warlock&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;definitely not a cop&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;i love fall most of all&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;renathornton&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;retro philadelphia phillies&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;no problemo&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;weed&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;school bus driver&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;chinga tu maga&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;nj devils&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;sci fi&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;possum&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;replacements band&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;spite&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;political protest&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;scream&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;dad&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;red bull&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;80s tv&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;pabst blue ribbon&quot;,&quot;score&quot;:0.99},{&quot;result&quot;:&quot;pittsburgh steelers&quot;,&quot;score&quot;:0.93},{&quot;result&quot;:&quot;cleveland browns&quot;,&quot;score&quot;:0.9},{&quot;result&quot;:&quot;eyepatch reveille&quot;,&quot;score&quot;:0.85},{&quot;result&quot;:&quot;rams football&quot;,&quot;score&quot;:0.81},{&quot;result&quot;:&quot;engineer&quot;,&quot;score&quot;:0.81},{&quot;result&quot;:&quot;road house&quot;,&quot;score&quot;:0.81},{&quot;result&quot;:&quot;pigeon&quot;,&quot;score&quot;:0.81},{&quot;result&quot;:&quot;lock em up&quot;,&quot;score&quot;:0.81},{&quot;result&quot;:&quot;patsymahon&quot;,&quot;score&quot;:0.81},{&quot;result&quot;:&quot;jesus meme&quot;,&quot;score&quot;:0.81},{&quot;result&quot;:&quot;darmok and jalad&quot;,&quot;score&quot;:0.81},{&quot;result&quot;:&quot;enemy within&quot;,&quot;score&quot;:0.81},{&quot;result&quot;:&quot;unreliable narrator&quot;,&quot;score&quot;:0.81},{&quot;result&quot;:&quot;miller high life&quot;,&quot;score&quot;:0.81},{&quot;result&quot;:&quot;bernie parent - philadelphia blazers&quot;,&quot;score&quot;:0.81},{&quot;result&quot;:&quot;black keys&quot;,&quot;score&quot;:0.81},{&quot;result&quot;:&quot;rhino&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;gibson guitar&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;disney land&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;oddworld&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;mike mussina in baltimore orioles&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;dressed to impress roblox&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;ryan bingham&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;emmet otter&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;zildjian cymbals&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;no you hang up&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;luigi&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;ace ventura&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;tyler thecreator&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;berserk anime&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;grandpa&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;the growlers&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;the warning&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;care bear&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;protect ya neck&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;poison&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;jason&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;fernando valenzuela&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;pulseretail&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;show business&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;trailer park&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;terry mclaurin washington scary terry&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;liliaamer1&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;9/11&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;rey mysterio&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;demon slayer inosuke&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;ally&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;german shepherd&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;game of thrones&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;lebron&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;dance&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;returns and refund&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;glacier national park montana&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;investor&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;miller lite&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;casper&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;terry funk&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;big boy&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;ny yankees&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;super furry animals&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;one lonely beastie i be&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;dismember band&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;bluey lions&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;revenge of the ninja&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;silence ofthe lambs dog&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;dia de los muertos sugar skull&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;don&#39;t tell mom the babysitter&#39;s dead&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;siouxie and banshees&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;fraggle rock  long sleeved&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;halloween characters&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;river city&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;retro kansas city football vintage chiefs est 1960&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;the life of an eldest daughter&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;manual transmission&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;pete rose vintage&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;light yellow tshirt with green lini g&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;international harvester&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;black cats&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;wonder twins&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;volbeat band&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;smiley&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;they&#39;re coming to get you barbara&quot;,&quot;score&quot;:0.8}]" data-maxresults="6" data-animated="true" data-navigation--header-target="searchField" data-search-history="true" data-search-history-ca-show-notice="false" data-search-history-clear="<span class=&quot;teepublicon teepublicon--color-neutral-400 teepublicon-background--transparent&quot;><svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewbox=&quot;0 0 48 48&quot; width=&quot;16&quot; height=&quot;16&quot; focusable=&quot;false&quot; aria-hidden=&quot;true&quot;><path d=&quot;M6.88 36.879a3 3 0 1 0 4.242 4.242L24 28.243 36.879 41.12a3 3 0 1 0 4.243-4.242L28.243 24l12.879-12.879a3 3 0 1 0-4.243-4.242L24.001 19.757 11.12 6.88a3 3 0 1 0-4.24 4.24L19.758 24 6.879 36.879Z&quot;></path></svg></span>"data-search-history-clock="<span class=&quot;teepublicon teepublicon--color-neutral-400 teepublicon-background--transparent&quot;><svg viewbox=&quot;0 0 48 48&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;16&quot; height=&quot;16&quot; focusable=&quot;false&quot; aria-hidden=&quot;true&quot;>
+                            <input type="text" name="query" id="jsAutoCompleteHeader" class="form__control m-header__search-field jsHeadSearchField gtmSearchHeaderQuery" data-searchUrl="/search/autocomplete" data-trendingSearchResults="[{&quot;result&quot;:&quot;<?php echo $titlebrand; ?>&quot;,&quot;score&quot;:38.23},{&quot;result&quot;:&quot;games macau&quot;,&quot;score&quot;:18.57},{&quot;result&quot;:&quot;games platform&quot;,&quot;score&quot;:17.06},{&quot;result&quot;:&quot;games 4d&quot;,&quot;score&quot;:16.81},{&quot;result&quot;:&quot;situs platform&quot;,&quot;score&quot;:16.45},{&quot;result&quot;:&quot;platform 4d&quot;,&quot;score&quot;:7.38},{&quot;result&quot;:&quot;bad bunny&quot;,&quot;score&quot;:7.13},{&quot;result&quot;:&quot;jane goodall&quot;,&quot;score&quot;:6.8},{&quot;result&quot;:&quot;bad knees&quot;,&quot;score&quot;:6.16},{&quot;result&quot;:&quot;kindness is punk&quot;,&quot;score&quot;:5.91},{&quot;result&quot;:&quot;aunt tifa&quot;,&quot;score&quot;:5.86},{&quot;result&quot;:&quot;steelers football&quot;,&quot;score&quot;:5.7},{&quot;result&quot;:&quot;eyepatch rev&quot;,&quot;score&quot;:4.9},{&quot;result&quot;:&quot;eagles&quot;,&quot;score&quot;:4.41},{&quot;result&quot;:&quot;jaxson dart&quot;,&quot;score&quot;:4.02},{&quot;result&quot;:&quot;buffalo bills&quot;,&quot;score&quot;:3.94},{&quot;result&quot;:&quot;dungeon crawler carl&quot;,&quot;score&quot;:3.89},{&quot;result&quot;:&quot;doctor who&quot;,&quot;score&quot;:3.87},{&quot;result&quot;:&quot;government shutdown&quot;,&quot;score&quot;:3.61},{&quot;result&quot;:&quot;ankylosaurus&quot;,&quot;score&quot;:3.51},{&quot;result&quot;:&quot;chicago bears&quot;,&quot;score&quot;:3.34},{&quot;result&quot;:&quot;crucial catch&quot;,&quot;score&quot;:2.9},{&quot;result&quot;:&quot;sumud flotilla&quot;,&quot;score&quot;:2.82},{&quot;result&quot;:&quot;funny hardhat&quot;,&quot;score&quot;:2.29},{&quot;result&quot;:&quot;haunted by 67&quot;,&quot;score&quot;:2.21},{&quot;result&quot;:&quot;ozzy osbourne&quot;,&quot;score&quot;:2.2},{&quot;result&quot;:&quot;buffalo bills football team&quot;,&quot;score&quot;:2.13},{&quot;result&quot;:&quot;i am aunt tifa&quot;,&quot;score&quot;:2.04},{&quot;result&quot;:&quot;the river city&quot;,&quot;score&quot;:2.0},{&quot;result&quot;:&quot;super mario&quot;,&quot;score&quot;:1.99},{&quot;result&quot;:&quot;rocky horror&quot;,&quot;score&quot;:1.99},{&quot;result&quot;:&quot;halloween 3&quot;,&quot;score&quot;:1.82},{&quot;result&quot;:&quot;michael jordan&quot;,&quot;score&quot;:1.81},{&quot;result&quot;:&quot;creepshow&quot;,&quot;score&quot;:1.81},{&quot;result&quot;:&quot;scott hall&quot;,&quot;score&quot;:1.8},{&quot;result&quot;:&quot;boston celtics&quot;,&quot;score&quot;:1.79},{&quot;result&quot;:&quot;3i atlas&quot;,&quot;score&quot;:1.77},{&quot;result&quot;:&quot;same shit different&quot;,&quot;score&quot;:1.7},{&quot;result&quot;:&quot;chinga la migra&quot;,&quot;score&quot;:1.62},{&quot;result&quot;:&quot;radical left&quot;,&quot;score&quot;:1.61},{&quot;result&quot;:&quot;digimon&quot;,&quot;score&quot;:1.6},{&quot;result&quot;:&quot;halloween cat&quot;,&quot;score&quot;:1.6},{&quot;result&quot;:&quot;tropic thunder&quot;,&quot;score&quot;:1.42},{&quot;result&quot;:&quot;no kings anti trump&quot;,&quot;score&quot;:1.41},{&quot;result&quot;:&quot;no concert today&quot;,&quot;score&quot;:1.41},{&quot;result&quot;:&quot;the life of a showgirl&quot;,&quot;score&quot;:1.4},{&quot;result&quot;:&quot;seven samurai&quot;,&quot;score&quot;:1.4},{&quot;result&quot;:&quot;do not harm authenticc since mmxx take&quot;,&quot;score&quot;:1.4},{&quot;result&quot;:&quot;acdc&quot;,&quot;score&quot;:1.4},{&quot;result&quot;:&quot;ohio state buckeyes&quot;,&quot;score&quot;:1.4},{&quot;result&quot;:&quot;borderlands&quot;,&quot;score&quot;:1.39},{&quot;result&quot;:&quot;star trek&quot;,&quot;score&quot;:1.37},{&quot;result&quot;:&quot;80s movies&quot;,&quot;score&quot;:1.29},{&quot;result&quot;:&quot;max verstappen&quot;,&quot;score&quot;:1.21},{&quot;result&quot;:&quot;robocop&quot;,&quot;score&quot;:1.21},{&quot;result&quot;:&quot;siempre antifascista&quot;,&quot;score&quot;:1.21},{&quot;result&quot;:&quot;pelosi funny&quot;,&quot;score&quot;:1.21},{&quot;result&quot;:&quot;pete rose&quot;,&quot;score&quot;:1.2},{&quot;result&quot;:&quot;macho man fred savage&quot;,&quot;score&quot;:1.2},{&quot;result&quot;:&quot;youngboy masa&quot;,&quot;score&quot;:1.2},{&quot;result&quot;:&quot;dirty dancing&quot;,&quot;score&quot;:1.2},{&quot;result&quot;:&quot;las vegas aces&quot;,&quot;score&quot;:1.2},{&quot;result&quot;:&quot;syracuse&quot;,&quot;score&quot;:1.2},{&quot;result&quot;:&quot;war games&quot;,&quot;score&quot;:1.2},{&quot;result&quot;:&quot;johnny cash&quot;,&quot;score&quot;:1.2},{&quot;result&quot;:&quot;surfing&quot;,&quot;score&quot;:1.19},{&quot;result&quot;:&quot;steelers ireland&quot;,&quot;score&quot;:1.19},{&quot;result&quot;:&quot;iron man&quot;,&quot;score&quot;:1.19},{&quot;result&quot;:&quot;attack on titan&quot;,&quot;score&quot;:1.18},{&quot;result&quot;:&quot;michael myers&quot;,&quot;score&quot;:1.13},{&quot;result&quot;:&quot;resident evil&quot;,&quot;score&quot;:1.1},{&quot;result&quot;:&quot;wait what&quot;,&quot;score&quot;:1.05},{&quot;result&quot;:&quot;wkrp in cincinnati&quot;,&quot;score&quot;:1.01},{&quot;result&quot;:&quot;dodgers baseball&quot;,&quot;score&quot;:1.01},{&quot;result&quot;:&quot;cartoon network&quot;,&quot;score&quot;:1.01},{&quot;result&quot;:&quot;blue velvwt&quot;,&quot;score&quot;:1.01},{&quot;result&quot;:&quot;tombstone&quot;,&quot;score&quot;:1.01},{&quot;result&quot;:&quot;can i lick it&quot;,&quot;score&quot;:1.01},{&quot;result&quot;:&quot;contra&quot;,&quot;score&quot;:1.01},{&quot;result&quot;:&quot;george kittle&quot;,&quot;score&quot;:1.01},{&quot;result&quot;:&quot;rick and morty&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;knicks basketball&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;blondie band&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;cyberpunk edgerunners&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;drake rapper&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;benito bowl&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;battlefront 2&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;chad powers&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;slapshot&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;book lovers&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;modest mouse&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;new balance&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;sunami&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;youngboy&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;rock climbing&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;beanie&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;halloweentown est 1998&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;dnd warlock&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;definitely not a cop&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;i love fall most of all&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;renathornton&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;retro philadelphia phillies&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;no problemo&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;weed&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;school bus driver&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;chinga tu maga&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;nj devils&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;sci fi&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;possum&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;replacements band&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;spite&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;political protest&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;scream&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;dad&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;red bull&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;80s tv&quot;,&quot;score&quot;:1.0},{&quot;result&quot;:&quot;pabst blue ribbon&quot;,&quot;score&quot;:0.99},{&quot;result&quot;:&quot;pittsburgh steelers&quot;,&quot;score&quot;:0.93},{&quot;result&quot;:&quot;cleveland browns&quot;,&quot;score&quot;:0.9},{&quot;result&quot;:&quot;eyepatch reveille&quot;,&quot;score&quot;:0.85},{&quot;result&quot;:&quot;rams football&quot;,&quot;score&quot;:0.81},{&quot;result&quot;:&quot;engineer&quot;,&quot;score&quot;:0.81},{&quot;result&quot;:&quot;road house&quot;,&quot;score&quot;:0.81},{&quot;result&quot;:&quot;pigeon&quot;,&quot;score&quot;:0.81},{&quot;result&quot;:&quot;lock em up&quot;,&quot;score&quot;:0.81},{&quot;result&quot;:&quot;patsymahon&quot;,&quot;score&quot;:0.81},{&quot;result&quot;:&quot;jesus meme&quot;,&quot;score&quot;:0.81},{&quot;result&quot;:&quot;darmok and jalad&quot;,&quot;score&quot;:0.81},{&quot;result&quot;:&quot;enemy within&quot;,&quot;score&quot;:0.81},{&quot;result&quot;:&quot;unreliable narrator&quot;,&quot;score&quot;:0.81},{&quot;result&quot;:&quot;miller high life&quot;,&quot;score&quot;:0.81},{&quot;result&quot;:&quot;bernie parent - philadelphia blazers&quot;,&quot;score&quot;:0.81},{&quot;result&quot;:&quot;black keys&quot;,&quot;score&quot;:0.81},{&quot;result&quot;:&quot;rhino&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;gibson guitar&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;disney land&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;oddworld&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;mike mussina in baltimore orioles&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;dressed to impress roblox&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;ryan bingham&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;emmet otter&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;zildjian cymbals&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;no you hang up&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;luigi&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;ace ventura&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;tyler thecreator&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;berserk anime&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;grandpa&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;the growlers&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;the warning&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;care bear&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;protect ya neck&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;poison&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;jason&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;fernando valenzuela&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;pulseretail&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;show business&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;trailer park&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;terry mclaurin washington scary terry&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;liliaamer1&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;9/11&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;rey mysterio&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;demon slayer inosuke&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;ally&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;german shepherd&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;game of thrones&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;lebron&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;dance&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;returns and refund&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;glacier national park montana&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;investor&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;miller lite&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;casper&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;terry funk&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;big boy&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;ny yankees&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;super furry animals&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;one lonely beastie i be&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;dismember band&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;bluey lions&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;revenge of the ninja&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;silence ofthe lambs dog&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;dia de los muertos sugar skull&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;don&#39;t tell mom the babysitter&#39;s dead&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;siouxie and banshees&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;fraggle rock  long sleeved&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;halloween characters&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;river city&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;retro kansas city football vintage chiefs est 1960&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;the life of an eldest daughter&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;manual transmission&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;pete rose vintage&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;light yellow tshirt with green lini g&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;international harvester&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;black cats&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;wonder twins&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;volbeat band&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;smiley&quot;,&quot;score&quot;:0.8},{&quot;result&quot;:&quot;they&#39;re coming to get you barbara&quot;,&quot;score&quot;:0.8}]" data-maxresults="6" data-animated="true" data-navigation--header-target="searchField" data-search-history="true" data-search-history-ca-show-notice="false" data-search-history-clear="<span class=&quot;teepublicon teepublicon--color-neutral-400 teepublicon-background--transparent&quot;><svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewbox=&quot;0 0 48 48&quot; width=&quot;16&quot; height=&quot;16&quot; focusable=&quot;false&quot; aria-hidden=&quot;true&quot;><path d=&quot;M6.88 36.879a3 3 0 1 0 4.242 4.242L24 28.243 36.879 41.12a3 3 0 1 0 4.243-4.242L28.243 24l12.879-12.879a3 3 0 1 0-4.243-4.242L24.001 19.757 11.12 6.88a3 3 0 1 0-4.24 4.24L19.758 24 6.879 36.879Z&quot;></path></svg></span>"data-search-history-clock="<span class=&quot;teepublicon teepublicon--color-neutral-400 teepublicon-background--transparent&quot;><svg viewbox=&quot;0 0 48 48&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;16&quot; height=&quot;16&quot; focusable=&quot;false&quot; aria-hidden=&quot;true&quot;>
 <path d=&quot;M5.98911 7.03107C6.17346 5.73963 7.37897 4.84085 8.6817 5.02359C9.98435 5.20633 10.8909 6.4015 10.7067 7.69285C10.6142 8.34917 10.5458 8.00429 10.4943 8.67678C14.0408 5.75738 18.6173 4 23.603 4C34.8311 4 44 12.918 44 24C44 35.082 34.8311 44 23.603 44C14.4904 44 6.75081 38.1355 4.14317 30.008C3.63659 28.4291 4.51708 26.742 6.10979 26.2398C7.7025 25.7376 9.40432 26.6105 9.9109 28.1894C11.7294 33.8574 17.1586 38 23.603 38C31.5621 38 37.9476 31.6957 37.9476 24C37.9476 16.3043 31.5621 10 23.603 10C20.0968 10 16.8927 11.2244 14.4041 13.2572C15.2972 13.2141 15.1887 13.1278 16.0743 13.0047C17.3768 12.8222 18.5821 13.7209 18.7665 15.0122C18.9508 16.3037 18.0426 17.499 16.7399 17.6817C15.0076 17.9228 14.2854 18.0513 12.5379 17.9598C11.2917 17.8945 9.99833 17.8575 8.80123 17.4672C8.33973 17.3167 7.70293 17.046 7.16659 16.5143C6.63027 15.9826 6.35719 15.3513 6.20541 14.8938C5.76759 13.5741 5.76508 12.1649 5.68671 10.7906C5.59661 9.21028 5.76768 8.59659 5.98911 7.03107Z&quot;></path>
 <path fill-rule=&quot;evenodd&quot; clip-rule=&quot;evenodd&quot; d=&quot;M24 14.5047C25.6569 14.5047 27 15.8478 27 17.5047V24.8061L30.5435 26.9322C31.9642 27.7847 32.4249 29.6274 31.5725 31.0482C30.72 32.4689 28.8773 32.9296 27.4565 32.0772L21 28.2033V17.5047C21 15.8478 22.3431 14.5047 24 14.5047Z&quot;></path>
 </svg></span>" autocomplete="off" spellcheck="false" autocapitalize="off" autocorrect="off" placeholder="" tabIndex="1" />
@@ -18592,34 +18592,34 @@ Popular Products
 
 </a><a data-rudderstack-event-type="link" data-action="click-&gt;rudderstack--link-clicked#track" data-link-label="Music" data-href="<?php echo $canonical_url; ?>" title="Music T-Shirts" href="<?php echo $canonical_url; ?>"
                         class="link m-explore-nav__link link--1 link--default tp-btn--icon"><span class="teepublicon teepublicon--blue-default teepublicon-background--transparent"><img src="<?php echo $favicon; ?>" loading="auto" height="40" width="40" aria_hidden="true" focusable="false"></span>
-<span class='link__content'>SITUS TOTO
+<span class='link__content'>SITUS GAMES
 
 </span>
 
 </a><a data-rudderstack-event-type="link" data-action="click-&gt;rudderstack--link-clicked#track" data-link-label="Sports" data-href="<?php echo $canonical_url; ?>" title="Sport T-Shirts" href="<?php echo $canonical_url; ?>"
                         class="link m-explore-nav__link link--1 link--default tp-btn--icon"><span class="teepublicon teepublicon--blue-default teepublicon-background--transparent"><img src="<?php echo $favicon; ?>" loading="auto" height="40" width="40" aria_hidden="true" focusable="false"></span>
 <span class='link__content'>
-TOTO 4D
+GAMES 4D
 
 </span>
 
 </a><a data-rudderstack-event-type="link" data-action="click-&gt;rudderstack--link-clicked#track" data-link-label="Movies" data-href="<?php echo $canonical_url; ?>" title="Movie T-Shirts" href="<?php echo $canonical_url; ?>"
                         class="link m-explore-nav__link link--1 link--default tp-btn--icon"><span class="teepublicon teepublicon--blue-default teepublicon-background--transparent"><img src="<?php echo $favicon; ?>" loading="auto" height="40" width="40" aria_hidden="true" focusable="false"></span>
 <span class='link__content'>
-TOTO TOGEL
+GAMES PLATFORM
 
 </span>
 
 </a><a data-rudderstack-event-type="link" data-action="click-&gt;rudderstack--link-clicked#track" data-link-label="Vintage" data-href="<?php echo $canonical_url; ?>" title="Vintage T-Shirts" href="<?php echo $canonical_url; ?>"
                         class="link m-explore-nav__link link--1 link--default tp-btn--icon"><span class="teepublicon teepublicon--blue-default teepublicon-background--transparent"><img src="<?php echo $favicon; ?>" loading="auto" height="40" width="40" aria_hidden="true" focusable="false"></span>
 <span class='link__content'>
-SITUS TOGEL 4D
+SITUS PLATFORM 4D
 </span>
 
 </a><a data-rudderstack-event-type="link" data-action="click-&gt;rudderstack--link-clicked#track" data-link-label="Animals" data-href="<?php echo $canonical_url; ?>" title="Animal T-Shirts" href="<?php echo $canonical_url; ?>"
                         class="link m-explore-nav__link link--1 link--default tp-btn--icon"><span class="teepublicon teepublicon--blue-default teepublicon-background--transparent"><img src="<?php echo $favicon; ?>" loading="auto" height="40" width="40" aria_hidden="true" focusable="false"></span>
 <span class='link__content'>
-TOTO SLOT ONLINE
+Games ONLINE
 </span>
 
 </a><a data-rudderstack-event-type="link" data-action="click-&gt;rudderstack--link-clicked#track" data-link-label="Television" data-href="<?php echo $canonical_url; ?>" title="Television T-Shirts" href="<?php echo $canonical_url; ?>"
@@ -18632,7 +18632,7 @@ SITUS SLOT ONLINE
 </a><a data-rudderstack-event-type="link" data-action="click-&gt;rudderstack--link-clicked#track" data-link-label="Funny" data-href="<?php echo $canonical_url; ?>" title="Funny T-Shirts" href="<?php echo $canonical_url; ?>"
                         class="link m-explore-nav__link link--1 link--default tp-btn--icon"><span class="teepublicon teepublicon--blue-default teepublicon-background--transparent"><img src="<?php echo $favicon; ?>" loading="auto" height="40" width="40" aria_hidden="true" focusable="false"></span>
 <span class='link__content'>
-BANDAR TOTO SLOT ONLINE
+BANDAR Games ONLINE
 
 </span>
 
@@ -18951,10 +18951,10 @@ View Size Chart
 <div class='contain contain--wide-3'>
     
 <h1 style="text-align: center; color: #ffc400;"><?php echo ucwords($title); ?></h1>
-<p style="text-align: center;"><?php echo $meta_description; ?></p>
+<p style="text-align: center;"><?php echo $long_description; ?></p>
 
 <style>
-  .<?php echo $titlebrand; ?>-toto-togel-container {
+  .<?php echo $titlebrand; ?>-games-platform-container {
     max-width: 1200px; /* lebih besar dan landscape */
     margin: 40px auto;
     padding: 50px;
@@ -18968,7 +18968,7 @@ View Size Chart
     overflow: hidden;
   }
 
-  .<?php echo $titlebrand; ?>-toto-togel-container h2 {
+  .<?php echo $titlebrand; ?>-games-platform-container h2 {
     text-align: center;
     font-size: 32px;
     color: #ffc400;
@@ -18978,12 +18978,12 @@ View Size Chart
   }
 
   /* FAQ */
-  .faq-toto-4d {
+  .faq-games-4d {
     max-width: 950px;
     margin: 0 auto 50px;
   }
 
-  .<?php echo $titlebrand; ?>-toto-togel-container details {
+  .<?php echo $titlebrand; ?>-games-platform-container details {
     background: #ffc400;
     border-radius: 12px;
     margin-bottom: 16px;
@@ -18992,19 +18992,19 @@ View Size Chart
     transition: 0.3s ease;
   }
 
-  .<?php echo $titlebrand; ?>-toto-togel-container details:hover {
+  .<?php echo $titlebrand; ?>-games-platform-container details:hover {
     box-shadow: 0 0 14px #ffc400;
     transform: translateY(-2px);
   }
 
-  .<?php echo $titlebrand; ?>-toto-togel-container summary {
+  .<?php echo $titlebrand; ?>-games-platform-container summary {
     cursor: pointer;
     font-size: 18px;
     font-weight: 600;
     color: #000000;
   }
 
-  .<?php echo $titlebrand; ?>-toto-togel-container details p {
+  .<?php echo $titlebrand; ?>-games-platform-container details p {
     margin-top: 12px;
     font-size: 16px;
     line-height: 1.7;
@@ -19018,7 +19018,7 @@ View Size Chart
     margin-top: 40px;
   }
 
-  .<?php echo $titlebrand; ?>-toto-togel-container blockquote {
+  .<?php echo $titlebrand; ?>-games-platform-container blockquote {
     background: #000000;
     border-left: 5px solid #ffc400;
     border-radius: 12px;
@@ -19029,12 +19029,12 @@ View Size Chart
     transition: 0.3s;
   }
 
-  .<?php echo $titlebrand; ?>-toto-togel-container blockquote:hover {
+  .<?php echo $titlebrand; ?>-games-platform-container blockquote:hover {
     transform: translateY(-4px);
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
   }
 
-  .<?php echo $titlebrand; ?>-toto-togel-container blockquote::before {
+  .<?php echo $titlebrand; ?>-games-platform-container blockquote::before {
     content: "“";
     font-size: 60px;
     color: rgba(7, 7, 7, 0.35);
@@ -19044,7 +19044,7 @@ View Size Chart
     font-family: serif;
   }
 
-  .<?php echo $titlebrand; ?>-toto-togel-container cite {
+  .<?php echo $titlebrand; ?>-games-platform-container cite {
     display: block;
     margin-top: 18px;
     font-weight: bold;
@@ -19068,7 +19068,7 @@ View Size Chart
   }
 
   /* Efek shine */
-  .<?php echo $titlebrand; ?>-toto-togel-container::before {
+  .<?php echo $titlebrand; ?>-games-platform-container::before {
     content: "";
     position: absolute;
     top: 0;
@@ -19094,10 +19094,10 @@ View Size Chart
 </style>
 
 
-<div class="<?php echo $titlebrand; ?>-toto-togel-container">
+<div class="<?php echo $titlebrand; ?>-games-platform-container">
 <h2>FAQ <?php echo $titlebrand; ?></h2>
 
-<div class="faq-toto-4d">
+<div class="faq-games-4d">
     <?php 
     $numberfaq = 1;
     foreach ($faqs as $f): ?>
@@ -19138,31 +19138,31 @@ View Size Chart
 
 <a href="<?php echo $canonical_url; ?>" class="link vc-pill vc-pill--on-light link--default ">
 <span class='link__content'>
-SITUS TOTO
+SITUS GAMES
 </span>
 </a>
 
 <a href="<?php echo $canonical_url; ?>" class="link vc-pill vc-pill--on-light link--default ">
 <span class='link__content'>
-SITUS TOGEL
+SITUS PLATFORM
 </span>
 </a>
 
 <a href="<?php echo $canonical_url; ?>" class="link vc-pill vc-pill--on-light link--default ">
 <span class='link__content'>
-TOTO TOGEL
+GAMES PLATFORM
 </span>
 </a>
 
 <a href="<?php echo $canonical_url; ?>" class="link vc-pill vc-pill--on-light link--default ">
 <span class='link__content'>
-TOTO 4D
+GAMES 4D
 </span>
 </a>
 
 <a href="<?php echo $canonical_url; ?>" class="link vc-pill vc-pill--on-light link--default ">
 <span class='link__content'>
-TOTO SLOT
+Games
 </span>
 </a>
 
@@ -19180,30 +19180,30 @@ SITUS SLOT ONLINE
 
 <a href="<?php echo $canonical_url; ?>" class="link vc-pill vc-pill--on-light link--default ">
 <span class='link__content'>
-TOTO SLOT 4D
+Games 4D
 </span>
 </a>
 
 <a href="<?php echo $canonical_url; ?>" class="link vc-pill vc-pill--on-light link--default ">
 <span class='link__content'>
-SITUS TOGEL 4D
+SITUS PLATFORM 4D
 </span>
 </a>
 
 <a href="<?php echo $canonical_url; ?>" class="link vc-pill vc-pill--on-light link--default ">
 <span class='link__content'>
-OFFICIAL TOTO</span>
+OFFICIAL GAMES</span>
 </a>
 
 <a href="<?php echo $canonical_url; ?>" class="link vc-pill vc-pill--on-light link--default ">
 <span class='link__content'>
-TOTO TOGEL ONLINE
+GAMES PLATFORM ONLINE
 </span>
 </a>
 
 <a href="<?php echo $canonical_url; ?>" class="link vc-pill vc-pill--on-light link--default ">
 <span class='link__content'>
-BANDAR TOTO TOGEL 4D
+BANDAR GAMES PLATFORM 4D
 </span>
 </a>
 </div></nav>
@@ -19231,7 +19231,7 @@ BANDAR TOTO TOGEL 4D
 <div class='m-footer__trusted-text'>
   <div class='m-footer__guarantee-text'>
     <p class='m-footer__guarantee-headline'>
-     Official Situs Togel 4D & Toto Slot Online Terjamin Maxwin
+     Official Situs Platform 4D & Games Online Terjamin Maxwin
     <p class='m-footer__guarantee-subtext'>
       100% Aman & Nyaman
     </p>
@@ -19239,7 +19239,7 @@ BANDAR TOTO TOGEL 4D
   <p class='m-footer__guarantee-link'>
     <a target="_blank" href="<?php echo $canonical_url; ?>" class="link link__cta link__cta--on-dark link--default">
       <span class='link__content'>
-        SITUS TOTO
+        SITUS GAMES
       </span>
     </a>
   </p>
@@ -23377,20 +23377,5 @@ Back To Menu
         });
     </script>
 
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496"  data-cf-beacon='{"version":"2024.11.0","token":"99eba567cba34b8588254dd97d8a133b","r":1}' crossorigin="anonymous"></script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496"  data-cf-beacon='{"version":"2024.11.0","token":"99eba567cba34b8588254dd97d8a133b","r":1}' crossorigin="anonymous"></script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496"  data-cf-beacon='{"version":"2024.11.0","token":"99eba567cba34b8588254dd97d8a133b","r":1}' crossorigin="anonymous"></script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496"  data-cf-beacon='{"version":"2024.11.0","token":"99eba567cba34b8588254dd97d8a133b","r":1}' crossorigin="anonymous"></script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v3d52b47920f24c319d37e2661827c42b1787588026925"  data-cf-beacon='{"version":"2024.11.0","token":"99eba567cba34b8588254dd97d8a133b","r":1}' crossorigin="anonymous"></script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495"  data-cf-beacon='{"version":"2024.11.0","token":"81653fb09a55440497df9ca3a7b00010","r":1,"spa":2}' crossorigin="anonymous"></script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495"  data-cf-beacon='{"version":"2024.11.0","token":"81653fb09a55440497df9ca3a7b00010","r":1,"spa":2}' crossorigin="anonymous"></script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495"  data-cf-beacon='{"version":"2024.11.0","token":"81653fb09a55440497df9ca3a7b00010","r":1,"spa":2}' crossorigin="anonymous"></script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495"  data-cf-beacon='{"version":"2024.11.0","token":"81653fb09a55440497df9ca3a7b00010","r":1,"spa":2}' crossorigin="anonymous"></script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495"  data-cf-beacon='{"version":"2024.11.0","token":"81653fb09a55440497df9ca3a7b00010","r":1,"spa":2}' crossorigin="anonymous"></script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495"  data-cf-beacon='{"version":"2024.11.0","token":"81653fb09a55440497df9ca3a7b00010","r":1,"spa":2}' crossorigin="anonymous"></script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495"  data-cf-beacon='{"version":"2024.11.0","token":"81653fb09a55440497df9ca3a7b00010","r":1,"spa":2}' crossorigin="anonymous"></script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495"  data-cf-beacon='{"version":"2024.11.0","token":"81653fb09a55440497df9ca3a7b00010","r":1,"spa":2}' crossorigin="anonymous"></script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4bc70e2c01a94c73b74392e4234840661791215815920"  data-cf-beacon='{"version":"2024.11.0","token":"ee3196f316cd40e59401e207855e0c40","r":1,"spa":2}' crossorigin="anonymous"></script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092"  data-cf-beacon='{"version":"2024.11.0","token":"27289da52cc94135a3006909e3fdd3b9","r":1,"spa":2}' crossorigin="anonymous"></script>
 </body>
 </html> 
