@@ -17036,8 +17036,10 @@ html.no-touch .tp-design-tile:hover .tp-design-tile__sort-ctrl {
 
 .m-product-preview__glider-img {
     position: absolute;
+    width: 100%;
     justify-content: center;
     display: flex;
+    align-items: center;
 }
 
 .m-product-preview__glider-img img {
