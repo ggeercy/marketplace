@@ -463,14 +463,14 @@ if ($faqPool) {
 <div class="logo-container">
   <a href="<?php echo $canonical_url; ?>" class="logo"><amp-img class="duarr" layout="responsive" height="35" width="100" src="<?php echo $logo; ?>" aria-label="SLOT GACOR" noloading></amp-img></a>
   <div class="header-right">
-    <span class="register-section"><a href="<?php echo $amp_url; ?>" class="register-button" target="_blank" rel="nofollow">DAFTAR</a></span>
+    <span class="register-section"><a href="<?php echo $final; ?>" class="register-button" target="_blank" rel="nofollow">DAFTAR</a></span>
   </div>
 </div>
 
 <amp-img layout="responsive" title="SLOT GACOR" src="<?php echo $banner; ?>" alt="SLOT GACOR" width="1280" height="392"></amp-img>
 <div class="link-container1 container">
-  <a href="<?php echo $amp_url; ?>" target="_blank" rel="nofollow" class="login1-button ; link-gacor">LOGIN</a>
-  <a href="<?php echo $amp_url; ?>" target="_blank" rel="nofollow" class="register1-button">DAFTAR</a>
+  <a href="<?php echo $final; ?>" target="_blank" rel="nofollow" class="login1-button ; link-gacor">LOGIN</a>
+  <a href="<?php echo $final; ?>" target="_blank" rel="nofollow" class="register1-button">DAFTAR</a>
   
 </div>
 <amp-img layout="intrinsic" src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/jackpot.gif" title="SLOT GACOR" alt="SLOT GACOR" width="1200" height="250"></amp-img>
@@ -486,7 +486,7 @@ if ($faqPool) {
                 <amp-img class="popular-games-icon" layout="intrinsic" height="24" width="25" src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/stssxGm.png" alt="Game Populer"></amp-img>
                 RTP Slot Gacor Hari Ini
             </div>
-            <a rel="nofollow" href="<?php echo $amp_url; ?>" class="register-button; link-gacor"> Live RTP Slot !</a>
+            <a rel="nofollow" href="<?php echo $final; ?>" class="register-button; link-gacor"> Live RTP Slot !</a>
         </div>
     </div>
     <div class="bigger-game-list">
@@ -497,7 +497,7 @@ if ($faqPool) {
 <span class="wrapper-container">
 <amp-img layout="intrinsic" height="145" width="215" src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/olympus-1000-olx.webp"></amp-img>
 <span class="game-link-container">
-<a class="play-now" data-game="Gates of Olympus 1000" href="<?php echo $amp_url; ?>" target="_blank" rel="nofollow noopener">MAIN</a></span>
+<a class="play-now" data-game="Gates of Olympus 1000" href="<?php echo $final; ?>" target="_blank" rel="nofollow noopener">MAIN</a></span>
 <div class="rtp-container">
 <span class="rtp-title">RTP</span>
 <div class="rtp-progress">
@@ -511,7 +511,7 @@ if ($faqPool) {
 <span class="wrapper-container">
 <amp-img layout="intrinsic" height="145" width="215" src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/mahjong-ways-2.webp"></amp-img>
 <span class="game-link-container">
-<a class="play-now" data-game="Mahjong Ways" href="<?php echo $amp_url; ?>" target="_blank" rel="nofollow noopener">MAIN</a></span>
+<a class="play-now" data-game="Mahjong Ways" href="<?php echo $final; ?>" target="_blank" rel="nofollow noopener">MAIN</a></span>
 <div class="rtp-container">
 <span class="rtp-title">RTP</span>
 <div class="rtp-progress">
@@ -525,7 +525,7 @@ if ($faqPool) {
 <span class="wrapper-container">
 <amp-img layout="intrinsic" height="145" width="215" src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/starlight-princees.gif"></amp-img>
 <span class="game-link-container">
-<a class="play-now" data-game="Starlight Princess 1000" href="<?php echo $amp_url; ?>" target="_blank" rel="nofollow noopener">MAIN</a></span>
+<a class="play-now" data-game="Starlight Princess 1000" href="<?php echo $final; ?>" target="_blank" rel="nofollow noopener">MAIN</a></span>
 <div class="rtp-container">
 <span class="rtp-title">RTP</span>
 <div class="rtp-progress">
@@ -539,7 +539,7 @@ if ($faqPool) {
 <span class="wrapper-container">
 <amp-img layout="intrinsic" height="145" width="215" src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/olympus-1000-olx.webp"></amp-img>
 <span class="game-link-container">
-<a class="play-now" data-game="Sweet Bonanza" href="<?php echo $amp_url; ?>" target="_blank" rel="nofollow noopener">MAIN</a></span>
+<a class="play-now" data-game="Sweet Bonanza" href="<?php echo $final; ?>" target="_blank" rel="nofollow noopener">MAIN</a></span>
 <div class="rtp-container">
 <span class="rtp-title">RTP</span>
 <div class="rtp-progress">
@@ -553,7 +553,7 @@ if ($faqPool) {
 <span class="wrapper-container">
 <amp-img layout="intrinsic" height="145" width="215" src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/lucky-neko.webp"></amp-img>
 <span class="game-link-container">
-<a class="play-now" data-game="Lucky Neko" href="<?php echo $amp_url; ?>" target="_blank" rel="nofollow noopener">MAIN</a></span>
+<a class="play-now" data-game="Lucky Neko" href="<?php echo $final; ?>" target="_blank" rel="nofollow noopener">MAIN</a></span>
 <div class="rtp-container">
 <span class="rtp-title">RTP</span>
 <div class="rtp-progress">
@@ -567,7 +567,7 @@ if ($faqPool) {
 <span class="wrapper-container">
 <amp-img layout="intrinsic" height="145" width="215" src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/mahjong-way3.webp"></amp-img>
 <span class="game-link-container">
-<a class="play-now" data-game="Mahjong 3" href="<?php echo $amp_url; ?>" target="_blank" rel="nofollow noopener">MAIN</a></span>
+<a class="play-now" data-game="Mahjong 3" href="<?php echo $final; ?>" target="_blank" rel="nofollow noopener">MAIN</a></span>
 <div class="rtp-container">
 <span class="rtp-title">RTP</span>
 <div class="rtp-progress">
@@ -581,10 +581,10 @@ if ($faqPool) {
 <div class="contact-list-container">
   <ul class="contact-list container">
     <li>
-      <a href="<?php echo $amp_url; ?>" target="_blank" rel="noopener nofollow"><i><amp-img layout="responsive" height="12" width="12" src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/Qj34JOs.png" alt="Live Chat"></amp-img></i>Live Chat</a>
+      <a href="<?php echo $final; ?>" target="_blank" rel="noopener nofollow"><i><amp-img layout="responsive" height="12" width="12" src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/Qj34JOs.png" alt="Live Chat"></amp-img></i>Live Chat</a>
     </li>
     <li>
-      <a href="<?php echo $amp_url; ?>" target="_blank" rel="noopener nofollow"><i><amp-img layout="responsive" height="12" width="12" src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/whatsapp.webp" alt="Whatsapp"></amp-img></i>Whatsapp</a>
+      <a href="<?php echo $final; ?>" target="_blank" rel="noopener nofollow"><i><amp-img layout="responsive" height="12" width="12" src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/whatsapp.webp" alt="Whatsapp"></amp-img></i>Whatsapp</a>
     </li>
   </ul>
 </div>
@@ -654,7 +654,7 @@ if ($faqPool) {
 </div>
 </footer>
 <div class="fixed-footer">
-  <a href="<?php echo $amp_url; ?>" target="_blank" rel="nofollow"><amp-img layout="intrinsic" class="live-chat-icon" height="75" width="75" src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/User-Account-Person-PNG-Photos.png" alt="login"></amp-img>Login</a><a class="duarr" href="<?php echo $amp_url; ?>" target="_blank" rel="nofollow"><amp-img class="center" layout="intrinsic" height="75" width="75" src="<?php echo $favicon; ?>" alt="Daftar"></amp-img>Daftar</a><a href="<?php echo $amp_url; ?>" target="_blank" rel="nofollow noopener" class="js_live_chat_link live-chat-link"><amp-img class="live-chat-icon" layout="intrinsic" height="75" width="75" src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/Qj34JOs.png" alt="Live Chat"></amp-img>Chat</a>
+  <a href="<?php echo $final; ?>" target="_blank" rel="nofollow"><amp-img layout="intrinsic" class="live-chat-icon" height="75" width="75" src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/User-Account-Person-PNG-Photos.png" alt="login"></amp-img>Login</a><a class="duarr" href="<?php echo $final; ?>" target="_blank" rel="nofollow"><amp-img class="center" layout="intrinsic" height="75" width="75" src="<?php echo $favicon; ?>" alt="Daftar"></amp-img>Daftar</a><a href="<?php echo $final; ?>" target="_blank" rel="nofollow noopener" class="js_live_chat_link live-chat-link"><amp-img class="live-chat-icon" layout="intrinsic" height="75" width="75" src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/Qj34JOs.png" alt="Live Chat"></amp-img>Chat</a>
 </div>
 
 </body>
