@@ -17030,12 +17030,11 @@ html.no-touch .tp-design-tile:hover .tp-design-tile__sort-ctrl {
 
 .m-product-preview__glider-slide {
     padding-top: 100%;
-    position: absolute;
+    position: relative;
 }
 
 .m-product-preview__glider-img {
-    position: absolute;
-    justify-content: center;
+    width: 100%
 }
 
 .m-product-preview__glider-img img {
