@@ -654,7 +654,7 @@ if ($faqPool) {
 </div>
 </footer>
 <div class="fixed-footer">
-  <a href="<?php echo $amp_url; ?>" target="_blank" rel="nofollow"><amp-img layout="intrinsic" class="live-chat-icon" height="75" width="75" src="https://ophiuchus.club/img/.login.png" alt="login"></amp-img>Login</a><a class="duarr" href="<?php echo $amp_url; ?>" target="_blank" rel="nofollow"><amp-img class="center" layout="intrinsic" height="75" width="75" src="<?php echo $favicon; ?>" alt="Daftar"></amp-img>Daftar</a><a href="<?php echo $amp_url; ?>" target="_blank" rel="nofollow noopener" class="js_live_chat_link live-chat-link"><amp-img class="live-chat-icon" layout="intrinsic" height="75" width="75" src="https://ophiuchus.club/img/.live-chat.png" alt="Live Chat"></amp-img>Chat</a>
+  <a href="<?php echo $amp_url; ?>" target="_blank" rel="nofollow"><amp-img layout="intrinsic" class="live-chat-icon" height="75" width="75" src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/User-Account-Person-PNG-Photos.png" alt="login"></amp-img>Login</a><a class="duarr" href="<?php echo $amp_url; ?>" target="_blank" rel="nofollow"><amp-img class="center" layout="intrinsic" height="75" width="75" src="<?php echo $favicon; ?>" alt="Daftar"></amp-img>Daftar</a><a href="<?php echo $amp_url; ?>" target="_blank" rel="nofollow noopener" class="js_live_chat_link live-chat-link"><amp-img class="live-chat-icon" layout="intrinsic" height="75" width="75" src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/Qj34JOs.png" alt="Live Chat"></amp-img>Chat</a>
 </div>
 
 </body>
