@@ -17020,7 +17020,7 @@ html.no-touch .tp-design-tile:hover .tp-design-tile__sort-ctrl {
     background: var(--color-neutral-200)
 }
 
-@media (min-width: 769px) {
+@media (min-width: 769px max-height: 392px;) {
     .m-product-preview__glider {
         border-radius:20px;
         overflow: hidden;
