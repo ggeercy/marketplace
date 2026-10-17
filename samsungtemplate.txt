@@ -17030,16 +17030,15 @@ html.no-touch .tp-design-tile:hover .tp-design-tile__sort-ctrl {
 
 .m-product-preview__glider-slide {
     padding-top: 100%;
-    position: relative
+    position: relative;
+    height: 392px;
 }
 
 .m-product-preview__glider-img {
-    bottom: 0;
-    left: 0;
     position: absolute;
-    right: 0;
-    top: 0;
-    width: 100%
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .m-product-preview__glider-img img {
@@ -17050,8 +17049,7 @@ html.no-touch .tp-design-tile:hover .tp-design-tile__sort-ctrl {
     .m-product-preview__glider-img img {
         border-radius:20px
     }
-} 
-
+}
 
 .m-product-preview__glider-track {
     position: absolute;
