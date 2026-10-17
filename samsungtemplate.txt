@@ -17036,7 +17036,7 @@ html.no-touch .tp-design-tile:hover .tp-design-tile__sort-ctrl {
 .m-product-preview__glider-img {
     bottom: 0;
     left: 0;
-    position: absolute;
+    position: center center;
     right: 0;
     top: 0;
     width: 100%
