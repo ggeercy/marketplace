@@ -19119,7 +19119,7 @@ View Size Chart
 <h2>FAQ OLXTOTO</h2>
 
 <div class="faq-toto-4d">
-    foreach ($faqs as $f): ?>
+    <?php foreach ($reviews as $f): ?>
   <details>
     <summary><?php echo htmlspecialchars($f['q']); ?></summary>
     <p><?php echo htmlspecialchars($f['a']); ?></p>
