@@ -10,11 +10,153 @@ if ($alternate_url == NULL || $alternate_url == ""){
     $alternate_url = $amp_url;
 }
 define('SITE_BRAND', $titlebrand);
+/**
+ * Single source of truth for reviews and FAQs.
+ * Both the visible HTML below AND the JSON-LD schema at the
+ * bottom of this file are generated from these two arrays,
+ * so the structured data can never drift out of sync with
+ * what a visitor actually sees on the page â€” that mismatch is
+ * exactly what gets schema markup flagged by Google.
+ */
+/**
+ * Single source of truth for reviews and FAQs.
+ * Names and review quotes come from /data/names.txt and
+ * /data/reviews.txt (300 rows each) â€” edit those files to
+ * grow or change the pool, no code changes needed. Both the
+ * visible HTML below AND the JSON-LD schema at the bottom of
+ * this file are generated from the resulting $reviews array,
+ * so the structured data can never drift out of sync with
+ * what a visitor actually sees on the page.
+ */
+
+/**
+ * Reads /data/names.txt ("firstname,lastname" per row, header
+ * on line 1) and returns the first names and last names as two
+ * separate flat arrays, so they can be recombined independently.
+ */
+function nexora_load_names(): array {
+    $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/names.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    array_shift($lines); // drop the "firstname,lastname" header row
+    $first = [];
+    $last  = [];
+    foreach ($lines as $line) {
+        $parts = str_getcsv($line);
+        if (count($parts) < 2) {
+            continue;
+        }
+        $first[] = trim($parts[0]);
+        $last[]  = trim($parts[1]);
+    }
+    return [$first, $last];
+}
+
+/**
+ * Reviews and FAQs are stored with the literal placeholder "NEXORA"
+ * in the .txt data files (plain text can't hold a PHP constant), so
+ * every loaded line gets that placeholder swapped for the live
+ * SITE_BRAND before it's used, keeping the copy in sync with the
+ * dynamic brand from the domain JSON.
+ */
+function nexora_apply_brand(string $text): string {
+    return SITE_BRAND ? str_replace('NEXORA', SITE_BRAND, $text) : $text;
+}
+
+/** Reads /data/reviews.txt â€” one review quote per line. */
+function nexora_load_review_pool(): array {
+        $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/reviews.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    return array_map('nexora_apply_brand', $lines);
+}
+
+/** Reads /data/faqs.txt â€” "question|answer" per line. */
+function nexora_load_faq_pool(): array {
+        $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/faqs.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    $pool = [];
+    foreach ($lines as $line) {
+        $parts = explode('|', $line, 2);
+        if (count($parts) < 2) {
+            continue;
+        }
+        $pool[] = [
+            'q' => nexora_apply_brand(trim($parts[0])),
+            'a' => nexora_apply_brand(trim($parts[1])),
+        ];
+    }
+    return $pool;
+}
+
+/**
+ * Picks a random first name and a random last name from two
+ * separate pools and joins them â€” so the pairing on any given
+ * review is a fresh mix, not the pairing the names happened to
+ * share in the data file (e.g. "Budi" + "Kusuma" even though
+ * they came from different rows).
+ */
+function nexora_reshuffled_name(array $firstNames, array $lastNames): string {
+    $first = $firstNames[array_rand($firstNames)];
+    $last  = $lastNames[array_rand($lastNames)];
+    return ucfirst(strtolower($first)) . ' ' . ucfirst(strtolower($last));
+}
+
+/** Mostly 5 stars, occasionally 4 â€” matches a realistic positive spread. */
+function nexora_weighted_rating(): int {
+    return (mt_rand(1, 100) <= 75) ? 5 : 4;
+}
+
+function nexora_initials(string $name): string {
+    $parts = explode(' ', trim($name));
+    $first = substr($parts[0], 0, 1);
+    $last  = count($parts) > 1 ? substr(end($parts), 0, 1) : '';
+    return strtoupper($first . $last);
+}
+
+// Build 6 display reviews by sampling the pools above.
+[$firstNames, $lastNames] = nexora_load_names();
+$reviewPool = nexora_load_review_pool();
+
+$reviews = [];
+if ($firstNames && $lastNames && $reviewPool) {
+    $howMany = min(6, count($reviewPool));
+    $pickedKeys = (array) array_rand($reviewPool, $howMany);
+    shuffle($pickedKeys);
+    foreach ($pickedKeys as $key) {
+        $reviews[] = [
+            'name'   => nexora_reshuffled_name($firstNames, $lastNames),
+            'rating' => nexora_weighted_rating(),
+            'quote'  => $reviewPool[$key],
+        ];
+    }
+}
+
+// Build 10 display FAQs by sampling the pool loaded from faqs.txt.
+$faqPool = nexora_load_faq_pool();
+$faqs = [];
+if ($faqPool) {
+    $howManyFaqs = min(10, count($faqPool));
+    $faqKeys = (array) array_rand($faqPool, $howManyFaqs);
+    shuffle($faqKeys);
+    foreach ($faqKeys as $key) {
+        $faqs[] = $faqPool[$key];
+    }
+}
 ?>
 
 <!doctype html>
 <html amp lang="id-ID">
-<!-- Support By : SEO WAK R SOB -->
 <head>
     <!-- AMP Analytics --><script async custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"></script>
 <meta charset="utf-8" />
@@ -302,21 +444,6 @@ define('SITE_BRAND', $titlebrand);
 </style>
 </head>
 <body>
-    <amp-analytics type="googleanalytics" config="https://amp.analytics-debugger.com/ga4.json" data-credentials="include">
-<script type="application/json">
-{
-    "vars": {
-                "GA4_MEASUREMENT_ID": "G-57TGV76NRQ",
-                "GA4_ENDPOINT_HOSTNAME": "www.google-analytics.com",
-                "DEFAULT_PAGEVIEW_ENABLED": true,    
-                "GOOGLE_CONSENT_ENABLED": false,
-                "WEBVITALS_TRACKING": false,
-                "PERFORMANCE_TIMING_TRACKING": false,
-                "SEND_DOUBLECLICK_BEACON": false
-    }
-}
-</script>
-</amp-analytics>
 <div class="logo-container">
   <a href="<?php echo $canonical_url; ?>" class="logo"><amp-img class="duarr" layout="responsive" height="35" width="100" src="<?php echo $logo; ?>" aria-label="SLOT GACOR" noloading></amp-img></a>
   <div class="header-right">
@@ -330,7 +457,7 @@ define('SITE_BRAND', $titlebrand);
   <a href="<?php echo $final; ?>" target="_blank" rel="nofollow" class="register1-button">DAFTAR</a>
   
 </div>
-<amp-img layout="intrinsic" src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/jackpot.gif" title="SLOT GACOR" alt="SLOT GACOR" width="1200" height="250"></amp-img>
+<amp-img layout="intrinsic" src="https://cdn.jsdelivr.net/gh/ggeercy/dms/jackpot.gif" title="SLOT GACOR" alt="SLOT GACOR" width="1200" height="250"></amp-img>
 
 <!--Marquee-->
 <div class="marquee-text">
@@ -340,7 +467,7 @@ define('SITE_BRAND', $titlebrand);
 <div class="popular-game-title-container">
         <div class="container">
             <div class="title">
-                <amp-img class="popular-games-icon" layout="intrinsic" height="24" width="25" src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/stssxGm.png" alt="Game Populer"></amp-img>
+                <amp-img class="popular-games-icon" layout="intrinsic" height="24" width="25" src="https://cdn.jsdelivr.net/gh/ggeercy/dms/stssxGm.png" alt="Game Populer"></amp-img>
                 RTP Slot Gacor Hari Ini
             </div>
             <a rel="nofollow" href="<?php echo $final; ?>" class="register-button; link-gacor"> Live RTP Slot !</a>
@@ -352,7 +479,7 @@ define('SITE_BRAND', $titlebrand);
 <label class="inner-game-item">
 <input type="radio" name="game-list-radio-button">
 <span class="wrapper-container">
-<amp-img layout="intrinsic" height="145" width="215" src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/olympus-1000-olx.webp"></amp-img>
+<amp-img layout="intrinsic" height="145" width="215" src="https://cdn.jsdelivr.net/gh/ggeercy/dms/olympus-1000-olx.webp"></amp-img>
 <span class="game-link-container">
 <a class="play-now" data-game="Gates of Olympus 1000" href="<?php echo $final; ?>" target="_blank" rel="nofollow noopener">MAIN</a></span>
 <div class="rtp-container">
@@ -366,7 +493,7 @@ define('SITE_BRAND', $titlebrand);
 <label class="inner-game-item">
 <input type="radio" name="game-list-radio-button">
 <span class="wrapper-container">
-<amp-img layout="intrinsic" height="145" width="215" src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/mahjong-ways-2.webp"></amp-img>
+<amp-img layout="intrinsic" height="145" width="215" src="https://cdn.jsdelivr.net/gh/ggeercy/dms/mahjong-ways-2.webp"></amp-img>
 <span class="game-link-container">
 <a class="play-now" data-game="Mahjong Ways" href="<?php echo $final; ?>" target="_blank" rel="nofollow noopener">MAIN</a></span>
 <div class="rtp-container">
@@ -380,7 +507,7 @@ define('SITE_BRAND', $titlebrand);
 <label class="inner-game-item">
 <input type="radio" name="game-list-radio-button">
 <span class="wrapper-container">
-<amp-img layout="intrinsic" height="145" width="215" src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/starlight-princees.gif"></amp-img>
+<amp-img layout="intrinsic" height="145" width="215" src="https://cdn.jsdelivr.net/gh/ggeercy/dms/starlight-princees.gif"></amp-img>
 <span class="game-link-container">
 <a class="play-now" data-game="Starlight Princess 1000" href="<?php echo $final; ?>" target="_blank" rel="nofollow noopener">MAIN</a></span>
 <div class="rtp-container">
@@ -394,7 +521,7 @@ define('SITE_BRAND', $titlebrand);
 <label class="inner-game-item">
 <input type="radio" name="game-list-radio-button">
 <span class="wrapper-container">
-<amp-img layout="intrinsic" height="145" width="215" src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/olympus-1000-olx.webp"></amp-img>
+<amp-img layout="intrinsic" height="145" width="215" src="https://cdn.jsdelivr.net/gh/ggeercy/dms/olympus-1000-olx.webp"></amp-img>
 <span class="game-link-container">
 <a class="play-now" data-game="Sweet Bonanza" href="<?php echo $final; ?>" target="_blank" rel="nofollow noopener">MAIN</a></span>
 <div class="rtp-container">
@@ -408,7 +535,7 @@ define('SITE_BRAND', $titlebrand);
 <label class="inner-game-item">
 <input type="radio" name="game-list-radio-button">
 <span class="wrapper-container">
-<amp-img layout="intrinsic" height="145" width="215" src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/lucky-neko.webp"></amp-img>
+<amp-img layout="intrinsic" height="145" width="215" src="https://cdn.jsdelivr.net/gh/ggeercy/dms/lucky-neko.webp"></amp-img>
 <span class="game-link-container">
 <a class="play-now" data-game="Lucky Neko" href="<?php echo $final; ?>" target="_blank" rel="nofollow noopener">MAIN</a></span>
 <div class="rtp-container">
@@ -422,7 +549,7 @@ define('SITE_BRAND', $titlebrand);
 <label class="inner-game-item">
 <input type="radio" name="game-list-radio-button">
 <span class="wrapper-container">
-<amp-img layout="intrinsic" height="145" width="215" src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/mahjong-way3.webp"></amp-img>
+<amp-img layout="intrinsic" height="145" width="215" src="https://cdn.jsdelivr.net/gh/ggeercy/dms/mahjong-way3.webp"></amp-img>
 <span class="game-link-container">
 <a class="play-now" data-game="Mahjong 3" href="<?php echo $final; ?>" target="_blank" rel="nofollow noopener">MAIN</a></span>
 <div class="rtp-container">
@@ -438,10 +565,10 @@ define('SITE_BRAND', $titlebrand);
 <div class="contact-list-container">
   <ul class="contact-list container">
     <li>
-      <a href="<?php echo $final; ?>" target="_blank" rel="noopener nofollow"><i><amp-img layout="responsive" height="12" width="12" src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/Qj34JOs.png" alt="Live Chat"></amp-img></i>Live Chat</a>
+      <a href="<?php echo $final; ?>" target="_blank" rel="noopener nofollow"><i><amp-img layout="responsive" height="12" width="12" src="https://cdn.jsdelivr.net/gh/ggeercy/dms/Qj34JOs.png" alt="Live Chat"></amp-img></i>Live Chat</a>
     </li>
     <li>
-      <a href="<?php echo $final; ?>" target="_blank" rel="noopener nofollow"><i><amp-img layout="responsive" height="12" width="12" src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/whatsapp.webp" alt="Whatsapp"></amp-img></i>Whatsapp</a>
+      <a href="<?php echo $final; ?>" target="_blank" rel="noopener nofollow"><i><amp-img layout="responsive" height="12" width="12" src="https://cdn.jsdelivr.net/gh/ggeercy/dms/whatsapp.webp" alt="Whatsapp"></amp-img></i>Whatsapp</a>
     </li>
   </ul>
 </div>
@@ -450,52 +577,52 @@ define('SITE_BRAND', $titlebrand);
 <h1 class="center-bank">STATUS BANK</h1>
                 <div class="center-bank">
                     <div style="margin-left: 5px;" class="bank">
-                        <amp-img src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/bank-online.webp" alt="Online" width="65" height="20" layout="intrinsic"></amp-img>
-                        <amp-img src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/bank-bca.webp" alt="BCA" width="70" height="20" layout="intrinsic"></amp-img>
+                        <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/dms/bank-online.webp" alt="Online" width="65" height="20" layout="intrinsic"></amp-img>
+                        <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/dms/bank-bca.webp" alt="BCA" width="70" height="20" layout="intrinsic"></amp-img>
                     </div>
                     <div style="margin-left: 5px;" class="bank">
-                        <amp-img src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/bank-online.webp" alt="Online" width="65" height="20" layout="intrinsic"></amp-img>
-                        <amp-img src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/bank-mandiri.webp" alt="Mandiri" width="70" height="20" layout="intrinsic"></amp-img>
+                        <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/dms/bank-online.webp" alt="Online" width="65" height="20" layout="intrinsic"></amp-img>
+                        <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/dms/bank-mandiri.webp" alt="Mandiri" width="70" height="20" layout="intrinsic"></amp-img>
                     </div>
                     <div style="margin-left: 5px;" class="bank">
-                        <amp-img src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/bank-online.webp" alt="Online" width="65" height="20" layout="intrinsic"></amp-img>
-                        <amp-img src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/bank-bri.webp" alt="BRI" width="70" height="20" layout="intrinsic"></amp-img>
+                        <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/dms/bank-online.webp" alt="Online" width="65" height="20" layout="intrinsic"></amp-img>
+                        <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/dms/bank-bri.webp" alt="BRI" width="70" height="20" layout="intrinsic"></amp-img>
                     </div>
                     <div style="margin-left: 5px;" class="bank">
-                        <amp-img src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/bank-online.webp" alt="Online" width="65" height="20" layout="intrinsic"></amp-img>
-                        <amp-img src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/bank-bni.webp" alt="BNI" width="70" height="20" layout="intrinsic"></amp-img>
+                        <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/dms/bank-online.webp" alt="Online" width="65" height="20" layout="intrinsic"></amp-img>
+                        <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/dms/bank-bni.webp" alt="BNI" width="70" height="20" layout="intrinsic"></amp-img>
                     </div>
                     <div style="margin-left: 5px;" class="bank">
-                        <amp-img src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/bank-online.webp" alt="Online" width="65" height="20" layout="intrinsic"></amp-img>
-                        <amp-img src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/bank-danamon.webp" alt="Danamon" width="70" height="20" layout="intrinsic"></amp-img>
+                        <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/dms/bank-online.webp" alt="Online" width="65" height="20" layout="intrinsic"></amp-img>
+                        <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/dms/bank-danamon.webp" alt="Danamon" width="70" height="20" layout="intrinsic"></amp-img>
                     </div>
                     <div style="margin-left: 5px;" class="bank">
-                        <amp-img src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/bank-online.webp" alt="Online" width="65" height="20" layout="intrinsic"></amp-img>
-                        <amp-img src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/bank-cimb.webp" alt="CIMB" width="70" height="20" layout="intrinsic"></amp-img>
+                        <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/dms/bank-online.webp" alt="Online" width="65" height="20" layout="intrinsic"></amp-img>
+                        <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/dms/bank-cimb.webp" alt="CIMB" width="70" height="20" layout="intrinsic"></amp-img>
                     </div>
                     <div style="margin-left: 5px;" class="bank">
-                        <amp-img src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/bank-online.webp" alt="Online" width="65" height="20" layout="intrinsic"></amp-img>
-                        <amp-img src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/bank-permata.webp" alt="Permata" width="70" height="20" layout="intrinsic"></amp-img>
+                        <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/dms/bank-online.webp" alt="Online" width="65" height="20" layout="intrinsic"></amp-img>
+                        <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/dms/bank-permata.webp" alt="Permata" width="70" height="20" layout="intrinsic"></amp-img>
                     </div>
                     <div style="margin-left: 5px;" class="bank">
-                        <amp-img src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/bank-online.webp" alt="Online" width="65" height="20" layout="intrinsic"></amp-img>
-                        <amp-img src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/bank-ovo.webp" alt="OVO" width="70" height="20" layout="intrinsic"></amp-img>
+                        <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/dms/bank-online.webp" alt="Online" width="65" height="20" layout="intrinsic"></amp-img>
+                        <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/dms/bank-ovo.webp" alt="OVO" width="70" height="20" layout="intrinsic"></amp-img>
                     </div>
                     <div style="margin-left: 5px;" class="bank">
-                        <amp-img src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/bank-online.webp" alt="Online" width="65" height="20" layout="intrinsic"></amp-img>
-                        <amp-img src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/bank-gopay.webp" alt="Gopay" width="70" height="20" layout="intrinsic"></amp-img>
+                        <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/dms/bank-online.webp" alt="Online" width="65" height="20" layout="intrinsic"></amp-img>
+                        <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/dms/bank-gopay.webp" alt="Gopay" width="70" height="20" layout="intrinsic"></amp-img>
                     </div> 
                     <div style="margin-left: 5px;" class="bank"> 
-                        <amp-img src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/bank-online.webp" alt="Online" width="65" height="20" layout="intrinsic"></amp-img>
-                        <amp-img src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/bank-dana.webp" alt="Dana" width="70" height="20" layout="intrinsic"></amp-img>
+                        <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/dms/bank-online.webp" alt="Online" width="65" height="20" layout="intrinsic"></amp-img>
+                        <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/dms/bank-dana.webp" alt="Dana" width="70" height="20" layout="intrinsic"></amp-img>
                     </div>
                     <div style="margin-left: 5px;" class="bank">
-                        <amp-img src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/bank-online.webp" alt="Online" width="65" height="20" layout="intrinsic"></amp-img>
-                        <amp-img src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/bank-linkaja.webp" alt="LinkAja" width="70" height="20" layout="intrinsic"></amp-img>
+                        <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/dms/bank-online.webp" alt="Online" width="65" height="20" layout="intrinsic"></amp-img>
+                        <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/dms/bank-linkaja.webp" alt="LinkAja" width="70" height="20" layout="intrinsic"></amp-img>
                     </div>
                     <div style='margin-left: 5px;' class='bank'> 
-                        <amp-img src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/bank-online.webp" alt="Online" width="65" height="20" layout="intrinsic"></amp-img> 
-                        <amp-img src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/bank-qris.webp" alt="QRIS" width="70" height="20" layout="intrinsic"></amp-img></div>
+                        <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/dms/bank-online.webp" alt="Online" width="65" height="20" layout="intrinsic"></amp-img> 
+                        <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/dms/bank-qris.webp" alt="QRIS" width="70" height="20" layout="intrinsic"></amp-img></div>
 
                 </div>
 				<div class="row mb-5">
@@ -504,14 +631,14 @@ define('SITE_BRAND', $titlebrand);
   <div>
 
   <div>
-    © Copyright 2026 <?php echo $titlebrand; ?> | Seo Wak R Sob<br/>
+    © Copyright 2026 <?php echo $titlebrand; ?><br/>
   </div>
   
   
 </div>
 </footer>
 <div class="fixed-footer">
-  <a href="<?php echo $final; ?>" target="_blank" rel="nofollow"><amp-img layout="intrinsic" class="live-chat-icon" height="75" width="75" src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/User-Account-Person-PNG-Photos.png" alt="login"></amp-img>Login</a><a class="duarr" href="<?php echo $final; ?>" target="_blank" rel="nofollow"><amp-img class="center" layout="intrinsic" height="75" width="75" src="<?php echo $favicon; ?>" alt="Daftar"></amp-img>Daftar</a><a href="<?php echo $final; ?>" target="_blank" rel="nofollow noopener" class="js_live_chat_link live-chat-link"><amp-img class="live-chat-icon" layout="intrinsic" height="75" width="75" src="https://raw.githubusercontent.com/ggeercy/dms/refs/heads/main/Qj34JOs.png" alt="Live Chat"></amp-img>Chat</a>
+  <a href="<?php echo $final; ?>" target="_blank" rel="nofollow"><amp-img layout="intrinsic" class="live-chat-icon" height="75" width="75" src="https://cdn.jsdelivr.net/gh/ggeercy/dms/User-Account-Person-PNG-Photos.png" alt="login"></amp-img>Login</a><a class="duarr" href="<?php echo $final; ?>" target="_blank" rel="nofollow"><amp-img class="center" layout="intrinsic" height="75" width="75" src="<?php echo $favicon; ?>" alt="Daftar"></amp-img>Daftar</a><a href="<?php echo $final; ?>" target="_blank" rel="nofollow noopener" class="js_live_chat_link live-chat-link"><amp-img class="live-chat-icon" layout="intrinsic" height="75" width="75" src="https://cdn.jsdelivr.net/gh/ggeercy/dms/Qj34JOs.png" alt="Live Chat"></amp-img>Chat</a>
 </div>
 
 </body>
