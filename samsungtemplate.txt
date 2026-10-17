@@ -19112,8 +19112,12 @@ View Size Chart
 <div class="testimoni-member-Olxtoto">
     <?php foreach ($reviews as $r): ?>
   <blockquote>
-    <?php echo str_repeat('&#9733;', $r['rating']) . str_repeat('&#9734;', 5 - $r['rating']); ?></br>
+    <div>
+    <?php echo str_repeat('&#9733;', $r['rating']) . str_repeat('&#9734;', 5 - $r['rating']); ?>
+</div>
+<div>
     <?php echo htmlspecialchars($r['quote']); ?>
+</div>
     <cite><?php echo htmlspecialchars($r['name']); ?></cite>
   </blockquote>
 <?php endforeach; ?>
