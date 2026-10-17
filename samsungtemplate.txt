@@ -17030,7 +17030,7 @@ html.no-touch .tp-design-tile:hover .tp-design-tile__sort-ctrl {
 
 .m-product-preview__glider-slide {
     padding-top: 100%;
-    position: relative;
+    position: absolute;
     height: 392px;
 }
 
