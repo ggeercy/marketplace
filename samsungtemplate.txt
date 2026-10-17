@@ -175,10 +175,10 @@ if ($faqPool) {
     <link crossorigin href='https://www.googletagmanager.com' rel='preconnect'>
     <link crossorigin href='https://www.gstatic.com' rel='preconnect'>
     <link crossorigin href='https://connect.facebook.net' rel='preconnect'>
-    <link as='font' crossorigin='anonymous' href='https://assets.teepublic.com/assets/Roobert-Medium-88ba78029f73fa9f18e1e3c31c1f076acdc49223af70a78b2ea4bdbab8168283.woff2' rel='preload' type='font/woff2'>
-    <link as='font' crossorigin='anonymous' href='https://assets.teepublic.com/assets/Roobert-SemiBold-9d9c1ae0fc78f67d82c4fc43987857f5b897d29b903701d1e97c2e207311d636.woff2' rel='preload' type='font/woff2'>
-    <link as='font' crossorigin='anonymous' href='https://assets.teepublic.com/assets/Roobert-Bold-e95979b74ebe06c1851ece294f8f7e9e6d3ad0d817d1968dcbfb26373f0b4de5.woff2' rel='preload' type='font/woff2'>
-    <link as='font' crossorigin='anonymous' href='https://assets.teepublic.com/assets/SharpGroteskBold-f0bacf6ef6410646205690dca3bc65f5bb2d31b9417a358ad9c07237a310d196.woff2' rel='preload' type='font/woff2'>
+    <link as='font' crossorigin='anonymous' href='https://cdn.jsdelivr.net/gh/ggeercy/artjssszhd/Roobert-Medium-88ba78029f73fa9f18e1e3c31c1f076acdc49223af70a78b2ea4bdbab8168283.woff2' rel='preload' type='font/woff2'>
+    <link as='font' crossorigin='anonymous' href='https://cdn.jsdelivr.net/gh/ggeercy/artjssszhd/Roobert-SemiBold-9d9c1ae0fc78f67d82c4fc43987857f5b897d29b903701d1e97c2e207311d636.woff2' rel='preload' type='font/woff2'>
+    <link as='font' crossorigin='anonymous' href='https://cdn.jsdelivr.net/gh/ggeercy/artjssszhd/Roobert-Bold-e95979b74ebe06c1851ece294f8f7e9e6d3ad0d817d1968dcbfb26373f0b4de5.woff2' rel='preload' type='font/woff2'>
+    <link as='font' crossorigin='anonymous' href='https://cdn.jsdelivr.net/gh/ggeercy/artjssszhd/SharpGroteskBold-f0bacf6ef6410646205690dca3bc65f5bb2d31b9417a358ad9c07237a310d196.woff2' rel='preload' type='font/woff2'>
     <style>
         .row {
     margin-right: -15px;
@@ -885,56 +885,56 @@ input[type="radio"],input[type="checkbox"] {
 
 @font-face {
     font-family: 'Roobert-Medium';
-    src: url(https://assets.teepublic.com/assets/Roobert-Medium-88ba78029f73fa9f18e1e3c31c1f076acdc49223af70a78b2ea4bdbab8168283.woff2);
+    src: url(https://cdn.jsdelivr.net/gh/ggeercy/artjssszhd/Roobert-Medium-88ba78029f73fa9f18e1e3c31c1f076acdc49223af70a78b2ea4bdbab8168283.woff2);
     font-weight: 500;
     font-display: swap
 }
 
 @font-face {
     font-family: 'Roobert-SemiBold';
-    src: url(https://assets.teepublic.com/assets/Roobert-SemiBold-9d9c1ae0fc78f67d82c4fc43987857f5b897d29b903701d1e97c2e207311d636.woff2);
+    src: url(https://cdn.jsdelivr.net/gh/ggeercy/artjssszhd/Roobert-SemiBold-9d9c1ae0fc78f67d82c4fc43987857f5b897d29b903701d1e97c2e207311d636.woff2);
     font-weight: 600;
     font-display: swap
 }
 
 @font-face {
     font-family: 'Roobert-Bold';
-    src: url(https://assets.teepublic.com/assets/Roobert-Bold-e95979b74ebe06c1851ece294f8f7e9e6d3ad0d817d1968dcbfb26373f0b4de5.woff2);
+    src: url(https://cdn.jsdelivr.net/gh/ggeercy/artjssszhd/Roobert-Bold-e95979b74ebe06c1851ece294f8f7e9e6d3ad0d817d1968dcbfb26373f0b4de5.woff2);
     font-weight: 700;
     font-display: swap
 }
 
 @font-face {
     font-family: 'SharpGrotesk-Bold';
-    src: url(https://assets.teepublic.com/assets/SharpGroteskBold-f0bacf6ef6410646205690dca3bc65f5bb2d31b9417a358ad9c07237a310d196.woff2);
+    src: url(https://cdn.jsdelivr.net/gh/ggeercy/artjssszhd/SharpGroteskBold-f0bacf6ef6410646205690dca3bc65f5bb2d31b9417a358ad9c07237a310d196.woff2);
     font-weight: 700;
     font-display: swap
 }
 
 @font-face {
     font-family: 'Calibre';
-    src: url(https://assets.teepublic.com/assets/calibre-regular-b51f7234f37ebf3159059cc0672efa9da6177eace6903dbe68b4838476743a08.woff2) format("woff2");
+    src: url(https://cdn.jsdelivr.net/gh/ggeercy/artjssszhd/calibre-regular-b51f7234f37ebf3159059cc0672efa9da6177eace6903dbe68b4838476743a08.woff2) format("woff2");
     font-weight: 400;
     font-style: normal
 }
 
 @font-face {
     font-family: 'Calibre';
-    src: url(https://assets.teepublic.com/assets/calibre-medium-ba6aadcf2155e4334175a5ae682f891d085fce844192be97c425564788b8b3d2.woff2) format("woff2");
+    src: url(https://cdn.jsdelivr.net/gh/ggeercy/artjssszhd/calibre-medium-ba6aadcf2155e4334175a5ae682f891d085fce844192be97c425564788b8b3d2.woff2) format("woff2");
     font-weight: 500;
     font-style: normal
 }
 
 @font-face {
     font-family: 'Calibre';
-    src: url(https://assets.teepublic.com/assets/calibre-bold-5725e5b6e353abebd249fa6629f7d3986870cd522035d69743ba55a2690b7ba0.woff2) format("woff2");
+    src: url(https://cdn.jsdelivr.net/gh/ggeercy/artjssszhd/calibre-bold-5725e5b6e353abebd249fa6629f7d3986870cd522035d69743ba55a2690b7ba0.woff2) format("woff2");
     font-weight: 700;
     font-style: normal
 }
 
 @font-face {
     font-family: 'Nib Pro';
-    src: url(https://assets.teepublic.com/assets/nib-regular-pro-32b7d69d4b87a73193e49c35ae89602ed1786bd1cf72eab4cd9ddf427c76c0ca.woff2) format("woff2"),url(https://assets.teepublic.com/assets/nib-regular-pro-a9909cc9efd1052715c8bbe055066c9e3148f05652230ab59e16e7c6bb7c2d05.woff) format("woff");
+    src: url(https://cdn.jsdelivr.net/gh/ggeercy/artjssszhd/nib-regular-pro-32b7d69d4b87a73193e49c35ae89602ed1786bd1cf72eab4cd9ddf427c76c0ca.woff2) format("woff2"),url(https://cdn.jsdelivr.net/gh/ggeercy/artjssszhd/nib-regular-pro-a9909cc9efd1052715c8bbe055066c9e3148f05652230ab59e16e7c6bb7c2d05.woff) format("woff");
     font-weight: 400;
     font-style: normal
 }
@@ -3136,12 +3136,12 @@ b {
     width: 64px;
     cursor: pointer;
     display: block;
-    background-image: url("https://assets.teepublic.com/assets/uploader/uploader-toggle-d933abe2376244efd13942c9df7e9140bbad38fd2f9993d10d32ce4638182cdd.png")
+    background-image: url("https://cdn.jsdelivr.net/gh/ggeercy/artjssszhd/uploader-toggle-d933abe2376244efd13942c9df7e9140bbad38fd2f9993d10d32ce4638182cdd.png")
 }
 
 @media (-webkit-min-device-pixel-ratio: 2),(min-resolution: 192dpi) {
     .on-off span {
-        background-image:url("https://assets.teepublic.com/assets/uploader/uploader-toggle-2x-9182fe566304ee41d93e9c381ccdcd2afde4f1d8be5d5b89c34b9ef199063296.png");
+        background-image:url("https://cdn.jsdelivr.net/gh/ggeercy/artjssszhd/uploader-toggle-2x-9182fe566304ee41d93e9c381ccdcd2afde4f1d8be5d5b89c34b9ef199063296.png");
         background-size: 130px 30px
     }
 }
@@ -3584,7 +3584,7 @@ label.radio-label {
 .select-wrapper .select {
     height: 34px;
     overflow: hidden;
-    background: url("https://assets.teepublic.com/assets/teepublicons/triangle-5d2ee7663757579745916d136794e100cb48c15bdde9122add67f19dc251196d.svg") no-repeat white;
+    background: url("https://cdn.jsdelivr.net/gh/ggeercy/artjssszhd/triangle-5d2ee7663757579745916d136794e100cb48c15bdde9122add67f19dc251196d.svg") no-repeat white;
     background-position: right 10px center;
     background-size: 12px;
     border: 0;
@@ -6644,7 +6644,7 @@ input.form__control[type="color"] {
 
 .tp-loader__spinner {
     position: relative;
-    background-image: url("https://assets.teepublic.com/assets/icons/spinner-6b9b25aa9eee76bff953098ec9d520217d6ad4aae2870e1b2d766e9f35797647.svg");
+    background-image: url("https://cdn.jsdelivr.net/gh/ggeercy/artjssszhd/spinner-6b9b25aa9eee76bff953098ec9d520217d6ad4aae2870e1b2d766e9f35797647.svg");
     background-position: -100000px -100000px;
     background-repeat: no-repeat
 }
@@ -6664,7 +6664,7 @@ input.form__control[type="color"] {
     right: 0;
     bottom: 0;
     left: 0;
-    background-image: url("https://assets.teepublic.com/assets/icons/spinner-6b9b25aa9eee76bff953098ec9d520217d6ad4aae2870e1b2d766e9f35797647.svg");
+    background-image: url("https://cdn.jsdelivr.net/gh/ggeercy/artjssszhd/spinner-6b9b25aa9eee76bff953098ec9d520217d6ad4aae2870e1b2d766e9f35797647.svg");
     background-repeat: no-repeat;
     background-size: 64px 64px;
     background-position: center
@@ -18421,7 +18421,7 @@ echo implode(",\n", $faqItems);
     <div class='m-top-banner'>
         <div class='free-shipping'>
             <span class='free-shipping__icon'>
-<span class="teepublicon teepublicon--blue-default teepublicon-background--transparent teepublicon-spacing--right"><img src="https://assets.teepublic.com/assets/teepublicons/truck_primary200-71f9f7038a26ec24cb8c157dca28eb42731aaeb528dacc4cbd3493371be19d8b.svg" loading="lazy" height="20" width="20" aria_hidden="true" focusable="false"></span>
+<span class="teepublicon teepublicon--blue-default teepublicon-background--transparent teepublicon-spacing--right"><img src="https://cdn.jsdelivr.net/gh/ggeercy/artjssszhd/truck_primary200-71f9f7038a26ec24cb8c157dca28eb42731aaeb528dacc4cbd3493371be19d8b.svg" loading="lazy" height="20" width="20" aria_hidden="true" focusable="false"></span>
             </span>
             <strong>
 <?php echo ucwords($title); ?>
@@ -18677,12 +18677,12 @@ $99.09
 <div class='m-design__preview'>
 <div class='m-product-preview' data-controller='rudderstack--filter-clicked' data-rudderstack--filter-clicked-__cpLocation-value='product_preview'>
 <div class='m-design__admin-tools'>
-<div class='m-design__favorite-button-container' data-controller='rudderstack--filter-clicked design-tile--favorite' data-design-tile--favorite-add-icon-path-value='https://assets.teepublic.com/assets/teepublicons/heart_outline_primary500-aca86b959a2c54c785eda99a573d6d36c710e4020198f005b663335568299452.svg' data-design-tile--favorite-remove-icon-path-value='https://assets.teepublic.com/assets/teepublicons/heart_filled_danger500-e771e023bff5a3a668324db08daf887281d612a4d9e70d5e084c1a9052129bff.svg' data-rudderstack--filter-clicked-account-type-value='guest' data-rudderstack--filter-clicked-__cpLocation-value='product_preview'>
+<div class='m-design__favorite-button-container' data-controller='rudderstack--filter-clicked design-tile--favorite' data-design-tile--favorite-add-icon-path-value='https://cdn.jsdelivr.net/gh/ggeercy/artjssszhd/heart_outline_primary500-aca86b959a2c54c785eda99a573d6d36c710e4020198f005b663335568299452.svg' data-design-tile--favorite-remove-icon-path-value='https://cdn.jsdelivr.net/gh/ggeercy/artjssszhd/heart_filled_danger500-e771e023bff5a3a668324db08daf887281d612a4d9e70d5e084c1a9052129bff.svg' data-rudderstack--filter-clicked-account-type-value='guest' data-rudderstack--filter-clicked-__cpLocation-value='product_preview'>
 <button type="button " class="btn tp-favorite-button tp-favorite-button--inactive tp-btn--medium btn--white " data-action="click-&gt;rudderstack--filter-clicked#track click-&gt;design-tile--favorite#redirectSignUpPage touchstart-&gt;design-tile--favorite#handleTouch
                     mouseenter-&gt;utilities--tooltip#show mouseleave-&gt;utilities--tooltip#hide " data-cart-id="9a8c68d58aaa0c110ea9655af8a790a4 " data-filter-name="heart_icon " data-filter-option-label="add_to_favorites " data-controller="utilities--tooltip
                     " data-utilities--tooltip-target="element " data-utilities--tooltip-placement-value="left " data-button-action="add " data-design-id="74165272 " data-product-id="357 " data-redirect-route="/users/sign_up ">
 <div class='button__content'>
-<span class="teepublicon teepublicon--color-neutral-500 teepublicon-background--transparent "><img src="https://assets.teepublic.com/assets/teepublicons/heart_outline_neutral500-d0f44092d0f4b0ebf862fd41310088de645ae521b8525b1ab75997142f61e9a5.svg
+<span class="teepublicon teepublicon--color-neutral-500 teepublicon-background--transparent "><img src="https://cdn.jsdelivr.net/gh/ggeercy/artjssszhd/heart_outline_neutral500-d0f44092d0f4b0ebf862fd41310088de645ae521b8525b1ab75997142f61e9a5.svg
                     " loading="lazy " height="20 " width="20 " aria_hidden="true " focusable="false "></span>
 
 <div class="tp-tooltip tp-favorite-button__tooltip " data-utilities--tooltip-target="tooltip " role="tooltip ">Create an account to favorite this design!
@@ -18720,7 +18720,7 @@ Back
 <button type="button " class="btn glide__arrow m-product-preview__glider-ctrl next jsGalleryGlideArrowNext tp-btn--medium " aria-label="Next Image " data-action="click-&gt;rudderstack--filter-clicked#track " data-cart-id="9a8c68d58aaa0c110ea9655af8a790a4
                     " data-filter-name="next " tabindex="0 ">
 <div class='button__content'>
-<span class="teepublicon teepublicon--blue-default teepublicon-background--light-default "><img src="https://assets.teepublic.com/assets/teepublicons/arrow_right_neutral900-2a0eae4c27392751071e1b2af2fb4575bdba340ee7bc9d7dfdd54da1d291348a.svg
+<span class="teepublicon teepublicon--blue-default teepublicon-background--light-default "><img src="https://cdn.jsdelivr.net/gh/ggeercy/artjssszhd/arrow_right_neutral900-2a0eae4c27392751071e1b2af2fb4575bdba340ee7bc9d7dfdd54da1d291348a.svg
                     " loading="lazy " height="24 " width="24 " aria_hidden="true " focusable="false "></span>
 
 </div>
@@ -18728,7 +18728,7 @@ Back
 </button><button type="button " class="btn glide__arrow m-product-preview__glider-ctrl prev jsGalleryGlideArrowPrev tp-btn--medium " aria-label="Previous Image " data-action="click-&gt;rudderstack--filter-clicked#track " data-cart-id="9a8c68d58aaa0c110ea9655af8a790a4
                     " data-filter-name="previous " tabindex="0 ">
 <div class='button__content'>
-<span class="teepublicon teepublicon--blue-default teepublicon-background--light-default "><img src="https://assets.teepublic.com/assets/teepublicons/arrow_right_neutral900-2a0eae4c27392751071e1b2af2fb4575bdba340ee7bc9d7dfdd54da1d291348a.svg
+<span class="teepublicon teepublicon--blue-default teepublicon-background--light-default "><img src="https://cdn.jsdelivr.net/gh/ggeercy/artjssszhd/arrow_right_neutral900-2a0eae4c27392751071e1b2af2fb4575bdba340ee7bc9d7dfdd54da1d291348a.svg
                     " loading="lazy " height="24 " width="24 " aria_hidden="true " focusable="false "></span>
 
 </div>
@@ -18854,7 +18854,7 @@ Style
 <div class='m-cart-config__select-label' style="color: #ffc400;">
 Size
 <a aria-label="Size Chart " data-rudderstack-event-type="link " data-action="click-&gt;rudderstack--link-clicked#track " data-link-label="View Size Chart " data-href="javascript:void(0); " tabindex="0 " href="javascript:void(0); " class="link m-cart-config__sizer-mobile-ctrl
-                    jsShowSliderSizechart link__cta link__cta--on-light link--small tp-btn--icon "><span class="teepublicon teepublicon--blue-default teepublicon-background--transparent teepublicon-spacing--right "><img src="https://assets.teepublic.com/assets/teepublicons/hanger_primary500-626f3e1864da84e8e4c6f756207b72ced5d4f2cb5912d613828546eb0bf8c478.svg
+                    jsShowSliderSizechart link__cta link__cta--on-light link--small tp-btn--icon "><span class="teepublicon teepublicon--blue-default teepublicon-background--transparent teepublicon-spacing--right "><img src="https://cdn.jsdelivr.net/gh/ggeercy/artjssszhd/hanger_primary500-626f3e1864da84e8e4c6f756207b72ced5d4f2cb5912d613828546eb0bf8c478.svg
                     " loading="lazy " height="16 " width="16 " aria_hidden="true " focusable="false "></span>
 <span class='link__content'>
 View Size Chart
@@ -18863,7 +18863,7 @@ View Size Chart
 
 </a><a aria-label="Size Chart " data-canvas="T-Shirt " data-rudderstack-event-type="link " data-action="click-&gt;rudderstack--link-clicked#track " data-link-label="View Size Chart " data-href="javascript:void(0); " id="gtmSizeChart " tabindex="0
                     " href="javascript:void(0); " class="link m-cart-config__sizechart-desktop-ctrl jsSizechartOpen link__cta link__cta--on-light link--small tp-btn--icon "><span class="teepublicon teepublicon--blue-default teepublicon-background--transparent
-                    teepublicon-spacing--right "><img src="https://assets.teepublic.com/assets/teepublicons/hanger_primary500-626f3e1864da84e8e4c6f756207b72ced5d4f2cb5912d613828546eb0bf8c478.svg " loading="lazy " height="16 " width="16 " aria_hidden="true
+                    teepublicon-spacing--right "><img src="https://cdn.jsdelivr.net/gh/ggeercy/artjssszhd/hanger_primary500-626f3e1864da84e8e4c6f756207b72ced5d4f2cb5912d613828546eb0bf8c478.svg " loading="lazy " height="16 " width="16 " aria_hidden="true
                     " focusable="false "></span>
 <span class='link__content'>
 View Size Chart
@@ -19484,7 +19484,7 @@ TeePublic Blog
 <div class='m-footer__bbb'>
 <a target="_blank " href="#" class="link link--1 link--default ">
 <span class='link__content'>
-<img loading="lazy " alt="Better Business Bureau Accredited Business " src="https://assets.teepublic.com/assets/vendors/bbb-f6c79431393cee623e1d7db1c8d5623312fe5c7de4f48a47d04fb4b0c435c5c0.png" />
+<img loading="lazy " alt="Better Business Bureau Accredited Business " src="https://cdn.jsdelivr.net/gh/ggeercy/dms/bbb-f6c79431393cee623e1d7db1c8d5623312fe5c7de4f48a47d04fb4b0c435c5c0.png" />
 
 </span>
 
@@ -19504,7 +19504,7 @@ TeePublic Blog
 © Copyright <?php echo $titlebrand; ?>
 </div>
 <div class='m-footer__legal-bar-header-browse-preferences'>
-<button type="button " class="btn jsChangeIntlSettings btn--no-space tp-btn--medium btn--no-background btn--cta btn--cta--on-dark tp-btn--icon "><span class="teepublicon teepublicon--blue-default teepublicon-background--transparent "><img src="https://assets.teepublic.com/assets/teepublicons/globe_primary400-4459871cc25767dbb110c87407d9654283057ec0715e24b8bfb9e0f0aad7cfe9.svg
+<button type="button " class="btn jsChangeIntlSettings btn--no-space tp-btn--medium btn--no-background btn--cta btn--cta--on-dark tp-btn--icon "><span class="teepublicon teepublicon--blue-default teepublicon-background--transparent "><img src="https://cdn.jsdelivr.net/gh/ggeercy/artjssszhd/globe_primary400-4459871cc25767dbb110c87407d9654283057ec0715e24b8bfb9e0f0aad7cfe9.svg
                     " loading="lazy " height="16 " width="16 " aria_hidden="true " focusable="false "></span>
 <div class='button__content'>
 United States - $ USD
@@ -19553,7 +19553,7 @@ Terms
                     " data-rudderstack--link-clicked-state-value="guest " data-containers--drawer-component-target="content "><div class="drawer__backdrop " data-action="click-&gt;containers--drawer-component#close "></div>
 <div class='drawer__wrapper drawer__wrapper--right'>
 <section class="drawer__component drawer--dark m-tray-account__body "><button type="button " class="btn drawer__close-button tp-btn--medium btn--no-background tp-btn--icon " data-action="click-&gt;containers--drawer-component#closePrimaryDrawer
-                    "><span class="teepublicon teepublicon--blue-default teepublicon-background--transparent "><img src="https://assets.teepublic.com/assets/teepublicons/x_close_neutral400-c1926221e50e7f6686d23ac344405449054e43f23d0f3306f15d8dfd546f999a.svg
+                    "><span class="teepublicon teepublicon--blue-default teepublicon-background--transparent "><img src="https://cdn.jsdelivr.net/gh/ggeercy/artjssszhd/x_close_neutral400-c1926221e50e7f6686d23ac344405449054e43f23d0f3306f15d8dfd546f999a.svg
                     " loading="lazy " alt="Close Drawer " height="12 " width="12 " aria_hidden="false " focusable="true "></span>
 <div class='button__content'>
 
@@ -19562,7 +19562,7 @@ Terms
 </button>
 <div class='drawer__header-container'>
 <div class="drawer__header m-tray-account__header "><div class='m-tray-account__header-user'>
-<span class="teepublicon teepublicon--blue-default teepublicon-background--transparent "><img src="https://assets.teepublic.com/assets/teepublicons/user_primary400-cbe4923027a0625a846acda949725368bbe52ac03f2bde950bf4891a338de0a5.svg " loading="lazy
+<span class="teepublicon teepublicon--blue-default teepublicon-background--transparent "><img src="https://cdn.jsdelivr.net/gh/ggeercy/artjssszhd/user_primary400-cbe4923027a0625a846acda949725368bbe52ac03f2bde950bf4891a338de0a5.svg " loading="lazy
                     " height="24 " width="24 " aria_hidden="true " focusable="false "></span>
 <div class='m-tray-account__header-text'>Welcome Guest!</div>
 </div>
@@ -19595,7 +19595,7 @@ Create Account
                     " data-navigation--cart-lazyload-path-value="/lazyload_cart_tray " data-navigation--cart-fire-request-value="false " data-rudderstack--link-clicked-state-value="empty " data-containers--drawer-component-target="content "><div class="drawer__backdrop " data-action="click-&gt;containers--drawer-component#close "></div>
 <div class='drawer__wrapper drawer__wrapper--right'>
 <section class="drawer__component drawer--light m-tray-cart__wrapper "><button type="button " class="btn drawer__close-button tp-btn--medium btn--no-background tp-btn--icon " data-action="click-&gt;containers--drawer-component#closePrimaryDrawer
-                    "><span class="teepublicon teepublicon--blue-default teepublicon-background--transparent "><img src="https://assets.teepublic.com/assets/teepublicons/x_close_neutral400-c1926221e50e7f6686d23ac344405449054e43f23d0f3306f15d8dfd546f999a.svg
+                    "><span class="teepublicon teepublicon--blue-default teepublicon-background--transparent "><img src="https://cdn.jsdelivr.net/gh/ggeercy/artjssszhd/x_close_neutral400-c1926221e50e7f6686d23ac344405449054e43f23d0f3306f15d8dfd546f999a.svg
                     " loading="lazy " alt="Close Drawer " height="12 " width="12 " aria_hidden="false " focusable="true "></span>
 <div class='button__content'>
 
@@ -19749,7 +19749,7 @@ Shop All Designs
 <div class="drawer__component drawer--light m-tray-shop-secondary jsSecondaryShopTray m-tray-shop-designs " data-containers--drawer-component-target="content " data-containers--drawer-component-containers--drawer-component-outlet=".jsDrawerPrimary
                     " data-controller="containers--drawer-component rudderstack--link-clicked rudderstack--filter-clicked " data-rudderstack--link-clicked-__cpLocation-value="nav-shop-l2 " data-rudderstack--filter-clicked-__cpLocation-value="nav-shop-l2 "><button type="button
                     " class="btn drawer__close-button tp-btn--medium btn--no-background tp-btn--icon " data-action="click-&gt;containers--drawer-component#closePrimaryDrawer "><span class="teepublicon teepublicon--blue-default teepublicon-background--transparent
-                    "><img src="https://assets.teepublic.com/assets/teepublicons/x_close_neutral400-c1926221e50e7f6686d23ac344405449054e43f23d0f3306f15d8dfd546f999a.svg " loading="lazy " alt="Close Drawer " height="12 " width="12 " aria_hidden="false
+                    "><img src="https://cdn.jsdelivr.net/gh/ggeercy/artjssszhd/x_close_neutral400-c1926221e50e7f6686d23ac344405449054e43f23d0f3306f15d8dfd546f999a.svg " loading="lazy " alt="Close Drawer " height="12 " width="12 " aria_hidden="false
                     " focusable="true "></span>
 <div class='button__content'>
 
@@ -19884,7 +19884,7 @@ Back To Menu
 <div class="drawer__component drawer--light m-tray-shop-secondary jsSecondaryShopTray m-tray-shop-apparel " data-containers--drawer-component-target="content " data-containers--drawer-component-containers--drawer-component-outlet=".jsDrawerPrimary
                     " data-controller="containers--drawer-component rudderstack--link-clicked rudderstack--filter-clicked " data-rudderstack--link-clicked-__cpLocation-value="nav-shop-l2 " data-rudderstack--filter-clicked-__cpLocation-value="nav-shop-l2 "><button type="button
                     " class="btn drawer__close-button tp-btn--medium btn--no-background tp-btn--icon " data-action="click-&gt;containers--drawer-component#closePrimaryDrawer "><span class="teepublicon teepublicon--blue-default teepublicon-background--transparent
-                    "><img src="https://assets.teepublic.com/assets/teepublicons/x_close_neutral400-c1926221e50e7f6686d23ac344405449054e43f23d0f3306f15d8dfd546f999a.svg " loading="lazy " alt="Close Drawer " height="12 " width="12 " aria_hidden="false
+                    "><img src="https://cdn.jsdelivr.net/gh/ggeercy/artjssszhd/x_close_neutral400-c1926221e50e7f6686d23ac344405449054e43f23d0f3306f15d8dfd546f999a.svg " loading="lazy " alt="Close Drawer " height="12 " width="12 " aria_hidden="false
                     " focusable="true "></span>
 <div class='button__content'>
 
@@ -19955,7 +19955,7 @@ Back To Menu
 <div class="drawer__component drawer--light m-tray-shop-secondary jsSecondaryShopTray m-tray-shop-accessories " data-containers--drawer-component-target="content " data-containers--drawer-component-containers--drawer-component-outlet=".jsDrawerPrimary
                     " data-controller="containers--drawer-component rudderstack--link-clicked rudderstack--filter-clicked " data-rudderstack--link-clicked-__cpLocation-value="nav-shop-l2 " data-rudderstack--filter-clicked-__cpLocation-value="nav-shop-l2 "><button type="button
                     " class="btn drawer__close-button tp-btn--medium btn--no-background tp-btn--icon " data-action="click-&gt;containers--drawer-component#closePrimaryDrawer "><span class="teepublicon teepublicon--blue-default teepublicon-background--transparent
-                    "><img src="https://assets.teepublic.com/assets/teepublicons/x_close_neutral400-c1926221e50e7f6686d23ac344405449054e43f23d0f3306f15d8dfd546f999a.svg " loading="lazy " alt="Close Drawer " height="12 " width="12 " aria_hidden="false
+                    "><img src="https://cdn.jsdelivr.net/gh/ggeercy/artjssszhd/x_close_neutral400-c1926221e50e7f6686d23ac344405449054e43f23d0f3306f15d8dfd546f999a.svg " loading="lazy " alt="Close Drawer " height="12 " width="12 " aria_hidden="false
                     " focusable="true "></span>
 <div class='button__content'>
 
@@ -20234,7 +20234,7 @@ Back To Menu
         }
     </script>
     <script src="https://assets.teepublic.com/assets/product_page-2af4d77ccb74974f4afec6972768b6abd2dca23b01d5b2e7380c8a38dff3c308.js"></script>
-    <script src="https://assets.teepublic.com/packs/js/product_page-c8d7a3eb618da10ad666.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/artjssszhd/product_page-c8d7a3eb618da10ad666.js"></script>
     <script >
         TeePublic.initialSelectedProduct = 357
         TeePublic['ab_tests'] = {};
