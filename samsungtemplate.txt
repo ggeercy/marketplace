@@ -17040,6 +17040,7 @@ html.no-touch .tp-design-tile:hover .tp-design-tile__sort-ctrl {
     position: absolute;
     right: 0;
     top: 0;
+    justify-content: center;
 }
 
 .m-product-preview__glider-img img {
