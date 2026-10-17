@@ -19097,11 +19097,14 @@ View Size Chart
 <h2>FAQ OLXTOTO</h2>
 
 <div class="faq-toto-4d">
+    <?php 
+    $numberfaq = 1;
+    foreach ($faqs as $f): ?>
   <details>
-    <summary>Apa itu OLXTOTO?</summary>
-    <p>OLXTOTO merupakan platform yang membahas pilihan permainan Togel 4D, Toto, dan Slot Online dengan informasi yang disusun secara ringkas agar lebih mudah dipahami dan dinavigasi.</p>
+    <summary><?php echo htmlspecialchars($f['q']); ?></summary>
+    <p><?php echo htmlspecialchars($f['a']); ?></p>
   </details>
-
+<?php endforeach; ?>
 </div>
 
 <h2>Review Member Olxtoto</h2>
