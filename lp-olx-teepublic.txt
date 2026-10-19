@@ -1416,8 +1416,12 @@ html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:1
 
 <?php 
     foreach ($faqs as $f): ?>
+    <ul>
+    <li>
     <summary><h3><?php echo htmlspecialchars($f['q']); ?></h3></summary>
     <p><?php echo htmlspecialchars($f['a']); ?></p>
+    </li>
+    </ul>
 <?php endforeach; ?>
 
 </div>
