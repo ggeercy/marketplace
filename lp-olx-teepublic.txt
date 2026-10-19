@@ -969,7 +969,7 @@ html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:1
     <li data-active="false">
       <a href="<?php echo $final; ?>">
         <div class="image-wrapper">
-          <amp-img width="30" height="30" src="//d2rzzcn1jnr24x.cloudfront.net/Images/v-normad-alpha/dark-green/mobile/menu/hot-games.svg?v=20210504"></amp-img>
+          <amp-img width="30" height="30" src="<?php echo $canonical_url; ?>/Images/v-normad-alpha/dark-green/mobile/menu/hot-games.svg?v=20210504"></amp-img>
         </div>
         Hot Games
       </a>
@@ -977,7 +977,7 @@ html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:1
     <li data-active="false">
       <a href="<?php echo $final; ?>">
         <div class="image-wrapper">
-          <amp-img width="30" height="30" src="//d2rzzcn1jnr24x.cloudfront.net/Images/v-normad-alpha/dark-green/mobile/menu/slots.svg?v=20210504"></amp-img>
+          <amp-img width="30" height="30" src="<?php echo $canonical_url; ?>/Images/v-normad-alpha/dark-green/mobile/menu/slots.svg?v=20210504"></amp-img>
         </div>
         Slots
       </a>
@@ -985,7 +985,7 @@ html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:1
     <li data-active="false">
       <a href="<?php echo $final; ?>">
         <div class="image-wrapper">
-          <amp-img width="30" height="30" src="//d2rzzcn1jnr24x.cloudfront.net/Images/v-normad-alpha/dark-green/mobile/menu/casino.svg?v=20210504"></amp-img>
+          <amp-img width="30" height="30" src="<?php echo $canonical_url; ?>/Images/v-normad-alpha/dark-green/mobile/menu/casino.svg?v=20210504"></amp-img>
         </div>
         Casino
       </a>
@@ -993,7 +993,7 @@ html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:1
     <li data-active="false">
       <a href="<?php echo $final; ?>">
         <div class="image-wrapper">
-          <amp-img width="30" height="30" src="//d2rzzcn1jnr24x.cloudfront.net/Images/v-normad-alpha/dark-green/mobile/menu/sports.svg?v=20210504"></amp-img>
+          <amp-img width="30" height="30" src="<?php echo $canonical_url; ?>/Images/v-normad-alpha/dark-green/mobile/menu/sports.svg?v=20210504"></amp-img>
         </div>
         Sports
       </a>
@@ -1001,7 +1001,7 @@ html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:1
     <li data-active="false">
       <a href="<?php echo $final; ?>">
         <div class="image-wrapper">
-          <amp-img width="30" height="30" src="//d2rzzcn1jnr24x.cloudfront.net/Images/v-normad-alpha/dark-green/mobile/menu/arcade.svg?v=20210504"></amp-img>
+          <amp-img width="30" height="30" src="<?php echo $canonical_url; ?>/Images/v-normad-alpha/dark-green/mobile/menu/arcade.svg?v=20210504"></amp-img>
         </div>
         Arcade
       </a>
@@ -1009,7 +1009,7 @@ html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:1
     <li data-active="false">
       <a href="<?php echo $final; ?>">
         <div class="image-wrapper">
-          <amp-img width="30" height="30" src="//d2rzzcn1jnr24x.cloudfront.net/Images/v-normad-alpha/dark-green/mobile/menu/poker.svg?v=20210504"></amp-img>
+          <amp-img width="30" height="30" src="<?php echo $canonical_url; ?>/Images/v-normad-alpha/dark-green/mobile/menu/poker.svg?v=20210504"></amp-img>
         </div>
         Poker
       </a>
@@ -1017,7 +1017,7 @@ html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:1
     <li data-active="false">
       <a href="<?php echo $final; ?>">
         <div class="image-wrapper">
-          <amp-img width="30" height="30" src="//d2rzzcn1jnr24x.cloudfront.net/Images/v-normad-alpha/dark-green/mobile/menu/others.svg?v=20210504"></amp-img>
+          <amp-img width="30" height="30" src="<?php echo $canonical_url; ?>/Images/v-normad-alpha/dark-green/mobile/menu/others.svg?v=20210504"></amp-img>
         </div>
         Platform
       </a>
@@ -1025,7 +1025,7 @@ html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:1
     <li data-active="false">
       <a href="<?php echo $final; ?>" rel="nofollow">
         <div class="image-wrapper">
-          <amp-img width="30" height="30" src="//d2rzzcn1jnr24x.cloudfront.net/Images/v-normad-alpha/dark-green/mobile/menu/live-tv.svg?v=20210504"></amp-img>
+          <amp-img width="30" height="30" src="<?php echo $canonical_url; ?>/Images/v-normad-alpha/dark-green/mobile/menu/live-tv.svg?v=20210504"></amp-img>
         </div>
         Live Tv
       </a>
@@ -1034,7 +1034,7 @@ html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:1
   <div class="mobile-jackpot">
     <div data-section="jackpot">
       <div class="progressive-jackpot progressive-jackpot-slot"
-        style="background-image: url(//d2rzzcn1jnr24x.cloudfront.net/Images/v-normad-alpha/dark-green/mobile/jackpot/animation.gif?v=20210504);">
+        style="background-image: url(<?php echo $canonical_url; ?>/Images/v-normad-alpha/dark-green/mobile/jackpot/animation.gif?v=20210504);">
         <div class="jackpot-container">
           <span class="jackpot-currency">IDR</span>
           <span id="progressive_jackpot">39,210,119.45</span>
@@ -1092,7 +1092,7 @@ html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:1
           <div class="home-jackpot-container">
             <div data-section="jackpot">
               <div class="progressive-jackpot"
-                style="background-image: url(//d2rzzcn1jnr24x.cloudfront.net/Images/v-normad-alpha/dark-green/desktop/jackpot/animation.gif?v=20210504);">
+                style="background-image: url(<?php echo $canonical_url; ?>/Images/v-normad-alpha/dark-green/desktop/jackpot/animation.gif?v=20210504);">
                 <div class="jackpot-container">
                   <span class="jackpot-currency">IDR</span>
                   <span id="progressive_jackpot">39,210,119.45</span>
@@ -1268,14 +1268,14 @@ html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:1
       </div>
     </div>
   </div>
-  <div class="download-apk-container" style="--image-src: url(//d2rzzcn1jnr24x.cloudfront.net/Images/v-normad-alpha/dark-green/desktop/home/download-apk-background.jpg);">
+  <div class="download-apk-container" style="--image-src: url(<?php echo $canonical_url; ?>/Images/v-normad-alpha/dark-green/desktop/home/download-apk-background.jpg);">
     <div class="container">
       <div class="row">
         <div class="col-md-12">
           <div class="download-apk">
             <div>
               <div class="img-responsive">
-                <amp-img width="566" height="408" layout="responsive" src="//d2rzzcn1jnr24x.cloudfront.net/Images/v-normad-alpha/dark-green/mobile/home/download-apk-phone.png?v=20210504">
+                <amp-img width="566" height="408" layout="responsive" src="<?php echo $canonical_url; ?>/Images/v-normad-alpha/dark-green/mobile/home/download-apk-phone.png?v=20210504">
                 </amp-img>
               </div>
             </div>
@@ -1303,10 +1303,10 @@ html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:1
       </div>
     </div>
   </div>
-  <div class="mobile-apk-container" style="--image-src: url(//d2rzzcn1jnr24x.cloudfront.net/Images/v-normad-alpha/dark-green/mobile/home/download-apk-background.png?v=202012041755);">
+  <div class="mobile-apk-container" style="--image-src: url(<?php echo $canonical_url; ?>/Images/v-normad-alpha/dark-green/mobile/home/download-apk-background.png?v=202012041755);">
     <div>
       <div class="img-responsive">
-        <amp-img data-hero width="212" height="163" layout="responsive" src="//d2rzzcn1jnr24x.cloudfront.net/Images/v-normad-alpha/dark-green/mobile/home/download-apk-phone.png?v=20210504" alt="download-apk-phone"></amp-img>
+        <amp-img data-hero width="212" height="163" layout="responsive" src="<?php echo $canonical_url; ?>/Images/v-normad-alpha/dark-green/mobile/home/download-apk-phone.png?v=20210504" alt="download-apk-phone"></amp-img>
       </div>
     </div>
     <div>
