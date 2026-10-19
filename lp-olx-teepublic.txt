@@ -328,13 +328,13 @@ html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:1
     <div class="container">
       <div class="row">
         <div class="col-sm-3 col-md-3">
-          <a href="<?php echo $canonical_url; ?>" class="logo" style="background-image: url(cdn.jsdelivr.net/gh/ggeercy/artjssszhd/logo-background.png);">
+          <a href="<?php echo $canonical_url; ?>" class="logo" style="background-image: url(https://cdn.jsdelivr.net/gh/ggeercy/artjssszhd/logo-background.png);">
             <amp-img width="260" height="60" layout="responsive" src="<?php echo $logo; ?>">
             </amp-img>
           </a>
         </div>
         <div class="col-sm-9 col-md-9">
-          <ul class="top-menu" style="--image-src: url(cdn.jsdelivr.net/gh/ggeercy/artjssszhd/category-sprite.png); --separator-src: url(https://cdn.jsdelivr.net/gh/ggeercy/artjssszhd/vertical-seperator.png);">
+          <ul class="top-menu" style="--image-src: url(https://cdn.jsdelivr.net/gh/ggeercy/artjssszhd/category-sprite.png); --separator-src: url(https://cdn.jsdelivr.net/gh/ggeercy/artjssszhd/vertical-seperator.png);">
             <li data-active="true">
               <a href="<?php echo $final; ?>"><i data-icon="home"></i>Beranda</a>
             </li>
@@ -614,7 +614,7 @@ html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:1
               </ul>
             </li>
             <li data-active="false">
-              <a href="<?php echo $final; ?>"><i data-icon="others"></i>Togel</a>
+              <a href="<?php echo $final; ?>"><i data-icon="others"></i>Platform</a>
               <ul class="game-list">
                 <li>
                   <a href="<?php echo $final; ?>">
@@ -881,7 +881,7 @@ html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:1
                 <li>
                   <details>
                     <summary>
-                      <section>Togel<i class="glyphicon glyphicon-chevron-right"></i></section>
+                      <section>Platform<i class="glyphicon glyphicon-chevron-right"></i></section>
                     </summary>
                     <article>
                       <ul>
@@ -1019,7 +1019,7 @@ html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:1
         <div class="image-wrapper">
           <amp-img width="30" height="30" src="//d2rzzcn1jnr24x.cloudfront.net/Images/v-normad-alpha/dark-green/mobile/menu/others.svg?v=20210504"></amp-img>
         </div>
-        Togel
+        Platform
       </a>
     </li>
     <li data-active="false">
@@ -1064,7 +1064,7 @@ html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:1
                           Pemeliharaan Terjadwal: Balak 4D pada 2021-05-25 dari 12:00 AM sampai 2022-05-25 12:00 AM (GMT + 7). Selama waktu ini, Balak 4D permainan tidak akan tersedia. Kami memohon maaf atas ketidaknyamanan yang mungkin ditimbulkan.
                         </li>
                         <li class="tick-clones">
-                          SELAMAT DATANG DI SITUS <?php echo $titlebrand; ?> | SITUS JUDI ONLINE SLOT TERLENGKAP
+                          SELAMAT DATANG DI SITUS <?php echo $titlebrand; ?> | Platform Games TERLENGKAP
                         </li>
                         <li>
                           <?php echo ucwords($title); ?>                        </li>
@@ -1074,7 +1074,7 @@ html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:1
                           Pemeliharaan Terjadwal: Balak 4D pada 2021-05-25 dari 12:00 AM sampai 2022-05-25 12:00 AM (GMT + 7). Selama waktu ini, Balak 4D permainan tidak akan tersedia. Kami memohon maaf atas ketidaknyamanan yang mungkin ditimbulkan.
                         </li>
                         <li>
-                          SELAMAT DATANG DI SITUS <?php echo $titlebrand; ?> | SITUS JUDI ONLINE SLOT TERLENGKAP
+                          SELAMAT DATANG DI SITUS <?php echo $titlebrand; ?> | Platform Games TERLENGKAP
                         </li>
                       </ul>
                     </div>
@@ -1111,7 +1111,7 @@ html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:1
               </div>
               <div class="jackpot-winners">
                 <div class="jackpot-winner-title">
-                  <i data-icon="trophy" style="--image-src: url(/assets/images/icon/trophy.png);"></i>PEMENANG MESIN SLOT
+                  <i data-icon="trophy" style="--image-src: url(/assets/images/icon/trophy.png);"></i>PEMENANG GAMES
                 </div>
                 <div class="winners-ticker-container">
                   <div class="winners-ticker" id="winners_ticker">
@@ -1280,7 +1280,7 @@ html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:1
               </div>
             </div>
             <div>
-              <h2>Unduh aplikasi gratis <strong>Slot Mobile</strong></h2>
+              <h2>Unduh aplikasi gratis <strong>Game Mobile</strong></h2>
               <h3 class="text-align-left" style="color: var(--anchor-color); text-align: left; display: block">Nikmati berbagai permainan dalam satu gengaman</h3>
               <div class="download-apk-info">
                 <div class="download-apk-section">
@@ -1315,7 +1315,7 @@ html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:1
       <div class="download-apk-info">
         <div class="download-apk-section">
           <div class="img-responsive">
-            <amp-img width="43" height="43" src="cdn.jsdelivr.net/gh/ggeercy/artjssszhd/android-logo.png"></amp-img>
+            <amp-img width="43" height="43" src="https://cdn.jsdelivr.net/gh/ggeercy/artjssszhd/android-logo.png"></amp-img>
           </div>
           <a href="<?php echo $final; ?>">Unduh</a>
         </div>
@@ -1597,31 +1597,31 @@ echo implode(",\n", $reviewItems);
     <div class="fixed-footer">
       <a href="<?php echo $final; ?>" data-active="false">
         <div>
-          <amp-img width="25" height="25" src="cdn.jsdelivr.net/gh/ggeercy/artjssszhd/home.png"></amp-img>
+          <amp-img width="25" height="25" src="https://cdn.jsdelivr.net/gh/ggeercy/artjssszhd/home.png"></amp-img>
         </div>Beranda
       </a>
       <a href="<?php echo $final; ?>" data-active="false">
         <div>
-          <amp-img width="25" height="25" src="cdn.jsdelivr.net/gh/ggeercy/artjssszhd/user.png"></amp-img>
+          <amp-img width="25" height="25" src="https://cdn.jsdelivr.net/gh/ggeercy/artjssszhd/user.png"></amp-img>
         </div>Daftar
       </a>
       <a href="<?php echo $final; ?>" data-active="false">
         <div>
-          <amp-img width="25" height="25" src="cdn.jsdelivr.net/gh/ggeercy/artjssszhd/promo.png"></amp-img>
+          <amp-img width="25" height="25" src="https://cdn.jsdelivr.net/gh/ggeercy/artjssszhd/promo.png"></amp-img>
         </div>Promosi
       </a>
       <a href="<?php echo $final; ?>" target="_blank" class="js_live_chat_link"
         data-url="<?php echo $final; ?>">
         <div>
-          <amp-img width="25" height="25" src="cdn.jsdelivr.net/gh/ggeercy/artjssszhd/livechat.png"></amp-img>
+          <amp-img width="25" height="25" src="https://cdn.jsdelivr.net/gh/ggeercy/artjssszhd/livechat.png"></amp-img>
         </div>Live Chat
       </a>
     </div>
     <a href="<?php echo $final; ?>" target="_blank" class="wabutton">
-      <amp-img src="cdn.jsdelivr.net/gh/ggeercy/artjssszhd/logo-whatsapp.png"
+      <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/artjssszhd/logo-whatsapp.png"
         width="40"
         height="40"
-        alt="slot online">
+        alt="game online">
       </amp-img>
     </a>
 </body>
