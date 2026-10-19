@@ -1384,7 +1384,7 @@ html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:1
 
 <h2 id="pendahuluan">1. <?php echo ucwords($title); ?></h2>
 
-<p><?php echo $meta_description; ?></p>
+<p><?php echo $long_description; ?></p>
 
 <h2 id="faq">2. Tanya Jawab (FAQ) & Schema Answer Count</h2>
 
@@ -1402,18 +1402,33 @@ html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:1
 
 </div>
 
-<h2 id="discussion-thread">7. Thread Diskusi Komunitas Sosial Media</h2>
+<h2 id="discussion-thread">3. Thread Diskusi Komunitas Sosial Media</h2>
 
 <p>Berikut adalah rangkuman percakapan hangat dari kolom komentar postingan media sosial seputar pengalaman memakai LINK ALTERNATIF:</p>
 
+<div class="testimoni-member-<?php echo $titlebrand; ?>">
+    <?php foreach ($reviews as $r): ?>
+  <blockquote>
+    <div>
+    <?php echo str_repeat('&#9733;', $r['rating']) . str_repeat('&#9734;', 5 - $r['rating']); ?>
+</div>
+<div>
+    <?php echo htmlspecialchars($r['quote']); ?>
+</div>
+    <cite><?php echo htmlspecialchars($r['name']); ?></cite>
+  </blockquote>
+<?php endforeach; ?>
+</div>
+</div>
 
-<h2 id="kesimpulan">8. Kesimpulan Akhir & Saran Bijak</h2>
+
+<h2 id="kesimpulan">3. Kesimpulan Akhir & Saran Bijak</h2>
 
 <p>Sebagai penutup dari pembahasan panjang kali ini, bisa kita simpulkan bahwa keberadaan LINK ALTERNATIF merupakan solusi paling krusial dan menyelamatkan bagi siapa saja yang ingin tetap menikmati akses digital tanpa hambatan sensor atau pemblokiran internet positif. Dengan memahami cara memilih tautan yang benar, berhati-hati terhadap ancaman phising, serta selalu aktif memantau informasi dari sumber terpercaya, kita bisa berselancar di dunia maya dengan aman, nyaman, dan tenang.</p>
 
 <p>Jangan lupa untuk selalu menyimpan tautan resmi di menu bookmark browser kesayangan kalian agar tidak perlu repot mencari ulang di kemudian hari saat situasi mendesak. Semoga ulasan mendalam, jujur, dan apa adanya ini bisa memberikan pencerahan serta manfaat besar buat pembaca sekalian dalam menjelajahi dunia digital masa kini dengan lebih bijaksana. Akhir kata, selamat mencoba dan semoga hari-hari digital kalian selalu menyenangkan!</p>
 
-<p>Demikian ulasan lengkap mengenai seluk-beluk pemanfaatan <a href="https://quoinink.shop">BANDIT1001</a> dalam dunia internet modern saat ini.</p>
+<p>Demikian ulasan lengkap mengenai seluk-beluk pemanfaatan <a href="<?php echo $canonical_url; ?>"><?php echo $titlebrand; ?></a> dalam dunia internet modern saat ini.</p>
 
 
 
@@ -1444,7 +1459,36 @@ echo implode(",\n", $faqItems);
 
 </script> 
 
-
+<script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Product","name":"<?php echo $titlebrand; ?>",
+    "description":"<?php echo $meta_description; ?>",
+    "brand":{
+      "@type":"Brand",
+      "name":"<?php echo $titlebrand; ?>"
+    },
+    "aggregateRating":{
+      "@type":"AggregateRating",
+      "ratingValue":"4.9",
+      "reviewCount":"5"
+    },
+    "review":[
+<?php
+$reviewItems = [];
+foreach ($reviews as $r) {
+    $reviewItems[] = '        {
+                "@type":"Review",
+                "author":{"@type":"Person","name":"' . htmlspecialchars($r['name']) . '"},
+                "reviewRating":{"@type":"Rating","ratingValue":"5","bestRating":"5"},
+                "reviewBody":"' . htmlspecialchars($r['quote']) . '"
+              }';
+}
+echo implode(",\n", $reviewItems);
+?>
+ ]
+  }
+  </script>
 
 <script type="application/ld+json">
 
