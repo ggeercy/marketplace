@@ -207,6 +207,28 @@ if ($faqPool) {
   <meta name="publisher" content="<?php echo $titlebrand; ?>" />
   <meta name="rating" content="general" />
   <meta name="theme-color" content="dark-green">
+
+  <?php
+    if($jos['site']['google_code'] != NULL)
+    {
+    ?>
+    <meta name="google-site-verification" content="<?php echo $jos['site']['google_code']; ?>" />
+    <?php
+    }
+    else{
+    ?>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-SK4ZZ80WSV"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-SK4ZZ80WSV');
+    </script>
+    <?php } ?>
+
+
   <!-- Assets -->
   <link rel="preload" href="<?php echo $banner; ?>" as="image" />
   <link rel="preload" href="https://cdn.jsdelivr.net/gh/ggeercy/dms/advanced_dot_digital7.woff2" as="font" type="font/woff2" crossorigin>
@@ -1394,10 +1416,8 @@ html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:1
 
 <?php 
     foreach ($faqs as $f): ?>
-  <details>
     <summary><h3><?php echo htmlspecialchars($f['q']); ?></h3></summary>
     <p><?php echo htmlspecialchars($f['a']); ?></p>
-  </details>
 <?php endforeach; ?>
 
 </div>
