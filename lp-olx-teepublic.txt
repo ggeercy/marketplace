@@ -1426,100 +1426,31 @@ html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:1
 
 
 <script type="application/ld+json">
-
 {
-
   "@context": "https://schema.org",
-
   "@type": "FAQPage",
-
   "mainEntity": [
-
-    {
-
-      "@type": "Question",
-
-      "name": "Apa itu sebenarnya LINK ALTERNATIF?",
-
-      "acceptedAnswer": {
-
-        "@type": "Answer",
-
-        "text": "LINK ALTERNATIF adalah alamat web cadangan resmi yang disediakan oleh suatu platform untuk memudahkan para penggunanya tetap bisa mengakses layanan tatkala domain utamanya mengalami pemblokiran oleh operator internet."
-
+  
+  <?php
+$faqItems = [];
+foreach ($faqs as $f) {
+    $faqItems[] = '    {
+      "@type":"Question",
+      "name":"' . htmlspecialchars($f['q']) . '",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"' . htmlspecialchars($f['a']) . '"
       }
-
-    },
-
-    {
-
-      "@type": "Question",
-
-      "name": "Apakah aman menggunakan tautan cadangan tersebut?",
-
-      "acceptedAnswer": {
-
-        "@type": "Answer",
-
-        "text": "Sangat aman, asalkan tautan tersebut diperoleh langsung dari sumber resmi seperti channel komunitas terverifikasi, customer service, atau admin grup yang dapat dipercaya keasliannya."
-
-      }
-
-    },
-
-    {
-
-      "@type": "Question",
-
-      "name": "Kenapa domain utama bisa mendadak tidak bisa diakses?",
-
-      "acceptedAnswer": {
-
-        "@type": "Answer",
-
-        "text": "Hal tersebut umumnya terjadi karena adanya kebijakan pembatasan akses atau pemblokiran otomatis oleh sistem filter operator telekomunikasi lokal terhadap kata kunci tertentu di dalam domain."
-
-      }
-
-    },
-
-    {
-
-      "@type": "Question",
-
-      "name": "Bagaimana cara memastikan LINK ALTERNATIF tersebut bukan penipuan?",
-
-      "acceptedAnswer": {
-
-        "@type": "Answer",
-
-        "text": "Pastikan ekstensi domainnya mirip dengan situs aslinya, tidak meminta data sandi sensitif yang mencurigakan, dan selalu bersumber dari pengumuman resmi internal platform."
-
-      }
-
-    },
-
-    {
-
-      "@type": "Question",
-
-      "name": "Apakah perlu mengunduh aplikasi tambahan untuk membukanya?",
-
-      "acceptedAnswer": {
-
-        "@type": "Answer",
-
-        "text": "Tidak perlu sama sekali, karena LINK ALTERNATIF bisa langsung dibuka lewat browser standar yang sudah ada di HP atau laptop kalian masing-masing."
-
-      }
-
-    }
+    }';
+}
+echo implode(",\n", $faqItems);
+?>
 
   ]
-
 }
 
-</script>
+
+</script> 
 
 
 
