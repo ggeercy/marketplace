@@ -1392,18 +1392,10 @@ html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:1
 
 <div class="faq-item">
 
-    <h3>Apa itu sebenarnya LINK ALTERNATIF?</h3>
-
-    <p>LINK ALTERNATIF adalah alamat web cadangan resmi yang disediakan oleh suatu platform untuk memudahkan para penggunanya tetap bisa mengakses layanan tatkala domain utamanya mengalami pemblokiran oleh operator internet.</p>
-
-</div>
-
-<div class="faq-item">
-
 <?php 
     foreach ($faqs as $f): ?>
   <details>
-    <summary><?php echo htmlspecialchars($f['q']); ?></summary>
+    <h3><?php echo htmlspecialchars($f['q']); ?><h3>
     <p><?php echo htmlspecialchars($f['a']); ?></p>
   </details>
 <?php endforeach; ?>
