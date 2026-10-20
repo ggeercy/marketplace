@@ -4668,7 +4668,7 @@ echo implode(",\n", $faqItems);
 }
 
 .rjb-card::before {
-    content: "ÃƒÂ¢Ã‹Å“Ã‚Â¾";
+    content: "";
     position: absolute;
     top: 18px;
     right: 28px;
@@ -4678,7 +4678,7 @@ echo implode(",\n", $faqItems);
 }
 
 .rjb-card::after {
-    content: "ÃƒÂ¢Ã…â€œÃ‚Â¦ ÃƒÂ¢Ã…â€œÃ‚Â§ ÃƒÂ¢Ã…â€œÃ‚Â¦ ÃƒÂ¢Ã…â€œÃ‚Â§ ÃƒÂ¢Ã…â€œÃ‚Â¦ ÃƒÂ¢Ã…â€œÃ‚Â§";
+    content: "";
     position: absolute;
     top: 25px;
     left: 22px;
