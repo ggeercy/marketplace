@@ -169,7 +169,7 @@ if ($faqPool) {
 <link rel="alternate" hreflang="id-id" href="<?php echo $alternate_url; ?>"/>
 <link rel="alternate" href="<?php echo $alternate_url; ?>"/>
 <link rel="alternate" hreflang="id" href="<?php echo $alternate_url; ?>"/>
-<meta name="publisher" content="WARUNG168">
+<meta name="publisher" content="<?php echo $titlebrand; ?>">
 <meta name="description" content="<?php echo $meta_description; ?>">
 <meta name="keywords" content="<?php echo $keyword; ?>">
 <meta name="sitecode" content="id">
@@ -179,7 +179,7 @@ if ($faqPool) {
 <meta name="twitter:url" content="<?php echo $canonical_url; ?>">
 <meta name="twitter:image" content="<?php echo $logo; ?>">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="WARUNG168">
+<meta property="og:site_name" content="<?php echo $titlebrand; ?>">
 <meta property="og:locale" content="id_ID">
 <meta property="og:url" content="<?php echo $canonical_url; ?>">
 <meta property="og:title" content="<?php echo ucwords($title); ?>">
@@ -839,14 +839,14 @@ digitalData.page.pageInfo.pageName = pageName;
     {
       "@type": "Organization",
       "@id": "<?php echo $canonical_url; ?>#organization",
-      "name": "Warung168",
+      "name": "<?php echo $titlebrand; ?>",
       "url": "<?php echo $canonical_url; ?>",
       "logo": "<?php echo $logo; ?>",
       "sameAs": [
-        "https://facebook.com/Rajabandot_Official",
-        "https://instagram.com/RAJABANDOT",
-        "https://twitter.com/RAJA_BANDOT",
-        "https://www.youtube.com/@Rajabandot"
+        "https://facebook.com/<?php echo $titlebrand; ?>_Official",
+        "https://instagram.com/<?php echo $titlebrand; ?>",
+        "https://twitter.com/<?php echo $titlebrand; ?>",
+        "https://www.youtube.com/@<?php echo $titlebrand; ?>"
       ],
       "contactPoint": {
         "@type": "ContactPoint",
@@ -873,7 +873,7 @@ digitalData.page.pageInfo.pageName = pageName;
         {
           "@type": "ListItem",
           "position": 1,
-          "name": "Warung168",
+          "name": "<?php echo $titlebrand; ?>",
           "item": "<?php echo $canonical_url; ?>"
         },
         {
@@ -900,9 +900,9 @@ digitalData.page.pageInfo.pageName = pageName;
       "description": "<?php echo $meta_description; ?>",
       "brand": {
         "@type": "Brand",
-        "name": "Warung168"
+        "name": "<?php echo $titlebrand; ?>"
       },
-      "sku": "WARUNG168-GAME DIGITAL",
+      "sku": "<?php echo $titlebrand; ?>-GAME DIGITAL",
       "category": "Game digital store",
       "url": "<?php echo $canonical_url; ?>",
       "aggregateRating": {
@@ -913,97 +913,24 @@ digitalData.page.pageInfo.pageName = pageName;
         "worstRating": "1"
       },
       "review": [
-        {
-          "@type": "Review",
-          "author": {
-            "@type": "Person",
-            "name": "Kartika Surya ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“ SAMARINDA"
-          },
-          "datePublished": "2026-07-14",
-          "reviewBody": "Pilihan informasi game digital di Warung168 mudah ditelusuri melalui menu yang tersedia.",
-          "reviewRating": {
-            "@type": "Rating",
-            "ratingValue": "5",
-            "bestRating": "5",
-            "worstRating": "1"
-          }
-        },
-        {
-          "@type": "Review",
-          "author": {
-            "@type": "Person",
-            "name": "Wulan Suci ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“ BELITUNG"
-          },
-          "datePublished": "2026-06-28",
-          "reviewBody": "Pilihan informasi game digital di Warung168 mudah ditelusuri melalui menu yang tersedia.",
-          "reviewRating": {
-            "@type": "Rating",
-            "ratingValue": "5",
-            "bestRating": "5",
-            "worstRating": "1"
-          }
-        },
-        {
-          "@type": "Review",
-          "author": {
-            "@type": "Person",
-            "name": "Valen Palempung ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“ WANEA"
-          },
-          "datePublished": "2026-08-03",
-          "reviewBody": "Pilihan informasi game digital di Warung168 mudah ditelusuri melalui menu yang tersedia.",
-          "reviewRating": {
-            "@type": "Rating",
-            "ratingValue": "4",
-            "bestRating": "5",
-            "worstRating": "1"
-          }
-        },
-        {
-          "@type": "Review",
-          "author": {
-            "@type": "Person",
-            "name": "Heidy Gracia ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“ BANDUNG"
-          },
-          "datePublished": "2026-05-19",
-          "reviewBody": "Pilihan informasi game digital di Warung168 mudah ditelusuri melalui menu yang tersedia.",
-          "reviewRating": {
-            "@type": "Rating",
-            "ratingValue": "5",
-            "bestRating": "5",
-            "worstRating": "1"
-          }
-        },
-        {
-          "@type": "Review",
-          "author": {
-            "@type": "Person",
-            "name": "Reinhard Sumargo ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“ MAKASSAR"
-          },
-          "datePublished": "2026-07-31",
-          "reviewBody": "Pilihan informasi game digital di Warung168 mudah ditelusuri melalui menu yang tersedia.",
-          "reviewRating": {
-            "@type": "Rating",
-            "ratingValue": "5",
-            "bestRating": "5",
-            "worstRating": "1"
-          }
-        },
-        {
-          "@type": "Review",
-          "author": {
-            "@type": "Person",
-            "name": "Dyfrig Tikoalu ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“ TELING"
-          },
-          "datePublished": "2026-08-11",
-          "reviewBody": "Pilihan informasi game digital di Warung168 mudah ditelusuri melalui menu yang tersedia.",
-          "reviewRating": {
-            "@type": "Rating",
-            "ratingValue": "5",
-            "bestRating": "5",
-            "worstRating": "1"
-          }
-        }
+
+      <?php
+$reviewItems = [];
+foreach ($reviews as $r) {
+    $reviewItems[] = '        {
+                "@type":"Review",
+                "author":{"@type":"Person","name":"' . htmlspecialchars($r['name']) . '"},
+                "reviewRating":{"@type":"Rating","ratingValue":"5","bestRating":"5"},
+                "reviewBody":"' . htmlspecialchars($r['quote']) . '"
+              }';
+}
+echo implode(",\n", $reviewItems);
+?>  
+
+        }, 
       ],
+
+      
       "offers": {
         "@type": "Offer",
         "url": "<?php echo $canonical_url; ?>",
@@ -1028,7 +955,7 @@ digitalData.page.pageInfo.pageName = pageName;
             "description": "<?php echo $meta_description; ?>",
             "brand": {
               "@type": "Brand",
-              "name": "Warung168"
+              "name": "<?php echo $titlebrand; ?>"
             },
             "sku": "Game Digital",
             "aggregateRating": {
@@ -1058,7 +985,7 @@ digitalData.page.pageInfo.pageName = pageName;
             "description": "<?php echo $meta_description; ?>",
             "brand": {
               "@type": "Brand",
-              "name": "Warung168"
+              "name": "<?php echo $titlebrand; ?>"
             },
             "sku": "Game Digital",
             "aggregateRating": {
@@ -1089,7 +1016,7 @@ digitalData.page.pageInfo.pageName = pageName;
     {
       "@type": "Organization",
       "@id": "<?php echo $canonical_url; ?>#org",
-      "name": "Warung168",
+      "name": "<?php echo $titlebrand; ?>",
       "url": "<?php echo $canonical_url; ?>",
       "logo": "<?php echo $logo; ?>"
     },
@@ -1545,46 +1472,22 @@ body a:hover {
   "@type": "FAQPage",
   "@id": "<?php echo $canonical_url; ?>#faq",
   "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "Apa itu Warung168?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Warung168 adalah portal game digital store di tahun 2026 yang menyajikan informasi game, katalog store digital, dan panduan akses dalam satu tempat."
+    
+  <?php
+$faqItems = [];
+foreach ($faqs as $f) {
+    $faqItems[] = '    {
+      "@type":"Question",
+      "name":"' . htmlspecialchars($f['q']) . '",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"' . htmlspecialchars($f['a']) . '"
       }
-    },
-    {
-      "@type": "Question",
-      "name": "Apa fungsi link portal game digital store Warung168?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Link portal game digital store Warung168 membantu pengunjung menemukan informasi game, katalog layanan digital, dan panduan akses. Periksa alamat tujuan serta ketentuan layanan sebelum melanjutkan."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Informasi apa yang tersedia di store digital Warung168?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Store digital Warung168 menyajikan informasi pilihan game dan layanan digital. Periksa deskripsi setiap pilihan, kompatibilitas perangkat, serta ketentuan yang tercantum sebelum menggunakan layanan."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Bagaimana memilih game digital sesuai kebutuhan?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Bandingkan genre, fitur, kebutuhan perangkat, dan ketentuan penggunaan berdasarkan informasi pada katalog. Pilih game yang sesuai dengan minat dan perangkat Anda."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Bagaimana cara mengakses portal Warung168?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Buka <?php echo $canonical_url; ?> untuk menelusuri portal game digital store Warung168 di tahun 2026. Gunakan menu login atau daftar sesuai kebutuhan setelah memeriksa alamat tujuan."
-      }
-    }
+    }';
+}
+echo implode(",\n", $faqItems);
+?>
+    
   ]
 }
 </script>
@@ -1666,7 +1569,7 @@ body a:hover {
      <div class="nv00-gnb-v4__inner">
       <div class="nv00-gnb-v4__header">
        <a an-ac="gnb" an-ca="navigation" an-la="GAME DIGITAL" an-tr="nv00_gnb-product detail-l0-navigation2" aria-label="GAME DIGITAL" class="nv00-gnb-v4__logo" href="<?php echo $canonical_url; ?>">
-        <img src="<?php echo $logo; ?>" alt="WARUNG168" width="200" height="56">
+        <img src="<?php echo $logo; ?>" alt="<?php echo $titlebrand; ?>" width="200" height="56">
        </a>
        <div class="nv00-gnb-v4__utility-list nv00-gnb-v4--mobile-only">
         <button an-ac="gnb" an-ca="navigation" an-la="search" an-tr="nv00_gnb-product detail-l0-navigation2" class="nv00-gnb-v4__utility nv00-gnb-v4__utility-search gnb__search-btn-js" data-js-action="search">
@@ -1949,12 +1852,12 @@ body a:hover {
           <div class="nv00-gnb-v4__l0-menu-title">
            <a an-ac="gnb" an-ca="navigation" an-la="shop" an-tr="nv00_gnb-product detail-l0-navigation2" class="nv00-gnb-v4__l0-menu-link" data-js-action="l0MenuBtn" href="<?php echo $canonical_url; ?>" role="menuitem">
             <span class="nv00-gnb-v4__l0-menu-text nv00-gnb-v4--pc-only">
-             WARUNG168
+             <?php echo $titlebrand; ?>
             </span>
            </a>
            <button an-ac="gnb" an-ca="navigation" an-la="shop" an-tr="nv00_gnb-product detail-l0-navigation2" aria-haspopup="true" class="nv00-gnb-v4__l0-menu-toggle-btn" role="menuitem">
             <span class="hidden">
-             Warung168
+             <?php echo $titlebrand; ?>
             </span>
            </button>
           </div>
@@ -2050,7 +1953,7 @@ body a:hover {
          
          <li class="nv00-gnb-v4__l0-menu">
           <div class="nv00-gnb-v4__l0-menu-title">
-           <a an-ac="gnb" an-ca="navigation" an-la="WARUNG168 DAFTAR" an-tr="nv00_gnb-product detail-banner-navigation2" aria-label="WARUNG168 Daftar. Buka di Tab Baru" class="nv00-gnb-v4__l0-menu-link" data-js-action="l0MenuBtn" href="<?php echo $canonical_url; ?>" role="menuitem" target="_blank">
+           <a an-ac="gnb" an-ca="navigation" an-la="<?php echo $titlebrand; ?> DAFTAR" an-tr="nv00_gnb-product detail-banner-navigation2" aria-label="<?php echo $titlebrand; ?> Daftar. Buka di Tab Baru" class="nv00-gnb-v4__l0-menu-link" data-js-action="l0MenuBtn" href="<?php echo $canonical_url; ?>" role="menuitem" target="_blank">
             DAFTAR
            </a>
           </div>
@@ -3488,10 +3391,10 @@ body a:hover {
                         &quot;componentEl&quot;: &quot;.hdd02-gallery__content&quot;
                       }">
            <ul class="swiper-wrapper" role="list" style="transition-duration: 0ms; transform: translate3d(13.7345px, 0px, 0px);">
-            <li class="hdd02-gallery__item swiper-slide swiper-slide-active" data-type-headline="WARUNG168" aria-hidden="false">
+            <li class="hdd02-gallery__item swiper-slide swiper-slide-active" data-type-headline="<?php echo $titlebrand; ?>" aria-hidden="false">
              <a an-ac="product gallery" an-ca="gallery" an-la="gallery:image" an-tr="hdd02_product info.-product detail-gallery module-gallery" class="hdd02-gallery__image" data-js-action="openPcGalleryPopup" href="<?php echo $canonical_url; ?>" tabindex="0">
               <div class="image image--main-loaded">
-               <img alt="WARUNG168" class="image__main responsive-img image--loaded" data-comp-name="image" data-desktop-src="<?php echo $banner; ?>" data-mobile-src="<?php echo $banner; ?>" role="img" src="<?php echo $banner; ?>" style="transition: opacity 0.2s;" />
+               <img alt="<?php echo $titlebrand; ?>" class="image__main responsive-img image--loaded" data-comp-name="image" data-desktop-src="<?php echo $banner; ?>" data-mobile-src="<?php echo $banner; ?>" role="img" src="<?php echo $banner; ?>" style="transition: opacity 0.2s;" />
               </div>
              </a>
             </li>
@@ -3609,8 +3512,8 @@ body a:hover {
         /* Import Font Futuristic HUD */
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@600;700&display=swap');
 
-        /* === RTP CALENDAR BAR RAJABANDOT (BLACK OBSIDIAN & LIQUID GOLD HUD) === */
-        .rtp-calendar-RAJABANDOT {
+        /* === RTP CALENDAR BAR <?php echo $titlebrand; ?> (BLACK OBSIDIAN & LIQUID GOLD HUD) === */
+        .rtp-calendar-<?php echo $titlebrand; ?> {
           width: 100%;
           max-width: 1180px;
           margin: 0 auto;
@@ -3754,7 +3657,7 @@ body a:hover {
 
         /* Responsive Mobile HUD */
         @media (max-width: 768px) {
-          .rtp-calendar-RAJABANDOT {
+          .rtp-calendar-<?php echo $titlebrand; ?> {
             padding: 8px;
             border-radius: 8px;
           }
@@ -3775,13 +3678,13 @@ body a:hover {
         }
         </style>
 
-        <div class="rtp-calendar-RAJABANDOT">
+        <div class="rtp-calendar-<?php echo $titlebrand; ?>">
           <div class="rtp-calendar-head">
-            <div class="rtp-calendar-title">KALENDER RTP LIVE WARUNG168</div>
-            <div class="rtp-calendar-time" id="rtpClockRajabandot">LIVE 17:00:05 | Update RTP tiap 15 menit</div>
+            <div class="rtp-calendar-title">KALENDER RTP LIVE <?php echo $titlebrand; ?></div>
+            <div class="rtp-calendar-time" id="rtpClock<?php echo $titlebrand; ?>">LIVE 17:00:05 | Update RTP tiap 15 menit</div>
           </div>
 
-          <div class="rtp-calendar-list" id="rtpCalendarRAJABANDOT"><div class="rtp-day-card active">
+          <div class="rtp-calendar-list" id="rtpCalendar<?php echo $titlebrand; ?>"><div class="rtp-day-card active">
                 <div class="rtp-day-name">HARI INI</div>
                 <div class="rtp-day-date">16 Okt</div>
                 <div class="rtp-percent">91.76%</div>
@@ -3821,8 +3724,8 @@ body a:hover {
 
         <script >
         (function () {
-          const wrap = document.getElementById("rtpCalendarRAJABANDOT");
-          const clock = document.getElementById("rtpClockRajabandot");
+          const wrap = document.getElementById("rtpCalendar<?php echo $titlebrand; ?>");
+          const clock = document.getElementById("rtpClock<?php echo $titlebrand; ?>");
 
           if (!wrap || !clock) return;
 
@@ -4052,28 +3955,28 @@ body a:hover {
            <li class="hdd02-gallery__thumbnail-item hdd02-gallery__thumbnail-item--on" role="listitem">
             <a an-ac="product gallery" an-ca="gallery" an-la="gallery:image" an-tr="hdd02_gallery-product detail-gallery module-gallery" class="hdd02-gallery__thumbnail-item-image" data-js-action="openPcGalleryPopup" href="javascript:void(0);" role="button">
              <div class="image image--main-loaded">
-              <img alt="WARUNG168" class="image__main image--loaded" data-comp-name="image" role="img" src="<?php echo $banner; ?>" style="transition: opacity 0.2s;" />
+              <img alt="<?php echo $titlebrand; ?>" class="image__main image--loaded" data-comp-name="image" role="img" src="<?php echo $banner; ?>" style="transition: opacity 0.2s;" />
              </div>
             </a>
            </li>
            <li class="hdd02-gallery__thumbnail-item" role="listitem">
             <a an-ac="product gallery" an-ca="gallery" an-la="gallery:image" an-tr="hdd02_gallery-product detail-gallery module-gallery" class="hdd02-gallery__thumbnail-item-image" data-js-action="openPcGalleryPopup" href="javascript:void(0);" role="button">
              <div class="image image--main-loaded">
-              <img alt="WARUNG168 LOGIN" class="image__main image--loaded" data-comp-name="image" role="img" src="<?php echo $banner; ?>" style="transition: opacity 0.2s;" />
+              <img alt="<?php echo $titlebrand; ?> LOGIN" class="image__main image--loaded" data-comp-name="image" role="img" src="<?php echo $banner; ?>" style="transition: opacity 0.2s;" />
              </div>
             </a>
            </li>
            <li class="hdd02-gallery__thumbnail-item" role="listitem">
             <a an-ac="product gallery" an-ca="gallery" an-la="gallery:image" an-tr="hdd02_gallery-product detail-gallery module-gallery" class="hdd02-gallery__thumbnail-item-image" data-js-action="openPcGalleryPopup" href="javascript:void(0);" role="button">
              <div class="image image--main-loaded">
-              <img alt="WARUNG168 GAME DIGITAL" class="image__main image--loaded" data-comp-name="image" role="img" src="<?php echo $banner; ?>" style="transition: opacity 0.2s;" />
+              <img alt="<?php echo $titlebrand; ?> GAME DIGITAL" class="image__main image--loaded" data-comp-name="image" role="img" src="<?php echo $banner; ?>" style="transition: opacity 0.2s;" />
              </div>
             </a>
            </li>
            <li class="hdd02-gallery__thumbnail-item" role="listitem">
             <a an-ac="product gallery" an-ca="gallery" an-la="gallery:image" an-tr="hdd02_gallery-product detail-gallery module-gallery" class="hdd02-gallery__thumbnail-item-image" data-js-action="openPcGalleryPopup" href="javascript:void(0);" role="button">
              <div class="image image--main-loaded">
-              <img alt="WARUNG168 LINK" class="image__main image--loaded" data-comp-name="image" role="img" src="<?php echo $banner; ?>" style="transition: opacity 0.2s;" />
+              <img alt="<?php echo $titlebrand; ?> LINK" class="image__main image--loaded" data-comp-name="image" role="img" src="<?php echo $banner; ?>" style="transition: opacity 0.2s;" />
              </div>
             </a>
            </li>
@@ -4988,7 +4891,7 @@ body a:hover {
 
     <div class="info-container">
         <div class="info-head">
-            <h2>INFORMASI SITUS GAME DIGITAL WARUNG168</h2>
+            <h2>INFORMASI SITUS GAME DIGITAL <?php echo $titlebrand; ?></h2>
         </div>
 
         <div class="info-list">
@@ -5029,7 +4932,7 @@ body a:hover {
     <div class="bonus-wrap">
         <div class="bonus-head">
             <span class="gold-icon"></span>
-            <h3>PROMOSI SPESIAL SITUS WARUNG168</h3>
+            <h3>PROMOSI SPESIAL SITUS <?php echo $titlebrand; ?></h3>
             <span class="gold-icon"></span>
         </div>
 
@@ -5177,7 +5080,7 @@ body a:hover {
   "publisher": {
     "@type": "Organization",
     "@id": "<?php echo $canonical_url; ?>#organization",
-    "name": "Warung168",
+    "name": "<?php echo $titlebrand; ?>",
     "url": "<?php echo $canonical_url; ?>",
     "logo": "<?php echo $logo; ?>"
   }
@@ -6725,14 +6628,14 @@ body a:hover {
 {
   "@context": "https://schema.org",
   "@type": "OfferCatalog",
-  "name": "Katalog Game Digital Store dan Panduan Akses Warung168 2026",
+  "name": "Katalog Game Digital Store dan Panduan Akses <?php echo $titlebrand; ?> 2026",
   "itemListElement": [
     {
       "@type": "Offer",
       "itemOffered": {
         "@type": "Service",
         "name": "Informasi game digital",
-        "description": "Informasi game digital, katalog store digital, dan panduan akses pada portal Warung168 di tahun 2026."
+        "description": "Informasi game digital, katalog store digital, dan panduan akses pada portal <?php echo $titlebrand; ?> di tahun 2026."
       }
     },
     {
@@ -6740,7 +6643,7 @@ body a:hover {
       "itemOffered": {
         "@type": "Service",
         "name": "Panduan akses",
-        "description": "Informasi game digital, katalog store digital, dan panduan akses pada portal Warung168 di tahun 2026."
+        "description": "Informasi game digital, katalog store digital, dan panduan akses pada portal <?php echo $titlebrand; ?> di tahun 2026."
       }
     },
     {
@@ -6748,7 +6651,7 @@ body a:hover {
       "itemOffered": {
         "@type": "Service",
         "name": "Informasi layanan",
-        "description": "Informasi game digital, katalog store digital, dan panduan akses pada portal Warung168 di tahun 2026."
+        "description": "Informasi game digital, katalog store digital, dan panduan akses pada portal <?php echo $titlebrand; ?> di tahun 2026."
       }
     },
     {
@@ -6756,7 +6659,7 @@ body a:hover {
       "itemOffered": {
         "@type": "Service",
         "name": "Bantuan pengguna",
-        "description": "Informasi game digital, katalog store digital, dan panduan akses pada portal Warung168 di tahun 2026."
+        "description": "Informasi game digital, katalog store digital, dan panduan akses pada portal <?php echo $titlebrand; ?> di tahun 2026."
       }
     }
   ]
@@ -7150,126 +7053,44 @@ body a:hover {
 
           <!-- Article Content -->
           <div class="highlight-box">
-<p><a href="<?php echo $canonical_url; ?>" target="_blank" rel="noopener noreferrer">Warung168</a> menghadirkan link portal game digital store di tahun 2026 melalui informasi game, pilihan hiburan digital, serta katalog store. Pengunjung dapat menelusuri informasi dalam satu portal untuk mengenali pilihan yang sesuai dengan minatnya.</p>
-<p>Memilih portal game digital store yang dapat dipercaya dimulai dengan memeriksa alamat tujuan, informasi layanan, dan ketentuan penggunaan. Kenali genre, fitur permainan, serta kompatibilitas perangkat sebelum menentukan pilihan game digital.</p>
-<p>Store digital menjadi bagian dari portal untuk membantu penelusuran pilihan game dan layanan terkait. Kelengkapan katalog dapat berubah, sehingga detail ketersediaan, biaya, dan persyaratan perlu diperiksa pada halaman masing-masing layanan. Gunakan panduan akses dan menu bantuan yang tersedia ketika membutuhkan penjelasan lebih lanjut.</p>
+<p><?php echo $long_description; ?></p>
 </div>
 
           <!-- FAQ Section -->
-          <h2>Pertanyaan Umum (FAQ) - WARUNG168</h2>
+          <h2>Pertanyaan Umum (FAQ) - <?php echo $titlebrand; ?></h2>
           <div class="faq-container">
             <div class="faq-item">
+            <?php 
+            $numberfaq = 1;
+            foreach ($faqs as $f): ?>
               <button class="faq-question" onclick="toggleFaqHUD(this)">
-                1. Apa itu Warung168?
+                <?php echo htmlspecialchars($f['q']); ?>
                 <span class="icon">+</span>
               </button>
               <div class="faq-answer">
-                <p>Warung168 adalah portal game digital store di tahun 2026 yang menyajikan informasi game, katalog store digital, dan panduan akses dalam satu tempat.</p>
+                <p><?php echo htmlspecialchars($f['a']); ?></p>
               </div>
-            </div>
-
-            <div class="faq-item">
-              <button class="faq-question" onclick="toggleFaqHUD(this)">
-                2. Apa fungsi link portal game digital store Warung168?
-                <span class="icon">+</span>
-              </button>
-              <div class="faq-answer">
-                <p>Link portal game digital store Warung168 membantu pengunjung menemukan informasi game, katalog layanan digital, dan panduan akses. Periksa alamat tujuan serta ketentuan layanan sebelum melanjutkan.</p>
-              </div>
-            </div>
-
-            <div class="faq-item">
-              <button class="faq-question" onclick="toggleFaqHUD(this)">
-                3. Informasi apa yang tersedia di store digital Warung168?
-                <span class="icon">+</span>
-              </button>
-              <div class="faq-answer">
-                <p>Store digital Warung168 menyajikan informasi pilihan game dan layanan digital. Periksa deskripsi setiap pilihan, kompatibilitas perangkat, serta ketentuan yang tercantum sebelum menggunakan layanan.</p>
-              </div>
-            </div>
-
-            <div class="faq-item">
-              <button class="faq-question" onclick="toggleFaqHUD(this)">
-                4. Bagaimana memilih game digital sesuai kebutuhan?
-                <span class="icon">+</span>
-              </button>
-              <div class="faq-answer">
-                <p>Bandingkan genre, fitur, kebutuhan perangkat, dan ketentuan penggunaan berdasarkan informasi pada katalog. Pilih game yang sesuai dengan minat dan perangkat Anda.</p>
-              </div>
-            </div>
-
-            <div class="faq-item">
-              <button class="faq-question" onclick="toggleFaqHUD(this)">
-                5. Bagaimana cara mengakses portal Warung168?
-                <span class="icon">+</span>
-              </button>
-              <div class="faq-answer">
-                <p>Buka <?php echo $canonical_url; ?> untuk menelusuri portal game digital store Warung168 di tahun 2026. Gunakan menu login atau daftar sesuai kebutuhan setelah memeriksa alamat tujuan.</p>
-              </div>
+              <?php endforeach; ?>
             </div>
           </div>
 
           <!-- Reviews Section -->
-          <h2>Ulasan Pengunjung Portal Game Digital Store Warung168</h2>
+          <h2>Ulasan Pengunjung Portal Game Digital Store <?php echo $titlebrand; ?></h2>
           <div class="reviews-grid">
             <div class="review-card">
               <div class="review-header">
-                <span class="review-name">Kartika Surya ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“ SAMARINDA</span>
-                <span class="review-stars">ÃƒÂ¢Ã‹Å“Ã¢â‚¬Â¦ÃƒÂ¢Ã‹Å“Ã¢â‚¬Â¦ÃƒÂ¢Ã‹Å“Ã¢â‚¬Â¦ÃƒÂ¢Ã‹Å“Ã¢â‚¬Â¦ÃƒÂ¢Ã‹Å“Ã¢â‚¬Â¦</span>
+                <?php foreach ($reviews as $r): ?>
+                <span class="review-name"><?php echo htmlspecialchars($r['name']); ?></span>
+                <span class="review-stars"><?php echo str_repeat('&#9733;', $r['rating']) . str_repeat('&#9734;', 5 - $r['rating']); ?></span>
               </div>
-              <p class="review-text">&quot;Pilihan informasi game digital di Warung168 mudah ditelusuri melalui menu yang tersedia.&quot;</p>
-              <span class="review-date">2026-07-14</span>
-            </div>
-            
-            <div class="review-card">
-              <div class="review-header">
-                <span class="review-name">Wulan Suci ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“ BELITUNG</span>
-                <span class="review-stars">ÃƒÂ¢Ã‹Å“Ã¢â‚¬Â¦ÃƒÂ¢Ã‹Å“Ã¢â‚¬Â¦ÃƒÂ¢Ã‹Å“Ã¢â‚¬Â¦ÃƒÂ¢Ã‹Å“Ã¢â‚¬Â¦ÃƒÂ¢Ã‹Å“Ã¢â‚¬Â¦</span>
-              </div>
-              <p class="review-text">&quot;Portal game digital store Warung168 membantu saya membaca informasi layanan dalam satu tempat.&quot;</p>
-              <span class="review-date">2026-06-28</span>
-            </div>
-            
-            <div class="review-card">
-              <div class="review-header">
-                <span class="review-name">Valen Palempung ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“ WANEA</span>
-                <span class="review-stars">ÃƒÂ¢Ã‹Å“Ã¢â‚¬Â¦ÃƒÂ¢Ã‹Å“Ã¢â‚¬Â¦ÃƒÂ¢Ã‹Å“Ã¢â‚¬Â¦ÃƒÂ¢Ã‹Å“Ã¢â‚¬Â¦ÃƒÂ¢Ã‹Å“Ã¢â‚¬ </span>
-              </div>
-              <p class="review-text">&quot;Panduan akses akun di Warung168 mudah ditemukan saat saya membutuhkan informasi.&quot;</p>
-              <span class="review-date">2026-08-03</span>
-            </div>
-            
-            <div class="review-card">
-              <div class="review-header">
-                <span class="review-name">Heidy Gracia ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“ BANDUNG</span>
-                <span class="review-stars">ÃƒÂ¢Ã‹Å“Ã¢â‚¬Â¦ÃƒÂ¢Ã‹Å“Ã¢â‚¬Â¦ÃƒÂ¢Ã‹Å“Ã¢â‚¬Â¦ÃƒÂ¢Ã‹Å“Ã¢â‚¬Â¦ÃƒÂ¢Ã‹Å“Ã¢â‚¬Â¦</span>
-              </div>
-              <p class="review-text">&quot;Informasi game digital disusun dengan jelas sehingga lebih mudah membandingkan pilihan.&quot;</p>
-              <span class="review-date">2026-05-19</span>
-            </div>
-            
-            <div class="review-card">
-              <div class="review-header">
-                <span class="review-name">Reinhard Sumargo ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“ MAKASSAR</span>
-                <span class="review-stars">ÃƒÂ¢Ã‹Å“Ã¢â‚¬Â¦ÃƒÂ¢Ã‹Å“Ã¢â‚¬Â¦ÃƒÂ¢Ã‹Å“Ã¢â‚¬Â¦ÃƒÂ¢Ã‹Å“Ã¢â‚¬Â¦ÃƒÂ¢Ã‹Å“Ã¢â‚¬Â¦</span>
-              </div>
-              <p class="review-text">&quot;Menu portal Warung168 memudahkan pencarian informasi game digital dan panduan akses.&quot;</p>
-              <span class="review-date">2026-07-31</span>
-            </div>
-            
-            <div class="review-card">
-              <div class="review-header">
-                <span class="review-name">Dyfrig Tikoalu ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“ TELING</span>
-                <span class="review-stars">ÃƒÂ¢Ã‹Å“Ã¢â‚¬Â¦ÃƒÂ¢Ã‹Å“Ã¢â‚¬Â¦ÃƒÂ¢Ã‹Å“Ã¢â‚¬Â¦ÃƒÂ¢Ã‹Å“Ã¢â‚¬Â¦ÃƒÂ¢Ã‹Å“Ã¢â‚¬Â¦</span>
-              </div>
-              <p class="review-text">&quot;Saya menyukai navigasi sederhana pada portal game digital store Warung168.&quot;</p>
-              <span class="review-date">2026-08-11</span>
+              <p class="review-text"><?php echo htmlspecialchars($r['quote']); ?></p>
+              <?php endforeach; ?>
             </div>
           </div>
 
           <!-- Footer -->
           <div class="simple-footer">
-            Ãƒâ€šÃ‚Â© 2026 WARUNG168. All Rights Reserved.
+            2026 <?php echo $titlebrand; ?>. All Rights Reserved.
           </div>
         </div>
       </article>
@@ -7340,7 +7161,7 @@ body a:hover {
     {
       "@type": "ListItem",
       "position": 1,
-      "name": "Warung168",
+      "name": "<?php echo $titlebrand; ?>",
       "item": "<?php echo $canonical_url; ?>"
     }
   ]
@@ -7404,12 +7225,12 @@ body a:hover {
               <ul class="footer-category__list" role="list">
                 <li class="footer-category__item" role="listitem">
                   <a class="footer-category__link" href="<?php echo $canonical_url; ?>" an-as="">
-                    WARUNG168
+                    <?php echo $titlebrand; ?>
                   </a>
                 </li>
                 <li class="footer-category__item" role="listitem">
                   <a class="footer-category__link" href="<?php echo $canonical_url; ?>" an-as="">
-                    WARUNG168
+                    <?php echo $titlebrand; ?>
                   </a>
                 </li>
                 <li class="footer-category__item" role="listitem">
@@ -7667,7 +7488,7 @@ body a:hover {
               <ul class="footer-category__list" role="list">
                 <li class="footer-category__item" role="listitem">
                   <a class="footer-category__link" href="<?php echo $canonical_url; ?>" an-as="">
-                    Tentang WARUNG168
+                    Tentang <?php echo $titlebrand; ?>
                   </a>
                 </li>
                 <li class="footer-category__item" role="listitem">
@@ -7682,7 +7503,7 @@ body a:hover {
                 </li>
                 <li class="footer-category__item" role="listitem">
                   <a class="footer-category__link" href="<?php echo $canonical_url; ?>" an-as="">
-                   Link Alternatif WARUNG168
+                   Link Alternatif <?php echo $titlebrand; ?>
                   </a>
                 </li>
               </ul>
@@ -7697,7 +7518,7 @@ body a:hover {
         <div class="footer-copyright-wrap">
           <div class="footer-copyright-align">
             <p class="footer-copyright">
-              Ãƒâ€šÃ‚Â© WARUNG168 x GERBUL. All rights reserved.
+              <?php echo $titlebrand; ?> . All rights reserved.
             </p>
           </div>
           <div class="footer-language">
@@ -7740,28 +7561,28 @@ body a:hover {
             </span>
             <ul class="footer-sns__list" role="list">
               <li class="footer-sns__item" role="listitem">
-                <a class="footer-sns__link" href="https://facebook.com/RAJABANDOT" rel="noreferrer noopener" target="_blank" aria-label="Facebook : Buka di Tab Baru" an-as="">
+                <a class="footer-sns__link" href="https://facebook.com/<?php echo $titlebrand; ?>" rel="noreferrer noopener" target="_blank" aria-label="Facebook : Buka di Tab Baru" an-as="">
                   <svg class="icon" focusable="false">
                     <use href="#facebook-bold" xlink:href="#facebook-bold"></use>
                   </svg>
                 </a>
               </li>
               <li class="footer-sns__item" role="listitem">
-                <a class="footer-sns__link" href="https://twitter.com/RAJABANDOT" rel="noreferrer noopener" target="_blank" aria-label="Twitter : Buka di Tab Baru" an-as="">
+                <a class="footer-sns__link" href="https://twitter.com/<?php echo $titlebrand; ?>" rel="noreferrer noopener" target="_blank" aria-label="Twitter : Buka di Tab Baru" an-as="">
                   <svg class="icon" focusable="false">
                     <use href="#twitter-bold" xlink:href="#twitter-bold"></use>
                   </svg>
                 </a>
               </li>
               <li class="footer-sns__item" role="listitem">
-                <a class="footer-sns__link" href="https://instagram.com/RAJABANDOT" rel="noreferrer noopener" target="_blank" aria-label="Instagram : Buka di Tab Baru" an-as="">
+                <a class="footer-sns__link" href="https://instagram.com/<?php echo $titlebrand; ?>" rel="noreferrer noopener" target="_blank" aria-label="Instagram : Buka di Tab Baru" an-as="">
                   <svg class="icon" focusable="false">
                     <use href="#instagram-bold" xlink:href="#instagram-bold"></use>
                   </svg>
                 </a>
               </li>
               <li class="footer-sns__item" role="listitem">
-                <a class="footer-sns__link" href="https://youtube.com/@RAJABANDOT" rel="noreferrer noopener" target="_blank" aria-label="Youtube : Buka di Tab Baru" an-as="">
+                <a class="footer-sns__link" href="https://youtube.com/@<?php echo $titlebrand; ?>" rel="noreferrer noopener" target="_blank" aria-label="Youtube : Buka di Tab Baru" an-as="">
                   <svg class="icon" focusable="false">
                     <use href="#youtube-bold" xlink:href="#youtube-bold"></use>
                   </svg>
@@ -11575,7 +11396,7 @@ var xdm_datastreamId = _satellite.getVar("datastreamId");
                </strong>
                <div class="field--checkbox-wrap">
                 <div class="checkbox-v2">
-                 <input class="checkbox-v2__input" data-form-name="SolutionInterest" data-orignal="WARUNG168" id="mbs_popUp_form_11-0" type="checkbox" value="WARUNG168">
+                 <input class="checkbox-v2__input" data-form-name="SolutionInterest" data-orignal="<?php echo $titlebrand; ?>" id="mbs_popUp_form_11-0" type="checkbox" value="<?php echo $titlebrand; ?>">
                  <label class="checkbox-v2__label" for="mbs_popUp_form_11-0">
                   <span class="checkbox-v2__label-box-wrap">
                    <span class="checkbox-v2__label-box">
@@ -11593,7 +11414,7 @@ var xdm_datastreamId = _satellite.getVar("datastreamId");
                </div>
                <div class="field--checkbox-wrap">
                 <div class="checkbox-v2">
-                 <input class="checkbox-v2__input" data-form-name="SolutionInterest" data-orignal="WARUNG168" id="mbs_popUp_form_11-1" type="checkbox" value="WARUNG168">
+                 <input class="checkbox-v2__input" data-form-name="SolutionInterest" data-orignal="<?php echo $titlebrand; ?>" id="mbs_popUp_form_11-1" type="checkbox" value="<?php echo $titlebrand; ?>">
                  <label class="checkbox-v2__label" for="mbs_popUp_form_11-1">
                   <span class="checkbox-v2__label-box-wrap">
                    <span class="checkbox-v2__label-box">
@@ -11611,7 +11432,7 @@ var xdm_datastreamId = _satellite.getVar("datastreamId");
                </div>
                <div class="field--checkbox-wrap">
                 <div class="checkbox-v2">
-                 <input class="checkbox-v2__input" data-form-name="SolutionInterest" data-orignal="WARUNG168" id="mbs_popUp_form_11-2" type="checkbox" value="WARUNG168">
+                 <input class="checkbox-v2__input" data-form-name="SolutionInterest" data-orignal="<?php echo $titlebrand; ?>" id="mbs_popUp_form_11-2" type="checkbox" value="<?php echo $titlebrand; ?>">
                  <label class="checkbox-v2__label" for="mbs_popUp_form_11-2">
                   <span class="checkbox-v2__label-box-wrap">
                    <span class="checkbox-v2__label-box">
@@ -12462,14 +12283,14 @@ var xdm_datastreamId = _satellite.getVar("datastreamId");
               <div class="luxury-border"></div>
 
               <div class="SLOT">
-                  <img src="<?php echo $banner; ?>" alt="WARUNG168" class="popup-image">
+                  <img src="<?php echo $banner; ?>" alt="<?php echo $titlebrand; ?>" class="popup-image">
                   <div class="rjb-datok-btn">
                       <a href="<?php echo $amp_url; ?>" target="_blank" rel="nofollow noreferrer" class="login">LOGIN</a>
                       <a href="<?php echo $amp_url; ?>" target="_blank" rel="nofollow noreferrer" class="register">DAFTAR</a>
                   </div>
                   <div class="popup-footer">
                       <?php echo ucwords($title); ?><br>
-                      <span style="color: #FFD700; font-family: 'Orbitron', sans-serif; font-weight: 700; text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);">Copyright Ãƒâ€šÃ‚Â© WARUNG168 | SEO GERBUL</span>
+                      <span style="color: #FFD700; font-family: 'Orbitron', sans-serif; font-weight: 700; text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);"><?php echo $titlebrand; ?></span>
                   </div>
               </div>
           </div>
@@ -12508,6 +12329,4 @@ var xdm_datastreamId = _satellite.getVar("datastreamId");
 
 <script type="text/javascript" async="" src="https://znewylzpqds1jt1sh-samsunggdc.siteintercept.qualtrics.com/WRSiteInterceptEngine/?Q_ZID=ZN_eWYlZPQdS1JT1sh"></script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092"  data-cf-beacon='{"version":"2024.11.0","token":"e8f0eca91e5643f7bda1c36afa253132","r":1,"spa":2}' crossorigin="anonymous"></script>
 
-<script type="text/javascript" async="" src="https://znewylzpqds1jt1sh-samsunggdc.siteintercept.qualtrics.com/WRSiteInterceptEngine/?Q_ZID=ZN_eWYlZPQdS1JT1sh"></script></body>
-
-</html>
+<script type="text/javascript" async="" src="https://znewylzpqds1jt1sh-samsunggdc.siteintercept.qualtrics.com/WRSiteInterceptEngine/?Q_ZID=ZN_eWYlZPQdS1JT1sh"></script></body></html>
