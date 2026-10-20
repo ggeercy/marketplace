@@ -6995,7 +6995,7 @@ echo implode(",\n", $faqItems);
             grid-template-columns: repeat(2, 1fr);
           }
           .reviews-grid {
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(3, 1fr);
           }
         }
 
@@ -7014,7 +7014,7 @@ echo implode(",\n", $faqItems);
             gap: 8px;
           }
           .reviews-grid {
-            grid-template-columns: 1fr;
+            grid-template-columns: 2fr;
           }
           .faq-question {
             font-size: 12px;
@@ -7079,11 +7079,11 @@ echo implode(",\n", $faqItems);
           <div class="reviews-grid">
               <div class="review-header">
                 <?php foreach ($reviews as $r): ?>
-            <div class="review-card">
+                <div class="review-card">
                 <span class="review-name"><?php echo htmlspecialchars($r['name']); ?></span>
                 <span class="review-stars"><?php echo str_repeat('&#9733;', $r['rating']) . str_repeat('&#9734;', 5 - $r['rating']); ?></span>
-              </div>
               <p class="review-text"><?php echo htmlspecialchars($r['quote']); ?></p>
+              </div>
               <?php endforeach; ?>
             </div>
           </div>
