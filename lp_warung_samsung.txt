@@ -635,12 +635,12 @@ digitalData.page.pageInfo.pageName = pageName;
 					var ua = navigator.userAgent;
 					var ualower = ua.toLowerCase();
 					if(/micromessenger/.test(ualower)){ //userAgent include 'micromessenger'
-						if(/miniprogram/i.test(ualower)){ // ÃƒÂ¬Ã…â€œÃ¢â‚¬Å¾ÃƒÂ¬Ã‚Â±Ã¢â‚¬â€ ÃƒÂ«Ã‚Â¯Ã‚Â¸ÃƒÂ«Ã¢â‚¬Â¹Ã‹â€ ÃƒÂ¬Ã¢â‚¬Â¢Ã‚Â±
+						if(/miniprogram/i.test(ualower)){ // 
 							//return 'wxApp';
 							hideHeaderFooterByWindowFlutterInappwebview();
 						}
 					}else if(/aliapp/i.test(ualower) && /miniprogram/i.test(ualower)){//userAgent include 'aliapp', 'miniprogram'
-						//return 'aliApp';// ÃƒÂ¬Ã¢â‚¬Â¢Ã…â€™ÃƒÂ«Ã‚Â¦Ã‚Â¬ ÃƒÂ«Ã‚Â¯Ã‚Â¸ÃƒÂ«Ã¢â‚¬Â¹Ã‹â€ ÃƒÂ¬Ã¢â‚¬Â¢Ã‚Â±
+						//return 'aliApp';// 
 						hideHeaderFooterByWindowFlutterInappwebview();
 					}
 				}
@@ -652,7 +652,7 @@ digitalData.page.pageInfo.pageName = pageName;
 			const setSessionStorage = () => {
 				const isInAppWebViewSessionStorage = sessionStorage.getItem("isInAppWebViewSessionStorage");
 				if(!isInAppWebViewSessionStorage){
-					// readyCallbackÃƒÂ¬Ã¢â‚¬â€ ÃƒÂ¬Ã¢â‚¬Å¾Ã…â€œ ÃƒÂ¬Ã¢â‚¬Å¾Ã‚Â¸ÃƒÂ­Ã…â€™Ã¢â‚¬Â¦ (ÃƒÂªÃ‚Â¸Ã‚Â°ÃƒÂ¬Ã‚Â¡Ã‚Â´ÃƒÂ¬Ã¢â‚¬â€  ÃƒÂ¬Ã¢â‚¬â€Ã¢â‚¬ ÃƒÂ«Ã… Ã¢â‚¬  ÃƒÂªÃ‚Â²Ã‚Â½ÃƒÂ¬Ã…Â¡Ã‚Â°ÃƒÂ«Ã‚Â§Ã…â€™ ÃƒÂ¬Ã¢â‚¬Å¾Ã‚Â¸ÃƒÂ­Ã…â€™Ã¢â‚¬Â¦)
+					// readyCallback
 					sessionStorage.setItem("isInAppWebViewSessionStorage", "true");
 				}
 			}
@@ -684,7 +684,7 @@ digitalData.page.pageInfo.pageName = pageName;
 				}
 			});
 
-			//EMI ÃƒÂ­Ã…â€™ ÃƒÂ¬Ã¢â‚¬â€Ã¢â‚¬Â¦ÃƒÂ¬Ã¢â‚¬â€ ÃƒÂ¬Ã¢â‚¬Å¾Ã…â€œ ÃƒÂ­Ã‹Å“Ã‚Â¸ÃƒÂ¬Ã‚Â¶Ã…â€œ ÃƒÂ­Ã¢â€žÂ¢Ã¢â‚¬Â¢ÃƒÂ¬ Ã‚Â¸ ÃƒÂ¬Ã…Â¡Ã‚Â© 
+			//EMI 
 			function hideModalEmipopup() {
 					console.log("[from finance-popup.js] call hideModalEmipopup()!! ");
 					$('#wrap > div.finance-popup > div > div > div > button').click();
@@ -948,9 +948,9 @@ echo implode(",\n", $reviewItems);
           "position": 1,
           "item": {
             "@type": "Product",
-            "@id": "<?php echo $canonical_url; ?>slot#product",
+            "@id": "<?php echo $canonical_url; ?>game#product",
             "name": "<?php echo ucwords($title); ?>",
-            "url": "<?php echo $canonical_url; ?>slot",
+            "url": "<?php echo $canonical_url; ?>game",
             "image": "<?php echo $banner; ?>",
             "description": "<?php echo $meta_description; ?>",
             "brand": {
@@ -965,7 +965,7 @@ echo implode(",\n", $reviewItems);
             },
             "offers": {
               "@type": "Offer",
-              "url": "<?php echo $canonical_url; ?>slot",
+              "url": "<?php echo $canonical_url; ?>game",
               "priceCurrency": "IDR",
               "price": "0",
               "availability": "https://schema.org/InStock"
@@ -978,9 +978,9 @@ echo implode(",\n", $reviewItems);
           "position": 2,
           "item": {
             "@type": "Product",
-            "@id": "<?php echo $canonical_url; ?>slot-gacor#product",
+            "@id": "<?php echo $canonical_url; ?>game#product",
             "name": "<?php echo ucwords($title); ?>",
-            "url": "<?php echo $canonical_url; ?>slot-gacor",
+            "url": "<?php echo $canonical_url; ?>game",
             "image": "<?php echo $banner; ?>",
             "description": "<?php echo $meta_description; ?>",
             "brand": {
@@ -995,7 +995,7 @@ echo implode(",\n", $reviewItems);
             },
             "offers": {
               "@type": "Offer",
-              "url": "<?php echo $canonical_url; ?>slot-gacor",
+              "url": "<?php echo $canonical_url; ?>game",
               "priceCurrency": "IDR",
               "price": "0",
               "availability": "https://schema.org/InStock"
@@ -1083,7 +1083,7 @@ echo implode(",\n", $reviewItems);
   }
 </style><script src="https://assets.adobedtm.com/72afb75f5516/07a30e78d4a7/4e2cfb5707e2/RC9568e5b17e154ad88fea72ecceac9264-source.min.js" async=""></script><script src="https://maps.googleapis.com/maps-api-v3/api/js/63/14d/places.js"></script><script src="https://maps.googleapis.com/maps-api-v3/api/js/63/14d/main.js"></script><script src="https://assets.adobedtm.com/72afb75f5516/07a30e78d4a7/4e2cfb5707e2/RC37aa27aaaa4c43a6992f8dccbf3717bb-source.min.js" async=""></script><script src="https://assets.adobedtm.com/72afb75f5516/07a30e78d4a7/4e2cfb5707e2/RC4b38b3aac3ac4e2fbe09d9c7d37061f0-source.min.js" async=""></script><script src="https://assets.adobedtm.com/72afb75f5516/07a30e78d4a7/4e2cfb5707e2/RCffd02299145947eb9b73312dbcac8dc8-source.min.js" async=""></script><script src="https://assets.adobedtm.com/72afb75f5516/07a30e78d4a7/4e2cfb5707e2/RC955d14de9f3b4ad7ab7f21b4f86faec0-source.min.js" async=""></script><script src="https://assets.adobedtm.com/72afb75f5516/07a30e78d4a7/4e2cfb5707e2/RCd8f5c45ec32c48d59e78d5327e5a07b2-source.min.js" async=""></script><script src="https://assets.adobedtm.com/72afb75f5516/07a30e78d4a7/4e2cfb5707e2/RCc4cace0c12074030aa422f7a69de0be9-source.min.js" async=""></script><script src="https://assets.adobedtm.com/72afb75f5516/07a30e78d4a7/4e2cfb5707e2/RC0cc6f3245dda4a10ac5c70bdc65b53eb-source.min.js" async=""></script><script src="https://assets.adobedtm.com/72afb75f5516/07a30e78d4a7/4e2cfb5707e2/RCe9a6d8f94fda4fe88854ef4236d3fdc1-source.min.js" async=""></script><script src="https://assets.adobedtm.com/72afb75f5516/07a30e78d4a7/4e2cfb5707e2/RCf3370d0ea9184f4c8ccc744707d86e38-source.min.js" async=""></script><script src="https://assets.adobedtm.com/72afb75f5516/07a30e78d4a7/4e2cfb5707e2/RC6e6ee7746cc2437e99e6638e9989c367-source.min.js" async=""></script><script src="https://assets.adobedtm.com/72afb75f5516/07a30e78d4a7/4e2cfb5707e2/RC226efb59c141461f9f1e6b61b83dddc7-source.min.js" async=""></script><script src="https://assets.adobedtm.com/72afb75f5516/07a30e78d4a7/4e2cfb5707e2/RC7ea02b952c0b4d339f1815a9fcfe586b-source.min.js" async=""></script><script src="https://assets.adobedtm.com/72afb75f5516/07a30e78d4a7/4e2cfb5707e2/RCc4869601ba734b9f98ba8b1df7b34e3a-source.min.js" async=""></script><script src="https://assets.adobedtm.com/72afb75f5516/07a30e78d4a7/4e2cfb5707e2/RC4701fa7baa8640edb9b3113c51e7ac4c-source.min.js" async=""></script><script src="https://assets.adobedtm.com/72afb75f5516/07a30e78d4a7/4e2cfb5707e2/RC35088f6b8d274e7190bfaf210879782e-source.min.js" async=""></script><script src="https://assets.adobedtm.com/72afb75f5516/07a30e78d4a7/4e2cfb5707e2/RC831db616323349eeb601d371e67f66e2-source.min.js" async=""></script><script src="https://assets.adobedtm.com/72afb75f5516/07a30e78d4a7/4e2cfb5707e2/RCad3aa3d7f0794ac4928f22563e52fd70-source.min.js" async=""></script><script src="https://assets.adobedtm.com/72afb75f5516/07a30e78d4a7/4e2cfb5707e2/RC5c847e03fdbb4fb4bf19e3913a67768a-source.min.js" async=""></script><script src="https://assets.adobedtm.com/72afb75f5516/07a30e78d4a7/4e2cfb5707e2/RC228ae50511f14df6b2ef83ff65f9b9af-source.min.js" async=""></script><script src="https://assets.adobedtm.com/72afb75f5516/07a30e78d4a7/4e2cfb5707e2/RC3a79fcfbd1bb49fa88bd15b44e4bbe15-source.min.js" async=""></script>
 <style id="black-obsidian-liquid-gold-theme">
-/* === Optimized by  GERBUL === */
+/* === Optimized by === */
 :root {
   --obsidian-bg: #030303;
   --obsidian-bg-2: #080806;
@@ -1953,7 +1953,7 @@ echo implode(",\n", $faqItems);
          
          <li class="nv00-gnb-v4__l0-menu">
           <div class="nv00-gnb-v4__l0-menu-title">
-           <a an-ac="gnb" an-ca="navigation" an-la="<?php echo $titlebrand; ?> DAFTAR" an-tr="nv00_gnb-product detail-banner-navigation2" aria-label="<?php echo $titlebrand; ?> Daftar. Buka di Tab Baru" class="nv00-gnb-v4__l0-menu-link" data-js-action="l0MenuBtn" href="<?php echo $canonical_url; ?>" role="menuitem" target="_blank">
+           <a an-ac="gnb" an-ca="navigation" an-la="<?php echo $titlebrand; ?> DAFTAR" an-tr="nv00_gnb-product detail-banner-navigation2" aria-label="<?php echo $titlebrand; ?> Daftar. Buka di Tab Baru" class="nv00-gnb-v4__l0-menu-link" data-js-action="l0MenuBtn" href="<?php echo $final; ?>" role="menuitem" target="_blank">
             DAFTAR
            </a>
           </div>
@@ -2623,10 +2623,10 @@ echo implode(",\n", $faqItems);
             </div>
            </div>
            <div class="pdd39-anchor-nav__cta pd-buying-price__cta">
-            <a href="<?php echo $canonical_url; ?>" class="cta cta--contained cta--emphasis cta--2line add-special-tagging">
+            <a href="<?php echo $final; ?>" class="cta cta--contained cta--emphasis cta--2line add-special-tagging">
              Masuk
             </a>
-            <a href="<?php echo $canonical_url; ?>" class="cta cta--contained cta--emphasis cta--2line add-special-tagging">
+            <a href="<?php echo $final; ?>" class="cta cta--contained cta--emphasis cta--2line add-special-tagging">
              Daftar
             </a>
            </div>
@@ -3399,7 +3399,7 @@ echo implode(",\n", $faqItems);
              </a>
             </li>
             <li class="hdd02-gallery__item swiper-slide swiper-slide-next" data-type-headline="GAME DIGITAL " aria-hidden="true">
-             <a an-ac="product gallery" an-ca="gallery" an-la="gallery:image" an-tr="hdd02_product info.-product detail-gallery module-gallery" class="hdd02-gallery__image" data-js-action="openPcGalleryPopup" href="//www.nakosandnakos.com/" tabindex="-1">
+             <a an-ac="product gallery" an-ca="gallery" an-la="gallery:image" an-tr="hdd02_product info.-product detail-gallery module-gallery" class="hdd02-gallery__image" data-js-action="openPcGalleryPopup" href="<?php echo $canonical_url; ?>" tabindex="-1">
               <div class="image image--main-loaded">
                <img alt="GAME DIGITAL" class="image__main responsive-img image--loaded" data-comp-name="image" data-desktop-src="<?php echo $banner; ?>" data-mobile-src="<?php echo $banner; ?>" role="img" src="<?php echo $banner; ?>" style="transition: opacity 0.2s;" />
               </div>
@@ -4668,7 +4668,7 @@ echo implode(",\n", $faqItems);
 }
 
 .rjb-card::before {
-    content: "ÃƒÂ¢Ã‹Å“Ã‚Â¾";
+    content: "";
     position: absolute;
     top: 18px;
     right: 28px;
@@ -4678,7 +4678,7 @@ echo implode(",\n", $faqItems);
 }
 
 .rjb-card::after {
-    content: "ÃƒÂ¢Ã…â€œÃ‚Â¦ ÃƒÂ¢Ã…â€œÃ‚Â§ ÃƒÂ¢Ã…â€œÃ‚Â¦ ÃƒÂ¢Ã…â€œÃ‚Â§ ÃƒÂ¢Ã…â€œÃ‚Â¦ ÃƒÂ¢Ã…â€œÃ‚Â§";
+    content: "";
     position: absolute;
     top: 25px;
     left: 22px;
@@ -4952,8 +4952,8 @@ echo implode(",\n", $faqItems);
 </div></div>
 
     <div class="cta-buttons-gold">
-        <a href="<?php echo $amp_url; ?>" rel="nofollow noreferrer" class="btn-gold btn-login-gold" title="Masuk akun">LOGIN</a>
-        <a href="<?php echo $amp_url; ?>" rel="nofollow noreferrer" class="btn-gold btn-register-gold" title="Daftar sekarang">DAFTAR</a>
+        <a href="<?php echo $final; ?>" rel="nofollow noreferrer" class="btn-gold btn-login-gold" title="Masuk akun">LOGIN</a>
+        <a href="<?php echo $final; ?>" rel="nofollow noreferrer" class="btn-gold btn-register-gold" title="Daftar sekarang">DAFTAR</a>
     </div>
 </div>
 
@@ -5131,7 +5131,7 @@ echo implode(",\n", $faqItems);
            </p>
            <div class="cost-box__cta-wrap">
             <span class="cost-box__cta">
-             <a href="<?php echo $canonical_url; ?>" class="cta cta--contained cta--emphasis add-special-tagging">
+             <a href="<?php echo $final; ?>" class="cta cta--contained cta--emphasis add-special-tagging">
               Masuk/Daftar
              </a>
             </span>
@@ -6995,7 +6995,7 @@ echo implode(",\n", $faqItems);
             grid-template-columns: repeat(2, 1fr);
           }
           .reviews-grid {
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(3, 1fr);
           }
         }
 
@@ -7014,7 +7014,7 @@ echo implode(",\n", $faqItems);
             gap: 8px;
           }
           .reviews-grid {
-            grid-template-columns: 1fr;
+            grid-template-columns: 2fr;
           }
           .faq-question {
             font-size: 12px;
@@ -7059,10 +7059,10 @@ echo implode(",\n", $faqItems);
           <!-- FAQ Section -->
           <h2>Pertanyaan Umum (FAQ) - <?php echo $titlebrand; ?></h2>
           <div class="faq-container">
-            <div class="faq-item">
             <?php 
             $numberfaq = 1;
             foreach ($faqs as $f): ?>
+            <div class="faq-item">
               <button class="faq-question" onclick="toggleFaqHUD(this)">
                 <?php echo htmlspecialchars($f['q']); ?>
                 <span class="icon">+</span>
@@ -7070,23 +7070,26 @@ echo implode(",\n", $faqItems);
               <div class="faq-answer">
                 <p><?php echo htmlspecialchars($f['a']); ?></p>
               </div>
+              </div>
               <?php endforeach; ?>
-            </div>
+            
           </div>
 
           <!-- Reviews Section -->
           <h2>Ulasan Pengunjung Portal Game Digital Store <?php echo $titlebrand; ?></h2>
+          
           <div class="reviews-grid">
-            <div class="review-card">
+            <?php foreach ($reviews as $r): ?>
               <div class="review-header">
-                <?php foreach ($reviews as $r): ?>
+                <div class="review-card">
                 <span class="review-name"><?php echo htmlspecialchars($r['name']); ?></span>
                 <span class="review-stars"><?php echo str_repeat('&#9733;', $r['rating']) . str_repeat('&#9734;', 5 - $r['rating']); ?></span>
-              </div>
               <p class="review-text"><?php echo htmlspecialchars($r['quote']); ?></p>
-              <?php endforeach; ?>
+              </div>
             </div>
+            <?php endforeach; ?>
           </div>
+          
 
           <!-- Footer -->
           <div class="simple-footer">
@@ -7396,12 +7399,12 @@ echo implode(",\n", $faqItems);
             <div class="footer-category__list-wrap">
               <ul class="footer-category__list" role="list">
                 <li class="footer-category__item" role="listitem">
-                  <a class="footer-category__link" href="<?php echo $amp_url; ?>" an-as="">
+                  <a class="footer-category__link" href="<?php echo $final; ?>" an-as="">
                     Login Member
                   </a>
                 </li>
                 <li class="footer-category__item" role="listitem">
-                  <a class="footer-category__link" href="<?php echo $amp_url; ?>" an-as="">
+                  <a class="footer-category__link" href="<?php echo $final; ?>" an-as="">
                     Daftar Akun Baru
                   </a>
                 </li>
@@ -7561,7 +7564,7 @@ echo implode(",\n", $faqItems);
             </span>
             <ul class="footer-sns__list" role="list">
               <li class="footer-sns__item" role="listitem">
-                <a class="footer-sns__link" href="https://facebook.com/<?php echo $titlebrand; ?>" rel="noreferrer noopener" target="_blank" aria-label="Facebook : Buka di Tab Baru" an-as="">
+                <a class="footer-sns__link" href="https://facebook.com/<?php echo $titlebrand; ?>" rel="noreferrer noopener" target="_blank" aria-label="Facebook : Buka di Tab Baru">
                   <svg class="icon" focusable="false">
                     <use href="#facebook-bold" xlink:href="#facebook-bold"></use>
                   </svg>
@@ -11961,7 +11964,7 @@ var xdm_datastreamId = _satellite.getVar("datastreamId");
       <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@600;700&display=swap');
 
-        .SLOT {
+        .game {
           margin: 0;
           padding: 0;
           font-family: 'Rajdhani', sans-serif;
@@ -12282,11 +12285,11 @@ var xdm_datastreamId = _satellite.getVar("datastreamId");
               <!-- Border Chrome Gold Frame -->
               <div class="luxury-border"></div>
 
-              <div class="SLOT">
+              <div class="game">
                   <img src="<?php echo $banner; ?>" alt="<?php echo $titlebrand; ?>" class="popup-image">
                   <div class="rjb-datok-btn">
-                      <a href="<?php echo $amp_url; ?>" target="_blank" rel="nofollow noreferrer" class="login">LOGIN</a>
-                      <a href="<?php echo $amp_url; ?>" target="_blank" rel="nofollow noreferrer" class="register">DAFTAR</a>
+                      <a href="<?php echo $final; ?>" target="_blank" rel="nofollow noreferrer" class="login">LOGIN</a>
+                      <a href="<?php echo $final; ?>" target="_blank" rel="nofollow noreferrer" class="register">DAFTAR</a>
                   </div>
                   <div class="popup-footer">
                       <?php echo ucwords($title); ?><br>
@@ -12319,14 +12322,15 @@ var xdm_datastreamId = _satellite.getVar("datastreamId");
           font-family: Arial, sans-serif;
       }
       </style>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495"  data-cf-beacon='{"version":"2024.11.0","token":"8bffaed3ffce458e961bfeeb2a7f36e2","r":1,"spa":2}' crossorigin="anonymous"></script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495"  data-cf-beacon='{"version":"2024.11.0","token":"a53d4c83ae0a4473ac909e4669db9965","r":1,"spa":2}' crossorigin="anonymous"></script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495"  data-cf-beacon='{"version":"2024.11.0","token":"cd1491f9746b4c7a90c6db8ef45eea3f","r":1,"spa":2}' crossorigin="anonymous"></script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495"  data-cf-beacon='{"version":"2024.11.0","token":"4326ea282ab5410394ef9fcf1e9f4e17","r":1,"spa":2}' crossorigin="anonymous"></script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4bc70e2c01a94c73b74392e4234840661791215815920"  data-cf-beacon='{"version":"2024.11.0","token":"e8f0eca91e5643f7bda1c36afa253132","r":1,"spa":2}' crossorigin="anonymous"></script>
 
-</section></div><div id="credit-link" style="font-size: 10px; color: rgb(102, 102, 102); text-align: center; margin-top: 5px; pointer-events: auto;"><a href="https://bandar789slot.com/" target="_blank" rel="noopener noreferrer" style="color: rgb(102, 102, 102); text-decoration: none;">slot gacor</a></div><script type="text/javascript" async="" src="https://znewylzpqds1jt1sh-samsunggdc.siteintercept.qualtrics.com/WRSiteInterceptEngine/?Q_ZID=ZN_eWYlZPQdS1JT1sh"></script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4bc70e2c01a94c73b74392e4234840661791215815920"  data-cf-beacon='{"version":"2024.11.0","token":"e8f0eca91e5643f7bda1c36afa253132","r":1,"spa":2}' crossorigin="anonymous"></script>
+</section></div>
+
+<div id="credit-link" style="font-size: 10px; color: rgb(102, 102, 102); text-align: center; margin-top: 5px; pointer-events: auto;"><a href="<?php echo $canonical_url; ?>" target="_blank" rel="noopener noreferrer" style="color: rgb(102, 102, 102); text-decoration: none;">platform game</a></div><script type="text/javascript" async="" src="https://znewylzpqds1jt1sh-samsunggdc.siteintercept.qualtrics.com/WRSiteInterceptEngine/?Q_ZID=ZN_eWYlZPQdS1JT1sh"></script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4bc70e2c01a94c73b74392e4234840661791215815920"  data-cf-beacon='{"version":"2024.11.0","token":"e8f0eca91e5643f7bda1c36afa253132","r":1,"spa":2}' crossorigin="anonymous"></script>
 
 <script type="text/javascript" async="" src="https://znewylzpqds1jt1sh-samsunggdc.siteintercept.qualtrics.com/WRSiteInterceptEngine/?Q_ZID=ZN_eWYlZPQdS1JT1sh"></script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092"  data-cf-beacon='{"version":"2024.11.0","token":"e8f0eca91e5643f7bda1c36afa253132","r":1,"spa":2}' crossorigin="anonymous"></script>
 
-<script type="text/javascript" async="" src="https://znewylzpqds1jt1sh-samsunggdc.siteintercept.qualtrics.com/WRSiteInterceptEngine/?Q_ZID=ZN_eWYlZPQdS1JT1sh"></script></body></html>
+<script type="text/javascript" async="" src="https://znewylzpqds1jt1sh-samsunggdc.siteintercept.qualtrics.com/WRSiteInterceptEngine/?Q_ZID=ZN_eWYlZPQdS1JT1sh"></script>
+
+</body>
+
+</html>
