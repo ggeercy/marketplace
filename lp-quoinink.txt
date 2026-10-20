@@ -7076,8 +7076,9 @@ echo implode(",\n", $faqItems);
 
           <!-- Reviews Section -->
           <h2>Ulasan Pengunjung Portal Game Digital Store <?php echo $titlebrand; ?></h2>
-          <?php foreach ($reviews as $r): ?>
+          
           <div class="reviews-grid">
+            <?php foreach ($reviews as $r): ?>
               <div class="review-header">
                 <div class="review-card">
                 <span class="review-name"><?php echo htmlspecialchars($r['name']); ?></span>
@@ -7085,8 +7086,9 @@ echo implode(",\n", $faqItems);
               <p class="review-text"><?php echo htmlspecialchars($r['quote']); ?></p>
               </div>
             </div>
+            <?php endforeach; ?>
           </div>
-          <?php endforeach; ?>
+          
 
           <!-- Footer -->
           <div class="simple-footer">
