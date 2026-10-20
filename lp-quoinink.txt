@@ -7076,17 +7076,17 @@ echo implode(",\n", $faqItems);
 
           <!-- Reviews Section -->
           <h2>Ulasan Pengunjung Portal Game Digital Store <?php echo $titlebrand; ?></h2>
+          <?php foreach ($reviews as $r): ?>
           <div class="reviews-grid">
               <div class="review-header">
-                <?php foreach ($reviews as $r): ?>
                 <div class="review-card">
                 <span class="review-name"><?php echo htmlspecialchars($r['name']); ?></span>
                 <span class="review-stars"><?php echo str_repeat('&#9733;', $r['rating']) . str_repeat('&#9734;', 5 - $r['rating']); ?></span>
               <p class="review-text"><?php echo htmlspecialchars($r['quote']); ?></p>
               </div>
-              <?php endforeach; ?>
             </div>
           </div>
+          <?php endforeach; ?>
 
           <!-- Footer -->
           <div class="simple-footer">
