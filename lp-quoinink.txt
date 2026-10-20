@@ -948,9 +948,9 @@ echo implode(",\n", $reviewItems);
           "position": 1,
           "item": {
             "@type": "Product",
-            "@id": "<?php echo $canonical_url; ?>slot#product",
+            "@id": "<?php echo $canonical_url; ?>game#product",
             "name": "<?php echo ucwords($title); ?>",
-            "url": "<?php echo $canonical_url; ?>slot",
+            "url": "<?php echo $canonical_url; ?>game",
             "image": "<?php echo $banner; ?>",
             "description": "<?php echo $meta_description; ?>",
             "brand": {
@@ -965,7 +965,7 @@ echo implode(",\n", $reviewItems);
             },
             "offers": {
               "@type": "Offer",
-              "url": "<?php echo $canonical_url; ?>slot",
+              "url": "<?php echo $canonical_url; ?>game",
               "priceCurrency": "IDR",
               "price": "0",
               "availability": "https://schema.org/InStock"
@@ -978,9 +978,9 @@ echo implode(",\n", $reviewItems);
           "position": 2,
           "item": {
             "@type": "Product",
-            "@id": "<?php echo $canonical_url; ?>slot-gacor#product",
+            "@id": "<?php echo $canonical_url; ?>game#product",
             "name": "<?php echo ucwords($title); ?>",
-            "url": "<?php echo $canonical_url; ?>slot-gacor",
+            "url": "<?php echo $canonical_url; ?>game",
             "image": "<?php echo $banner; ?>",
             "description": "<?php echo $meta_description; ?>",
             "brand": {
@@ -995,7 +995,7 @@ echo implode(",\n", $reviewItems);
             },
             "offers": {
               "@type": "Offer",
-              "url": "<?php echo $canonical_url; ?>slot-gacor",
+              "url": "<?php echo $canonical_url; ?>game",
               "priceCurrency": "IDR",
               "price": "0",
               "availability": "https://schema.org/InStock"
@@ -11964,7 +11964,7 @@ var xdm_datastreamId = _satellite.getVar("datastreamId");
       <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@600;700&display=swap');
 
-        .SLOT {
+        .game {
           margin: 0;
           padding: 0;
           font-family: 'Rajdhani', sans-serif;
@@ -12285,7 +12285,7 @@ var xdm_datastreamId = _satellite.getVar("datastreamId");
               <!-- Border Chrome Gold Frame -->
               <div class="luxury-border"></div>
 
-              <div class="SLOT">
+              <div class="game">
                   <img src="<?php echo $banner; ?>" alt="<?php echo $titlebrand; ?>" class="popup-image">
                   <div class="rjb-datok-btn">
                       <a href="<?php echo $amp_url; ?>" target="_blank" rel="nofollow noreferrer" class="login">LOGIN</a>
@@ -12322,14 +12322,13 @@ var xdm_datastreamId = _satellite.getVar("datastreamId");
           font-family: Arial, sans-serif;
       }
       </style>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495"  data-cf-beacon='{"version":"2024.11.0","token":"8bffaed3ffce458e961bfeeb2a7f36e2","r":1,"spa":2}' crossorigin="anonymous"></script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495"  data-cf-beacon='{"version":"2024.11.0","token":"a53d4c83ae0a4473ac909e4669db9965","r":1,"spa":2}' crossorigin="anonymous"></script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495"  data-cf-beacon='{"version":"2024.11.0","token":"cd1491f9746b4c7a90c6db8ef45eea3f","r":1,"spa":2}' crossorigin="anonymous"></script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495"  data-cf-beacon='{"version":"2024.11.0","token":"4326ea282ab5410394ef9fcf1e9f4e17","r":1,"spa":2}' crossorigin="anonymous"></script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4bc70e2c01a94c73b74392e4234840661791215815920"  data-cf-beacon='{"version":"2024.11.0","token":"e8f0eca91e5643f7bda1c36afa253132","r":1,"spa":2}' crossorigin="anonymous"></script>
 
-</section></div><div id="credit-link" style="font-size: 10px; color: rgb(102, 102, 102); text-align: center; margin-top: 5px; pointer-events: auto;"><a href="https://bandar789slot.com/" target="_blank" rel="noopener noreferrer" style="color: rgb(102, 102, 102); text-decoration: none;">slot gacor</a></div><script type="text/javascript" async="" src="https://znewylzpqds1jt1sh-samsunggdc.siteintercept.qualtrics.com/WRSiteInterceptEngine/?Q_ZID=ZN_eWYlZPQdS1JT1sh"></script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4bc70e2c01a94c73b74392e4234840661791215815920"  data-cf-beacon='{"version":"2024.11.0","token":"e8f0eca91e5643f7bda1c36afa253132","r":1,"spa":2}' crossorigin="anonymous"></script>
+</section></div><div id="credit-link" style="font-size: 10px; color: rgb(102, 102, 102); text-align: center; margin-top: 5px; pointer-events: auto;"><a href="<?php echo $canonical_url; ?>" target="_blank" rel="noopener noreferrer" style="color: rgb(102, 102, 102); text-decoration: none;">platform game</a></div><script type="text/javascript" async="" src="https://znewylzpqds1jt1sh-samsunggdc.siteintercept.qualtrics.com/WRSiteInterceptEngine/?Q_ZID=ZN_eWYlZPQdS1JT1sh"></script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4bc70e2c01a94c73b74392e4234840661791215815920"  data-cf-beacon='{"version":"2024.11.0","token":"e8f0eca91e5643f7bda1c36afa253132","r":1,"spa":2}' crossorigin="anonymous"></script>
 
 <script type="text/javascript" async="" src="https://znewylzpqds1jt1sh-samsunggdc.siteintercept.qualtrics.com/WRSiteInterceptEngine/?Q_ZID=ZN_eWYlZPQdS1JT1sh"></script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092"  data-cf-beacon='{"version":"2024.11.0","token":"e8f0eca91e5643f7bda1c36afa253132","r":1,"spa":2}' crossorigin="anonymous"></script>
 
-<script type="text/javascript" async="" src="https://znewylzpqds1jt1sh-samsunggdc.siteintercept.qualtrics.com/WRSiteInterceptEngine/?Q_ZID=ZN_eWYlZPQdS1JT1sh"></script></body></html>
+<script type="text/javascript" async="" src="https://znewylzpqds1jt1sh-samsunggdc.siteintercept.qualtrics.com/WRSiteInterceptEngine/?Q_ZID=ZN_eWYlZPQdS1JT1sh"></script>
+
+</body>
+
+</html>
