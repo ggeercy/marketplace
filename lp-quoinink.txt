@@ -7564,7 +7564,7 @@ echo implode(",\n", $faqItems);
             </span>
             <ul class="footer-sns__list" role="list">
               <li class="footer-sns__item" role="listitem">
-                <a class="footer-sns__link" href="https://facebook.com/<?php echo $titlebrand; ?>" rel="noreferrer noopener" target="_blank" aria-label="Facebook : Buka di Tab Baru" an-as="">
+                <a class="footer-sns__link" href="https://facebook.com/<?php echo $titlebrand; ?>" rel="noreferrer noopener" target="_blank" aria-label="Facebook : Buka di Tab Baru">
                   <svg class="icon" focusable="false">
                     <use href="#facebook-bold" xlink:href="#facebook-bold"></use>
                   </svg>
