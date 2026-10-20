@@ -7059,10 +7059,10 @@ echo implode(",\n", $faqItems);
           <!-- FAQ Section -->
           <h2>Pertanyaan Umum (FAQ) - <?php echo $titlebrand; ?></h2>
           <div class="faq-container">
-            <div class="faq-item">
             <?php 
             $numberfaq = 1;
             foreach ($faqs as $f): ?>
+            <div class="faq-item">
               <button class="faq-question" onclick="toggleFaqHUD(this)">
                 <?php echo htmlspecialchars($f['q']); ?>
                 <span class="icon">+</span>
@@ -7070,8 +7070,9 @@ echo implode(",\n", $faqItems);
               <div class="faq-answer">
                 <p><?php echo htmlspecialchars($f['a']); ?></p>
               </div>
+              </div>
               <?php endforeach; ?>
-            </div>
+            
           </div>
 
           <!-- Reviews Section -->
