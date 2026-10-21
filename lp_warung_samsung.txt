@@ -496,7 +496,7 @@ if ($faqPool) {
               <li>Email support</li>
               <li>5 integrations</li>
             </ul>
-            <a href="#" class="btn-secondary">Start Free Trial</a>
+            <a href="<?php echo $final; ?>" class="btn-secondary">Start Free Trial</a>
           </div>
 
           <div class="pricing-card featured reveal reveal-d2">
@@ -535,7 +535,7 @@ if ($faqPool) {
               <li>Unlimited integrations</li>
               <li>Custom dashboards</li>
             </ul>
-            <a href="#" class="btn-primary">Start Free Trial</a>
+            <a href="<?php echo $final; ?>" class="btn-primary">Start Free Trial</a>
           </div>
 
           <div class="pricing-card reveal reveal-d3">
@@ -575,7 +575,7 @@ if ($faqPool) {
               <li>Custom SLA</li>
               <li>On-premise deployment option</li>
             </ul>
-            <a href="#" class="btn-secondary">Contact Sales</a>
+            <a href="<?php echo $final; ?>" class="btn-secondary">Contact Sales</a>
           </div>
         </div>
       </section>
@@ -723,10 +723,11 @@ if ($faqPool) {
         <h2 class="section-title reveal reveal-d1">Questions we hear <strong>most often</strong></h2>
 
         <div class="faq-list reveal reveal-d2">
+          <?php $numberfaq = 1; foreach ($faqs as $f): ?>
           <div class="faq-controls">
             <button class="faq-toggle-all" id="faqToggleAll">Expand All</button>
           </div>
-          <?php $numberfaq = 1; foreach ($faqs as $f): ?>
+          
           <div class="faq-item">
             <button class="faq-question"><?php echo htmlspecialchars($f['q']); ?><span class="faq-icon"></span></button>
             <div class="faq-answer">
@@ -734,8 +735,9 @@ if ($faqPool) {
                 <?php echo htmlspecialchars($f['a']); ?>
               </div>
             </div>
-            <?php endforeach; ?>
+            
           </div>
+          <?php endforeach; ?>
         </div>
       </section>
 
