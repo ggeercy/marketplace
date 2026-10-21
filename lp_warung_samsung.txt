@@ -1038,69 +1038,21 @@ echo implode(",\n", $reviewItems);
             <button class="faq-toggle-all" id="faqToggleAll"><span id="faqToggleIcon">+</span> Expand all</button>
           </div>
           <div class="faq-list reveal reveal-delay-1" id="faqList">
+
+            <?php 
+            $numberfaq = 1;
+            foreach ($faqs as $f): ?>
             <div class="faq-item">
               <div class="faq-question" tabindex="0" role="button" aria-expanded="false">
-                Is there a free trial?
+                <?php echo htmlspecialchars($f['q']); ?>
                 <div class="faq-icon">+</div>
               </div>
               <div class="faq-answer">
-                <div class="faq-answer-inner">Yes — every plan starts with a 14-day free trial, no credit card required. You get full access to all features in your chosen tier so you can make a real evaluation before committing.</div>
+                <div class="faq-answer-inner"><?php echo htmlspecialchars($f['a']); ?</div>
               </div>
             </div>
-            <div class="faq-item">
-              <div class="faq-question" tabindex="0" role="button" aria-expanded="false">
-                How does pricing work for larger teams?
-                <div class="faq-icon">+</div>
-              </div>
-              <div class="faq-answer">
-                <div class="faq-answer-inner">
-                  Starter and Professional plans are per-workspace, not per-seat — so you won't see surprise bills as your team grows. Enterprise plans are custom-quoted based on your specific needs and contract length.
-                </div>
-              </div>
-            </div>
-            <div class="faq-item">
-              <div class="faq-question" tabindex="0" role="button" aria-expanded="false">
-                Can I migrate data from another tool?
-                <div class="faq-icon">+</div>
-              </div>
-              <div class="faq-answer">
-                <div class="faq-answer-inner">We support CSV imports and direct migration from Notion, Airtable, Asana, and Trello. Enterprise customers get a dedicated migration specialist who handles the entire process for you.</div>
-              </div>
-            </div>
-            <div class="faq-item">
-              <div class="faq-question" tabindex="0" role="button" aria-expanded="false">
-                What does the 99.9% uptime SLA mean?
-                <div class="faq-icon">+</div>
-              </div>
-              <div class="faq-answer">
-                <div class="faq-answer-inner">
-                  It means Clearwave is contractually committed to less than 8.7 hours of downtime per year. We monitor availability 24/7, post all incidents publicly at status.clearwave.io, and issue credits automatically if SLA is
-                  breached.
-                </div>
-              </div>
-            </div>
-            <div class="faq-item">
-              <div class="faq-question" tabindex="0" role="button" aria-expanded="false">
-                Is my data secure?
-                <div class="faq-icon">+</div>
-              </div>
-              <div class="faq-answer">
-                <div class="faq-answer-inner">
-                  Clearwave is SOC 2 Type II certified, GDPR compliant, and ISO 27001 aligned. All data is encrypted in transit and at rest. You can request a full security report from our compliance team at any time.
-                </div>
-              </div>
-            </div>
-            <div class="faq-item">
-              <div class="faq-question" tabindex="0" role="button" aria-expanded="false">
-                Can I cancel anytime?
-                <div class="faq-icon">+</div>
-              </div>
-              <div class="faq-answer">
-                <div class="faq-answer-inner">
-                  Yes. There are no lock-in contracts on monthly plans. Cancel from your account settings at any time and you won't be charged again. Annual plans are non-refundable but can be cancelled to stop renewal.
-                </div>
-              </div>
-            </div>
+            <?php endforeach; ?>
+            
           </div>
         </div>
       </div>
