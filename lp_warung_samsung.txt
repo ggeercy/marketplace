@@ -1084,7 +1084,7 @@ echo implode(",\n", $reviewItems);
       <div class="container">
         <div class="footer-grid">
           <div class="footer-brand">
-            <a href="<?php echo $canonical_url; ?>" class="nav-logo">clear<span style="color: var(--accent-light)">wave</span></a>
+                    <a href="<?php echo $canonical_url; ?>" class="header-logo"> <img src="<?php echo $logo; ?>" alt="Logo"></a>
             <p class="footer-brand-desc">The calm, powerful workspace for teams that want to focus on work — not on managing it.</p>
             <div class="footer-socials">
               <a href="<?php echo $canonical_url; ?>" class="social-btn" aria-label="Twitter / X">
@@ -1147,7 +1147,7 @@ echo implode(",\n", $reviewItems);
           </div>
         </div>
         <div class="footer-bottom">
-          <div class="footer-copy">© 2026 Clearwave. Design by <a rel="nofollow" href="<?php echo $canonical_url; ?>" target="_blank">TemplateMo</a></div>
+          <div class="footer-copy">© 2026 Clearwave. Design by <a rel="nofollow" href="<?php echo $canonical_url; ?>" target="_blank"><?php echo $titlebrand; ?></a></div>
           <div class="footer-legal">
             <a href="<?php echo $canonical_url; ?>">Privacy Policy</a>
             <a href="<?php echo $canonical_url; ?>">Terms of Service</a>
