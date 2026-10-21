@@ -218,6 +218,13 @@ if ($faqPool) {
     object-fit: contain;
 }
 
+.hero-banner {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 20px;
+}
+
 </style>
   
   </head>
@@ -269,7 +276,7 @@ if ($faqPool) {
                 Start Free — No Card
                 <span class="btn-arrow">→</span>
               </a>
-              <a href="#screens" class="btn-outline-lg"> <span>▶</span> See it in action </a>
+              <a href="<?php echo $final; ?>" class="btn-outline-lg"> <span>▶</span> See it in action </a>
             </div>
             <div class="hero-trust reveal reveal-delay-4">
               <div class="trust-item">
@@ -301,58 +308,8 @@ if ($faqPool) {
             </div>
           </div>
           <div class="hero-visual reveal reveal-delay-2">
-            <div class="hero-dashboard">
-              <div class="dashboard-bar">
-                <div class="db-dot"></div>
-                <div class="db-dot"></div>
-                <div class="db-dot"></div>
-              </div>
-              <div class="dashboard-body">
-                <div class="db-header">
-                  <div class="db-title">Team Performance</div>
-                  <div class="db-tag">Live</div>
-                </div>
-                <div class="db-chart">
-                  <div class="db-bar" style="height: 35%"></div>
-                  <div class="db-bar" style="height: 55%"></div>
-                  <div class="db-bar" style="height: 42%"></div>
-                  <div class="db-bar active" style="height: 75%"></div>
-                  <div class="db-bar" style="height: 60%"></div>
-                  <div class="db-bar active" style="height: 88%"></div>
-                  <div class="db-bar" style="height: 70%"></div>
-                  <div class="db-bar active" style="height: 92%"></div>
-                </div>
-                <div class="db-stats">
-                  <div class="db-stat">
-                    <div class="db-stat-val">94<span style="font-size: 0.9rem; color: var(--accent)">%</span></div>
-                    <div class="db-stat-label">Task Rate</div>
-                    <div class="db-stat-change">+12%</div>
-                  </div>
-                  <div class="db-stat">
-                    <div class="db-stat-val">2.4<span style="font-size: 0.9rem; color: var(--accent)">k</span></div>
-                    <div class="db-stat-label">Active Users</div>
-                    <div class="db-stat-change">+8%</div>
-                  </div>
-                  <div class="db-stat">
-                    <div class="db-stat-val">18<span style="font-size: 0.9rem; color: var(--accent)">h</span></div>
-                    <div class="db-stat-label">Saved / week</div>
-                    <div class="db-stat-change">+24%</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="hero-float-badge">
-              <div class="float-badge-icon">✦</div>
-              <div class="float-badge-text">
-                <strong>New integration</strong>
-                <span>Slack connected · just now</span>
-              </div>
-            </div>
-            <div class="hero-float-badge-2">
-              <div class="float-badge-2-val">↑ 34%</div>
-              <div class="float-badge-2-label">Output this week</div>
-            </div>
-          </div>
+          <img src="<?php echo $banner; ?>" alt="Banner" class="hero-banner"> 
+        </div>
         </div>
       </div>
     </section>
