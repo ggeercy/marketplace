@@ -642,10 +642,7 @@ $faqs[] = $faqPool[$key]; } } ?>
         </div>
 
         <div class="footer-bar reveal reveal-d4" style="margin-top: 80px">
-          <div class="footer-brand">
-            <?php echo $titlebrand; ?>
-            &mdash; 2026
-          </div>
+          <div class="footer-brand"><?php echo $titlebrand; ?> &mdash; 2026</div>
           <div class="footer-links">
             <a href="<?php echo $canonical_url; ?>">Privacy</a>
             <a href="<?php echo $canonical_url; ?>">Terms</a>
