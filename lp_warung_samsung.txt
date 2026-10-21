@@ -226,7 +226,58 @@ if ($faqPool) {
 }
 
 </style>
-  
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "@id": "<?php echo $canonical_url; ?>#faq",
+  "mainEntity": [
+    
+  <?php
+$faqItems = [];
+foreach ($faqs as $f) {
+    $faqItems[] = '    {
+      "@type":"Question",
+      "name":"' . htmlspecialchars($f['q']) . '",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"' . htmlspecialchars($f['a']) . '"
+      }
+    }';
+}
+echo implode(",\n", $faqItems);
+?>
+    
+  ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "review",
+  "@id": "<?php echo $canonical_url; ?>#faq",
+  "mainEntity": [
+    
+  <?php
+$reviewItems = [];
+foreach ($reviews as $r) {
+    $reviewItems[] = '        {
+                "@type":"Review",
+                "author":{"@type":"Person","name":"' . htmlspecialchars($r['name']) . '"},
+                "reviewRating":{"@type":"Rating","ratingValue":"5","bestRating":"5"},
+                "reviewBody":"' . htmlspecialchars($r['quote']) . '"
+              }';
+}
+echo implode(",\n", $reviewItems);
+?>  
+    
+  ]
+}
+</script>
+
+
   </head>
 
   <body>
@@ -543,8 +594,8 @@ if ($faqPool) {
       <div class="container">
         <div class="features-header">
           <div class="section-label reveal">Platform Features</div>
-          <h2 class="section-title reveal reveal-delay-1">Built for <em>clarity</em><br />at every scale</h2>
-          <p class="section-sub reveal reveal-delay-2">Every feature is designed to reduce friction and surface what matters. No bloat, no configuration maze.</p>
+          <h2 class="section-title reveal reveal-delay-1"><?php echo ucwords($title); ?></h2>
+          <p class="section-sub reveal reveal-delay-2"><?php echo $meta_description; ?></p>
         </div>
 
         <!-- Feature 1 -->
@@ -930,63 +981,19 @@ if ($faqPool) {
           <p class="section-sub reveal reveal-delay-2">Don't take our word for it — here's what real teams say after 90 days.</p>
         </div>
         <div class="testimonials-grid">
+          <?php foreach ($reviews as $r): ?>
           <div class="testimonial-card tall reveal">
-            <div class="testimonial-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+            <div class="testimonial-stars"><span><?php echo str_repeat('&#9733;', $r['rating']) . str_repeat('&#9734;', 5 - $r['rating']); ?></span></div>
             <p class="testimonial-quote">
-              "We replaced three separate tools with Clearwave and actually have fewer meetings now. The automation flows handle the handoffs our team used to spend mornings sorting out. It's the calmest our workflow has ever felt."
+              <?php echo htmlspecialchars($r['quote']); ?>
             </p>
             <div class="testimonial-author">
-              <div class="author-avatar">SL</div>
               <div>
-                <div class="author-name">Sarah Lindqvist</div>
-                <div class="author-role">Head of Operations · Stratum IO</div>
+                <div class="author-name"><?php echo htmlspecialchars($r['name']); ?></div>
               </div>
             </div>
           </div>
-          <div class="testimonial-card reveal reveal-delay-1">
-            <div class="testimonial-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
-            <p class="testimonial-quote">"The mobile app alone justified the switch. I can review dashboards and approve tasks between meetings without opening my laptop."</p>
-            <div class="testimonial-author">
-              <div class="author-avatar">MR</div>
-              <div>
-                <div class="author-name">Marcus Reyes</div>
-                <div class="author-role">Product Director · Meridian</div>
-              </div>
-            </div>
-          </div>
-          <div class="testimonial-card reveal reveal-delay-2">
-            <div class="testimonial-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
-            <p class="testimonial-quote">"Onboarding our 30-person team took one afternoon. The learning curve is genuinely flat."</p>
-            <div class="testimonial-author">
-              <div class="author-avatar">PK</div>
-              <div>
-                <div class="author-name">Priya Kapoor</div>
-                <div class="author-role">Engineering Lead · Vanta Labs</div>
-              </div>
-            </div>
-          </div>
-          <div class="testimonial-card reveal reveal-delay-1">
-            <div class="testimonial-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
-            <p class="testimonial-quote">"The reporting features are leagues ahead of what we had. We can finally show stakeholders live data instead of preparing decks."</p>
-            <div class="testimonial-author">
-              <div class="author-avatar">TW</div>
-              <div>
-                <div class="author-name">Tom Wainwright</div>
-                <div class="author-role">CFO · Pulsar HQ</div>
-              </div>
-            </div>
-          </div>
-          <div class="testimonial-card reveal reveal-delay-2">
-            <div class="testimonial-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
-            <p class="testimonial-quote">"Customer support actually reads your message. Had a custom integration question answered in under two hours."</p>
-            <div class="testimonial-author">
-              <div class="author-avatar">AN</div>
-              <div>
-                <div class="author-name">Aiko Nakamura</div>
-                <div class="author-role">CTO · Nexaflow</div>
-              </div>
-            </div>
-          </div>
+          <?php endforeach; ?>
         </div>
       </div>
     </section>
