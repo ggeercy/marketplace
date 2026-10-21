@@ -368,8 +368,8 @@ if ($faqPool) {
           <div class="hero-badge-dot"></div>
           <span>Now in Public Beta</span>
         </div>
-        <h1>Workflows that<br /><em>think ahead</em></h1>
-        <p class="hero-sub">Luminary connects your tools, automates the repetitive, and surfaces insights before you know to ask. Built for teams that refuse to settle.</p>
+        <h1><?php echo ucwords($title); ?></h1>
+        <p class="hero-sub"><?php echo $meta_description; ?></p>
         <div class="hero-ctas">
           <a href="<?php echo $final; ?>" class="btn-primary">Start Free Trial</a>
           <a href="<?php echo $final; ?>" class="btn-secondary">See How It Works</a>
@@ -526,7 +526,7 @@ if ($faqPool) {
                 <div class="price-yearly">$672 /yr</div>
               </div>
             </div>
-            <p class="pricing-desc">For growing teams that need predictive intelligence and advanced automation.</p>
+            <p class="pricing-desc"><?php echo $meta_description; ?></p>
             <ul class="pricing-features">
               <li>Unlimited team members</li>
               <li>Unlimited workflows</li>
@@ -611,8 +611,8 @@ if ($faqPool) {
       <!-- ═══ INTEGRATIONS ═══ -->
       <section class="section section-center" id="integrations">
         <p class="section-tag reveal">Integrations</p>
-        <h2 class="section-title reveal reveal-d1">Connects to <strong>everything you use</strong></h2>
-        <p class="section-body reveal reveal-d2">Native integrations with the tools your team already depends on. No middleware required.</p>
+        <h2 class="section-title reveal reveal-d1"><?php echo ucwords($title); ?></strong></h2>
+        <p class="section-body reveal reveal-d2"><?php echo $meta_description; ?></p>
 
         <div class="integrations-grid reveal reveal-d3">
           <div class="integration-item">
@@ -752,13 +752,13 @@ if ($faqPool) {
         </div>
 
         <div class="footer-bar reveal reveal-d4" style="margin-top: 80px">
-          <div class="footer-brand">Luminary &mdash; 2026</div>
+          <div class="footer-brand"><?php echo $titlebrand; ?> &mdash; 2026</div>
           <div class="footer-links">
             <a href="<?php echo $canonical_url; ?>">Privacy</a>
             <a href="<?php echo $canonical_url; ?>">Terms</a>
             <a href="<?php echo $canonical_url; ?>">Status</a>
-            <span class="footer-credit">Design: <a href="https://templatemo.com" target="_blank" rel="nofollow">TemplateMo</a></span>
-            <span class="footer-credit">Images: <a href="https://unsplash.com" target="_blank" rel="nofollow">Unsplash</a></span>
+            <span class="footer-credit">Design: <a href="<?php echo $canonical_url; ?>" target="_blank" rel="nofollow"><?php echo $titlebrand; ?></a></span>
+            <span class="footer-credit">Images: <a href="<?php echo $canonical_url; ?>" target="_blank" rel="nofollow"><?php echo $titlebrand; ?></a></span>
           </div>
         </div>
       </section>
