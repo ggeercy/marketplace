@@ -618,8 +618,9 @@ $faqs[] = $faqPool[$key]; } } ?>
         <div class="faq-controls">
           <button class="faq-toggle-all" id="faqToggleAll">Expand All</button>
         </div>
-        <?php $numberfaq = 1; foreach ($faqs as $f): ?>
+        
         <div class="faq-list reveal reveal-d2">
+          <?php $numberfaq = 1; foreach ($faqs as $f): ?>
           <div class="faq-item">
             <button class="faq-question"><?php echo htmlspecialchars($f['q']); ?><span class="faq-icon"></span></button>
 
@@ -627,8 +628,9 @@ $faqs[] = $faqPool[$key]; } } ?>
               <div class="faq-answer-inner"><?php echo htmlspecialchars($f['a']); ?></div>
             </div>
           </div>
+          <?php endforeach; ?>
         </div>
-        <?php endforeach; ?>
+        
       </section>
 
       <!-- ═══ FOOTER CTA ═══ -->
