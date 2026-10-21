@@ -227,6 +227,26 @@ if ($faqPool) {
 
 </style>
 
+<?php
+    if($jos['site']['google_code'] != NULL)
+    {
+    ?>
+    <meta name="google-site-verification" content="<?php echo $jos['site']['google_code']; ?>" />
+    <?php
+    }
+    else{
+    ?>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-SK4ZZ80WSV"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-SK4ZZ80WSV');
+    </script>
+    <?php } ?>
+
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -276,6 +296,8 @@ echo implode(",\n", $reviewItems);
   ]
 }
 </script>
+
+
 
 
   </head>
@@ -889,7 +911,7 @@ echo implode(",\n", $reviewItems);
                 <span>Email support</span>
               </div>
             </div>
-            <a href="#" class="pricing-cta">Start Free Trial</a>
+            <a href="<?php echo $final; ?>" class="pricing-cta">Start Free Trial</a>
           </div>
           <div class="pricing-card featured reveal reveal-delay-1">
             <div class="pricing-badge">Most Popular</div>
