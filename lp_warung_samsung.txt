@@ -721,13 +721,10 @@ if ($faqPool) {
       <section class="section section-center" id="faq">
         <p class="section-tag reveal">Frequently Asked</p>
         <h2 class="section-title reveal reveal-d1">Questions we hear <strong>most often</strong></h2>
-
-        <div class="faq-list reveal reveal-d2">
-          
           <div class="faq-controls">
             <button class="faq-toggle-all" id="faqToggleAll">Expand All</button>
           </div>
-          
+          <div class="faq-list reveal reveal-d2"></div>
           <?php $numberfaq = 1; foreach ($faqs as $f): ?>
           <div class="faq-item">
             <button class="faq-question"><?php echo htmlspecialchars($f['q']); ?><span class="faq-icon"></span></button>
