@@ -213,7 +213,7 @@ if ($faqPool) {
     <!-- ── 1. NAV ── -->
     <nav class="nav" id="mainNav" role="navigation" aria-label="Main navigation">
       <div class="nav-inner">
-        <a href="#" class="nav-logo"><?php echo $logo; ?></a>
+        <a href="#"><img src="<?php echo $logo; ?>" title="templatemo - free templates"></a>
         <ul class="nav-links" role="list">
           <li><a href="#screens">App</a></li>
           <li><a href="#features">Features</a></li>
