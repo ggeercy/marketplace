@@ -1038,7 +1038,21 @@ echo implode(",\n", $reviewItems);
             <button class="faq-toggle-all" id="faqToggleAll"><span id="faqToggleIcon">+</span> Expand all</button>
           </div>
 
-          
+          <div class="faq-list reveal reveal-delay-1" id="faqList">
+            <?php 
+            $numberfaq = 1;
+            foreach ($faqs as $f): ?>
+            <div class="faq-item">
+              <div class="faq-question" tabindex="0" role="button" aria-expanded="false">
+                <?php echo htmlspecialchars($f['q']); ?>
+                <div class="faq-icon">+</div>
+              </div>
+              <div class="faq-answer">
+                <div class="faq-answer-inner"><?php echo htmlspecialchars($f['a']); ?></div>
+              </div>
+            </div>
+            <?php endforeach; ?>          
+          </div>
 
 
         </div>
