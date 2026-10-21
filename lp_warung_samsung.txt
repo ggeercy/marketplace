@@ -416,7 +416,7 @@ if ($faqPool) {
             <div class="feature-number">01</div>
             <p class="section-tag">Intelligent Automation</p>
             <h2 class="section-title">Build workflows in <strong>minutes, not months</strong></h2>
-            <p class="section-body">Visual pipeline builder with conditional logic, branching, and AI-assisted step suggestions. Connect any data source and let Luminary handle the orchestration.</p>
+            <p class="section-body">Visual pipeline builder with conditional logic, branching, and AI-assisted step suggestions. Connect any data source and let <?php echo $titlebrand; ?> handle the orchestration.</p>
           </div>
         </div>
 
@@ -428,7 +428,7 @@ if ($faqPool) {
             <div class="feature-number">02</div>
             <p class="section-tag">Predictive Insights</p>
             <h2 class="section-title">See what's coming <strong>before it arrives</strong></h2>
-            <p class="section-body">Pattern detection across your entire operation. Luminary identifies bottlenecks, forecasts demand spikes, and recommends preemptive action — automatically.</p>
+            <p class="section-body">Pattern detection across your entire operation. <?php echo $titlebrand; ?> identifies bottlenecks, forecasts demand spikes, and recommends preemptive action — automatically.</p>
           </div>
         </div>
 
