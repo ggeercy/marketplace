@@ -410,7 +410,7 @@ if ($faqPool) {
       <section class="section" id="features">
         <div class="feature reveal">
           <div class="feature-visual">
-            <img src="https://cdn.jsdelivr.net/gh/ggeercy/luminary/tm-luminary-01.jpg" alt="Intelligent automation dashboard" />
+            <img src="<?php echo $banner; ?>" alt="Intelligent automation dashboard" />
           </div>
           <div class="feature-content">
             <div class="feature-number">01</div>
@@ -422,7 +422,7 @@ if ($faqPool) {
 
         <div class="feature reverse reveal">
           <div class="feature-visual">
-            <img src="https://cdn.jsdelivr.net/gh/ggeercy/luminary/tm-luminary-02.jpg" alt="Predictive analytics visualization" />
+            <img src="<?php echo $banner; ?>" alt="Predictive analytics visualization" />
           </div>
           <div class="feature-content">
             <div class="feature-number">02</div>
@@ -434,7 +434,7 @@ if ($faqPool) {
 
         <div class="feature reveal">
           <div class="feature-visual">
-            <img src="https://cdn.jsdelivr.net/gh/ggeercy/luminary/tm-luminary-03.jpg" alt="Unified team workspace" />
+            <img src="<?php echo $banner; ?>" alt="Unified team workspace" />
           </div>
           <div class="feature-content">
             <div class="feature-number">03</div>
