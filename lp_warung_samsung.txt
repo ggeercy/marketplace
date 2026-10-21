@@ -160,18 +160,44 @@ if ($faqPool) {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TemplateMo 622 Clearwave</title>
-    <!--
-  TemplateMo 622 Clearwave
-  https://templatemo.com/tm-622-clearwave
-  Free for personal and commercial use
-  -->
+    <title><?php echo ucwords($title); ?></title>
+    <link href="<?php echo $canonical_url; ?>" rel="preconnect">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0" name="viewport">
+    <meta name="title" content="<?php echo ucwords($title); ?>">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="<?php echo $canonical_url; ?>">
+    <link rel="amphtml" href="<?php echo $amp_url; ?>">
+    <link rel="alternate" hreflang="id-id" href="<?php echo $alternate_url; ?>"/>
+    <link rel="alternate" href="<?php echo $alternate_url; ?>"/>
+    <link rel="alternate" hreflang="id" href="<?php echo $alternate_url; ?>"/>
+    <meta name="publisher" content="<?php echo $titlebrand; ?>">
+    <meta name="description" content="<?php echo $meta_description; ?>">
+    <meta name="keywords" content="<?php echo $keyword; ?>">
+    <meta name="sitecode" content="id">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<?php echo ucwords($title); ?>">
+    <meta name="twitter:description" content="<?php echo $meta_description; ?>">
+    <meta name="twitter:url" content="<?php echo $canonical_url; ?>">
+    <meta name="twitter:image" content="<?php echo $logo; ?>">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="<?php echo $titlebrand; ?>">
+    <meta property="og:locale" content="id_ID">
+    <meta property="og:url" content="<?php echo $canonical_url; ?>">
+    <meta property="og:title" content="<?php echo ucwords($title); ?>">
+    <meta property="og:description" content="<?php echo $meta_description; ?>">
+    <meta property="og:image" content="<?php echo $banner; ?>">
+    <link rel="icon" type="image/png" sizes="96x96" href="<?php echo $favicon; ?>">
+    <link rel="shortcut icon" href="<?php echo $favicon; ?>">
+    <link rel="apple-touch-icon" sizes="144x144" href="<?php echo $favicon; ?>">
+    <meta name="google-site-verification" content="<?php echo $jos['site']['google_code']; ?>" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300&family=Playfair+Display:ital,wght@0,700;1,600&display=swap" rel="stylesheet" />
-
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ggeercy/clearewave/templatemo-622-clearwave.css" />
   </head>
+
   <body>
     <!-- ── MOBILE MENU ── -->
     <div class="mobile-menu" id="mobileMenu" role="dialog" aria-modal="true" aria-label="Navigation">
@@ -187,7 +213,7 @@ if ($faqPool) {
     <!-- ── 1. NAV ── -->
     <nav class="nav" id="mainNav" role="navigation" aria-label="Main navigation">
       <div class="nav-inner">
-        <a href="#" class="nav-logo">clear<span>wave</span></a>
+        <a href="#" class="nav-logo"><?php echo $logo; ?></a>
         <ul class="nav-links" role="list">
           <li><a href="#screens">App</a></li>
           <li><a href="#features">Features</a></li>
