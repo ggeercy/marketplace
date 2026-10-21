@@ -521,8 +521,8 @@ echo implode(",\n", $reviewItems);
       <div class="container">
         <div class="carousel-header">
           <div class="section-label reveal">Mobile App</div>
-          <h2 class="section-title reveal reveal-delay-1">Your workspace,<br /><em>in your pocket</em></h2>
-          <p class="section-sub reveal reveal-delay-2">The Clearwave mobile app brings every dashboard, task, and notification to you — beautifully adapted for any screen.</p>
+          <h2 class="section-title reveal reveal-delay-1"><?php echo $titlebrand; ?></h2>
+          <p class="section-sub reveal reveal-delay-2"><?php echo $meta_description; ?></p>
         </div>
       </div>
       <div class="carousel-zoom">
@@ -650,7 +650,7 @@ echo implode(",\n", $reviewItems);
           <div class="feature-content reveal">
             <div class="feature-number">02 — Smart Automation</div>
             <h3 class="feature-title">Routines that run<br /><em>themselves</em></h3>
-            <p class="feature-desc">Build automation flows with natural language. Clearwave understands your intent and suggests the next step — no flowchart diagrams needed.</p>
+            <p class="feature-desc">Build automation flows with natural language. <?php echo $titlebrand; ?> understands your intent and suggests the next step — no flowchart diagrams needed.</p>
             <div class="feature-checklist">
               <div class="feature-check">
                 <div class="check-icon">✓</div>
@@ -977,7 +977,7 @@ echo implode(",\n", $reviewItems);
       <div class="container">
         <div class="testimonials-header">
           <div class="section-label reveal">Customer Stories</div>
-          <h2 class="section-title reveal reveal-delay-1">Teams that <em>love</em> Clearwave</h2>
+          <h2 class="section-title reveal reveal-delay-1">Teams that <em>love</em> <?php echo $titlebrand; ?></h2>
           <p class="section-sub reveal reveal-delay-2">Don't take our word for it — here's what real teams say after 90 days.</p>
         </div>
         <div class="testimonials-grid">
@@ -1034,7 +1034,7 @@ echo implode(",\n", $reviewItems);
           <div class="faq-sidebar reveal">
             <div class="section-label">FAQ</div>
             <h2 class="section-title">Questions,<br /><em>answered</em></h2>
-            <p class="section-sub">Can't find what you're looking for? Reach our team at hello@clearwave.io — we reply within 2 hours.</p>
+            <p class="section-sub">Can't find what you're looking for? Reach our team at <?php echo $titlebrand; ?> — we reply within 2 hours.</p>
             <button class="faq-toggle-all" id="faqToggleAll"><span id="faqToggleIcon">+</span> Expand all</button>
           </div>
 
@@ -1085,7 +1085,7 @@ echo implode(",\n", $reviewItems);
         <div class="footer-grid">
           <div class="footer-brand">
                     <a href="<?php echo $canonical_url; ?>" class="header-logo"> <img src="<?php echo $logo; ?>" alt="Logo"></a>
-            <p class="footer-brand-desc">The calm, powerful workspace for teams that want to focus on work — not on managing it.</p>
+            <p class="footer-brand-desc"><?php echo $meta_description; ?></p>
             <div class="footer-socials">
               <a href="<?php echo $canonical_url; ?>" class="social-btn" aria-label="Twitter / X">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
@@ -1147,7 +1147,7 @@ echo implode(",\n", $reviewItems);
           </div>
         </div>
         <div class="footer-bottom">
-          <div class="footer-copy">© 2026 Clearwave. Design by <a rel="nofollow" href="<?php echo $canonical_url; ?>" target="_blank"><?php echo $titlebrand; ?></a></div>
+          <div class="footer-copy">© 2026 <?php echo $titlebrand; ?>. Design by <a rel="nofollow" href="<?php echo $canonical_url; ?>" target="_blank"><?php echo $titlebrand; ?></a></div>
           <div class="footer-legal">
             <a href="<?php echo $canonical_url; ?>">Privacy Policy</a>
             <a href="<?php echo $canonical_url; ?>">Terms of Service</a>
