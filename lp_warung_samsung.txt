@@ -1037,8 +1037,8 @@ echo implode(",\n", $reviewItems);
             <p class="section-sub">Can't find what you're looking for? Reach our team at hello@clearwave.io — we reply within 2 hours.</p>
             <button class="faq-toggle-all" id="faqToggleAll"><span id="faqToggleIcon">+</span> Expand all</button>
           </div>
-          <div class="faq-list reveal reveal-delay-1" id="faqList">
 
+          <div class="faq-list reveal reveal-delay-1" id="faqList">
             <?php 
             $numberfaq = 1;
             foreach ($faqs as $f): ?>
@@ -1051,8 +1051,7 @@ echo implode(",\n", $reviewItems);
                 <div class="faq-answer-inner"><?php echo htmlspecialchars($f['a']); ?</div>
               </div>
             </div>
-            <?php endforeach; ?>
-            
+            <?php endforeach; ?>          
           </div>
         </div>
       </div>
