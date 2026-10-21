@@ -196,6 +196,30 @@ if ($faqPool) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300&family=Playfair+Display:ital,wght@0,700;1,600&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ggeercy/clearewave/templatemo-622-clearwave.css" />
+  
+  
+    
+<style>
+
+  .header-logo {
+    display: flex;
+    align-items: center;
+    height: 80px; /* sesuaikan dengan tinggi header */
+    padding: 10px 0;
+    box-sizing: border-box;
+}
+
+.header-logo img {
+    display: block;
+    max-height: 100%;
+    max-width: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+}
+
+</style>
+  
   </head>
 
   <body>
@@ -213,7 +237,7 @@ if ($faqPool) {
     <!-- ── 1. NAV ── -->
     <nav class="nav" id="mainNav" role="navigation" aria-label="Main navigation">
       <div class="nav-inner">
-        <a href="#"><img src="<?php echo $logo; ?>" title="templatemo - free templates"></a>
+        <a href="#" class="header-logo"> <img src="<?php echo $logo; ?>" alt="Logo"></a>
         <ul class="nav-links" role="list">
           <li><a href="#screens">App</a></li>
           <li><a href="#features">Features</a></li>
