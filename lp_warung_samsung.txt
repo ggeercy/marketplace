@@ -621,7 +621,7 @@ $faqs[] = $faqPool[$key]; } } ?>
         </div>
 
         <div class="faq-list reveal reveal-d2">
-          <?php foreach ($faqs as $f): ?>
+          <?php $numberfaq = 1; foreach ($faqs as $f): ?>
           <div class="faq-item">
             <button class="faq-question"><?php echo htmlspecialchars($f['q']); ?><span class="faq-icon"></span></button>
             <div class="faq-answer">
