@@ -161,6 +161,9 @@ if ($faqPool) {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><?php echo ucwords($title); ?></title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ggeercy/luminary/templatemo-621-luminary-style.css" />
     <link href="<?php echo $canonical_url; ?>" rel="preconnect">
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
     <meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0" name="viewport">
@@ -192,993 +195,617 @@ if ($faqPool) {
     <link rel="apple-touch-icon" sizes="144x144" href="<?php echo $favicon; ?>">
     <meta name="google-site-verification" content="<?php echo $jos['site']['google_code']; ?>" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300&family=Playfair+Display:ital,wght@0,700;1,600&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ggeercy/clearewave/templatemo-622-clearwave.css" />
-  
-  
-    
 <style>
+      .header-logo {
+        display: flex;
+        align-items: center;
+        height: 80px; /* sesuaikan dengan tinggi header */
+        padding: 10px 0;
+        box-sizing: border-box;
+      }
 
-  .header-logo {
-    display: flex;
-    align-items: center;
-    height: 80px; /* sesuaikan dengan tinggi header */
-    padding: 10px 0;
-    box-sizing: border-box;
-}
+      .header-logo img {
+        display: block;
+        max-height: 100%;
+        max-width: 100%;
+        width: auto;
+        height: auto;
+        object-fit: contain;
+      }
 
-.header-logo img {
-    display: block;
-    max-height: 100%;
-    max-width: 100%;
-    width: auto;
-    height: auto;
-    object-fit: contain;
-}
+      .hero-banner {
+        display: block;
+        width: 100%;
+        height: auto;
+        border-radius: 20px;
+      }
+    </style>
 
-.hero-banner {
-    display: block;
-    width: 100%;
-    height: auto;
-    border-radius: 20px;
-}
-
-</style>
-
-<?php
-    if($jos['site']['google_code'] != NULL)
-    {
-    ?>
+    <?php if($jos['site']['google_code'] != NULL) { ?>
     <meta name="google-site-verification" content="<?php echo $jos['site']['google_code']; ?>" />
-    <?php
-    }
-    else{
-    ?>
+    <?php } else{ ?>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-SK4ZZ80WSV"></script>
     <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
 
-    gtag('config', 'G-SK4ZZ80WSV');
+      gtag('config', 'G-SK4ZZ80WSV');
     </script>
     <?php } ?>
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "@id": "<?php echo $canonical_url; ?>#faq",
-  "mainEntity": [
-    
-  <?php
-$faqItems = [];
-foreach ($faqs as $f) {
-    $faqItems[] = '    {
-      "@type":"Question",
-      "name":"' . htmlspecialchars($f['q']) . '",
-      "acceptedAnswer":{
-        "@type":"Answer",
-        "text":"' . htmlspecialchars($f['a']) . '"
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "@id": "<?php echo $canonical_url; ?>#faq",
+        "mainEntity": [
+
+        <?php
+      $faqItems = [];
+      foreach ($faqs as $f) {
+          $faqItems[] = '    {
+            "@type":"Question",
+            "name":"' . htmlspecialchars($f['q']) . '",
+            "acceptedAnswer":{
+              "@type":"Answer",
+              "text":"' . htmlspecialchars($f['a']) . '"
+            }
+          }';
       }
-    }';
-}
-echo implode(",\n", $faqItems);
-?>
-    
-  ]
-}
-</script>
+      echo implode(",\n", $faqItems);
+      ?>
 
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "review",
-  "@id": "<?php echo $canonical_url; ?>#faq",
-  "mainEntity": [
-    
-  <?php
-$reviewItems = [];
-foreach ($reviews as $r) {
-    $reviewItems[] = '        {
-                "@type":"Review",
-                "author":{"@type":"Person","name":"' . htmlspecialchars($r['name']) . '"},
-                "reviewRating":{"@type":"Rating","ratingValue":"5","bestRating":"5"},
-                "reviewBody":"' . htmlspecialchars($r['quote']) . '"
-              }';
-}
-echo implode(",\n", $reviewItems);
-?>  
-    
-  ]
-}
-</script>
+        ]
+      }
+    </script>
 
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "review",
+        "@id": "<?php echo $canonical_url; ?>#faq",
+        "mainEntity": [
 
+        <?php
+      $reviewItems = [];
+      foreach ($reviews as $r) {
+          $reviewItems[] = '        {
+                      "@type":"Review",
+                      "author":{"@type":"Person","name":"' . htmlspecialchars($r['name']) . '"},
+                      "reviewRating":{"@type":"Rating","ratingValue":"5","bestRating":"5"},
+                      "reviewBody":"' . htmlspecialchars($r['quote']) . '"
+                    }';
+      }
+      echo implode(",\n", $reviewItems);
+      ?>
+
+        ]
+      }
+    </script>
 
 
   </head>
 
-  <body>
-    <!-- ── MOBILE MENU ── -->
-    <div class="mobile-menu" id="mobileMenu" role="dialog" aria-modal="true" aria-label="Navigation">
-      <a href="#screens">App</a>
-      <a href="#features">Features</a>
-      <a href="#pricing">Pricing</a>
-      <a href="#testimonials">Reviews</a>
-      <a href="#integrations">Integrations</a>
-      <a href="#faq">FAQ</a>
-      <a href="<?php echo $final; ?>" class="mobile-cta btn-primary">Start Free Trial</a>
-    </div>
 
-    <!-- ── 1. NAV ── -->
-    <nav class="nav" id="mainNav" role="navigation" aria-label="Main navigation">
-      <div class="nav-inner">
-        <a href="<?php echo $canonical_url; ?>" class="header-logo"> <img src="<?php echo $logo; ?>" alt="Logo"></a>
-        <ul class="nav-links" role="list">
-          <li><a href="#screens">App</a></li>
-          <li><a href="#features">Features</a></li>
-          <li><a href="#pricing">Pricing</a></li>
-          <li><a href="#testimonials">Reviews</a></li>
-          <li><a href="#faq">FAQ</a></li>
-        </ul>
-        <div class="nav-cta">
-          <a href="<?php echo $final; ?>" class="btn-ghost">Sign in</a>
-          <a href="<?php echo $final; ?>" class="btn-primary">Start Free Trial</a>
-        </div>
-        <button class="nav-hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span><span></span></button>
-      </div>
+  <body>
+    <svg class="grain" width="100%" height="100%">
+      <filter id="n">
+        <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="5" stitchTiles="stitch" />
+        <feColorMatrix type="saturate" values="0" />
+      </filter>
+      <rect width="100%" height="100%" filter="url(#n)" />
+    </svg>
+    <div class="atmosphere"></div>
+
+    <!-- Nav -->
+    <nav class="top-nav" id="topNav">
+      <a href="<?php echo $canonical_url; ?>" class="header-logo"> <img src="<?php echo $logo; ?>" alt="Logo" /></a>
+      <ul class="nav-links">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#testimonials">Testimonials</a></li>
+        <li><a href="#integrations">Integrations</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+      <a href="#pricing" class="nav-cta">Get Started</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false"><span class="toggle-bar"></span><span class="toggle-bar"></span></button>
     </nav>
 
-    <!-- ── 2. HERO ── -->
-    <section class="hero">
-      <div class="container">
-        <div class="hero-inner">
-          <div class="hero-content">
-            <div class="hero-badge reveal">
-              <div class="hero-badge-dot">✦</div>
-              <span>Rated <strong>#1 Productivity SaaS</strong> of 2024</span>
-            </div>
-            <h1 class="hero-title reveal reveal-delay-1"><?php echo ucwords($title); ?></h1>
-            <p class="hero-sub reveal reveal-delay-2"><?php echo $meta_description; ?></p>
-            <div class="hero-actions reveal reveal-delay-3">
-              <a href="<?php echo $final; ?>" class="btn-primary-lg">
-                Start Free — No Card
-                <span class="btn-arrow">→</span>
-              </a>
-              <a href="<?php echo $final; ?>" class="btn-outline-lg"> <span>▶</span> See it in action </a>
-            </div>
-            <div class="hero-trust reveal reveal-delay-4">
-              <div class="trust-item">
-                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-                  />
-                </svg>
-                SOC 2 Certified
-              </div>
-              <div class="trust-divider"></div>
-              <div class="trust-item">
-                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
-                99.9% Uptime SLA
-              </div>
-              <div class="trust-divider"></div>
-              <div class="trust-item">
-                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                </svg>
-                50k+ Teams
-              </div>
-            </div>
-          </div>
-          <div class="hero-visual reveal reveal-delay-2">
-          <img src="<?php echo $banner; ?>" alt="Banner" class="hero-banner"> 
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+      <div class="mobile-menu-inner">
+        <div class="mobile-menu-links">
+          <a href="<?php echo $canonical_url; ?>" class="mobile-menu-link" data-index="01">Home</a>
+          <a href="#features" class="mobile-menu-link" data-index="02">Features</a>
+          <a href="#pricing" class="mobile-menu-link" data-index="03">Pricing</a>
+          <a href="#testimonials" class="mobile-menu-link" data-index="04">Testimonials</a>
+          <a href="#integrations" class="mobile-menu-link" data-index="05">Integrations</a>
+          <a href="#faq" class="mobile-menu-link" data-index="06">FAQ</a>
+          <a href="#cta" class="mobile-menu-link" data-index="07">Get Started</a>
         </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ── 3. LOGO TICKER ── -->
-    <div class="ticker-section">
-      <div class="ticker-label">Trusted by forward-thinking teams at</div>
-      <div class="ticker-track-wrap">
-        <div class="ticker-track">
-          <!-- Set 1 -->
-          <div class="ticker-item">
-            <div class="ticker-item-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--accent)">
-                <rect x="3" y="3" width="7" height="7" rx="1" />
-                <rect x="14" y="3" width="7" height="7" rx="1" />
-                <rect x="3" y="14" width="7" height="7" rx="1" />
-                <rect x="14" y="14" width="7" height="7" rx="1" />
-              </svg>
-            </div>
-            Nexaflow
-          </div>
-          <div class="ticker-dot"></div>
-          <div class="ticker-item">
-            <div class="ticker-item-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--accent)">
-                <circle cx="12" cy="12" r="9" />
-                <path d="M12 7v5l3 3" stroke="#fff" stroke-width="2" stroke-linecap="round" />
-              </svg>
-            </div>
-            Meridian
-          </div>
-          <div class="ticker-dot"></div>
-          <div class="ticker-item">
-            <div class="ticker-item-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--accent)"><polygon points="12,2 22,20 2,20" /></svg>
-            </div>
-            Vanta Labs
-          </div>
-          <div class="ticker-dot"></div>
-          <div class="ticker-item">
-            <div class="ticker-item-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--accent)"><path d="M4 4h16v12H4z M8 20h8" /></svg>
-            </div>
-            Pulsar HQ
-          </div>
-          <div class="ticker-dot"></div>
-          <div class="ticker-item">
-            <div class="ticker-item-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--accent)">
-                <circle cx="12" cy="7" r="4" />
-                <path d="M4 21c0-4 3.6-7 8-7s8 3 8 7" />
-              </svg>
-            </div>
-            Arclight
-          </div>
-          <div class="ticker-dot"></div>
-          <div class="ticker-item">
-            <div class="ticker-item-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--accent)">
-                <rect x="2" y="7" width="20" height="14" rx="2" />
-                <path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2" />
-              </svg>
-            </div>
-            Korova Co.
-          </div>
-          <div class="ticker-dot"></div>
-          <div class="ticker-item">
-            <div class="ticker-item-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--accent)"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" /></svg>
-            </div>
-            Stratum IO
-          </div>
-          <div class="ticker-dot"></div>
-          <div class="ticker-item">
-            <div class="ticker-item-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--accent)"><path d="M22 12h-4l-3 9L9 3l-3 9H2" /></svg>
-            </div>
-            Lumiq
-          </div>
-          <div class="ticker-dot"></div>
-          <!-- Set 2 (duplicate for seamless loop) -->
-          <div class="ticker-item">
-            <div class="ticker-item-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--accent)">
-                <rect x="3" y="3" width="7" height="7" rx="1" />
-                <rect x="14" y="3" width="7" height="7" rx="1" />
-                <rect x="3" y="14" width="7" height="7" rx="1" />
-                <rect x="14" y="14" width="7" height="7" rx="1" />
-              </svg>
-            </div>
-            Nexaflow
-          </div>
-          <div class="ticker-dot"></div>
-          <div class="ticker-item">
-            <div class="ticker-item-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--accent)">
-                <circle cx="12" cy="12" r="9" />
-                <path d="M12 7v5l3 3" stroke="#fff" stroke-width="2" stroke-linecap="round" />
-              </svg>
-            </div>
-            Meridian
-          </div>
-          <div class="ticker-dot"></div>
-          <div class="ticker-item">
-            <div class="ticker-item-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--accent)"><polygon points="12,2 22,20 2,20" /></svg>
-            </div>
-            Vanta Labs
-          </div>
-          <div class="ticker-dot"></div>
-          <div class="ticker-item">
-            <div class="ticker-item-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--accent)"><path d="M4 4h16v12H4z M8 20h8" /></svg>
-            </div>
-            Pulsar HQ
-          </div>
-          <div class="ticker-dot"></div>
-          <div class="ticker-item">
-            <div class="ticker-item-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--accent)">
-                <circle cx="12" cy="7" r="4" />
-                <path d="M4 21c0-4 3.6-7 8-7s8 3 8 7" />
-              </svg>
-            </div>
-            Arclight
-          </div>
-          <div class="ticker-dot"></div>
-          <div class="ticker-item">
-            <div class="ticker-item-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--accent)">
-                <rect x="2" y="7" width="20" height="14" rx="2" />
-                <path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2" />
-              </svg>
-            </div>
-            Korova Co.
-          </div>
-          <div class="ticker-dot"></div>
-          <div class="ticker-item">
-            <div class="ticker-item-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--accent)"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" /></svg>
-            </div>
-            Stratum IO
-          </div>
-          <div class="ticker-dot"></div>
-          <div class="ticker-item">
-            <div class="ticker-item-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--accent)"><path d="M22 12h-4l-3 9L9 3l-3 9H2" /></svg>
-            </div>
-            Lumiq
-          </div>
-          <div class="ticker-dot"></div>
+        <div class="mobile-menu-footer">
+          <a href="<?php echo $canonical_url; ?>">Privacy</a>
+          <a href="<?php echo $canonical_url; ?>">Terms</a>
+          <a href="<?php echo $canonical_url; ?>">Contact</a>
         </div>
       </div>
     </div>
 
-    <!-- ── 5. 3D PHONE CAROUSEL ── -->
-    <section class="carousel-section" id="screens">
-      <div class="container">
-        <div class="carousel-header">
-          <div class="section-label reveal">Mobile App</div>
-          <h2 class="section-title reveal reveal-delay-1"><?php echo $titlebrand; ?></h2>
-          <p class="section-sub reveal reveal-delay-2"><?php echo $meta_description; ?></p>
+    <!-- Side Panels -->
+    <nav class="side-panel left" aria-label="Scroll indicators">
+      <span class="side-label">Scroll</span>
+      <div class="side-track"><div class="side-track-fill" id="leftTrack"></div></div>
+      <div class="side-dot active"></div>
+      <div class="side-dot"></div>
+      <div class="side-dot"></div>
+      <div class="side-dot"></div>
+      <div class="side-dot"></div>
+      <div class="side-dot"></div>
+      <div class="side-readout" id="scrollPct">00</div>
+    </nav>
+
+    <nav class="side-panel right" aria-label="Status indicators">
+      <span class="side-label">Status</span>
+      <div class="side-track"><div class="side-track-fill" id="rightTrack"></div></div>
+      <div class="side-dot"></div>
+      <div class="side-dot"></div>
+      <div class="side-dot active"></div>
+      <div class="side-dot"></div>
+      <div class="side-dot"></div>
+      <div class="side-dot"></div>
+      <div class="side-readout">LMN</div>
+    </nav>
+
+    <main class="main">
+      <!-- ═══ HERO ═══ -->
+      <section class="hero" id="hero">
+        <div class="hero-grid"></div>
+        <div class="hero-badge">
+          <div class="hero-badge-dot"></div>
+          <span>Now in Public Beta</span>
+        </div>
+        <h1>Workflows that<br /><em>think ahead</em></h1>
+        <p class="hero-sub">Luminary connects your tools, automates the repetitive, and surfaces insights before you know to ask. Built for teams that refuse to settle.</p>
+        <div class="hero-ctas">
+          <a href="#pricing" class="btn-primary">Start Free Trial</a>
+          <a href="#features" class="btn-secondary">See How It Works</a>
+        </div>
+        <div class="hero-metrics">
+          <div class="metric">
+            <div class="metric-value"><span class="counter" data-target="99.9" data-decimals="1">0.0</span><span>%</span></div>
+            <div class="metric-label">Uptime SLA</div>
+          </div>
+          <div class="metric">
+            <div class="metric-value"><span class="counter" data-target="4200" data-decimals="0">0</span><span>+</span></div>
+            <div class="metric-label">Teams Active</div>
+          </div>
+          <div class="metric">
+            <div class="metric-value"><span class="counter" data-target="12" data-decimals="0">0</span><span>ms</span></div>
+            <div class="metric-label">Avg Latency</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ LOGO TICKER ═══ -->
+      <div class="logo-ticker reveal">
+        <div class="logo-ticker-label">Trusted by forward-thinking teams</div>
+        <div class="ticker-track" id="tickerTrack">
+          <span class="ticker-item">Meridian Labs</span><span class="ticker-dot"></span> <span class="ticker-item">Vertex Capital</span><span class="ticker-dot"></span> <span class="ticker-item">Arcline Systems</span
+          ><span class="ticker-dot"></span> <span class="ticker-item">Nova Engineering</span><span class="ticker-dot"></span> <span class="ticker-item">Prism Analytics</span><span class="ticker-dot"></span>
+          <span class="ticker-item">Helix Health</span><span class="ticker-dot"></span> <span class="ticker-item">Stratos AI</span><span class="ticker-dot"></span> <span class="ticker-item">Cobalt Finance</span
+          ><span class="ticker-dot"></span>
+          <!-- Duplicated for seamless loop -->
+          <span class="ticker-item">Meridian Labs</span><span class="ticker-dot"></span> <span class="ticker-item">Vertex Capital</span><span class="ticker-dot"></span> <span class="ticker-item">Arcline Systems</span
+          ><span class="ticker-dot"></span> <span class="ticker-item">Nova Engineering</span><span class="ticker-dot"></span> <span class="ticker-item">Prism Analytics</span><span class="ticker-dot"></span>
+          <span class="ticker-item">Helix Health</span><span class="ticker-dot"></span> <span class="ticker-item">Stratos AI</span><span class="ticker-dot"></span> <span class="ticker-item">Cobalt Finance</span
+          ><span class="ticker-dot"></span>
         </div>
       </div>
-      <div class="carousel-zoom">
-        <button class="zoom-btn" id="zoomOut" aria-label="Zoom out">−</button>
-        <div class="zoom-pips" id="zoomPips"></div>
-        <button class="zoom-btn" id="zoomIn" aria-label="Zoom in">+</button>
-      </div>
 
-      <div class="carousel-stage" id="carouselStage">
-        <div class="carousel-track" id="carouselTrack">
-          <!-- Phone screens: 5 different screen designs + extras for looping -->
-          <!-- We will render 7 cards and cycle positions -->
-
-          <div class="phone-card" data-pos="left2" data-index="0">
-            <div class="phone-shell">
-              <div class="phone-screen">
-                <img src="https://cdn.jsdelivr.net/gh/ggeercy/clearewave/tm-622-screen-01.jpg" alt="App screen 1" style="width: 100%; height: 100%; object-fit: cover; display: block" loading="lazy" />
-              </div>
-            </div>
+      <!-- ═══ FEATURES ═══ -->
+      <section class="section" id="features">
+        <div class="feature reveal">
+          <div class="feature-visual">
+            <img src="https://cdn.jsdelivr.net/gh/ggeercy/luminary/tm-luminary-01.jpg" alt="Intelligent automation dashboard" />
           </div>
-
-          <div class="phone-card" data-pos="left1" data-index="1">
-            <div class="phone-shell">
-              <div class="phone-screen">
-                <img src="https://cdn.jsdelivr.net/gh/ggeercy/clearewave/tm-622-screen-02.jpg" alt="App screen 2" style="width: 100%; height: 100%; object-fit: cover; display: block" loading="lazy" />
-              </div>
-            </div>
-          </div>
-
-          <div class="phone-card" data-pos="center" data-index="2">
-            <div class="phone-shell">
-              <div class="phone-screen">
-                <img src="https://cdn.jsdelivr.net/gh/ggeercy/clearewave/tm-622-screen-03.jpg" alt="App screen 3" style="width: 100%; height: 100%; object-fit: cover; display: block" loading="lazy" />
-              </div>
-            </div>
-          </div>
-
-          <div class="phone-card" data-pos="right1" data-index="3">
-            <div class="phone-shell">
-              <div class="phone-screen">
-                <img src="https://cdn.jsdelivr.net/gh/ggeercy/clearewave/tm-622-screen-04.jpg" alt="App screen 4" style="width: 100%; height: 100%; object-fit: cover; display: block" loading="lazy" />
-              </div>
-            </div>
-          </div>
-
-          <div class="phone-card" data-pos="right2" data-index="4">
-            <div class="phone-shell">
-              <div class="phone-screen">
-                <img src="https://cdn.jsdelivr.net/gh/ggeercy/clearewave/tm-622-screen-05.jpg" alt="App screen 5" style="width: 100%; height: 100%; object-fit: cover; display: block" loading="lazy" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div style="display: flex; align-items: center; justify-content: center; gap: 24px; width: 100%; margin-top: 48px">
-        <button class="carousel-btn" id="carouselPrev" aria-label="Previous screen">
-          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" /></svg>
-        </button>
-        <div class="carousel-dots" id="carouselDots"></div>
-        <button class="carousel-btn" id="carouselNext" aria-label="Next screen">
-          <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg>
-        </button>
-      </div>
-    </section>
-
-    <!-- ── 4. FEATURES ── -->
-    <section class="features-section" id="features">
-      <div class="container">
-        <div class="features-header">
-          <div class="section-label reveal">Platform Features</div>
-          <h2 class="section-title reveal reveal-delay-1"><?php echo ucwords($title); ?></h2>
-          <p class="section-sub reveal reveal-delay-2"><?php echo $meta_description; ?></p>
-        </div>
-
-        <!-- Feature 1 -->
-        <div class="feature-row">
-          <div class="feature-content reveal">
-            <div class="feature-number">01 — Unified Dashboard</div>
-            <h3 class="feature-title">Every metric, one calm surface</h3>
-            <p class="feature-desc">Pull data from any source into a single, composable view. Share live dashboards with stakeholders — no exports, no screenshots.</p>
-            <div class="feature-checklist">
-              <div class="feature-check">
-                <div class="check-icon">✓</div>
-                <span>Drag-and-drop widget builder</span>
-              </div>
-              <div class="feature-check">
-                <div class="check-icon">✓</div>
-                <span>Real-time data sync across all sources</span>
-              </div>
-              <div class="feature-check">
-                <div class="check-icon">✓</div>
-                <span>Role-based sharing with granular permissions</span>
-              </div>
-            </div>
-          </div>
-          <div class="feature-visual reveal reveal-delay-1">
-            <div class="feature-visual-inner">
-              <div class="fv-row">
-                <div class="fv-card">
-                  <div class="fv-card-label">Monthly Revenue</div>
-                  <div class="fv-card-val">$84.2k</div>
-                  <div class="fv-card-bar"><div class="fv-card-bar-fill" style="width: 72%"></div></div>
-                </div>
-                <div class="fv-card">
-                  <div class="fv-card-label">Active Users</div>
-                  <div class="fv-card-val">12,481</div>
-                  <div class="fv-card-bar"><div class="fv-card-bar-fill" style="width: 88%"></div></div>
-                </div>
-              </div>
-              <div class="fv-card">
-                <div class="fv-card-label">Recent Activity</div>
-                <div class="fv-list" style="margin-top: 8px">
-                  <div class="fv-list-item"><span class="fv-list-name">Q3 Report synced</span><span class="fv-pill green">Done</span></div>
-                  <div class="fv-list-item"><span class="fv-list-name">Team review pending</span><span class="fv-pill blue">Active</span></div>
-                  <div class="fv-list-item"><span class="fv-list-name">Analytics export</span><span class="fv-pill dim">Queued</span></div>
-                </div>
-              </div>
-            </div>
+          <div class="feature-content">
+            <div class="feature-number">01</div>
+            <p class="section-tag">Intelligent Automation</p>
+            <h2 class="section-title">Build workflows in <strong>minutes, not months</strong></h2>
+            <p class="section-body">Visual pipeline builder with conditional logic, branching, and AI-assisted step suggestions. Connect any data source and let Luminary handle the orchestration.</p>
           </div>
         </div>
 
-        <!-- Feature 2 -->
-        <div class="feature-row reverse">
-          <div class="feature-content reveal">
-            <div class="feature-number">02 — Smart Automation</div>
-            <h3 class="feature-title">Routines that run<br /><em>themselves</em></h3>
-            <p class="feature-desc">Build automation flows with natural language. <?php echo $titlebrand; ?> understands your intent and suggests the next step — no flowchart diagrams needed.</p>
-            <div class="feature-checklist">
-              <div class="feature-check">
-                <div class="check-icon">✓</div>
-                <span>Natural language automation builder</span>
-              </div>
-              <div class="feature-check">
-                <div class="check-icon">✓</div>
-                <span>500+ pre-built trigger templates</span>
-              </div>
-              <div class="feature-check">
-                <div class="check-icon">✓</div>
-                <span>Full audit trail for every action</span>
-              </div>
-            </div>
+        <div class="feature reverse reveal">
+          <div class="feature-visual">
+            <img src="https://cdn.jsdelivr.net/gh/ggeercy/luminary/tm-luminary-02.jpg" alt="Predictive analytics visualization" />
           </div>
-          <div class="feature-visual reveal reveal-delay-1">
-            <div class="feature-visual-inner">
-              <div class="fv-card">
-                <div class="fv-card-label">Active Automations</div>
-                <div class="fv-list" style="margin-top: 8px">
-                  <div class="fv-list-item"><span class="fv-list-name">Weekly digest → Slack</span><span class="fv-pill green">Running</span></div>
-                  <div class="fv-list-item"><span class="fv-list-name">Lead scored → Notify sales</span><span class="fv-pill green">Running</span></div>
-                  <div class="fv-list-item"><span class="fv-list-name">Invoice due → Alert CFO</span><span class="fv-pill blue">Active</span></div>
-                  <div class="fv-list-item"><span class="fv-list-name">Report sync → Drive</span><span class="fv-pill dim">Paused</span></div>
-                </div>
-              </div>
-              <div class="fv-row">
-                <div class="fv-card fv-wide">
-                  <div class="fv-card-label">Hours Saved This Month</div>
-                  <div class="fv-card-val">148h</div>
-                  <div class="fv-card-bar"><div class="fv-card-bar-fill" style="width: 91%"></div></div>
-                </div>
-                <div class="fv-card">
-                  <div class="fv-card-label">Flows</div>
-                  <div class="fv-card-val">24</div>
-                </div>
-              </div>
-            </div>
+          <div class="feature-content">
+            <div class="feature-number">02</div>
+            <p class="section-tag">Predictive Insights</p>
+            <h2 class="section-title">See what's coming <strong>before it arrives</strong></h2>
+            <p class="section-body">Pattern detection across your entire operation. Luminary identifies bottlenecks, forecasts demand spikes, and recommends preemptive action — automatically.</p>
           </div>
         </div>
 
-        <!-- Feature 3 -->
-        <div class="feature-row">
-          <div class="feature-content reveal">
-            <div class="feature-number">03 — Team Collaboration</div>
-            <h3 class="feature-title">Comments, context,<br />and <em>clarity</em></h3>
-            <p class="feature-desc">Annotate anything, assign tasks inline, and resolve conversations without switching tabs. The work and the discussion stay together.</p>
-            <div class="feature-checklist">
-              <div class="feature-check">
-                <div class="check-icon">✓</div>
-                <span>Inline comments on any data point</span>
-              </div>
-              <div class="feature-check">
-                <div class="check-icon">✓</div>
-                <span>Threaded task assignments</span>
-              </div>
-              <div class="feature-check">
-                <div class="check-icon">✓</div>
-                <span>Real-time presence and live cursors</span>
-              </div>
-            </div>
+        <div class="feature reveal">
+          <div class="feature-visual">
+            <img src="https://cdn.jsdelivr.net/gh/ggeercy/luminary/tm-luminary-03.jpg" alt="Unified team workspace" />
           </div>
-          <div class="feature-visual reveal reveal-delay-1">
-            <div class="feature-visual-inner">
-              <div class="fv-row">
-                <div class="fv-card fv-wide">
-                  <div class="fv-card-label">Online Now</div>
-                  <div style="display: flex; gap: -4px; margin-top: 6px">
-                    <div
-                      style="
-                        width: 28px;
-                        height: 28px;
-                        border-radius: 50%;
-                        background: var(--accent);
-                        border: 2px solid var(--surface);
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        font-size: 10px;
-                        font-weight: 700;
-                        color: #fff;
-                      "
-                    >
-                      A
-                    </div>
-                    <div
-                      style="
-                        width: 28px;
-                        height: 28px;
-                        border-radius: 50%;
-                        background: var(--accent-mid);
-                        border: 2px solid var(--surface);
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        font-size: 10px;
-                        font-weight: 700;
-                        color: #fff;
-                        margin-left: -6px;
-                      "
-                    >
-                      K
-                    </div>
-                    <div
-                      style="
-                        width: 28px;
-                        height: 28px;
-                        border-radius: 50%;
-                        background: #5a6b66;
-                        border: 2px solid var(--surface);
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        font-size: 10px;
-                        font-weight: 700;
-                        color: #fff;
-                        margin-left: -6px;
-                      "
-                    >
-                      M
-                    </div>
-                    <div
-                      style="
-                        width: 28px;
-                        height: 28px;
-                        border-radius: 50%;
-                        background: var(--bg-alt);
-                        border: 2px solid var(--surface);
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        font-size: 9px;
-                        color: var(--text-2);
-                        margin-left: -6px;
-                      "
-                    >
-                      +5
-                    </div>
+          <div class="feature-content">
+            <div class="feature-number">03</div>
+            <p class="section-tag">Unified Workspace</p>
+            <h2 class="section-title">One surface for <strong>everything that matters</strong></h2>
+            <p class="section-body">Dashboards, docs, and decisions in a single plane. No more toggling between twelve tabs. Your entire team's context, always within reach.</p>
+          </div>
+        </div>
+      </section>
+
+      <div class="silk-divider reveal"></div>
+
+      <!-- ═══ PRICING ═══ -->
+      <section class="section section-center" id="pricing">
+        <p class="section-tag reveal">Simple Pricing</p>
+        <h2 class="section-title reveal reveal-d1">Choose the plan that <strong>fits your scale</strong></h2>
+        <p class="section-body reveal reveal-d2">Start free. Upgrade when you're ready. No surprises, no hidden fees.</p>
+
+        <div class="pricing-toggle reveal reveal-d3">
+          <span class="pricing-toggle-label active" id="monthlyLabel">Monthly</span>
+          <div class="toggle-switch" id="pricingToggle" role="switch" aria-checked="false" tabindex="0"></div>
+          <span class="pricing-toggle-label" id="annualLabel">Annual</span>
+          <span class="save-badge" id="saveBadge">Save 30%</span>
+        </div>
+
+        <div class="pricing-grid">
+          <div class="pricing-card reveal reveal-d1">
+            <div class="pricing-badge">Popular</div>
+            <div class="pricing-tier">Starter</div>
+            <div class="pricing-prices">
+              <div class="price-option monthly active">
+                <div>
+                  <div class="price-label">Monthly</div>
+                  <div class="price-option-left">
+                    <span class="price-currency">$</span>
+                    <span class="price-amount">36</span>
+                    <span class="price-period">/mo</span>
                   </div>
                 </div>
-                <div class="fv-card">
-                  <div class="fv-card-label">Open Tasks</div>
-                  <div class="fv-card-val">37</div>
+                <div class="price-yearly">$432 /yr</div>
+              </div>
+              <div class="price-option annual">
+                <div>
+                  <div class="price-label">Annual</div>
+                  <div class="price-option-left">
+                    <span class="price-currency">$</span>
+                    <span class="price-amount">25</span>
+                    <span class="price-period">/mo</span>
+                  </div>
                 </div>
-              </div>
-              <div class="fv-card">
-                <div class="fv-card-label">Recent Comments</div>
-                <div class="fv-list" style="margin-top: 8px">
-                  <div class="fv-list-item"><span class="fv-list-name">Alex → Q3 chart updated</span><span class="fv-pill green">Resolved</span></div>
-                  <div class="fv-list-item"><span class="fv-list-name">Kim → Review needed</span><span class="fv-pill blue">Open</span></div>
-                  <div class="fv-list-item"><span class="fv-list-name">Maya → Approved & shipped</span><span class="fv-pill green">Done</span></div>
-                </div>
+                <div class="price-yearly">$300 /yr</div>
               </div>
             </div>
+            <p class="pricing-desc">For small teams getting started with workflow automation.</p>
+            <ul class="pricing-features">
+              <li>Up to 10 team members</li>
+              <li>50 automated workflows</li>
+              <li>Basic analytics dashboard</li>
+              <li>Email support</li>
+              <li>5 integrations</li>
+            </ul>
+            <a href="#" class="btn-secondary">Start Free Trial</a>
           </div>
-        </div>
-      </div>
-    </section>
 
-    <!-- ── 6. STATS ── -->
-    <section class="stats-section">
-      <div class="container">
-        <div class="stats-grid">
-          <div class="stat-card reveal">
-            <div class="stat-rule"></div>
-            <div class="stat-value"><span class="stat-num" data-target="50">0</span><span class="stat-suffix">k+</span></div>
-            <div class="stat-label">Teams Worldwide</div>
-            <div class="stat-sublabel">Across 80+ countries</div>
-          </div>
-          <div class="stat-card reveal reveal-delay-1">
-            <div class="stat-rule"></div>
-            <div class="stat-value"><span class="stat-num" data-target="34">0</span><span class="stat-suffix">%</span></div>
-            <div class="stat-label">Avg. Productivity Gain</div>
-            <div class="stat-sublabel">Measured in first 30 days</div>
-          </div>
-          <div class="stat-card reveal reveal-delay-2">
-            <div class="stat-rule"></div>
-            <div class="stat-value"><span class="stat-num" data-target="99" data-decimal="9">0</span><span class="stat-suffix">%</span></div>
-            <div class="stat-label">Uptime SLA</div>
-            <div class="stat-sublabel">Guaranteed and monitored</div>
-          </div>
-          <div class="stat-card reveal reveal-delay-3">
-            <div class="stat-rule"></div>
-            <div class="stat-value"><span class="stat-num" data-target="18">0</span><span class="stat-suffix">h</span></div>
-            <div class="stat-label">Saved Per Team Weekly</div>
-            <div class="stat-sublabel">On average across all plans</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ── 7. PRICING ── -->
-    <section class="pricing-section" id="pricing">
-      <div class="container">
-        <div class="pricing-header">
-          <div class="section-label reveal">Pricing</div>
-          <h2 class="section-title reveal reveal-delay-1">Simple, <em>transparent</em> pricing</h2>
-          <p class="section-sub reveal reveal-delay-2">No hidden fees. No surprise overages. Cancel anytime.</p>
-        </div>
-        <div class="pricing-toggle reveal">
-          <span class="toggle-label active" id="monthlyLabel">Monthly</span>
-          <div class="toggle-switch" id="pricingToggle" role="switch" aria-checked="false" tabindex="0" aria-label="Toggle annual billing"></div>
-          <span class="toggle-label" id="annualLabel">Annual</span>
-          <div class="toggle-badge">Save 35%</div>
-        </div>
-        <div class="pricing-grid">
-          <div class="pricing-card reveal">
-            <div class="pricing-tier">Starter</div>
-            <div class="pricing-price">
-              <span class="price-currency">$</span>
-              <span class="price-amount" id="price-starter">20</span>
-              <span class="price-period">&nbsp;/ mo</span>
-            </div>
-            <div class="price-annual-note" id="annual-note-starter">&nbsp;</div>
-            <p class="pricing-desc">For individuals and small teams getting started with structured workflows.</p>
-            <div class="pricing-divider"></div>
-            <div class="pricing-features">
-              <div class="pricing-feature">
-                <div class="pricing-check">✓</div>
-                <span>Up to 5 team members</span>
-              </div>
-              <div class="pricing-feature">
-                <div class="pricing-check">✓</div>
-                <span>10 active dashboards</span>
-              </div>
-              <div class="pricing-feature">
-                <div class="pricing-check">✓</div>
-                <span>Basic automations (50/mo)</span>
-              </div>
-              <div class="pricing-feature">
-                <div class="pricing-check">✓</div>
-                <span>7-day data history</span>
-              </div>
-              <div class="pricing-feature">
-                <div class="pricing-check">✓</div>
-                <span>Email support</span>
-              </div>
-            </div>
-            <a href="<?php echo $final; ?>" class="pricing-cta">Start Free Trial</a>
-          </div>
-          <div class="pricing-card featured reveal reveal-delay-1">
-            <div class="pricing-badge">Most Popular</div>
+          <div class="pricing-card featured reveal reveal-d2">
+            <div class="pricing-badge">Popular</div>
             <div class="pricing-tier">Professional</div>
-            <div class="pricing-price">
-              <span class="price-currency">$</span>
-              <span class="price-amount" id="price-pro">60</span>
-              <span class="price-period">&nbsp;/ mo</span>
-            </div>
-            <div class="price-annual-note" id="annual-note-pro">&nbsp;</div>
-            <p class="pricing-desc">For growing teams that need powerful automation and advanced reporting.</p>
-            <div class="pricing-divider"></div>
-            <div class="pricing-features">
-              <div class="pricing-feature">
-                <div class="pricing-check">✓</div>
-                <span>Up to 25 team members</span>
+            <div class="pricing-prices">
+              <div class="price-option monthly active">
+                <div>
+                  <div class="price-label">Monthly</div>
+                  <div class="price-option-left">
+                    <span class="price-currency">$</span>
+                    <span class="price-amount">80</span>
+                    <span class="price-period">/mo</span>
+                  </div>
+                </div>
+                <div class="price-yearly">$960 /yr</div>
               </div>
-              <div class="pricing-feature">
-                <div class="pricing-check">✓</div>
-                <span>Unlimited dashboards</span>
-              </div>
-              <div class="pricing-feature">
-                <div class="pricing-check">✓</div>
-                <span>Advanced automations (unlimited)</span>
-              </div>
-              <div class="pricing-feature">
-                <div class="pricing-check">✓</div>
-                <span>90-day data history</span>
-              </div>
-              <div class="pricing-feature">
-                <div class="pricing-check">✓</div>
-                <span>Priority chat support</span>
-              </div>
-              <div class="pricing-feature">
-                <div class="pricing-check">✓</div>
-                <span>Mobile app access</span>
+              <div class="price-option annual">
+                <div>
+                  <div class="price-label">Annual</div>
+                  <div class="price-option-left">
+                    <span class="price-currency">$</span>
+                    <span class="price-amount">56</span>
+                    <span class="price-period">/mo</span>
+                  </div>
+                </div>
+                <div class="price-yearly">$672 /yr</div>
               </div>
             </div>
-            <a href="<?php echo $final; ?>" class="pricing-cta">Start Free Trial</a>
+            <p class="pricing-desc">For growing teams that need predictive intelligence and advanced automation.</p>
+            <ul class="pricing-features">
+              <li>Unlimited team members</li>
+              <li>Unlimited workflows</li>
+              <li>Predictive insights engine</li>
+              <li>Priority support + Slack</li>
+              <li>Unlimited integrations</li>
+              <li>Custom dashboards</li>
+            </ul>
+            <a href="#" class="btn-primary">Start Free Trial</a>
           </div>
-          <div class="pricing-card reveal reveal-delay-2">
+
+          <div class="pricing-card reveal reveal-d3">
+            <div class="pricing-badge">Popular</div>
             <div class="pricing-tier">Enterprise</div>
-            <div class="pricing-price">
-              <span class="price-currency">$</span>
-              <span class="price-amount" id="price-ent">150</span>
-              <span class="price-period">&nbsp;/ mo</span>
-            </div>
-            <div class="price-annual-note" id="annual-note-ent">&nbsp;</div>
-            <p class="pricing-desc">For large organizations with custom requirements and compliance needs.</p>
-            <div class="pricing-divider"></div>
-            <div class="pricing-features">
-              <div class="pricing-feature">
-                <div class="pricing-check">✓</div>
-                <span>Unlimited members</span>
+            <div class="pricing-prices">
+              <div class="price-option monthly active">
+                <div>
+                  <div class="price-label">Monthly</div>
+                  <div class="price-option-left">
+                    <span class="price-currency">$</span>
+                    <span class="price-amount">160</span>
+                    <span class="price-period">/mo</span>
+                  </div>
+                </div>
+                <div class="price-yearly">$1,920 /yr</div>
               </div>
-              <div class="pricing-feature">
-                <div class="pricing-check">✓</div>
-                <span>Custom integrations & API</span>
-              </div>
-              <div class="pricing-feature">
-                <div class="pricing-check">✓</div>
-                <span>SSO & advanced permissions</span>
-              </div>
-              <div class="pricing-feature">
-                <div class="pricing-check">✓</div>
-                <span>Unlimited data history</span>
-              </div>
-              <div class="pricing-feature">
-                <div class="pricing-check">✓</div>
-                <span>Dedicated success manager</span>
-              </div>
-              <div class="pricing-feature">
-                <div class="pricing-check">✓</div>
-                <span>SOC 2 & compliance reports</span>
+              <div class="price-option annual">
+                <div>
+                  <div class="price-label">Annual</div>
+                  <div class="price-option-left">
+                    <span class="price-currency">$</span>
+                    <span class="price-amount">112</span>
+                    <span class="price-period">/mo</span>
+                  </div>
+                </div>
+                <div class="price-yearly">$1,344 /yr</div>
               </div>
             </div>
-            <a href="<?php echo $final; ?>" class="pricing-cta">Contact Sales</a>
+            <p class="pricing-desc">For organizations requiring dedicated infrastructure and compliance controls.</p>
+            <ul class="pricing-features">
+              <li>Everything in Professional</li>
+              <li>Dedicated instance</li>
+              <li>SSO + SAML</li>
+              <li>Audit logs + compliance</li>
+              <li>Dedicated success manager</li>
+              <li>Custom SLA</li>
+              <li>On-premise deployment option</li>
+            </ul>
+            <a href="#" class="btn-secondary">Contact Sales</a>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- ── 8. TESTIMONIALS ── -->
-    <section class="testimonials-section" id="testimonials">
-      <div class="container">
-        <div class="testimonials-header">
-          <div class="section-label reveal">Customer Stories</div>
-          <h2 class="section-title reveal reveal-delay-1">Teams that <em>love</em> <?php echo $titlebrand; ?></h2>
-          <p class="section-sub reveal reveal-delay-2">Don't take our word for it — here's what real teams say after 90 days.</p>
-        </div>
+      <div class="silk-divider reveal"></div>
+
+      <!-- ═══ TESTIMONIALS ═══ -->
+      <section class="section section-center" id="testimonials">
+        <p class="section-tag reveal">What Teams Say</p>
+        <h2 class="section-title reveal reveal-d1">Trusted by teams who <strong>ship faster</strong></h2>
+
         <div class="testimonials-grid">
-          <?php foreach ($reviews as $r): ?>
-          <div class="testimonial-card tall reveal">
-            <div class="testimonial-stars"><span><?php echo str_repeat('&#9733;', $r['rating']) . str_repeat('&#9734;', 5 - $r['rating']); ?></span></div>
-            <p class="testimonial-quote">
-              <?php echo htmlspecialchars($r['quote']); ?>
-            </p>
+          <div class="testimonial-card reveal reveal-d1">
+            <p class="testimonial-quote">"Luminary replaced three tools we were paying for separately. The workflow builder alone saved our ops team 20 hours a week."</p>
             <div class="testimonial-author">
+              <div class="testimonial-avatar">AK</div>
               <div>
-                <div class="author-name"><?php echo htmlspecialchars($r['name']); ?></div>
+                <div class="testimonial-name">Anna Kim</div>
+                <div class="testimonial-role">VP Operations, Arcline Systems</div>
               </div>
             </div>
           </div>
-          <?php endforeach; ?>
-        </div>
-      </div>
-    </section>
 
-    <!-- ── 9. INTEGRATIONS ── -->
-    <section class="integrations-section" id="integrations">
-      <div class="container">
-        <div class="integrations-header">
-          <div class="section-label reveal">Integrations</div>
-          <h2 class="section-title reveal reveal-delay-1">Connects with your<br /><em>existing stack</em></h2>
-          <p class="section-sub reveal reveal-delay-2">One-click integrations with the tools your team already uses. No dev work required.</p>
-        </div>
-        <div class="integrations-grid">
-          <div class="integration-tile reveal"><div class="integration-name">Slack</div></div>
-          <div class="integration-tile reveal reveal-delay-1"><div class="integration-name">Google Sheets</div></div>
-          <div class="integration-tile reveal reveal-delay-2"><div class="integration-name">Google Drive</div></div>
-          <div class="integration-tile reveal reveal-delay-3"><div class="integration-name">Zapier</div></div>
-          <div class="integration-tile reveal"><div class="integration-name">Stripe</div></div>
-          <div class="integration-tile reveal reveal-delay-1"><div class="integration-name">GitHub</div></div>
-          <div class="integration-tile reveal reveal-delay-2"><div class="integration-name">Notion</div></div>
-          <div class="integration-tile reveal reveal-delay-3"><div class="integration-name">Mailchimp</div></div>
-          <div class="integration-tile reveal"><div class="integration-name">HubSpot</div></div>
-          <div class="integration-tile reveal reveal-delay-1"><div class="integration-name">Airtable</div></div>
-          <div class="integration-tile reveal reveal-delay-2"><div class="integration-name">Intercom</div></div>
-          <div class="integration-tile reveal reveal-delay-3"><div class="integration-name">Salesforce</div></div>
-          <div class="integration-tile reveal"><div class="integration-name">Figma</div></div>
-          <div class="integration-tile reveal reveal-delay-1"><div class="integration-name">Linear</div></div>
-          <div class="integration-tile reveal reveal-delay-2"><div class="integration-name">Jira</div></div>
-          <div class="integration-tile reveal reveal-delay-3"><div class="integration-name">Webflow</div></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ── 10. FAQ ── -->
-    <section class="faq-section" id="faq">
-      <div class="container">
-        <div class="faq-inner">
-          <div class="faq-sidebar reveal">
-            <div class="section-label">FAQ</div>
-            <h2 class="section-title">Questions,<br /><em>answered</em></h2>
-            <p class="section-sub">Can't find what you're looking for? Reach our team at <?php echo $titlebrand; ?> — we reply within 2 hours.</p>
-            <button class="faq-toggle-all" id="faqToggleAll"><span id="faqToggleIcon">+</span> Expand all</button>
-          </div>
-
-          <div class="faq-list reveal reveal-delay-1" id="faqList">
-            <?php 
-            $numberfaq = 1;
-            foreach ($faqs as $f): ?>
-            <div class="faq-item">
-              <div class="faq-question" tabindex="0" role="button" aria-expanded="false">
-                <?php echo htmlspecialchars($f['q']); ?>
-                <div class="faq-icon">+</div>
-              </div>
-              <div class="faq-answer">
-                <div class="faq-answer-inner"><?php echo htmlspecialchars($f['a']); ?></div>
+          <div class="testimonial-card reveal reveal-d2">
+            <p class="testimonial-quote">"The predictive insights caught a supply chain disruption 72 hours before it would have hit us. That's not incremental — that's transformational."</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">MR</div>
+              <div>
+                <div class="testimonial-name">Marcus Reeves</div>
+                <div class="testimonial-role">CTO, Nova Engineering</div>
               </div>
             </div>
-            <?php endforeach; ?>          
           </div>
 
-
-        </div>
-      </div>
-    </section>
-
-    <!-- ── 11. CTA BANNER ── -->
-    <section class="cta-section">
-      <div class="container">
-        <div class="cta-inner reveal">
-          <div class="cta-content">
-            <div class="cta-label">✦ Get Started Today</div>
-            <h2 class="cta-title">Ready for a<br /><em>clearer workflow?</em></h2>
-            <p class="cta-sub">Join 50,000+ teams who replaced chaos with clarity. Set up in under 10 minutes.</p>
-          </div>
-          <div class="cta-actions">
-            <a href="<?php echo $final; ?>" class="btn-cta-primary">
-              Start Free Trial
-              <span>→</span>
-            </a>
-            <a href="<?php echo $final; ?>" class="btn-cta-ghost">Schedule a demo</a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ── 12. FOOTER ── -->
-    <footer class="footer">
-      <div class="container">
-        <div class="footer-grid">
-          <div class="footer-brand">
-                    <a href="<?php echo $canonical_url; ?>" class="header-logo"> <img src="<?php echo $logo; ?>" alt="Logo"></a>
-            <p class="footer-brand-desc"><?php echo $meta_description; ?></p>
-            <div class="footer-socials">
-              <a href="<?php echo $canonical_url; ?>" class="social-btn" aria-label="Twitter / X">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                </svg>
-              </a>
-              <a href="<?php echo $canonical_url; ?>" class="social-btn" aria-label="LinkedIn">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                  <path
-                    d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"
-                  />
-                </svg>
-              </a>
-              <a href="<?php echo $canonical_url; ?>" class="social-btn" aria-label="YouTube">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-                  <path
-                    d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"
-                  />
-                </svg>
-              </a>
-              <a href="<?php echo $canonical_url; ?>" class="social-btn" aria-label="TikTok">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
-                  <path
-                    d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"
-                  />
-                </svg>
-              </a>
-            </div>
-          </div>
-          <div>
-            <div class="footer-col-label">Product</div>
-            <div class="footer-links">
-              <a href="#features">Features</a>
-              <a href="#screens">Mobile App</a>
-              <a href="#pricing">Pricing</a>
-              <a href="#integrations">Integrations</a>
-              <a href="<?php echo $canonical_url; ?>">Changelog</a>
-            </div>
-          </div>
-          <div>
-            <div class="footer-col-label">Company</div>
-            <div class="footer-links">
-              <a href="<?php echo $canonical_url; ?>">About</a>
-              <a href="<?php echo $canonical_url; ?>">Blog</a>
-              <a href="<?php echo $canonical_url; ?>">Careers</a>
-              <a href="<?php echo $canonical_url; ?>">Press Kit</a>
-              <a href="<?php echo $canonical_url; ?>">Status</a>
-            </div>
-          </div>
-          <div>
-            <div class="footer-col-label">Support</div>
-            <div class="footer-links">
-              <a href="<?php echo $canonical_url; ?>">Help Center</a>
-              <a href="<?php echo $canonical_url; ?>">Documentation</a>
-              <a href="<?php echo $canonical_url; ?>">Security</a>
-              <a href="<?php echo $canonical_url; ?>">Contact</a>
-              <a href="<?php echo $canonical_url; ?>">Community</a>
+          <div class="testimonial-card reveal reveal-d3">
+            <p class="testimonial-quote">"We evaluated six platforms. Luminary was the only one our engineers didn't complain about. Clean API, real documentation, zero bloat."</p>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">SL</div>
+              <div>
+                <div class="testimonial-name">Sarah Lin</div>
+                <div class="testimonial-role">Head of Engineering, Prism Analytics</div>
+              </div>
             </div>
           </div>
         </div>
-        <div class="footer-bottom">
-          <div class="footer-copy">© 2026 <?php echo $titlebrand; ?>. Design by <a rel="nofollow" href="<?php echo $canonical_url; ?>" target="_blank"><?php echo $titlebrand; ?></a></div>
-          <div class="footer-legal">
-            <a href="<?php echo $canonical_url; ?>">Privacy Policy</a>
-            <a href="<?php echo $canonical_url; ?>">Terms of Service</a>
-            <a href="<?php echo $canonical_url; ?>">Cookie Policy</a>
+      </section>
+
+      <div class="silk-divider reveal"></div>
+
+      <!-- ═══ INTEGRATIONS ═══ -->
+      <section class="section section-center" id="integrations">
+        <p class="section-tag reveal">Integrations</p>
+        <h2 class="section-title reveal reveal-d1">Connects to <strong>everything you use</strong></h2>
+        <p class="section-body reveal reveal-d2">Native integrations with the tools your team already depends on. No middleware required.</p>
+
+        <div class="integrations-grid reveal reveal-d3">
+          <div class="integration-item">
+            <div class="integration-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path
+                  d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65S8.93 17.38 9 18v4"
+                />
+                <path d="M9 18c-4.51 2-5-2-7-2" />
+              </svg>
+            </div>
+            <div class="integration-name">GitHub</div>
+          </div>
+          <div class="integration-item">
+            <div class="integration-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+                <path d="M14 2v6h6" />
+              </svg>
+            </div>
+            <div class="integration-name">Notion</div>
+          </div>
+          <div class="integration-item">
+            <div class="integration-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="2" y="3" width="20" height="14" rx="2" />
+                <path d="m22 5-10 7L2 5" />
+              </svg>
+            </div>
+            <div class="integration-name">Gmail</div>
+          </div>
+          <div class="integration-item">
+            <div class="integration-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>
+            </div>
+            <div class="integration-name">Slack</div>
+          </div>
+          <div class="integration-item">
+            <div class="integration-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>
+            </div>
+            <div class="integration-name">Stripe</div>
+          </div>
+          <div class="integration-item">
+            <div class="integration-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 6v6l4 2" />
+              </svg>
+            </div>
+            <div class="integration-name">Jira</div>
+          </div>
+          <div class="integration-item">
+            <div class="integration-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M3 3h18v18H3z" />
+                <path d="M3 9h18M9 3v18" />
+              </svg>
+            </div>
+            <div class="integration-name">Airtable</div>
+          </div>
+          <div class="integration-item">
+            <div class="integration-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                <path d="m22 6-10 7L2 6" />
+              </svg>
+            </div>
+            <div class="integration-name">Outlook</div>
+          </div>
+          <div class="integration-item">
+            <div class="integration-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2" /></svg>
+            </div>
+            <div class="integration-name">Datadog</div>
+          </div>
+          <div class="integration-item">
+            <div class="integration-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="2" y="2" width="20" height="8" rx="2" />
+                <rect x="2" y="14" width="20" height="8" rx="2" />
+                <circle cx="6" cy="6" r="1" />
+                <circle cx="6" cy="18" r="1" />
+              </svg>
+            </div>
+            <div class="integration-name">AWS</div>
+          </div>
+          <div class="integration-item">
+            <div class="integration-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 20V10M12 20V4M6 20v-6" /></svg>
+            </div>
+            <div class="integration-name">Tableau</div>
+          </div>
+          <div class="integration-item">
+            <div class="integration-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>
+            </div>
+            <div class="integration-name">Okta</div>
           </div>
         </div>
-      </div>
-    </footer>
+      </section>
 
-    <script src="https://cdn.jsdelivr.net/gh/ggeercy/clearewave/templatemo-622-clearwave.js"></script>
+      <div class="silk-divider reveal"></div>
+
+      <!-- ═══ FAQ ═══ -->
+      <section class="section section-center" id="faq">
+        <p class="section-tag reveal">Frequently Asked</p>
+        <h2 class="section-title reveal reveal-d1">Questions we hear <strong>most often</strong></h2>
+
+        <div class="faq-list reveal reveal-d2">
+          <div class="faq-controls">
+            <button class="faq-toggle-all" id="faqToggleAll">Expand All</button>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question">How long does onboarding take?<span class="faq-icon"></span></button>
+            <div class="faq-answer">
+              <div class="faq-answer-inner">
+                Most teams are fully operational within 48 hours. Our onboarding wizard walks you through connecting your tools, importing existing workflows, and inviting team members. Enterprise customers receive a dedicated onboarding
+                specialist.
+              </div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question">Can I migrate from my current platform?<span class="faq-icon"></span></button>
+            <div class="faq-answer">
+              <div class="faq-answer-inner">Yes. We provide migration tools for Zapier, Make, and n8n workflows. Our team handles the heavy lifting for enterprise migrations — most are completed within one week with zero downtime.</div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question">What happens when I exceed my plan limits?<span class="faq-icon"></span></button>
+            <div class="faq-answer">
+              <div class="faq-answer-inner">We never cut you off mid-workflow. You'll receive a notification at 80% and 100% of your limit. Overages are billed at a transparent per-unit rate, or you can upgrade your plan at any time.</div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question">Is my data encrypted?<span class="faq-icon"></span></button>
+            <div class="faq-answer">
+              <div class="faq-answer-inner">
+                All data is encrypted at rest (AES-256) and in transit (TLS 1.3). Enterprise plans include dedicated encryption keys, SOC 2 Type II compliance, and optional data residency controls for EU and APAC regions.
+              </div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-question">Do you offer a free trial?<span class="faq-icon"></span></button>
+            <div class="faq-answer">
+              <div class="faq-answer-inner">
+                Every plan includes a 14-day free trial with full feature access. No credit card required. At the end of the trial, you choose your plan — or your workspace converts to a limited free tier automatically.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ FOOTER CTA ═══ -->
+      <section class="footer-cta" id="cta">
+        <p class="section-tag reveal">Ready to Start</p>
+        <h2 class="section-title reveal reveal-d1">Your team's best work<br /><strong>starts here</strong></h2>
+        <p class="section-body reveal reveal-d2" style="margin: 0 auto">14-day free trial. No credit card. Cancel anytime.</p>
+        <div class="footer-ctas reveal reveal-d3">
+          <a href="#" class="btn-primary">Start Free Trial</a>
+          <a href="#" class="btn-secondary">Talk to Sales</a>
+        </div>
+
+        <div class="footer-bar reveal reveal-d4" style="margin-top: 80px">
+          <div class="footer-brand">Luminary &mdash; 2026</div>
+          <div class="footer-links">
+            <a href="<?php echo $canonical_url; ?>">Privacy</a>
+            <a href="<?php echo $canonical_url; ?>">Terms</a>
+            <a href="<?php echo $canonical_url; ?>">Status</a>
+            <span class="footer-credit">Design: <a href="https://templatemo.com" target="_blank" rel="nofollow">TemplateMo</a></span>
+            <span class="footer-credit">Images: <a href="https://unsplash.com" target="_blank" rel="nofollow">Unsplash</a></span>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/luminary/templatemo-621-luminary-script.js"></script>
   </body>
 </html>
