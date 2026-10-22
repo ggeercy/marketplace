@@ -1,0 +1,725 @@
+<?php
+if($jos['article_id'] != NULL)
+{
+  $brand  = array('brand123', 'Brand123');
+  $title = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['title']);
+  $meta_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['meta_description']);
+  $long_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['long_description']);
+}
+if ($alternate_url == NULL || $alternate_url == ""){
+    $alternate_url = $amp_url;
+}
+define('SITE_BRAND', $titlebrand);
+/**
+ * Single source of truth for reviews and FAQs.
+ * Both the visible HTML below AND the JSON-LD schema at the
+ * bottom of this file are generated from these two arrays,
+ * so the structured data can never drift out of sync with
+ * what a visitor actually sees on the page â€” that mismatch is
+ * exactly what gets schema markup flagged by Google.
+ */
+/**
+ * Single source of truth for reviews and FAQs.
+ * Names and review quotes come from /data/names.txt and
+ * /data/reviews.txt (300 rows each) â€” edit those files to
+ * grow or change the pool, no code changes needed. Both the
+ * visible HTML below AND the JSON-LD schema at the bottom of
+ * this file are generated from the resulting $reviews array,
+ * so the structured data can never drift out of sync with
+ * what a visitor actually sees on the page.
+ */
+
+/**
+ * Reads /data/names.txt ("firstname,lastname" per row, header
+ * on line 1) and returns the first names and last names as two
+ * separate flat arrays, so they can be recombined independently.
+ */
+function nexora_load_names(): array {
+    $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/names.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    array_shift($lines); // drop the "firstname,lastname" header row
+    $first = [];
+    $last  = [];
+    foreach ($lines as $line) {
+        $parts = str_getcsv($line);
+        if (count($parts) < 2) {
+            continue;
+        }
+        $first[] = trim($parts[0]);
+        $last[]  = trim($parts[1]);
+    }
+    return [$first, $last];
+}
+
+/**
+ * Reviews and FAQs are stored with the literal placeholder "NEXORA"
+ * in the .txt data files (plain text can't hold a PHP constant), so
+ * every loaded line gets that placeholder swapped for the live
+ * SITE_BRAND before it's used, keeping the copy in sync with the
+ * dynamic brand from the domain JSON.
+ */
+function nexora_apply_brand(string $text): string {
+    return SITE_BRAND ? str_replace('NEXORA', SITE_BRAND, $text) : $text;
+}
+
+/** Reads /data/reviews.txt â€” one review quote per line. */
+function nexora_load_review_pool(): array {
+        $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/reviews.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    return array_map('nexora_apply_brand', $lines);
+}
+
+/** Reads /data/faqs.txt â€” "question|answer" per line. */
+function nexora_load_faq_pool(): array {
+        $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/faqs.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    $pool = [];
+    foreach ($lines as $line) {
+        $parts = explode('|', $line, 2);
+        if (count($parts) < 2) {
+            continue;
+        }
+        $pool[] = [
+            'q' => nexora_apply_brand(trim($parts[0])),
+            'a' => nexora_apply_brand(trim($parts[1])),
+        ];
+    }
+    return $pool;
+}
+
+/**
+ * Picks a random first name and a random last name from two
+ * separate pools and joins them â€” so the pairing on any given
+ * review is a fresh mix, not the pairing the names happened to
+ * share in the data file (e.g. "Budi" + "Kusuma" even though
+ * they came from different rows).
+ */
+function nexora_reshuffled_name(array $firstNames, array $lastNames): string {
+    $first = $firstNames[array_rand($firstNames)];
+    $last  = $lastNames[array_rand($lastNames)];
+    return ucfirst(strtolower($first)) . ' ' . ucfirst(strtolower($last));
+}
+
+/** Mostly 5 stars, occasionally 4 â€” matches a realistic positive spread. */
+function nexora_weighted_rating(): int {
+    return (mt_rand(1, 100) <= 75) ? 5 : 4;
+}
+
+function nexora_initials(string $name): string {
+    $parts = explode(' ', trim($name));
+    $first = substr($parts[0], 0, 1);
+    $last  = count($parts) > 1 ? substr(end($parts), 0, 1) : '';
+    return strtoupper($first . $last);
+}
+
+// Build 6 display reviews by sampling the pools above.
+[$firstNames, $lastNames] = nexora_load_names();
+$reviewPool = nexora_load_review_pool();
+
+$reviews = [];
+if ($firstNames && $lastNames && $reviewPool) {
+    $howMany = min(6, count($reviewPool));
+    $pickedKeys = (array) array_rand($reviewPool, $howMany);
+    shuffle($pickedKeys);
+    foreach ($pickedKeys as $key) {
+        $reviews[] = [
+            'name'   => nexora_reshuffled_name($firstNames, $lastNames),
+            'rating' => nexora_weighted_rating(),
+            'quote'  => $reviewPool[$key],
+        ];
+    }
+}
+
+// Build 10 display FAQs by sampling the pool loaded from faqs.txt.
+$faqPool = nexora_load_faq_pool();
+$faqs = [];
+if ($faqPool) {
+    $howManyFaqs = min(10, count($faqPool));
+    $faqKeys = (array) array_rand($faqPool, $howManyFaqs);
+    shuffle($faqKeys);
+    foreach ($faqKeys as $key) {
+        $faqs[] = $faqPool[$key];
+    }
+}
+?>
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><?php echo ucwords($title); ?></title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="<?php echo $canonical_url; ?>" rel="preconnect" />
+    <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+    <meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0" name="viewport" />
+    <meta name="title" content="<?php echo ucwords($title); ?>" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="<?php echo $canonical_url; ?>" />
+    <link rel="amphtml" href="<?php echo $amp_url; ?>" />
+    <link rel="alternate" hreflang="id-id" href="<?php echo $alternate_url; ?>" />
+    <link rel="alternate" href="<?php echo $alternate_url; ?>" />
+    <link rel="alternate" hreflang="id" href="<?php echo $alternate_url; ?>" />
+    <meta name="publisher" content="<?php echo $titlebrand; ?>" />
+    <meta name="description" content="<?php echo $meta_description; ?>" />
+    <meta name="keywords" content="<?php echo $keyword; ?>" />
+    <meta name="sitecode" content="id" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="<?php echo ucwords($title); ?>" />
+    <meta name="twitter:description" content="<?php echo $meta_description; ?>" />
+    <meta name="twitter:url" content="<?php echo $canonical_url; ?>" />
+    <meta name="twitter:image" content="<?php echo $logo; ?>" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="<?php echo $titlebrand; ?>" />
+    <meta property="og:locale" content="id_ID" />
+    <meta property="og:url" content="<?php echo $canonical_url; ?>" />
+    <meta property="og:title" content="<?php echo ucwords($title); ?>" />
+    <meta property="og:description" content="<?php echo $meta_description; ?>" />
+    <meta property="og:image" content="<?php echo $banner; ?>" />
+    <link rel="icon" type="image/png" sizes="96x96" href="<?php echo $favicon; ?>" />
+    <link rel="shortcut icon" href="<?php echo $favicon; ?>" />
+    <link rel="apple-touch-icon" sizes="144x144" href="<?php echo $favicon; ?>" />
+
+    
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+
+
+<?php if($jos['site']['google_code'] != NULL) { ?>
+    <meta name="google-site-verification" content="<?php echo $jos['site']['google_code']; ?>" />
+    <?php } else{ ?>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-SK4ZZ80WSV"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+
+      gtag('config', 'G-SK4ZZ80WSV');
+    </script>
+    <?php } ?>
+
+
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "<?php echo $titlebrand; ?>",
+  "url": "<?php echo $canonical_url; ?>",
+  "logo": "<?php echo $banner; ?>",
+  "description": "<?php echo $meta_description; ?>",
+  "foundingDate": "2024",
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "telephone": "+62-444-232-2014",
+    "contactType": "customer service",
+    "areaServed": "ID",
+    "availableLanguage": ["Indonesian"]
+  },
+  "sameAs": [
+    "https://facebook.com/<?php echo $titlebrand; ?>",
+    "https://instagram.com/<?php echo $titlebrand; ?>",
+    "https://twitter.com/<?php echo $titlebrand; ?>"
+  ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "<?php echo $titlebrand; ?>",
+      "item": "<?php echo $canonical_url; ?>"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "<?php echo $titlebrand; ?> LOGIN",
+      "item": "<?php echo $canonical_url; ?>"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "<?php echo $titlebrand; ?> GAMES",
+      "item": "<?php echo $canonical_url; ?>"
+    }
+  ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"FAQPage",
+  "mainEntity":[
+<?php
+$faqItems = [];
+foreach ($faqs as $f) {
+    $faqItems[] = '    {
+      "@type":"Question",
+      "name":"' . htmlspecialchars($f['q']) . '",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"' . htmlspecialchars($f['a']) . '"
+      }
+    }';
+}
+echo implode(",\n", $faqItems);
+?>
+
+  ]
+}
+</script>
+  <!-- REVIEW SCHEMA -->
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Product","name":"<?php echo $titlebrand; ?>",
+    "description":"<?php echo $meta_description; ?>",
+    "brand":{
+      "@type":"Brand",
+      "name":"<?php echo $titlebrand; ?>"
+    },
+    "aggregateRating":{
+      "@type":"AggregateRating",
+      "ratingValue":"4.9",
+      "reviewCount":"5"
+    },
+    "review":[
+<?php
+$reviewItems = [];
+foreach ($reviews as $r) {
+    $reviewItems[] = '        {
+                "@type":"Review",
+                "author":{"@type":"Person","name":"' . htmlspecialchars($r['name']) . '"},
+                "reviewRating":{"@type":"Rating","ratingValue":"5","bestRating":"5"},
+                "reviewBody":"' . htmlspecialchars($r['quote']) . '"
+              }';
+}
+echo implode(",\n", $reviewItems);
+?>
+
+    ]
+  }
+  </script>
+
+
+
+
+
+    <!-- Template CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ggeercy/clearewave/templatemo-catalyst-style.css">
+</head>
+<body>
+
+    <!-- ===== NAVIGATION ===== -->
+    <nav class="nav" role="navigation" aria-label="Main navigation">
+    <div
+        class="nav-inner"
+        style="
+            min-height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+        "
+    >
+        <a
+            href="<?php echo $canonical_url; ?>"
+            class="header-logo"
+            style="
+                display: flex;
+                align-items: center;
+                flex-shrink: 0;
+                height: 72px;
+            "
+        >
+            <img
+                src="<?php echo $logo; ?>"
+                alt="Logo"
+                style="
+                    display: block;
+                    width: auto;
+                    height: 42px;
+                    max-width: 180px;
+                    object-fit: contain;
+                "
+            />
+        </a>
+
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#metrics">Performance</a></li>
+            <li><a href="#engine">Review</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#faq">FAQ</a></li>
+        </ul>
+
+        <div class="nav-cta">
+            <a href="<?php echo $final; ?>" class="btn-ghost">Login</a>
+            <a href="<?php echo $final; ?>" class="btn-acid">Daftar</a>
+        </div>
+
+        <button
+            class="nav-toggle"
+            id="navToggle"
+            type="button"
+            aria-label="Toggle menu"
+            aria-expanded="false"
+        >
+            <span></span>
+        </button>
+    </div>
+</nav>
+
+    <!-- ===== SECTION 1: HERO ===== -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-badge reveal">
+                <span class="hero-badge-dot"></span>
+                v4.2 — Now with real-time sync
+            </div>
+            <h1 class="reveal"><?php echo ucwords($title); ?></h1>
+            <p class="hero-sub reveal"><?php echo $meta_description; ?></p>
+            <div class="hero-actions reveal">
+                <a href="<?php echo $final; ?>" class="btn-acid">
+                    Daftar
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </a>
+                <a href="<?php echo $final; ?>" class="btn-ghost">Login</a>
+            </div>
+
+            <!-- Dashboard Mockup -->
+            <div class="hero-dashboard reveal">
+    <div class="dashboard-frame">
+        <div class="dashboard-toolbar">
+            <div class="dashboard-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
+            <div class="dashboard-toolbar-tabs">
+                <span class="active">Overview</span>
+                <span>Funnels</span>
+                <span>Retention</span>
+                <span>Revenue</span>
+            </div>
+
+            <div style="width: 50px;"></div>
+        </div>
+
+        <div
+            class="dashboard-body"
+            style="
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 100%;
+                padding: 30px 20px;
+                box-sizing: border-box;
+            "
+        >
+            <img
+                src="<?php echo $banner; ?>"
+                alt="Intelligent automation dashboard"
+                style="
+                    display: block;
+                    width: 100%;
+                    max-width: 1100px;
+                    height: auto;
+                    object-fit: contain;
+                    margin: 0 auto;
+                "
+            />
+        </div>
+    </div>
+</div>
+
+        </div>
+    </section>
+
+    <!-- ===== SECTION 2: SPEED METRICS ===== -->
+    <section class="metrics" id="metrics">
+        <div class="container">
+            <p class="metrics-label reveal">Performance that speaks for itself</p>
+            <div class="metrics-grid">
+                <div class="metric-item reveal">
+                    <div class="metric-number"><span class="metric-highlight">42</span><span class="metric-unit">ms</span></div>
+                    <p class="metric-desc">Average query response time across 10B+ row datasets</p>
+                </div>
+                <div class="metric-item reveal">
+                    <div class="metric-number">99.99<span class="metric-unit">%</span></div>
+                    <p class="metric-desc">Guaranteed uptime SLA for all enterprise customers</p>
+                </div>
+                <div class="metric-item reveal">
+                    <div class="metric-number">10<span class="metric-unit">x</span></div>
+                    <p class="metric-desc">Faster than legacy warehouses at one-tenth the cost</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SECTION 3: THE ENGINE — BENTO GRID ===== -->
+    <section class="engine" id="engine">
+        <div class="container">
+            <div class="section-header reveal">
+                <p class="section-tag">The Engine</p>
+                <h2 class="section-title">Review <?php echo $titlebrand; ?></h2>
+            </div>
+            
+            <div class="bento-grid">
+            <?php foreach ($reviews as $r): ?>
+                <div class="card bento-card reveal">
+                    <div class="testimonial-stars">
+                        <span><?php echo str_repeat('&#9733;', $r['rating']) . str_repeat('&#9734;', 5 - $r['rating']); ?></span>
+                    </div>
+                    <h3><?php echo htmlspecialchars($r['name']); ?></h3>
+                    <p><?php echo htmlspecialchars($r['quote']); ?></p>
+                </div>
+            <?php endforeach; ?>
+            </div>
+            
+        </div>
+    </section>
+
+    <!-- ===== SECTION 4: PRICING ===== -->
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <div class="section-header reveal">
+                <p class="section-tag">Pricing</p>
+                <h2 class="section-title">Simple, transparent pricing</h2>
+            </div>
+            <div class="toggle-wrap reveal">
+                <div class="toggle-container">
+                    <button class="toggle-btn" data-plan="monthly" id="toggleMonthly">Monthly</button>
+                    <button class="toggle-btn active" data-plan="yearly" id="toggleYearly">Yearly</button>
+                </div>
+                <span class="toggle-save visible" id="toggleSave">Save 25%</span>
+            </div>
+            <div class="pricing-grid">
+                <!-- Starter -->
+                <div class="card pricing-card reveal">
+                    <div class="pricing-plan-name">Starter</div>
+                    <div class="pricing-plan-desc">For small teams getting started</div>
+                    <div class="pricing-amount">
+                        <span class="pricing-currency">$</span>
+                        <span class="pricing-value" data-monthly="30" data-yearly="22">22</span>
+                    </div>
+                    <p class="pricing-period">per seat / month</p>
+                    <p class="pricing-billed yearly-active" data-monthly="Billed monthly" data-yearly="$264 billed annually">$264 billed annually</p>
+                    <a href="<?php echo $final; ?>" class="btn-ghost">Daftar</a>
+                    <ul class="pricing-features">
+                        <li>
+                            <svg viewBox="0 0 18 18" fill="none"><path d="M4 9l3.5 3.5L14 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            Up to 5 team members
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 18 18" fill="none"><path d="M4 9l3.5 3.5L14 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            1 billion events / month
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 18 18" fill="none"><path d="M4 9l3.5 3.5L14 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            7-day data retention
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 18 18" fill="none"><path d="M4 9l3.5 3.5L14 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            Community support
+                        </li>
+                    </ul>
+                </div>
+                <!-- Pro -->
+                <div class="card pricing-card featured reveal">
+                    <div class="pricing-plan-name">Pro</div>
+                    <div class="pricing-plan-desc">For scaling data teams</div>
+                    <div class="pricing-amount">
+                        <span class="pricing-currency">$</span>
+                        <span class="pricing-value" data-monthly="100" data-yearly="75">75</span>
+                    </div>
+                    <p class="pricing-period">per seat / month</p>
+                    <p class="pricing-billed yearly-active" data-monthly="Billed monthly" data-yearly="$900 billed annually">$900 billed annually</p>
+                    <a href="<?php echo $final; ?>" class="btn-acid">Login</a>
+                    <ul class="pricing-features">
+                        <li>
+                            <svg viewBox="0 0 18 18" fill="none"><path d="M4 9l3.5 3.5L14 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            Unlimited team members
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 18 18" fill="none"><path d="M4 9l3.5 3.5L14 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            50 billion events / month
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 18 18" fill="none"><path d="M4 9l3.5 3.5L14 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            Unlimited data retention
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 18 18" fill="none"><path d="M4 9l3.5 3.5L14 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            Priority support + SLA
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 18 18" fill="none"><path d="M4 9l3.5 3.5L14 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            SSO &amp; audit logs
+                        </li>
+                    </ul>
+                </div>
+                <!-- Enterprise -->
+                <div class="card pricing-card reveal">
+                    <div class="pricing-plan-name">Enterprise</div>
+                    <div class="pricing-plan-desc">For mission-critical deployments</div>
+                    <div class="pricing-amount">
+                        <span class="pricing-currency">$</span>
+                        <span class="pricing-value" data-monthly="500" data-yearly="375">375</span>
+                    </div>
+                    <p class="pricing-period">starts from / month</p>
+                    <p class="pricing-billed yearly-active" data-monthly="Billed monthly" data-yearly="$4,500 billed annually">$4,500 billed annually</p>
+                    <a href="<?php echo $final; ?>" class="btn-ghost">Daftar</a>
+                    <ul class="pricing-features">
+                        <li>
+                            <svg viewBox="0 0 18 18" fill="none"><path d="M4 9l3.5 3.5L14 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            Everything in Pro
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 18 18" fill="none"><path d="M4 9l3.5 3.5L14 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            Dedicated infrastructure
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 18 18" fill="none"><path d="M4 9l3.5 3.5L14 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            Custom integrations
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 18 18" fill="none"><path d="M4 9l3.5 3.5L14 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            24/7 dedicated support
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 18 18" fill="none"><path d="M4 9l3.5 3.5L14 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            99.99% SLA guarantee
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SECTION 5: FAQ ===== -->
+    <section class="faq" id="faq">
+        <div class="container">
+            <div class="section-header reveal">
+                <p class="section-tag">FAQ</p>
+                <h2 class="section-title">Common questions, straight answers</h2>
+            </div>
+            <div class="faq-controls reveal">
+                <button class="faq-ctrl-btn" id="faqExpandAll">Expand All</button>
+                <button class="faq-ctrl-btn" id="faqCollapseAll">Collapse All</button>
+            </div>
+            <div class="faq-list">
+            <?php $numberfaq = 1; foreach ($faqs as $f): ?>
+                <div class="faq-item reveal">
+                    <button class="faq-question" aria-expanded="false">
+                        <?php echo htmlspecialchars($f['q']); ?>
+                        <span class="faq-icon"><svg viewBox="0 0 14 14" fill="none"><path d="M7 1v12M1 7h12" stroke="#111" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+                    </button>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner"><?php echo htmlspecialchars($f['a']); ?></div>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SECTION 6: CTA BANNER ===== -->
+    <section class="cta-banner">
+        <div class="container">
+            <div class="cta-banner-inner reveal">
+                <p class="cta-banner-tag">Get started today</p>
+                <h2><?php echo ucwords($title); ?></h2>
+                <p>
+        <?php echo $long_description; ?>
+    </p>
+                <div class="cta-banner-actions">
+                    <a href="<?php echo $final; ?>" class="btn-acid">
+                        Login
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </a>
+                    <a href="<?php echo $final; ?>" class="btn-dark-ghost">Daftar</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SECTION 7: FOOTER ===== -->
+    <footer class="footer" id="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    
+                    <a href="<?php echo $canonical_url; ?>" class="header-logo"> <img src="<?php echo $logo; ?>" alt="Logo" /></a>
+                    <p class="footer-brand-desc"><?php echo $meta_description; ?></p>
+                </div>
+                <div>
+                    <h4 class="footer-col-title">Resources</h4>
+                    <ul class="footer-links">
+                        <li><a href="<?php echo $canonical_url; ?>">Documentation</a></li>
+                        <li><a href="<?php echo $canonical_url; ?>">API Reference</a></li>
+                        <li><a href="<?php echo $canonical_url; ?>">Blog</a></li>
+                        <li><a href="<?php echo $canonical_url; ?>">Changelog</a></li>
+                        <li><a href="<?php echo $canonical_url; ?>">Status Page</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="footer-col-title">Support</h4>
+                    <ul class="footer-links">
+                        <li><a href="<?php echo $canonical_url; ?>">Help Center</a></li>
+                        <li><a href="<?php echo $canonical_url; ?>">Community Forum</a></li>
+                        <li><a href="<?php echo $canonical_url; ?>">Contact Us</a></li>
+                        <li><a href="<?php echo $canonical_url; ?>">System Status</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="footer-col-title">Connect</h4>
+                    <ul class="footer-links">
+                        <li><a href="<?php echo $canonical_url; ?>">Twitter / X</a></li>
+                        <li><a href="<?php echo $canonical_url; ?>">GitHub</a></li>
+                        <li><a href="<?php echo $canonical_url; ?>">LinkedIn</a></li>
+                        <li><a href="<?php echo $canonical_url; ?>">YouTube</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p class="footer-copy">&copy; 2026 <?php echo $titlebrand; ?> Inc. All rights reserved. Design: <a href="<?php echo $canonical_url; ?>" target="_blank" rel="nofollow"><?php echo $titlebrand; ?></a></p>
+                <ul class="footer-bottom-links">
+                    <li><a href="<?php echo $canonical_url; ?>">Privacy</a></li>
+                    <li><a href="<?php echo $canonical_url; ?>">Terms</a></li>
+                    <li><a href="<?php echo $canonical_url; ?>">Cookies</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Template JS -->
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/clearewave/templatemo-catalyst-script.js"></script>
+
+</body>
+</html>
