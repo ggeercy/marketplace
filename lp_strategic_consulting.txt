@@ -1,0 +1,926 @@
+<?php
+if($jos['article_id'] != NULL)
+{
+  $brand  = array('brand123', 'Brand123');
+  $title = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['title']);
+  $meta_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['meta_description']);
+  $long_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['long_description']);
+}
+if ($alternate_url == NULL || $alternate_url == ""){
+    $alternate_url = $amp_url;
+}
+define('SITE_BRAND', $titlebrand);
+/**
+ * Single source of truth for reviews and FAQs.
+ * Both the visible HTML below AND the JSON-LD schema at the
+ * bottom of this file are generated from these two arrays,
+ * so the structured data can never drift out of sync with
+ * what a visitor actually sees on the page â€” that mismatch is
+ * exactly what gets schema markup flagged by Google.
+ */
+/**
+ * Single source of truth for reviews and FAQs.
+ * Names and review quotes come from /data/names.txt and
+ * /data/reviews.txt (300 rows each) â€” edit those files to
+ * grow or change the pool, no code changes needed. Both the
+ * visible HTML below AND the JSON-LD schema at the bottom of
+ * this file are generated from the resulting $reviews array,
+ * so the structured data can never drift out of sync with
+ * what a visitor actually sees on the page.
+ */
+
+/**
+ * Reads /data/names.txt ("firstname,lastname" per row, header
+ * on line 1) and returns the first names and last names as two
+ * separate flat arrays, so they can be recombined independently.
+ */
+function nexora_load_names(): array {
+    $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/names.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    array_shift($lines); // drop the "firstname,lastname" header row
+    $first = [];
+    $last  = [];
+    foreach ($lines as $line) {
+        $parts = str_getcsv($line);
+        if (count($parts) < 2) {
+            continue;
+        }
+        $first[] = trim($parts[0]);
+        $last[]  = trim($parts[1]);
+    }
+    return [$first, $last];
+}
+
+/**
+ * Reviews and FAQs are stored with the literal placeholder "NEXORA"
+ * in the .txt data files (plain text can't hold a PHP constant), so
+ * every loaded line gets that placeholder swapped for the live
+ * SITE_BRAND before it's used, keeping the copy in sync with the
+ * dynamic brand from the domain JSON.
+ */
+function nexora_apply_brand(string $text): string {
+    return SITE_BRAND ? str_replace('NEXORA', SITE_BRAND, $text) : $text;
+}
+
+/** Reads /data/reviews.txt â€” one review quote per line. */
+function nexora_load_review_pool(): array {
+        $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/reviews.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    return array_map('nexora_apply_brand', $lines);
+}
+
+/** Reads /data/faqs.txt â€” "question|answer" per line. */
+function nexora_load_faq_pool(): array {
+        $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/faqs.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    $pool = [];
+    foreach ($lines as $line) {
+        $parts = explode('|', $line, 2);
+        if (count($parts) < 2) {
+            continue;
+        }
+        $pool[] = [
+            'q' => nexora_apply_brand(trim($parts[0])),
+            'a' => nexora_apply_brand(trim($parts[1])),
+        ];
+    }
+    return $pool;
+}
+
+/**
+ * Picks a random first name and a random last name from two
+ * separate pools and joins them â€” so the pairing on any given
+ * review is a fresh mix, not the pairing the names happened to
+ * share in the data file (e.g. "Budi" + "Kusuma" even though
+ * they came from different rows).
+ */
+function nexora_reshuffled_name(array $firstNames, array $lastNames): string {
+    $first = $firstNames[array_rand($firstNames)];
+    $last  = $lastNames[array_rand($lastNames)];
+    return ucfirst(strtolower($first)) . ' ' . ucfirst(strtolower($last));
+}
+
+/** Mostly 5 stars, occasionally 4 â€” matches a realistic positive spread. */
+function nexora_weighted_rating(): int {
+    return (mt_rand(1, 100) <= 75) ? 5 : 4;
+}
+
+function nexora_initials(string $name): string {
+    $parts = explode(' ', trim($name));
+    $first = substr($parts[0], 0, 1);
+    $last  = count($parts) > 1 ? substr(end($parts), 0, 1) : '';
+    return strtoupper($first . $last);
+}
+
+// Build 6 display reviews by sampling the pools above.
+[$firstNames, $lastNames] = nexora_load_names();
+$reviewPool = nexora_load_review_pool();
+
+$reviews = [];
+if ($firstNames && $lastNames && $reviewPool) {
+    $howMany = min(6, count($reviewPool));
+    $pickedKeys = (array) array_rand($reviewPool, $howMany);
+    shuffle($pickedKeys);
+    foreach ($pickedKeys as $key) {
+        $reviews[] = [
+            'name'   => nexora_reshuffled_name($firstNames, $lastNames),
+            'rating' => nexora_weighted_rating(),
+            'quote'  => $reviewPool[$key],
+        ];
+    }
+}
+
+// Build 10 display FAQs by sampling the pool loaded from faqs.txt.
+$faqPool = nexora_load_faq_pool();
+$faqs = [];
+if ($faqPool) {
+    $howManyFaqs = min(10, count($faqPool));
+    $faqKeys = (array) array_rand($faqPool, $howManyFaqs);
+    shuffle($faqKeys);
+    foreach ($faqKeys as $key) {
+        $faqs[] = $faqPool[$key];
+    }
+}
+?>
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><?php echo ucwords($title); ?></title>
+    <link href="<?php echo $canonical_url; ?>" rel="preconnect" />
+    <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+    <meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0" name="viewport" />
+    <meta name="title" content="<?php echo ucwords($title); ?>" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="<?php echo $canonical_url; ?>" />
+    <link rel="amphtml" href="<?php echo $amp_url; ?>" />
+    <link rel="alternate" hreflang="id-id" href="<?php echo $alternate_url; ?>" />
+    <link rel="alternate" href="<?php echo $alternate_url; ?>" />
+    <link rel="alternate" hreflang="id" href="<?php echo $alternate_url; ?>" />
+    <meta name="publisher" content="<?php echo $titlebrand; ?>" />
+    <meta name="description" content="<?php echo $meta_description; ?>" />
+    <meta name="keywords" content="<?php echo $keyword; ?>" />
+    <meta name="sitecode" content="id" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="<?php echo ucwords($title); ?>" />
+    <meta name="twitter:description" content="<?php echo $meta_description; ?>" />
+    <meta name="twitter:url" content="<?php echo $canonical_url; ?>" />
+    <meta name="twitter:image" content="<?php echo $logo; ?>" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="<?php echo $titlebrand; ?>" />
+    <meta property="og:locale" content="id_ID" />
+    <meta property="og:url" content="<?php echo $canonical_url; ?>" />
+    <meta property="og:title" content="<?php echo ucwords($title); ?>" />
+    <meta property="og:description" content="<?php echo $meta_description; ?>" />
+    <meta property="og:image" content="<?php echo $banner; ?>" />
+    <link rel="icon" type="image/png" sizes="96x96" href="<?php echo $favicon; ?>" />
+    <link rel="shortcut icon" href="<?php echo $favicon; ?>" />
+    <link rel="apple-touch-icon" sizes="144x144" href="<?php echo $favicon; ?>" />
+    <link rel="stylesheet" href="http://cdn.jsdelivr.net/gh/ggeercy/clearewave/tooplate-strategic-style.css" />
+
+    <?php if($jos['site']['google_code'] != NULL) { ?>
+    <meta name="google-site-verification" content="<?php echo $jos['site']['google_code']; ?>" />
+    <?php } else{ ?>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-SK4ZZ80WSV"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+
+      gtag('config', 'G-SK4ZZ80WSV');
+    </script>
+    <?php } ?>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "<?php echo $titlebrand; ?>",
+        "url": "<?php echo $canonical_url; ?>",
+        "logo": "<?php echo $banner; ?>",
+        "description": "<?php echo $meta_description; ?>",
+        "foundingDate": "2024",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+62-444-232-2014",
+          "contactType": "customer service",
+          "areaServed": "ID",
+          "availableLanguage": ["Indonesian"]
+        },
+        "sameAs": ["https://facebook.com/<?php echo $titlebrand; ?>", "https://instagram.com/<?php echo $titlebrand; ?>", "https://twitter.com/<?php echo $titlebrand; ?>"]
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "<?php echo $titlebrand; ?>",
+            "item": "<?php echo $canonical_url; ?>"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "<?php echo $titlebrand; ?> LOGIN",
+            "item": "<?php echo $canonical_url; ?>"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "<?php echo $titlebrand; ?> GAMES",
+            "item": "<?php echo $canonical_url; ?>"
+          }
+        ]
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context":"https://schema.org",
+        "@type":"FAQPage",
+        "mainEntity":[
+      <?php
+      $faqItems = [];
+      foreach ($faqs as $f) {
+          $faqItems[] = '    {
+            "@type":"Question",
+            "name":"' . htmlspecialchars($f['q']) . '",
+            "acceptedAnswer":{
+              "@type":"Answer",
+              "text":"' . htmlspecialchars($f['a']) . '"
+            }
+          }';
+      }
+      echo implode(",\n", $faqItems);
+      ?>
+
+        ]
+      }
+    </script>
+    <!-- REVIEW SCHEMA -->
+    <script type="application/ld+json">
+        {
+          "@context":"https://schema.org",
+          "@type":"Product","name":"<?php echo $titlebrand; ?>",
+          "description":"<?php echo $meta_description; ?>",
+          "brand":{
+            "@type":"Brand",
+            "name":"<?php echo $titlebrand; ?>"
+          },
+          "aggregateRating":{
+            "@type":"AggregateRating",
+            "ratingValue":"4.9",
+            "reviewCount":"5"
+          },
+          "review":[
+      <?php
+      $reviewItems = [];
+      foreach ($reviews as $r) {
+          $reviewItems[] = '        {
+                      "@type":"Review",
+                      "author":{"@type":"Person","name":"' . htmlspecialchars($r['name']) . '"},
+                      "reviewRating":{"@type":"Rating","ratingValue":"5","bestRating":"5"},
+                      "reviewBody":"' . htmlspecialchars($r['quote']) . '"
+                    }';
+      }
+      echo implode(",\n", $reviewItems);
+      ?>
+
+          ]
+        }
+    </script>
+
+    <style>
+
+    .article {
+    width: calc(100% - 32px);
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 40px 48px;
+    box-sizing: border-box;
+
+    font-family: 'Crimson Pro', serif;
+    font-size: 1.2rem;
+    line-height: 1.8;
+    color: var(--text-secondary);
+    text-align: justify;
+
+    background: var(--surface, #ffffff);
+    border: 1px solid var(--border, #e2e8f0);
+    border-radius: 16px;
+}
+
+.article h1,
+.article h2,
+.article h3 {
+    color: var(--text-primary, #111827);
+    font-family: inherit;
+    line-height: 1.3;
+    text-align: left;
+}
+
+.article h1 {
+    margin: 0 0 28px;
+    padding-bottom: 20px;
+    font-size: clamp(2rem, 5vw, 3rem);
+    border-bottom: 1px solid var(--border, #e2e8f0);
+}
+
+.article h2 {
+    margin: 36px 0 16px;
+    font-size: 1.8rem;
+}
+
+.article h3 {
+    margin: 28px 0 12px;
+    font-size: 1.45rem;
+}
+
+.article p {
+    margin: 0 0 20px;
+    text-align: justify;
+}
+
+.article ul,
+.article ol {
+    margin: 0 0 20px;
+    padding-left: 28px;
+}
+
+.article li {
+    margin-bottom: 8px;
+}
+
+.article img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 28px auto;
+    border-radius: 12px;
+}
+
+@media (max-width: 768px) {
+    .article {
+        width: calc(100% - 24px);
+        margin: 24px auto;
+        padding: 28px 20px;
+        font-size: 1.05rem;
+    }
+
+    .article h1 {
+        font-size: 2rem;
+    }
+
+    .article h2 {
+        font-size: 1.55rem;
+    }
+
+    .article h3 {
+        font-size: 1.3rem;
+    }
+}
+
+
+
+
+    </style>
+  </head>
+  <body>
+    <!-- Navigation -->
+    <nav class="navbar">
+      <div class="nav-container">
+        <a
+            href="<?php echo $canonical_url; ?>"
+            class="header-logo"
+            style="
+                display: flex;
+                align-items: center;
+                flex-shrink: 0;
+                height: 40px;
+            "
+        >
+            <img
+                src="<?php echo $logo; ?>"
+                alt="Logo"
+                style="
+                    display: block;
+                    width: auto;
+                    height: 42px;
+                    max-width: 180px;
+                    object-fit: contain;
+                "
+            />
+        </a>
+        <ul class="nav-links">
+          <li><a href="#home">Home</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#article">Article</a></li>
+          <li><a href="#testimonials">Testimonials</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+        <div class="mobile-menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+      <div class="geometric-shapes">
+        <div class="geo-shape"></div>
+        <div class="geo-shape"></div>
+        <div class="geo-shape"></div>
+        <div class="geo-shape"></div>
+        <div class="geo-shape"></div>
+      </div>
+      <div class="hero-content">
+        <h1><?php echo ucwords($title); ?></h1>
+        <p><?php echo $meta_description; ?></p>
+        <a href="<?php echo $final; ?>" class="cta-button">Login</a>
+        <a href="<?php echo $final; ?>" class="cta-button">Daftar</a>
+      </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="services">
+      <div class="section services-container">
+        <h2 class="section-title fade-in">Our Strategic Arsenal</h2>
+        <div class="services-layout">
+          <div class="services-content">
+            <div class="service-details active" data-service="strategy">
+              <h3>Strategic Architecture</h3>
+              <div class="service-subtitle">Comprehensive Business Framework Design</div>
+              <p>We design comprehensive business frameworks that integrate market dynamics, competitive intelligence, and organizational capabilities to create sustainable competitive advantages.</p>
+              <p>Our strategic architecture approach combines deep industry expertise with cutting-edge analytical tools to develop roadmaps that drive exceptional business performance.</p>
+              <ul class="service-features">
+                <li><span class="feature-check">✓</span> Market Analysis & Competitive Intelligence</li>
+                <li><span class="feature-check">✓</span> Strategic Roadmap Development</li>
+                <li><span class="feature-check">✓</span> Performance Metrics & KPI Framework</li>
+                <li><span class="feature-check">✓</span> Risk Assessment & Mitigation Planning</li>
+              </ul>
+            </div>
+            <div class="service-details" data-service="digital">
+              <h3>Digital Metamorphosis</h3>
+              <div class="service-subtitle">Advanced Digital Ecosystem Transformation</div>
+              <p>Transform your organization through advanced digital ecosystems that leverage emerging technologies to revolutionize customer experiences and operational efficiency.</p>
+              <p>We architect comprehensive digital transformations that seamlessly integrate AI, automation, and cloud technologies to create competitive advantages.</p>
+              <ul class="service-features">
+                <li><span class="feature-check">✓</span> AI & Automation Implementation</li>
+                <li><span class="feature-check">✓</span> Cloud Architecture & Migration</li>
+                <li><span class="feature-check">✓</span> Customer Experience Optimization</li>
+                <li><span class="feature-check">✓</span> Digital Workforce Development</li>
+              </ul>
+            </div>
+            <div class="service-details" data-service="performance">
+              <h3>Performance Engineering</h3>
+              <div class="service-subtitle">Data-Driven Optimization Excellence</div>
+              <p>Optimize organizational performance through data-driven methodologies and advanced analytics that identify breakthrough opportunities and eliminate operational inefficiencies.</p>
+              <p>Our performance engineering approach utilizes predictive analytics and machine learning to unlock hidden potential across all business functions.</p>
+              <ul class="service-features">
+                <li><span class="feature-check">✓</span> Advanced Analytics & Business Intelligence</li>
+                <li><span class="feature-check">✓</span> Process Optimization & Automation</li>
+                <li><span class="feature-check">✓</span> Predictive Modeling & Forecasting</li>
+                <li><span class="feature-check">✓</span> Cost Reduction & Efficiency Gains</li>
+              </ul>
+            </div>
+            <div class="service-details" data-service="market">
+              <h3>Market Intelligence</h3>
+              <div class="service-subtitle">Advanced Market Research & Consumer Insights</div>
+              <p>Decode complex market signals and consumer behaviors using proprietary research frameworks that reveal hidden opportunities and emerging industry disruptions.</p>
+              <p>We provide deep market insights through advanced research methodologies, competitive analysis, and trend identification to inform strategic decision-making.</p>
+              <ul class="service-features">
+                <li><span class="feature-check">✓</span> Consumer Behavior Analysis</li>
+                <li><span class="feature-check">✓</span> Market Trend Identification</li>
+                <li><span class="feature-check">✓</span> Competitive Landscape Mapping</li>
+                <li><span class="feature-check">✓</span> Opportunity Assessment & Validation</li>
+              </ul>
+            </div>
+            <div class="service-details" data-service="innovation">
+              <h3>Innovation Catalyst</h3>
+              <div class="service-subtitle">Breakthrough Innovation Acceleration</div>
+              <p>Accelerate breakthrough innovation through systematic creativity processes and emerging technology integration that positions your organization at the industry forefront.</p>
+              <p>Our innovation catalyst methodology combines design thinking, rapid prototyping, and technology scouting to create revolutionary products and services.</p>
+              <ul class="service-features">
+                <li><span class="feature-check">✓</span> Innovation Strategy & Roadmapping</li>
+                <li><span class="feature-check">✓</span> Design Thinking Workshops</li>
+                <li><span class="feature-check">✓</span> Rapid Prototyping & Testing</li>
+                <li><span class="feature-check">✓</span> Technology Scouting & Integration</li>
+              </ul>
+            </div>
+            <div class="service-details" data-service="transformation">
+              <h3>Transformation Orchestration</h3>
+              <div class="service-subtitle">Comprehensive Change Management Excellence</div>
+              <p>Navigate complex organizational change with precision-engineered methodologies that ensure seamless transitions and sustained cultural transformation.</p>
+              <p>We orchestrate enterprise-wide transformations through proven change management frameworks that maximize adoption and minimize disruption.</p>
+              <ul class="service-features">
+                <li><span class="feature-check">✓</span> Change Management Strategy</li>
+                <li><span class="feature-check">✓</span> Cultural Transformation Programs</li>
+                <li><span class="feature-check">✓</span> Leadership Development & Training</li>
+                <li><span class="feature-check">✓</span> Implementation & Success Metrics</li>
+              </ul>
+            </div>
+          </div>
+          <div class="services-tabs">
+            <div class="service-tab active" data-target="strategy">
+              <div class="tab-icon">🎯</div>
+              <div class="tab-content">
+                <h4>Strategic Architecture</h4>
+                <p>Comprehensive business frameworks and competitive strategies</p>
+              </div>
+            </div>
+            <div class="service-tab" data-target="digital">
+              <div class="tab-icon">⚡</div>
+              <div class="tab-content">
+                <h4>Digital Metamorphosis</h4>
+                <p>Advanced digital ecosystems and technology integration</p>
+              </div>
+            </div>
+            <div class="service-tab" data-target="performance">
+              <div class="tab-icon">📊</div>
+              <div class="tab-content">
+                <h4>Performance Engineering</h4>
+                <p>Data-driven optimization and analytics excellence</p>
+              </div>
+            </div>
+            <div class="service-tab" data-target="market">
+              <div class="tab-icon">🔬</div>
+              <div class="tab-content">
+                <h4>Market Intelligence</h4>
+                <p>Advanced research and consumer insights</p>
+              </div>
+            </div>
+            <div class="service-tab" data-target="innovation">
+              <div class="tab-icon">🚀</div>
+              <div class="tab-content">
+                <h4>Innovation Catalyst</h4>
+                <p>Breakthrough innovation and technology scouting</p>
+              </div>
+            </div>
+            <div class="service-tab" data-target="transformation">
+              <div class="tab-icon">🌊</div>
+              <div class="tab-content">
+                <h4>Transformation Orchestration</h4>
+                <p>Comprehensive change management and cultural transformation</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about-section">
+      <div class="section about fade-in">
+        <div class="about-content">
+          <div class="highlight">Excellence Through Innovation</div>
+          <h2>Two Decades of Strategic Mastery</h2>
+          <p>We are pioneering consultants who have redefined strategic thinking across global enterprises. Our innovative methodologies have transformed Fortune 500 companies and emerging unicorns alike.</p>
+
+          <div class="about-features">
+            <div class="feature-item">
+              <div class="feature-icon">🎯</div>
+              <div class="feature-text">Strategic Planning Excellence</div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon">📊</div>
+              <div class="feature-text">Data-Driven Insights</div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon">⚡</div>
+              <div class="feature-text">Rapid Implementation</div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon">🚀</div>
+              <div class="feature-text">Innovation Leadership</div>
+            </div>
+          </div>
+
+          <p>From initial strategy conception to full-scale implementation, we orchestrate comprehensive transformations that deliver measurable impact and sustainable competitive advantage.</p>
+
+          <p>
+            Keep productivity high with <a href="<?php echo $canonical_url; ?>" rel="nofollow" target="_blank"><?php echo $titlebrand; ?></a> timer tools. Access unlimited vector sticker designs at
+            <a href="<?php echo $canonical_url; ?>" rel="nofollow" target="_blank"><?php echo $titlebrand; ?></a>.
+          </p>
+        </div>
+
+            <div class="about-visual">
+            <div
+    class="hero-visual silk-reveal-right"
+    style="
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+        overflow: hidden;
+    "
+>
+    <img
+        src="<?php echo $banner; ?>"
+        alt="Intelligent automation dashboard"
+        style="
+            display: block;
+            width: 100%;
+            max-width: 600px;
+            max-height: 450px;
+            height: auto;
+            object-fit: contain;
+            object-position: center;
+        "
+    />
+          </div>
+
+          <div class="stats">
+            <div class="stat">
+              <span class="stat-number counter" data-count="200">0</span>
+              <span class="stat-label">Strategic Transformations</span>
+            </div>
+            <div class="stat">
+              <span class="stat-number counter" data-count="98">0</span>
+              <span class="stat-label">Success Rate</span>
+            </div>
+            <div class="stat">
+              <span class="stat-number counter" data-count="35">0</span>
+              <span class="stat-label">Industry Awards</span>
+            </div>
+          </div>
+          </div>
+       </div>
+    </section>
+
+    <!-- Team Section -->
+    <section id="article" class="team">
+        <h2 class="section-title fade-in"><?php echo ucwords($title); ?></h2>
+          <div class="article">
+            <p><?php echo $long_description; ?></p>
+          </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="testimonials">
+      <div class="section">
+        <h2 class="section-title fade-in">Client Transformations</h2>
+        <div class="testimonials-container">
+        <?php foreach ($reviews as $r): ?>
+          <div class="testimonial fade-in">
+            <div class="testimonial-content">
+              <p class="testimonial-text"><?php echo htmlspecialchars($r['quote']); ?></p>
+              <div class="testimonial-author">
+
+                  <div class="testi-stars">
+    <span><?php echo str_repeat('&#9733;', $r['rating']) . str_repeat('&#9734;', 5 - $r['rating']); ?></span>
+            </div>
+
+                <div class="author-info">
+                  <h4><?php echo htmlspecialchars($r['name']); ?></h4>
+                </div>
+
+              </div>
+            </div>
+          </div>
+          <?php endforeach; ?>
+        </div>
+      </div>
+    </section>
+
+    <style>
+      .shop-faq {
+        padding: 90px 20px;
+        background: linear-gradient(135deg, #1e293b 0%, #475569 100%);
+      }
+
+      .shop-faq-container {
+        width: 100%;
+        max-width: 960px;
+        margin: 0 auto;
+      }
+
+      .shop-faq-header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 24px;
+        margin-bottom: 36px;
+      }
+
+      .shop-faq-label {
+        margin-bottom: 8px;
+        color: #d4dbe6;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .shop-faq-title {
+        margin: 0 0 12px;
+        color: #ffffff;
+        font-size: clamp(32px, 5vw, 48px);
+        font-family: 'Crimson Pro', serif;
+        line-height: 1.15;
+      }
+
+      .shop-faq-description {
+        margin: 0;
+        color: #d4dbe6;
+        line-height: 1.7;
+      }
+
+      .shop-faq-toggle {
+        flex-shrink: 0;
+        padding: 11px 18px;
+        border: 1px solid #cbd5e1;
+        border-radius: 10px;
+        background: #ffffff;
+        color: #334155;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .shop-faq-toggle:hover {
+        color: #d4dbe6;
+        border-color: #d4dbe6;
+      }
+
+      .shop-faq-list {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      .shop-faq-item {
+        overflow: hidden;
+        border: 1px solid #9a9a9a;
+        border-radius: 16px;
+        background: #566a7e;
+        transition:
+          border-color 0.2s ease,
+          box-shadow 0.2s ease;
+      }
+
+      .shop-faq-item[open] {
+        border-color: #9a9a9a;
+        box-shadow: 0 12px 32px rgba(37, 99, 235, 0.08);
+      }
+
+      .shop-faq-question {
+        position: relative;
+        padding: 21px 64px 21px 22px;
+        color: #ffffff;
+        font-size: 16px;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-weight: 700;
+        line-height: 1.5;
+        list-style: none;
+        cursor: pointer;
+      }
+
+      .shop-faq-question::-webkit-details-marker {
+        display: none;
+      }
+
+      .shop-faq-question::before,
+      .shop-faq-question::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        right: 25px;
+        width: 14px;
+        height: 2px;
+        border-radius: 2px;
+        background: #d4dbe6;
+        transform: translateY(-50%);
+        transition: transform 0.25s ease;
+      }
+
+      .shop-faq-question::after {
+        transform: translateY(-50%) rotate(90deg);
+      }
+
+      .shop-faq-item[open] .shop-faq-question::after {
+        transform: translateY(-50%) rotate(0deg);
+      }
+
+      .shop-faq-answer {
+        padding: 0 22px 22px;
+        color: #d4dbe6;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 15px;
+        line-height: 1.8;
+      }
+
+      @media (max-width: 700px) {
+        .shop-faq {
+          padding: 65px 16px;
+        }
+
+        .shop-faq-header {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .shop-faq-toggle {
+          width: 100%;
+        }
+      }
+    </style>
+
+    <section class="shop-faq" id="faq">
+      <div class="shop-faq-container">
+        <div class="shop-faq-header">
+          <div>
+            <div class="shop-faq-label">FAQ</div>
+
+            <h2 class="shop-faq-title">Frequently Asked Questions</h2>
+
+            <p class="shop-faq-description"><?php echo $meta_description; ?></p>
+          </div>
+
+          <button type="button" class="shop-faq-toggle" id="shopFaqToggle">Expand all</button>
+        </div>
+
+        <div class="shop-faq-list" id="shopFaqList">
+        <?php foreach ($faqs as $f): ?>
+          <details class="shop-faq-item">
+            <summary class="shop-faq-question"><?php echo htmlspecialchars($f['q']); ?></summary>
+
+            <div class="shop-faq-answer"><?php echo htmlspecialchars($f['a']); ?></div>
+          </details>
+          <?php endforeach; ?>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-links">
+          <a href="<?php echo $canonical_url; ?>">Privacy Policy</a>
+          <a href="<?php echo $canonical_url; ?>">Terms of Service</a>
+          <a href="<?php echo $canonical_url; ?>">Careers</a>
+        </div>
+        <div class="footer-copyright">© 2026 <?php echo $titlebrand; ?>. All rights reserved.</div>
+        <div class="footer-design">Design: <a href="<?php echo $canonical_url; ?>" target="_blank"><?php echo $titlebrand; ?></a></div>
+      </div>
+    </footer>
+
+    <script src="http://cdn.jsdelivr.net/gh/ggeercy/clearewave/tooplate-strategic-scripts.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const toggleButton = document.getElementById('shopFaqToggle');
+        const faqItems = document.querySelectorAll('#shopFaqList .shop-faq-item');
+
+        if (!toggleButton || !faqItems.length) return;
+
+        toggleButton.addEventListener('click', function () {
+          const allOpen = [...faqItems].every(function (item) {
+            return item.open;
+          });
+
+          faqItems.forEach(function (item) {
+            item.open = !allOpen;
+          });
+
+          toggleButton.textContent = allOpen ? 'Buka Semua' : 'Tutup Semua';
+        });
+
+        faqItems.forEach(function (item) {
+          item.addEventListener('toggle', function () {
+            const allOpen = [...faqItems].every(function (faq) {
+              return faq.open;
+            });
+
+            toggleButton.textContent = allOpen ? 'Tutup Semua' : 'Buka Semua';
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

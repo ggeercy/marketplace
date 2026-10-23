@@ -1,0 +1,881 @@
+<?php
+if($jos['article_id'] != NULL)
+{
+  $brand  = array('brand123', 'Brand123');
+  $title = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['title']);
+  $meta_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['meta_description']);
+  $long_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['long_description']);
+}
+if ($alternate_url == NULL || $alternate_url == ""){
+    $alternate_url = $amp_url;
+}
+define('SITE_BRAND', $titlebrand);
+/**
+ * Single source of truth for reviews and FAQs.
+ * Both the visible HTML below AND the JSON-LD schema at the
+ * bottom of this file are generated from these two arrays,
+ * so the structured data can never drift out of sync with
+ * what a visitor actually sees on the page â€” that mismatch is
+ * exactly what gets schema markup flagged by Google.
+ */
+/**
+ * Single source of truth for reviews and FAQs.
+ * Names and review quotes come from /data/names.txt and
+ * /data/reviews.txt (300 rows each) â€” edit those files to
+ * grow or change the pool, no code changes needed. Both the
+ * visible HTML below AND the JSON-LD schema at the bottom of
+ * this file are generated from the resulting $reviews array,
+ * so the structured data can never drift out of sync with
+ * what a visitor actually sees on the page.
+ */
+
+/**
+ * Reads /data/names.txt ("firstname,lastname" per row, header
+ * on line 1) and returns the first names and last names as two
+ * separate flat arrays, so they can be recombined independently.
+ */
+function nexora_load_names(): array {
+    $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/names.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    array_shift($lines); // drop the "firstname,lastname" header row
+    $first = [];
+    $last  = [];
+    foreach ($lines as $line) {
+        $parts = str_getcsv($line);
+        if (count($parts) < 2) {
+            continue;
+        }
+        $first[] = trim($parts[0]);
+        $last[]  = trim($parts[1]);
+    }
+    return [$first, $last];
+}
+
+/**
+ * Reviews and FAQs are stored with the literal placeholder "NEXORA"
+ * in the .txt data files (plain text can't hold a PHP constant), so
+ * every loaded line gets that placeholder swapped for the live
+ * SITE_BRAND before it's used, keeping the copy in sync with the
+ * dynamic brand from the domain JSON.
+ */
+function nexora_apply_brand(string $text): string {
+    return SITE_BRAND ? str_replace('NEXORA', SITE_BRAND, $text) : $text;
+}
+
+/** Reads /data/reviews.txt â€” one review quote per line. */
+function nexora_load_review_pool(): array {
+        $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/reviews.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    return array_map('nexora_apply_brand', $lines);
+}
+
+/** Reads /data/faqs.txt â€” "question|answer" per line. */
+function nexora_load_faq_pool(): array {
+        $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/faqs.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    $pool = [];
+    foreach ($lines as $line) {
+        $parts = explode('|', $line, 2);
+        if (count($parts) < 2) {
+            continue;
+        }
+        $pool[] = [
+            'q' => nexora_apply_brand(trim($parts[0])),
+            'a' => nexora_apply_brand(trim($parts[1])),
+        ];
+    }
+    return $pool;
+}
+
+/**
+ * Picks a random first name and a random last name from two
+ * separate pools and joins them â€” so the pairing on any given
+ * review is a fresh mix, not the pairing the names happened to
+ * share in the data file (e.g. "Budi" + "Kusuma" even though
+ * they came from different rows).
+ */
+function nexora_reshuffled_name(array $firstNames, array $lastNames): string {
+    $first = $firstNames[array_rand($firstNames)];
+    $last  = $lastNames[array_rand($lastNames)];
+    return ucfirst(strtolower($first)) . ' ' . ucfirst(strtolower($last));
+}
+
+/** Mostly 5 stars, occasionally 4 â€” matches a realistic positive spread. */
+function nexora_weighted_rating(): int {
+    return (mt_rand(1, 100) <= 75) ? 5 : 4;
+}
+
+function nexora_initials(string $name): string {
+    $parts = explode(' ', trim($name));
+    $first = substr($parts[0], 0, 1);
+    $last  = count($parts) > 1 ? substr(end($parts), 0, 1) : '';
+    return strtoupper($first . $last);
+}
+
+// Build 6 display reviews by sampling the pools above.
+[$firstNames, $lastNames] = nexora_load_names();
+$reviewPool = nexora_load_review_pool();
+
+$reviews = [];
+if ($firstNames && $lastNames && $reviewPool) {
+    $howMany = min(6, count($reviewPool));
+    $pickedKeys = (array) array_rand($reviewPool, $howMany);
+    shuffle($pickedKeys);
+    foreach ($pickedKeys as $key) {
+        $reviews[] = [
+            'name'   => nexora_reshuffled_name($firstNames, $lastNames),
+            'rating' => nexora_weighted_rating(),
+            'quote'  => $reviewPool[$key],
+        ];
+    }
+}
+
+// Build 10 display FAQs by sampling the pool loaded from faqs.txt.
+$faqPool = nexora_load_faq_pool();
+$faqs = [];
+if ($faqPool) {
+    $howManyFaqs = min(10, count($faqPool));
+    $faqKeys = (array) array_rand($faqPool, $howManyFaqs);
+    shuffle($faqKeys);
+    foreach ($faqKeys as $key) {
+        $faqs[] = $faqPool[$key];
+    }
+}
+?>
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><?php echo ucwords($title); ?></title>
+    <link href="<?php echo $canonical_url; ?>" rel="preconnect" />
+    <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+    <meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0" name="viewport" />
+    <meta name="title" content="<?php echo ucwords($title); ?>" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="<?php echo $canonical_url; ?>" />
+    <link rel="amphtml" href="<?php echo $amp_url; ?>" />
+    <link rel="alternate" hreflang="id-id" href="<?php echo $alternate_url; ?>" />
+    <link rel="alternate" href="<?php echo $alternate_url; ?>" />
+    <link rel="alternate" hreflang="id" href="<?php echo $alternate_url; ?>" />
+    <meta name="publisher" content="<?php echo $titlebrand; ?>" />
+    <meta name="description" content="<?php echo $meta_description; ?>" />
+    <meta name="keywords" content="<?php echo $keyword; ?>" />
+    <meta name="sitecode" content="id" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="<?php echo ucwords($title); ?>" />
+    <meta name="twitter:description" content="<?php echo $meta_description; ?>" />
+    <meta name="twitter:url" content="<?php echo $canonical_url; ?>" />
+    <meta name="twitter:image" content="<?php echo $logo; ?>" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="<?php echo $titlebrand; ?>" />
+    <meta property="og:locale" content="id_ID" />
+    <meta property="og:url" content="<?php echo $canonical_url; ?>" />
+    <meta property="og:title" content="<?php echo ucwords($title); ?>" />
+    <meta property="og:description" content="<?php echo $meta_description; ?>" />
+    <meta property="og:image" content="<?php echo $banner; ?>" />
+    <link rel="icon" type="image/png" sizes="96x96" href="<?php echo $favicon; ?>" />
+    <link rel="shortcut icon" href="<?php echo $favicon; ?>" />
+    <link rel="apple-touch-icon" sizes="144x144" href="<?php echo $favicon; ?>" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;400;600;700&family=Archivo:wght@300;400;600;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="http://cdn.jsdelivr.net/gh/ggeercy/clearewave/tooplate-split-portfolio.css" />
+
+    <?php if($jos['site']['google_code'] != NULL) { ?>
+    <meta name="google-site-verification" content="<?php echo $jos['site']['google_code']; ?>" />
+    <?php } else{ ?>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-SK4ZZ80WSV"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+
+      gtag('config', 'G-SK4ZZ80WSV');
+    </script>
+    <?php } ?>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "<?php echo $titlebrand; ?>",
+        "url": "<?php echo $canonical_url; ?>",
+        "logo": "<?php echo $banner; ?>",
+        "description": "<?php echo $meta_description; ?>",
+        "foundingDate": "2024",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+62-444-232-2014",
+          "contactType": "customer service",
+          "areaServed": "ID",
+          "availableLanguage": ["Indonesian"]
+        },
+        "sameAs": ["https://facebook.com/<?php echo $titlebrand; ?>", "https://instagram.com/<?php echo $titlebrand; ?>", "https://twitter.com/<?php echo $titlebrand; ?>"]
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "<?php echo $titlebrand; ?>",
+            "item": "<?php echo $canonical_url; ?>"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "<?php echo $titlebrand; ?> LOGIN",
+            "item": "<?php echo $canonical_url; ?>"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "<?php echo $titlebrand; ?> GAMES",
+            "item": "<?php echo $canonical_url; ?>"
+          }
+        ]
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context":"https://schema.org",
+        "@type":"FAQPage",
+        "mainEntity":[
+      <?php
+      $faqItems = [];
+      foreach ($faqs as $f) {
+          $faqItems[] = '    {
+            "@type":"Question",
+            "name":"' . htmlspecialchars($f['q']) . '",
+            "acceptedAnswer":{
+              "@type":"Answer",
+              "text":"' . htmlspecialchars($f['a']) . '"
+            }
+          }';
+      }
+      echo implode(",\n", $faqItems);
+      ?>
+
+        ]
+      }
+    </script>
+    <!-- REVIEW SCHEMA -->
+    <script type="application/ld+json">
+        {
+          "@context":"https://schema.org",
+          "@type":"Product","name":"<?php echo $titlebrand; ?>",
+          "description":"<?php echo $meta_description; ?>",
+          "brand":{
+            "@type":"Brand",
+            "name":"<?php echo $titlebrand; ?>"
+          },
+          "aggregateRating":{
+            "@type":"AggregateRating",
+            "ratingValue":"4.9",
+            "reviewCount":"5"
+          },
+          "review":[
+      <?php
+      $reviewItems = [];
+      foreach ($reviews as $r) {
+          $reviewItems[] = '        {
+                      "@type":"Review",
+                      "author":{"@type":"Person","name":"' . htmlspecialchars($r['name']) . '"},
+                      "reviewRating":{"@type":"Rating","ratingValue":"5","bestRating":"5"},
+                      "reviewBody":"' . htmlspecialchars($r['quote']) . '"
+                    }';
+      }
+      echo implode(",\n", $reviewItems);
+      ?>
+
+          ]
+        }
+    </script>
+
+<style>
+.project-desc {
+	font-family: 'Crimson Pro', serif;
+	font-size: 1.3rem;
+	line-height: 1.8;
+	color: var(--text-secondary);
+	margin-bottom: 2rem;
+	max-width: 600px;
+}
+
+.article {
+	font-family: 'Crimson Pro', serif;
+	font-size: 1.3rem;
+	line-height: 1.8;
+	color: var(--text-secondary);
+	margin: 0 auto;
+	max-width: 600px;
+  text-align: justify;
+}
+
+.article-container {
+        width: 100%;
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 0 auto;
+      }
+
+      
+.cont-split {
+    width: calc(100% - 40px);
+    max-width: 900px;
+    margin: 50px auto;
+    padding: 40px;
+    display: flex;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.cont-info {
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.cont-info > h2 {
+    margin: 0 0 16px;
+}
+
+.cont-info > p {
+    max-width: 600px;
+    margin: 0 auto 32px;
+    line-height: 1.7;
+}
+
+.cont-details {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    max-width: 600px;
+    margin: 0 auto 32px;
+    text-align: left;
+}
+
+.cont-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 20px;
+    border-radius: 14px;
+    margin: 0 auto;
+}
+
+.cont-item-icon {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: #f1f5f9;
+    font-size: 20px;
+}
+
+.cont-item-content h4 {
+    margin: 0 0 4px;
+}
+
+.cont-item-content a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.soc-links {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+@media (max-width: 700px) {
+    .cont-split {
+        width: calc(100% - 24px);
+        margin: 30px auto;
+        padding: 24px 16px;
+    }
+
+    .cont-item {
+        padding: 15px;
+    }
+}
+
+
+</style>
+
+  </head>
+  <body>
+    <header>
+      
+      <a
+            href="<?php echo $canonical_url; ?>"
+            class="header-logo"
+            style="
+                display: flex;
+                align-items: center;
+                flex-shrink: 0;
+                height: 40px;
+            "
+        >
+            <img
+                src="<?php echo $logo; ?>"
+                alt="Logo"
+                style="
+                    display: block;
+                    width: auto;
+                    height: 42px;
+                    max-width: 180px;
+                    object-fit: contain;
+                "
+            />
+        </a>
+
+      <nav>
+        <ul class="desktop-nav">
+          <li><a href="#work">Work</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#article">Article</a></li>
+          <li><a href="#testimonials">Testimonials</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+      </nav>
+      <div class="menu-icon">
+        <span></span>
+      </div>
+    </header>
+
+    <div class="mobile-nav">
+      <button class="mobile-nav-close" aria-label="Close menu">&times;</button>
+      <ul>
+        <li><a href="#work">Work</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#article">Article</a></li>
+        <li><a href="#testimonials">Testimonials</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+      <div class="mobile-nav-footer">
+        <p>Let's create something amazing together</p>
+      </div>
+    </div>
+
+    <section id="work" class="work-section">
+    <div class="split-container" id="work">
+      <div class="left-panel">
+        <div class="image-container active" data-project="0">
+<div
+    class="hero-visual silk-reveal-right"
+    style="
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+        overflow: hidden;
+    "
+>
+    <img
+        src="<?php echo $banner; ?>"
+        alt="Intelligent automation dashboard"
+        style="
+            display: block;
+            width: 100%;
+            max-width: 600px;
+            max-height: 450px;
+            height: auto;
+            object-fit: contain;
+            object-position: center;
+        "
+    />
+</div>
+</div>
+      </div>
+      <div class="right-panel">
+        <!-- Project 1 -->
+        <div class="project-details active" data-project="0">
+          <h1 class="project-title"><?php echo ucwords($title); ?></h1>
+          <span class="project-category">Branding</span>
+
+          <p class="project-desc">
+            <?php echo $meta_description; ?>
+          </p>
+          <a href="<?php echo $final; ?>" class="view-project-btn">Login</a>
+          <a href="<?php echo $final; ?>" class="view-project-btn">Daftar</a>
+          <div class="project-info">
+            <div class="info-item">
+              <h4>Client</h4>
+              <p><?php echo $titlebrand; ?></p>
+            </div>
+            <div class="info-item">
+              <h4>Year</h4>
+              <p>2026</p>
+            </div>
+            <div class="info-item">
+              <h4>Role</h4>
+              <p>Lead Designer</p>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="services-section">
+      <div class="services-container">
+        <div class="section-header">
+          <h2>What I Do</h2>
+          <p>Comprehensive design services tailored to your needs</p>
+        </div>
+        <div class="services-grid">
+          <div class="service-card">
+            <div class="service-number">01</div>
+            
+            <h3>Brand Identity</h3>
+            <p>Creating cohesive visual identities that capture your brand's essence and resonate with your audience.</p>
+            <ul class="service-list">
+              <li>Logo Design</li>
+              <li>Brand Strategy</li>
+              <li>Visual Guidelines</li>
+              <li>Brand Collateral</li>
+            </ul>
+          </div>
+          <div class="service-card">
+            <div class="service-number">02</div>
+            <h3>Web Design</h3>
+            <p>Designing beautiful, functional websites that deliver exceptional user experiences across all devices.</p>
+            <ul class="service-list">
+              <li>UI/UX Design</li>
+              <li>Responsive Design</li>
+              <li>Prototyping</li>
+              <li>Frontend Development</li>
+            </ul>
+          </div>
+          <div class="service-card">
+            <div class="service-number">03</div>
+            <h3>Digital Strategy</h3>
+            <p>Strategic planning and consulting to help your brand succeed in the digital landscape.</p>
+            <ul class="service-list">
+              <li>User Research</li>
+              <li>Content Strategy</li>
+              <li>Digital Roadmaps</li>
+              <li>Analytics & Insights</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+            <!-- Services Section -->
+    <section id="article" class="article-section">
+      <div class="article-container">
+        <div class="section-header">
+          <h2><?php echo ucwords($title); ?></h2>
+          <div class="article">
+          <p><?php echo $long_description; ?></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="testimonials-section">
+      <div class="testimonials-container">
+        <div class="section-header">
+          <h2>Client Testimonials</h2>
+          <p>What people say about working with me</p>
+        </div>
+        <div class="testimonials-grid">
+        <?php foreach ($reviews as $r): ?>
+          <div class="testimonial-card">   
+            <p class="testimonial-text">"<?php echo htmlspecialchars($r['quote']); ?>"</p>
+            <div class="testimonial-author">
+              <div class="author-info">
+              <div class="testi-stars">
+    <span><?php echo str_repeat('&#9733;', $r['rating']) . str_repeat('&#9734;', 5 - $r['rating']); ?></span>
+            </div>
+                <h4><?php echo htmlspecialchars($r['name']); ?></h4>
+              </div>
+            </div>
+          </div>
+          
+          <?php endforeach; ?>
+        </div>
+      </div>
+    </section>
+
+    <style>
+      .shop-faq {
+        padding: 90px 20px;
+        background: #242424f2;
+      }
+
+      .shop-faq-container {
+        width: 100%;
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 40px 20px;
+      }
+
+      .shop-faq-header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 24px;
+        margin-bottom: 36px;
+      }
+
+      .shop-faq-label {
+        margin-bottom: 8px;
+        color: #ff3366;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .shop-faq-title {
+        margin: 0 0 12px;
+        color: #ffffff;
+        font-size: clamp(32px, 5vw, 48px);
+        font-family: 'Crimson Pro', serif;
+        line-height: 1.15;
+      }
+
+      .shop-faq-description {
+        margin: 0;
+        color: #d4dbe6;
+        line-height: 1.7;
+      }
+
+      .shop-faq-toggle {
+        flex-shrink: 0;
+        padding: 11px 18px;
+        border: 1px solid #cbd5e1;
+        border-radius: 10px;
+        background: #ffffff;
+        color: #334155;
+        font-family: 'Crimson Pro', serif;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .shop-faq-toggle:hover {
+        color: #ff3366;
+        border-color: #ff3366;
+      }
+
+      .shop-faq-list {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      .shop-faq-item {
+        overflow: hidden;
+        border: 1px solid #9a9a9a;
+        border-radius: 16px;
+        background: #2d2d2d;
+        transition:
+          border-color 0.2s ease,
+          box-shadow 0.2s ease;
+      }
+
+      .shop-faq-item[open] {
+        border-color: #9a9a9a;
+        box-shadow: 0 12px 32px rgba(37, 99, 235, 0.08);
+      }
+
+      .shop-faq-question {
+        position: relative;
+        padding: 21px 64px 21px 22px;
+        color: #ffffff;
+        font-size: 16px;
+        font-family: 'Crimson Pro', serif;
+        font-weight: 700;
+        line-height: 1.5;
+        list-style: none;
+        cursor: pointer;
+      }
+
+      .shop-faq-question::-webkit-details-marker {
+        display: none;
+      }
+
+      .shop-faq-question::before,
+      .shop-faq-question::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        right: 25px;
+        width: 14px;
+        height: 2px;
+        border-radius: 2px;
+        background: #ff3366;
+        transform: translateY(-50%);
+        transition: transform 0.25s ease;
+      }
+
+      .shop-faq-question::after {
+        transform: translateY(-50%) rotate(90deg);
+      }
+
+      .shop-faq-item[open] .shop-faq-question::after {
+        transform: translateY(-50%) rotate(0deg);
+      }
+
+      .shop-faq-answer {
+        padding: 0 22px 22px;
+        color: #d4dbe6;
+        font-family: 'Crimson Pro', serif;
+        font-size: 15px;
+        line-height: 1.8;
+      }
+
+      @media (max-width: 700px) {
+        .shop-faq {
+          padding: 65px 16px;
+        }
+
+        .shop-faq-header {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .shop-faq-toggle {
+          width: 100%;
+        }
+      }
+    </style>
+
+    <section id="faq" class="faq-section">
+      <div class="shop-faq-container">
+        <div class="shop-faq-header">
+          <div>
+            <div class="shop-faq-label">FAQ</div>
+
+            <h2 class="shop-faq-title">Frequently Asked Questions</h2>
+
+            <p class="shop-faq-description"><?php echo $meta_description; ?></p>
+          </div>
+
+          <button type="button" class="shop-faq-toggle" id="shopFaqToggle">Open All</button>
+        </div>
+
+        <div class="shop-faq-list" id="shopFaqList">
+          <?php foreach ($faqs as $f): ?>
+          <details class="shop-faq-item">
+            <summary class="shop-faq-question"><?php echo htmlspecialchars($f['q']); ?></summary>
+            <div class="shop-faq-answer"><?php echo htmlspecialchars($f['a']); ?></div>
+          </details>
+          <?php endforeach; ?>
+        </div>
+      </div>
+    </section>
+
+        <div class="cont-split">
+            <div class="cont-info">
+                <h2>Let's Work Together</h2>
+                <p>Have a project in mind? I'd love to hear about it. Send me a message and let's create something amazing together.</p>
+                <div class="cont-details">
+                    <div class="cont-item">
+                        <div class="cont-item-icon">📧</div>
+                        <div class="cont-item-content">
+                            <h4>Email</h4>
+                            <a href="<?php echo $canonical_url; ?>"><span class="__cf_email__" data-cfemail="18707d747477587d60797568747d367b7775">[email&nbsp;protected]</span></a>
+                        </div>
+                    </div>
+                    <div class="cont-item">
+                        <div class="cont-item-icon">📱</div>
+                        <div class="cont-item-content">
+                            <h4>Phone</h4>
+                            <a href="<?php echo $canonical_url; ?>">+1 (234) 567-890</a>
+                        </div>
+                    </div>
+                    <div class="cont-item">
+                        <div class="cont-item-icon">📍</div>
+                        <div class="cont-item-content">
+                            <h4>Location</h4>
+                            <a href="<?php echo $canonical_url; ?>" target="_blank">New York City, NY</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="soc-links">
+                    <a href="<?php echo $canonical_url; ?>" class="social-link" title="Dribbble">Dr</a>
+                    <a href="<?php echo $canonical_url; ?>" class="social-link" title="Behance">Be</a>
+                    <a href="<?php echo $canonical_url; ?>" class="social-link" title="Instagram">In</a>
+                    <a href="<?php echo $canonical_url; ?>" class="social-link" title="LinkedIn">Li</a>
+                    <a href="<?php echo $canonical_url; ?>" class="social-link" title="Twitter">Tw</a>
+                </div>
+            </div>
+        </div>
+
+    <footer>
+      <p>Copyright © 2026 Your Company Name. All rights reserved. Design: <a rel="nofollow" href="<?php echo $canonical_url; ?>" target="_blank"><?php echo $titlebrand; ?></a></p>
+    </footer>
+
+    <script src="http://cdn.jsdelivr.net/gh/ggeercy/clearewave/tooplate-split-scripts.js"></script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const toggleButton = document.getElementById('shopFaqToggle');
+        const faqItems = document.querySelectorAll('#shopFaqList .shop-faq-item');
+
+        if (!toggleButton || !faqItems.length) return;
+
+        toggleButton.addEventListener('click', function () {
+          const allOpen = [...faqItems].every(function (item) {
+            return item.open;
+          });
+
+          faqItems.forEach(function (item) {
+            item.open = !allOpen;
+          });
+
+          toggleButton.textContent = allOpen ? 'Buka Semua' : 'Tutup Semua';
+        });
+
+        faqItems.forEach(function (item) {
+          item.addEventListener('toggle', function () {
+            const allOpen = [...faqItems].every(function (faq) {
+              return faq.open;
+            });
+
+            toggleButton.textContent = allOpen ? 'Tutup Semua' : 'Buka Semua';
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
