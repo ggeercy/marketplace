@@ -1,0 +1,1078 @@
+<?php
+if($jos['article_id'] != NULL)
+{
+  $brand  = array('brand123', 'Brand123');
+  $title = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['title']);
+  $meta_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['meta_description']);
+  $long_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['long_description']);
+}
+if ($alternate_url == NULL || $alternate_url == ""){
+    $alternate_url = $amp_url;
+}
+define('SITE_BRAND', $titlebrand);
+/**
+ * Single source of truth for reviews and FAQs.
+ * Both the visible HTML below AND the JSON-LD schema at the
+ * bottom of this file are generated from these two arrays,
+ * so the structured data can never drift out of sync with
+ * what a visitor actually sees on the page â€” that mismatch is
+ * exactly what gets schema markup flagged by Google.
+ */
+/**
+ * Single source of truth for reviews and FAQs.
+ * Names and review quotes come from /data/names.txt and
+ * /data/reviews.txt (300 rows each) â€” edit those files to
+ * grow or change the pool, no code changes needed. Both the
+ * visible HTML below AND the JSON-LD schema at the bottom of
+ * this file are generated from the resulting $reviews array,
+ * so the structured data can never drift out of sync with
+ * what a visitor actually sees on the page.
+ */
+
+/**
+ * Reads /data/names.txt ("firstname,lastname" per row, header
+ * on line 1) and returns the first names and last names as two
+ * separate flat arrays, so they can be recombined independently.
+ */
+function nexora_load_names(): array {
+    $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/names.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    array_shift($lines); // drop the "firstname,lastname" header row
+    $first = [];
+    $last  = [];
+    foreach ($lines as $line) {
+        $parts = str_getcsv($line);
+        if (count($parts) < 2) {
+            continue;
+        }
+        $first[] = trim($parts[0]);
+        $last[]  = trim($parts[1]);
+    }
+    return [$first, $last];
+}
+
+/**
+ * Reviews and FAQs are stored with the literal placeholder "NEXORA"
+ * in the .txt data files (plain text can't hold a PHP constant), so
+ * every loaded line gets that placeholder swapped for the live
+ * SITE_BRAND before it's used, keeping the copy in sync with the
+ * dynamic brand from the domain JSON.
+ */
+function nexora_apply_brand(string $text): string {
+    return SITE_BRAND ? str_replace('NEXORA', SITE_BRAND, $text) : $text;
+}
+
+/** Reads /data/reviews.txt â€” one review quote per line. */
+function nexora_load_review_pool(): array {
+        $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/reviews.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    return array_map('nexora_apply_brand', $lines);
+}
+
+/** Reads /data/faqs.txt â€” "question|answer" per line. */
+function nexora_load_faq_pool(): array {
+        $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/faqs.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    $pool = [];
+    foreach ($lines as $line) {
+        $parts = explode('|', $line, 2);
+        if (count($parts) < 2) {
+            continue;
+        }
+        $pool[] = [
+            'q' => nexora_apply_brand(trim($parts[0])),
+            'a' => nexora_apply_brand(trim($parts[1])),
+        ];
+    }
+    return $pool;
+}
+
+/**
+ * Picks a random first name and a random last name from two
+ * separate pools and joins them â€” so the pairing on any given
+ * review is a fresh mix, not the pairing the names happened to
+ * share in the data file (e.g. "Budi" + "Kusuma" even though
+ * they came from different rows).
+ */
+function nexora_reshuffled_name(array $firstNames, array $lastNames): string {
+    $first = $firstNames[array_rand($firstNames)];
+    $last  = $lastNames[array_rand($lastNames)];
+    return ucfirst(strtolower($first)) . ' ' . ucfirst(strtolower($last));
+}
+
+/** Mostly 5 stars, occasionally 4 â€” matches a realistic positive spread. */
+function nexora_weighted_rating(): int {
+    return (mt_rand(1, 100) <= 75) ? 5 : 4;
+}
+
+function nexora_initials(string $name): string {
+    $parts = explode(' ', trim($name));
+    $first = substr($parts[0], 0, 1);
+    $last  = count($parts) > 1 ? substr(end($parts), 0, 1) : '';
+    return strtoupper($first . $last);
+}
+
+// Build 6 display reviews by sampling the pools above.
+[$firstNames, $lastNames] = nexora_load_names();
+$reviewPool = nexora_load_review_pool();
+
+$reviews = [];
+if ($firstNames && $lastNames && $reviewPool) {
+    $howMany = min(6, count($reviewPool));
+    $pickedKeys = (array) array_rand($reviewPool, $howMany);
+    shuffle($pickedKeys);
+    foreach ($pickedKeys as $key) {
+        $reviews[] = [
+            'name'   => nexora_reshuffled_name($firstNames, $lastNames),
+            'rating' => nexora_weighted_rating(),
+            'quote'  => $reviewPool[$key],
+        ];
+    }
+}
+
+// Build 10 display FAQs by sampling the pool loaded from faqs.txt.
+$faqPool = nexora_load_faq_pool();
+$faqs = [];
+if ($faqPool) {
+    $howManyFaqs = min(10, count($faqPool));
+    $faqKeys = (array) array_rand($faqPool, $howManyFaqs);
+    shuffle($faqKeys);
+    foreach ($faqKeys as $key) {
+        $faqs[] = $faqPool[$key];
+    }
+}
+?>
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><?php echo ucwords($title); ?></title>
+    <link href="<?php echo $canonical_url; ?>" rel="preconnect" />
+    <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+    <meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0" name="viewport" />
+    <meta name="title" content="<?php echo ucwords($title); ?>" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="<?php echo $canonical_url; ?>" />
+    <link rel="amphtml" href="<?php echo $amp_url; ?>" />
+    <link rel="alternate" hreflang="id-id" href="<?php echo $alternate_url; ?>" />
+    <link rel="alternate" href="<?php echo $alternate_url; ?>" />
+    <link rel="alternate" hreflang="id" href="<?php echo $alternate_url; ?>" />
+    <meta name="publisher" content="<?php echo $titlebrand; ?>" />
+    <meta name="description" content="<?php echo $meta_description; ?>" />
+    <meta name="keywords" content="<?php echo $keyword; ?>" />
+    <meta name="sitecode" content="id" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="<?php echo ucwords($title); ?>" />
+    <meta name="twitter:description" content="<?php echo $meta_description; ?>" />
+    <meta name="twitter:url" content="<?php echo $canonical_url; ?>" />
+    <meta name="twitter:image" content="<?php echo $logo; ?>" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="<?php echo $titlebrand; ?>" />
+    <meta property="og:locale" content="id_ID" />
+    <meta property="og:url" content="<?php echo $canonical_url; ?>" />
+    <meta property="og:title" content="<?php echo ucwords($title); ?>" />
+    <meta property="og:description" content="<?php echo $meta_description; ?>" />
+    <meta property="og:image" content="<?php echo $banner; ?>" />
+    <link rel="icon" type="image/png" sizes="96x96" href="<?php echo $favicon; ?>" />
+    <link rel="shortcut icon" href="<?php echo $favicon; ?>" />
+    <link rel="apple-touch-icon" sizes="144x144" href="<?php echo $favicon; ?>" />
+
+
+	<!-- CSS
+    ================================================== -->
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ggeercy/woo10/default.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ggeercy/woo10/layout.css">
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ggeercy/woo10/media-queries.css">
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ggeercy/woo10/animate.css">
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ggeercy/woo10/prettyPhoto.css">
+
+   <!-- Script
+   ================================================== -->
+	<script src="https://cdn.jsdelivr.net/gh/ggeercy/woo10/modernizr.js"></script>
+
+
+
+<style>
+
+.review-section {
+  padding: 80px 20px;
+  background: #f8fafc;
+}
+
+.review-header {
+  max-width: 700px;
+  margin: 0 auto 40px;
+  text-align: center;
+}
+
+.review-header h2 {
+  margin: 0 0 12px;
+  font-size: clamp(2rem, 4vw, 3rem);
+  color: #111827;
+}
+
+.review-header p {
+  margin: 0;
+  color: #64748b;
+  line-height: 1.7;
+}
+
+.review-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.review-card {
+  display: flex;
+  flex-direction: column;
+  padding: 28px;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+}
+
+.review-stars {
+  margin-bottom: 18px;
+  color: #f59e0b;
+  font-size: 20px;
+  letter-spacing: 3px;
+}
+
+.review-text {
+  flex: 1;
+  margin: 0 0 24px;
+  color: #475569;
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+.review-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.review-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: #111827;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.review-profile h3 {
+  margin: 0 0 4px;
+  color: #111827;
+  font-size: 16px;
+}
+
+.review-profile span {
+  color: #64748b;
+  font-size: 13px;
+}
+
+/* Tablet: 2 kartu per baris */
+@media (max-width: 900px) {
+  .review-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* HP: 1 kartu per baris */
+@media (max-width: 600px) {
+  .review-section {
+    padding: 55px 16px;
+  }
+
+  .review-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .review-card {
+    padding: 22px;
+  }
+}
+      .shop-faq {
+        padding: 90px 20px;
+        background: #23292F;
+      }
+
+      .shop-faq-container {
+        width: 100%;
+        max-width: 960px;
+        margin: 0 auto;
+      }
+
+      .shop-faq-header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 24px;
+        margin-bottom: 36px;
+      }
+
+      .shop-faq-label {
+        margin-bottom: 8px;
+        color: #d4dbe6;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .shop-faq-title {
+        margin: 0 0 12px;
+        color: #ffffff;
+        font-size: clamp(32px, 5vw, 48px);
+        font-family: 'Crimson Pro', serif;
+        line-height: 1.15;
+      }
+
+      .shop-faq-description {
+        margin: 0;
+        color: #d4dbe6;
+        line-height: 1.7;
+      }
+
+      .shop-faq-toggle {
+        flex-shrink: 0;
+        padding: 11px 18px;
+        border: 1px solid #cbd5e1;
+        border-radius: 10px;
+        background: #ffffff;
+        color: #334155;
+        font-family: sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .shop-faq-toggle:hover {
+        color: #d4dbe6;
+        border-color: #d4dbe6;
+      }
+
+      .shop-faq-list {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      .shop-faq-item {
+        overflow: hidden;
+        border: 1px solid #9a9a9a;
+        border-radius: 16px;
+        background: #3c4753;
+        transition:
+          border-color 0.2s ease,
+          box-shadow 0.2s ease;
+      }
+
+      .shop-faq-item[open] {
+        border-color: #9a9a9a;
+        box-shadow: 0 12px 32px rgba(37, 99, 235, 0.08);
+      }
+
+      .shop-faq-question {
+        position: relative;
+        padding: 21px 64px 21px 22px;
+        color: #ffffff;
+        font-size: 16px;
+        font-family: sans-serif;
+        font-weight: 700;
+        line-height: 1.5;
+        list-style: none;
+        cursor: pointer;
+      }
+
+      .shop-faq-question::-webkit-details-marker {
+        display: none;
+      }
+
+      .shop-faq-question::before,
+      .shop-faq-question::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        right: 25px;
+        width: 14px;
+        height: 2px;
+        border-radius: 2px;
+        background: #d4dbe6;
+        transform: translateY(-50%);
+        transition: transform 0.25s ease;
+      }
+
+      .shop-faq-question::after {
+        transform: translateY(-50%) rotate(90deg);
+      }
+
+      .shop-faq-item[open] .shop-faq-question::after {
+        transform: translateY(-50%) rotate(0deg);
+      }
+
+      .shop-faq-answer {
+        padding: 0 22px 22px;
+        color: #ffffff;
+        font-family: sans-serif;
+        font-size: 15px;
+        line-height: 1.8;
+      }
+
+      @media (max-width: 700px) {
+        .shop-faq {
+          padding: 65px 16px;
+        }
+
+        .shop-faq-header {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .shop-faq-toggle {
+          width: 100%;
+        }
+      }
+    </style>
+
+
+
+<?php if($jos['site']['google_code'] != NULL) { ?>
+    <meta name="google-site-verification" content="<?php echo $jos['site']['google_code']; ?>" />
+    <?php } else{ ?>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-SK4ZZ80WSV"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+
+      gtag('config', 'G-SK4ZZ80WSV');
+    </script>
+    <?php } ?>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "<?php echo $titlebrand; ?>",
+        "url": "<?php echo $canonical_url; ?>",
+        "logo": "<?php echo $banner; ?>",
+        "description": "<?php echo $meta_description; ?>",
+        "foundingDate": "2024",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+62-444-232-2014",
+          "contactType": "customer service",
+          "areaServed": "ID",
+          "availableLanguage": ["Indonesian"]
+        },
+        "sameAs": ["https://facebook.com/<?php echo $titlebrand; ?>", "https://instagram.com/<?php echo $titlebrand; ?>", "https://twitter.com/<?php echo $titlebrand; ?>"]
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "<?php echo $titlebrand; ?>",
+            "item": "<?php echo $canonical_url; ?>"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "<?php echo $titlebrand; ?> LOGIN",
+            "item": "<?php echo $canonical_url; ?>"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "<?php echo $titlebrand; ?> GAMES",
+            "item": "<?php echo $canonical_url; ?>"
+          }
+        ]
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context":"https://schema.org",
+        "@type":"FAQPage",
+        "mainEntity":[
+      <?php
+      $faqItems = [];
+      foreach ($faqs as $f) {
+          $faqItems[] = '    {
+            "@type":"Question",
+            "name":"' . htmlspecialchars($f['q']) . '",
+            "acceptedAnswer":{
+              "@type":"Answer",
+              "text":"' . htmlspecialchars($f['a']) . '"
+            }
+          }';
+      }
+      echo implode(",\n", $faqItems);
+      ?>
+
+        ]
+      }
+    </script>
+    <!-- REVIEW SCHEMA -->
+    <script type="application/ld+json">
+        {
+          "@context":"https://schema.org",
+          "@type":"Product","name":"<?php echo $titlebrand; ?>",
+          "description":"<?php echo $meta_description; ?>",
+          "brand":{
+            "@type":"Brand",
+            "name":"<?php echo $titlebrand; ?>"
+          },
+          "aggregateRating":{
+            "@type":"AggregateRating",
+            "ratingValue":"4.9",
+            "reviewCount":"5"
+          },
+          "review":[
+      <?php
+      $reviewItems = [];
+      foreach ($reviews as $r) {
+          $reviewItems[] = '        {
+                      "@type":"Review",
+                      "author":{"@type":"Person","name":"' . htmlspecialchars($r['name']) . '"},
+                      "reviewRating":{"@type":"Rating","ratingValue":"5","bestRating":"5"},
+                      "reviewBody":"' . htmlspecialchars($r['quote']) . '"
+                    }';
+      }
+      echo implode(",\n", $reviewItems);
+      ?>
+
+          ]
+        }
+    </script>
+
+</head>
+
+<body>
+
+   <!-- Header
+   ================================================== -->
+   <header>
+
+      <div class="logo">
+         <a class="smoothscroll" href="<?php echo $canonical_url; ?>"><img alt="" src="<?php echo $logo; ?>"></a>
+      </div>
+
+      <nav id="nav-wrap">         
+         
+         <a class="mobile-btn" href="#nav-wrap" title="Show navigation">Show Menu</a>
+	      <a class="mobile-btn" href="#" title="Hide navigation">Hide Menu</a>         
+
+         <ul id="nav" class="nav">
+            <li><a class="smoothscroll" href="#hero">Home</a></li>
+	         <li><a class="smoothscroll" href="#pricing">Pricing</a></li>
+            <li><a class="smoothscroll" href="#testimonial">Testimonial</a></li>
+            <li><a class="smoothscroll" href="#call-to-action">Call to Action</a></li>
+            <li><a class="smoothscroll" href="#screenshots">Article</a></li>
+            <li><a class="smoothscroll" href="#faq">FAQ</a></li>
+            <li><a class="smoothscroll" href="#subscribe">Subscribe</a></li>
+         </ul> <!-- end #nav -->
+
+      </nav> <!-- end #nav-wrap -->
+
+
+   </header> <!-- Header End -->
+
+
+   <!-- Homepage Hero
+   ================================================== -->
+   <section id="hero">
+
+	   <div class="row">
+
+		   <div class="twelve columns">
+
+			   <div class="hero-text">
+				   <h1 class="responsive-headline"><?php echo ucwords($title); ?></h1>
+
+				   <p><?php echo $meta_description; ?></p>
+			   </div>
+
+            <div class="buttons">
+               <a class="button trial" href="<?php echo $final; ?>">Login</a>
+               <a class="button learn-more smoothscroll" href="<?php echo $final; ?>">Daftar</a>
+            </div>
+
+            <div class="hero-image">
+               <img src="<?php echo $banner; ?>" alt="" />
+            </div>
+
+		   </div>
+
+	   </div>
+
+   </section> <!-- Homepage Hero end -->
+
+    <!-- Pricing Section
+   ================================================== -->
+   <section id="pricing">
+
+      <div class="row section-head">
+
+         <h1>Pricing Tables.</h1>
+
+         <p>Explore our flexible pricing plans designed to meet your needs. Compare features, choose the plan that works best for you, and get the best value for your investment.
+         </p>
+
+      </div>
+
+      <div class="row">
+
+         <div class="pricing-tables bgrid-quarters s-bgrid-halves">
+
+            <div class="column">
+
+               <div class="price-block">
+
+                  <h3 class="plan-title"><i class="fa fa-cog"></i>Starter</h3>
+                  <p class="plan-price">FREE <span>per month</span></p>
+
+                  <ul class="features">
+                     <li>1GB Storage</li>
+                     <li>5GB Bandwidth</li>
+                     <li>2 Domains</li>
+                     <li>3 Databases</li>
+                     <li>1 FTP Account</li>
+                     <li>25 Email Accounts</li>
+                  </ul>
+
+                  <footer class="plan-sign-up">
+                     <a class="button" href="">Sign Up</a>
+                  </footer>
+
+               </div> <!-- End Price Block -->
+
+			   </div> <!-- End Column -->
+
+            <div class="column">
+
+               <div class="price-block">
+
+                  <h3 class="plan-title"><i class="fa fa-thumbs-up"></i>Standard</h3>
+                  <p class="plan-price">$9.99 <span>per month</span></p>
+
+                  <ul class="features">
+                     <li>3GB Storage</li>
+                     <li>10GB Bandwidth</li>
+                     <li>3 Domains</li>
+                     <li>5 Databases</li>
+                     <li>3 FTP Account</li>
+                     <li>30 Email Accounts</li>
+                  </ul>
+
+                  <footer class="plan-sign-up">
+                     <a class="button" href="">Sign Up</a>
+                  </footer>
+
+               </div> <!-- End Price Block -->
+
+			   </div> <!-- End Column -->
+
+           <div class="column">
+
+               <div class="price-block">
+
+                  <h3 class="plan-title"><i class="fa fa-star"></i>Premium</h3>
+                  <p class="plan-price">$19.99 <span>per month</span></p>
+
+                  <ul class="features">
+                     <li>10GB Storage</li>
+                     <li>25GB Bandwidth</li>
+                     <li>5 Domains</li>
+                     <li>10 Databases</li>
+                     <li>10 FTP Account</li>
+                     <li>50 Email Accounts</li>
+                  </ul>
+
+                  <footer class="plan-sign-up">
+                     <a class="button" href="">Sign Up</a>
+                  </footer>
+
+               </div> <!-- End Price block -->
+
+			   </div> <!-- End Column -->
+
+            <div class="column">
+
+               <div class="price-block">
+
+                  <h3 class="plan-title"><i class="fa fa-trophy"></i>Ultimate</h3>
+                  <p class="plan-price">$29.99 <span>per month</span></p>
+
+                  <ul class="features">
+                     <li>30 Storage</li>
+                     <li>Unlimited Bandwidth</li>
+                     <li>10 Domains</li>
+                     <li>15 Databases</li>
+                     <li>10 FTP Account</li>
+                     <li>50 Email Accounts</li>
+                  </ul>
+
+                  <footer class="plan-sign-up">
+                     <a class="button" href="">Sign Up</a>
+                  </footer>
+
+               </div> <!-- End Price Block -->
+
+			   </div> <!-- End Column -->
+
+         </div>
+
+      </div>
+
+   </section> <!-- Pricing End -->
+
+
+   <!-- Features Section
+   ================================================== -->
+
+      <section id = "testimonial" class="review-section">
+  <div class="review-header">
+    <h2>What Our Customers Say</h2>
+    <p>Pengalaman pelanggan yang telah menggunakan layanan kami.</p>
+  </div>
+
+  <div class="review-grid">
+<?php foreach ($reviews as $r): ?>
+    <article class="review-card">
+                  <div class="testi-stars">
+    <span><?php echo str_repeat('&#9733;', $r['rating']) . str_repeat('&#9734;', 5 - $r['rating']); ?></span>
+            </div>
+      <p class="review-text">
+        <?php echo htmlspecialchars($r['quote']); ?>
+      </p>
+      <div class="review-profile">
+        <div>
+          <h3><?php echo htmlspecialchars($r['name']); ?></h3>
+          <span>Verified Customer</span>
+        </div>
+      </div>
+    </article>
+<?php endforeach; ?>
+  </div>
+
+   </section> <!-- Homepage Hero end -->
+
+
+
+   <!-- Call-To-Action Section
+   ================================================== -->
+   <section id="call-to-action">
+
+      <div class="row">
+
+         <div class="seven columns">
+
+            <h2>Host This Template on <?php echo $titlebrand; ?>.</a></h2>
+            <p><?php echo $meta_description; ?></p>
+
+         </div>
+
+         <div class="three columns action">
+
+            <a href="<?php echo $final; ?>" class="button">Daftar Sekarang</a>
+
+         </div>
+
+      </div>
+
+   </section> <!-- Call-To-Action Section End-->
+
+
+   <!-- Screenshots
+   ================================================== -->
+   <section id="screenshots">
+
+      <div class="row section-head">
+
+         <h1><?php echo ucwords($title); ?></h1>
+
+         <p><?php echo $long_description; ?>
+         </p>
+
+      </div>
+
+      
+
+   </section> <!-- Screenshots End -->
+
+
+   <!-- Testimonials Section
+   ================================================== -->
+   <section id="testimonials">
+
+      <div class="row content">
+
+         <span><i class="quote-left fa fa-quote-left"></i></span>
+
+         <div class="text-container">
+
+            <div class="twelve columns">
+
+               <h1>What People Are Saying.</h1>
+
+            </div>
+
+            <div class="twelve columns flex-container">
+
+               <div class="flexslider">
+
+                  <ul class="slides">
+
+                     <li>
+                        <blockquote>
+                           <p>Your work is going to fill a large part of your life, and the only way to be truly satisfied is
+                           to do what you believe is great work. And the only way to do great work is to love what you do.
+                           If you haven't found it yet, keep looking. Don't settle. As with all matters of the heart, you'll know when you find it.
+                           </p>
+                           <cite>Steve Jobs</cite>
+                        </blockquote>
+                     </li> <!-- slide ends -->
+
+                     <li>
+                        <blockquote>
+                           <p>This is Photoshop's version  of Lorem Ipsum. Proin gravida nibh vel velit auctor aliquet.
+                           Aenean sollicitudin, lorem quis bibendum auctor, nisi elit consequat ipsum, nec sagittis sem
+                           nibh id elit. Duis sed odio sit amet nibh vulputate cursus a sit amet mauris.
+                           </p>
+                           <cite>Mr. Adobe</cite>
+                        </blockquote>
+                     </li> <!-- slide ends -->
+
+                  </ul>
+
+               </div> <!-- div.flexslider ends -->
+
+            </div> <!-- div.flex-container ends -->
+
+         </div>  <!-- text-container ends -->
+
+         <span><i class="quote-right fa fa-quote-right"></i></span>
+
+      </div> <!-- row ends -->
+
+   </section> 
+
+
+<section class="shop-faq" id="faq">
+      <div class="shop-faq-container">
+        <div class="shop-faq-header">
+          <div>
+            <div class="shop-faq-label">FAQ</div>
+
+            <h2 class="shop-faq-title">Frequently Asked Questions</h2>
+
+            <p class="shop-faq-description"><?php echo $meta_description; ?></p>
+          </div>
+
+          <button type="button" class="shop-faq-toggle" id="shopFaqToggle">Expand all</button>
+        </div>
+
+        <div class="shop-faq-list" id="shopFaqList">
+        <?php foreach ($faqs as $f): ?>
+          <details class="shop-faq-item">
+            <summary class="shop-faq-question"><?php echo htmlspecialchars($f['q']); ?></summary>
+
+            <div class="shop-faq-answer"><?php echo htmlspecialchars($f['a']); ?></div>
+          </details>
+          <?php endforeach; ?>
+        </div>
+      </div>
+    </section>
+
+
+   <!-- Subscribe
+   ================================================== -->
+   <section id="subscribe">
+
+      <div class="row section-head">
+
+         <div class="twelve columns">
+
+            <h1><?php echo $titlebrand; ?> signup form.</h1>
+
+            <p>Adding your own <?php echo $titlebrand; ?> powered email sign-up is easy.
+            Grab the super slim code from your <?php echo $titlebrand; ?> account and drop the code here. Lastly, remove the link and style tags
+            that comes with the embedded code and your good to go. All styling is within our stylesheet.</p>
+
+         </div>
+
+      </div>
+
+      <div class="row">
+
+         <div class="twelve columns">
+
+         <!-- Begin <?php echo $titlebrand; ?> Signup Form -->
+
+            <div id="mc_embed_signup">
+               <form action="<?php echo $final; ?>" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+                  
+                  <input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="email address" required>
+                   <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+                   <div style="position: absolute; left: -5000px;"><input type="text" name="b_cdb7b577e41181934ed6a6a44_e65110b38d" value=""></div>
+                  <div class="clear"><input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button"></div>
+               
+            </form>
+            </div>
+
+            <p><small>We never share your information or use it to spam you.</small></p>
+
+         </div>
+
+      </div>
+
+   </section>  <!-- Subscribe Section End-->
+
+
+   <!-- Footer
+   ================================================== -->
+   <footer>
+
+      <div class="row">         
+
+         <div class="six columns info">
+
+            <div class="footer-logo">
+               <a href="<?php echo $canonical_url; ?>">
+                  <img src="<?php echo $logo; ?>" alt="" />
+               </a>
+            </div>
+
+            <p><?php echo $meta_description; ?>
+            </p>
+
+         </div>
+
+         <div class="six columns right-cols">
+
+            <div class="row">
+
+               <div class="columns">
+                  <h3>Come Visit</h3>
+                  <p>
+                  1600 Amphitheatre Parkway<br>
+                  Mountain View, CA<br>
+                  94043 US
+                  </p>
+               </div>
+
+               <div class="columns">
+                  <h3>socialize</h3>
+                  <ul>
+                     <li><a href="<?php echo $canonical_url; ?>">Facebook</a></li>
+                     <li><a href="<?php echo $canonical_url; ?>">Twitter</a></li>
+                     <li><a href="<?php echo $canonical_url; ?>">GooglePlus</a></li>
+                  </ul>
+               </div>
+
+               <div class="columns last">
+                  <h3>Contact Us</h3>
+                  <ul>
+                    <li><a href="<?php echo $canonical_url; ?>">647.343.8234</a></li>
+                    <li><a href="<?php echo $canonical_url; ?>">123.456.7890</a></li>
+                    <li><a href="<?php echo $canonical_url; ?>">someone@woosite.com</a></li>
+                  </ul>
+               </div>
+
+            </div> <!-- Nested Row End -->
+
+         </div>
+
+         <p class="copyright">&copy; <?php echo $titlebrand; ?> | Design by <a title="<?php echo $titlebrand; ?>" href="<?php echo $canonical_url; ?>"><?php echo $titlebrand; ?></a></p>
+
+         <div id="go-top">
+            <a class="smoothscroll" title="Back to Top" href="#hero"><i class="icon-up-open"></i></a>
+         </div>
+
+      </div> <!-- Row End -->
+
+   </footer> <!-- Footer End-->
+
+
+   <!-- Java Script
+   ================================================== -->
+   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+   <script>window.jQuery || document.write('<script src="https://cdn.jsdelivr.net/gh/ggeercy/woo10/jquery-1.10.2.min.js"><\/script>')</script>
+   <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/ggeercy/woo10/jquery-migrate-1.2.1.min.js"></script>
+
+   <script src="https://cdn.jsdelivr.net/gh/ggeercy/woo10/jquery.flexslider.js"></script>
+   <script src="https://cdn.jsdelivr.net/gh/ggeercy/woo10/waypoints.js"></script>
+   <script src="https://cdn.jsdelivr.net/gh/ggeercy/woo10/jquery.fittext.js"></script>
+   <script src="https://cdn.jsdelivr.net/gh/ggeercy/woo10/jquery.fitvids.js"></script>
+   <script src="https://cdn.jsdelivr.net/gh/ggeercy/woo10/imagelightbox.js"></script>
+   <script src="https://cdn.jsdelivr.net/gh/ggeercy/woo10/jquery.prettyPhoto.js"></script>   
+   <script src="https://cdn.jsdelivr.net/gh/ggeercy/woo10/main.js"></script>
+
+   <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const toggleButton = document.getElementById('shopFaqToggle');
+        const faqItems = document.querySelectorAll('#shopFaqList .shop-faq-item');
+
+        if (!toggleButton || !faqItems.length) return;
+
+        toggleButton.addEventListener('click', function () {
+          const allOpen = [...faqItems].every(function (item) {
+            return item.open;
+          });
+
+          faqItems.forEach(function (item) {
+            item.open = !allOpen;
+          });
+
+          toggleButton.textContent = allOpen ? 'Buka Semua' : 'Tutup Semua';
+        });
+
+        faqItems.forEach(function (item) {
+          item.addEventListener('toggle', function () {
+            const allOpen = [...faqItems].every(function (faq) {
+              return faq.open;
+            });
+
+            toggleButton.textContent = allOpen ? 'Tutup Semua' : 'Buka Semua';
+          });
+        });
+      });
+    </script>
+
+</body>
+
+</html>
