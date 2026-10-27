@@ -1,0 +1,875 @@
+<?php
+if($jos['article_id'] != NULL)
+{
+  $brand  = array('brand123', 'Brand123');
+  $title = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['title']);
+  $meta_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['meta_description']);
+  $long_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['long_description']);
+}
+if ($alternate_url == NULL || $alternate_url == ""){
+    $alternate_url = $amp_url;
+}
+define('SITE_BRAND', $titlebrand);
+?>
+
+<!DOCTYPE html>
+<html amp lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1" />
+    <title><?php echo ucwords($title); ?></title>
+    <meta name="description" content="<?php echo $meta_description; ?>" />
+    <meta name="geo.placename" content="Indonesia" />
+    <meta name="geo.region" content="id-ID" />
+    <meta name="geo.country" content="id" />
+    <meta name="language" content="Indonesian" />
+    <meta name="author" content="<?php echo $titlebrand; ?>" />
+    <meta name="robots" content="index, follow" />
+    <meta name="googlebot" content="index, follow" />
+    <meta property="og:locale" content="id_ID" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="<?php echo ucwords($title); ?>" />
+    <meta property="og:description" content="<?php echo $meta_description; ?>" />
+    <meta property="og:url" content="<?php echo $canonical_url; ?>" />
+    <meta property="og:image" content="<?php echo $banner; ?>" />
+    <link rel="canonical" href="<?php echo $canonical_url; ?>" />
+    <link rel="icon" href="<?php echo $favicon; ?>" sizes="any" />
+    <link rel="icon" href="<?php echo $favicon; ?>" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="<?php echo $favicon; ?>" />
+    <link rel="preload" href="<?php echo $banner; ?>" as="image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Matrix+Regular+Small+Caps&family=EB+Garamond:ital,wght@0,400;0,700;1,000&display=swap" rel="stylesheet" />
+    <script async src="https://cdn.ampproject.org/v0.js"></script>
+    <script async custom-element="amp-bind" src="https://cdn.ampproject.org/v0/amp-bind-0.1.js"></script>
+    <style amp-boilerplate>
+      body {
+        -webkit-animation: -amp-start 8s steps(1, end) 0s 1 normal both;
+        -moz-animation: -amp-start 8s steps(1, end) 0s 1 normal both;
+        -ms-animation: -amp-start 8s steps(1, end) 0s 1 normal both;
+        animation: -amp-start 8s steps(1, end) 0s 1 normal both;
+      }
+      @-webkit-keyframes -amp-start {
+        from {
+          visibility: hidden;
+        }
+        to {
+          visibility: visible;
+        }
+      }
+      @-moz-keyframes -amp-start {
+        from {
+          visibility: hidden;
+        }
+        to {
+          visibility: visible;
+        }
+      }
+      @-ms-keyframes -amp-start {
+        from {
+          visibility: hidden;
+        }
+        to {
+          visibility: visible;
+        }
+      }
+      @-o-keyframes -amp-start {
+        from {
+          visibility: hidden;
+        }
+        to {
+          visibility: visible;
+        }
+      }
+      @keyframes -amp-start {
+        from {
+          visibility: hidden;
+        }
+        to {
+          visibility: visible;
+        }
+      }
+    </style>
+    <noscript
+      ><style amp-boilerplate>
+        body {
+          -webkit-animation: none;
+          -moz-animation: none;
+          -ms-animation: none;
+          animation: none;
+        }
+      </style></noscript
+    >
+    <style amp-custom>
+      html {
+        height: 100%;
+        overflow-y: auto;
+      }
+
+      body {
+        /* Memasang gambar background */
+        background-image: url('<?php echo $banner; ?>');
+
+        /* Mengatur agar gambar memenuhi seluruh layar */
+        background-size: cover;
+
+        /* Mengatur agar gambar tidak ikut bergerak saat di-scroll */
+        background-attachment: fixed;
+
+        /* Mengatur posisi gambar tepat di tengah */
+        background-position: center;
+
+        /* Mengatur agar gambar tidak mengulang (no-repeat) */
+        background-repeat: no-repeat;
+
+        /* Sisa kode tata letak kamu */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        padding: 15px 0;
+        box-sizing: border-box;
+      }
+      /* Gunakan ini pada div pembungkus konten agar terlihat elegan */
+      .content-wrapper {
+        background: rgba(0, 0, 0, 0.6); /* Transparan hitam */
+        backdrop-filter: blur(8px); /* Efek blur pada background di belakangnya */
+        border: 1px solid rgba(255, 215, 0, 0.3); /* Bingkai emas tipis */
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+        text-align: center;
+      }
+
+      .flip-button {
+        padding: 10px 20px;
+        font-size: 16px;
+        font-family: 'Matrix Regular Small Caps', sans-serif;
+        background: linear-gradient(to bottom, #f2ff00 0%, #7a7800 100%);
+        border: 2px solid #f2ff00;
+        border-radius: 8px;
+        cursor: pointer;
+        color: rgb(255 255 255);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        margin-bottom: -28px;
+        position: relative;
+        z-index: 20;
+      }
+
+      .card-scene {
+        width: 470px;
+        perspective: 1200px;
+        margin: 50px 0;
+        position: relative;
+        z-index: 10;
+      }
+
+      .card-flipper {
+        position: relative;
+        transition: transform 0.8s;
+        transform-style: preserve-3d;
+      }
+
+      .card-flipper.is-flipped {
+        transform: rotateY(180deg);
+      }
+
+      .card-face-front {
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+      }
+
+      .card-face-back {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        transform: rotateY(180deg);
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+        box-sizing: border-box;
+        background: linear-gradient(270deg, #7a7800 0%, #f2ff00 21%, #7a7800 33%, #7a7800 44%, #f2ff00 60%, #7a7800 73%, #f2ff00 85%, #f2ff00 100%);
+        padding: 12px;
+        display: block;
+      }
+
+      .card-face-back amp-img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        border-radius: 10px;
+      }
+
+      .ygo-card-container {
+        width: 100%;
+        background: linear-gradient(270deg, #7a7800 0%, #f2ff00 21%, #7a7800 33%, #7a7800 44%, #f2ff00 60%, #7a7800 73%, #f2ff00 85%, #7a7800 100%);
+        border-radius: 20px;
+        padding: 12px;
+        box-shadow:
+          0 10px 40px rgba(0, 0, 0, 0.7),
+          inset 0 0 5px rgba(255, 255, 255, 0.5);
+        position: relative;
+        transition: all 0.2s ease-out;
+        box-sizing: border-box;
+        overflow: hidden;
+      }
+
+      .ygo-card-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -150px;
+        width: 100px;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 240, 0.6), transparent);
+        transform: skewX(-25deg);
+        z-index: 2;
+        animation: card-shine 5s infinite;
+        animation-delay: 1s;
+      }
+
+      @keyframes card-shine {
+        0% {
+          left: -150px;
+        }
+
+        25% {
+          left: 110%;
+        }
+
+        100% {
+          left: 110%;
+        }
+      }
+
+      @keyframes holo-shine {
+        0% {
+          background-position: 100% 100%;
+        }
+
+        50% {
+          background-position: 0% 0%;
+        }
+
+        100% {
+          background-position: 100% 100%;
+        }
+      }
+
+      .ygo-card-inner {
+        background: #2c2c2c;
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid #f2ff00;
+        position: relative;
+        z-index: 1;
+      }
+
+      .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: url('https://cdn.jsdelivr.net/gh/ggeercy/artjssszhd/kunang2.gif') no-repeat center center;
+        padding: 10px 15px;
+        border-bottom: 2px solid #477ba8;
+        box-shadow:
+          inset 0 2px 2px rgba(255, 255, 255, 0.3),
+          inset 0 -2px 3px rgba(0, 0, 0, 0.4);
+      }
+
+      .card-name {
+        font-family: 'Matrix Regular Small Caps', sans-serif;
+        font-size: 28px;
+        /* Kita lebarkan background agar bisa digerakkan */
+        background: linear-gradient(120deg, #3a2200 30%, #ffffff 50%, #3a2200 70%);
+        background-size: 200% auto;
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 600;
+        letter-spacing: 1px;
+        /* Jalankan animasi sweep */
+        animation: shine 3s linear infinite;
+      }
+
+      @keyframes shine {
+        to {
+          background-position: 200% center;
+        }
+      }
+
+      .card-attribute {
+        width: 40px;
+        height: 40px;
+        background: radial-gradient(circle, #f0f0f0, #a0a0a0);
+        border: 2px solid #fffefe;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: 'Arial Black', sans-serif;
+        font-size: 18px;
+        color: #222;
+        text-shadow: 1px 1px 1px white;
+        box-shadow:
+          inset 0 0 5px rgba(0, 0, 0, 0.7),
+          0 0 5px white;
+        flex-shrink: 0;
+      }
+
+      .card-level {
+        background: url('https://cdn.jsdelivr.net/gh/ggeercy/artjssszhd/kunang2.gif') no-repeat center center;
+        padding: 5px 15px 8px 15px;
+        box-shadow:
+          inset 0 2px 2px rgba(255, 255, 255, 0.3),
+          inset 0 -2px 3px rgba(0, 0, 0, 0.4);
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+      }
+
+      .star {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        background: radial-gradient(circle at 50% 30%, #f2ff00, #b00000 70%);
+        border-radius: 50%;
+        margin-left: 3px;
+        filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.6));
+        position: relative;
+      }
+
+      .star::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at 40% 30%, #7a7800, #f2ff00 70%);
+        clip-path: polygon(50% 0%, 65% 40%, 100% 40%, 75% 65%, 85% 100%, 50% 80%, 15% 100%, 25% 65%, 0% 40%, 35% 40%);
+        transform: scale(0.9);
+      }
+
+      .rating-count {
+        font-family: 'Matrix Regular Small Caps', sans-serif;
+        font-size: 16px;
+        font-weight: bold;
+        color: #f2ff00;
+        margin-left: 10px;
+        padding: 3px 10px;
+        border: 1px solid #f2ff00;
+        border-radius: 50px;
+        background: rgba(0, 0, 0, 0.5);
+        box-shadow: inset 0 0 10px rgba(255, 215, 0, 0.3);
+        /* Animasi kedip lembut */
+        animation: ratingPulse 1.5s infinite ease-in-out;
+      }
+
+      @keyframes ratingPulse {
+        0%,
+        100% {
+          opacity: 1;
+          box-shadow: 0 0 5px #f2ff00;
+        }
+        50% {
+          opacity: 0.6;
+          box-shadow: 0 0 15px #f2ff00;
+        }
+      }
+      .card-image-box {
+        padding: 8px;
+        background: #2c2c2c;
+      }
+      .card-image-box {
+        padding: 8px;
+        background: linear-gradient(135deg, #2c2c2c, #1a1a1a);
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* efek shine jalan */
+      .card-image-box::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -60%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(120deg, transparent 40%, #f2ff00, transparent 60%);
+        transform: rotate(25deg);
+        animation: shineMove 2s linear infinite;
+      }
+
+      /* animasi */
+      @keyframes shineMove {
+        0% {
+          transform: translateX(-100%) rotate(25deg);
+        }
+        100% {
+          transform: translateX(100%) rotate(25deg);
+        }
+      }
+
+      .card-image-placeholder {
+        width: 100%;
+        overflow: hidden;
+        border-radius: 5px;
+        position: relative;
+        border-style: solid;
+        border-width: 6px;
+        background: url('https://cdn.jsdelivr.net/gh/ggeercy/artjssszhd/kunang2.gif') no-repeat center center;
+        box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8);
+        box-sizing: border-box;
+      }
+
+      .card-type {
+        background: url('https://cdn.jsdelivr.net/gh/ggeercy/artjssszhd/kunang2.gif') no-repeat center center;
+        padding: 5px 15px;
+        border-top: 2px solid #7a7800;
+        border-bottom: 2px solid #7a7800;
+      }
+
+      .type-text {
+        font-family: 'Matrix Regular Small Caps', sans-serif;
+        font-size: 14px;
+        font-weight: 800;
+        color: #d3d3d3;
+      }
+
+      .card-body {
+        background: #000000 url('https://cdn.jsdelivr.net/gh/ggeercy/artjssszhd/nagagaul.webp') no-repeat center center;
+        padding: 15px;
+        text-align: left;
+        box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+      }
+
+      .card-description {
+        font-family: 'EB Garamond', serif;
+        font-size: 15px;
+        color: #000;
+        line-height: 1.4;
+        font-style: italic;
+      }
+
+      .card-description strong {
+        font-style: normal;
+        font-weight: bold;
+        color: #000;
+      }
+
+      .card-cta-button {
+        display: block;
+        width: 80%;
+        margin: 15px auto 10px auto;
+        padding: 12px;
+        /* Background diperlebar untuk animasi flow */
+        background: linear-gradient(270deg, #7a7800, #f2ff00, #fff, #f2ff00, #7a7800);
+        background-size: 400% 400%;
+        color: #fff;
+        font-family: 'Matrix Regular Small Caps', sans-serif;
+        font-size: 20px; /* Sedikit diperbesar */
+        font-weight: bold;
+        text-align: center;
+        text-decoration: none;
+        border-radius: 8px;
+        box-shadow: 0 0 15px rgba(82, 0, 215, 0.4);
+        cursor: pointer;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        position: relative;
+        overflow: hidden;
+        /* Animasi background mengalir */
+        animation:
+          goldFlow 3s infinite linear,
+          buttonPulse 2s infinite;
+        transition: all 0.3s ease;
+      }
+
+      /* Animasi mengalirkan warna emas dan cahaya putih */
+      @keyframes goldFlow {
+        0% {
+          background-position: 0% 50%;
+        }
+        100% {
+          background-position: 100% 50%;
+        }
+      }
+
+      /* Animasi denyut halus agar tombol terlihat "hidup" */
+      @keyframes buttonPulse {
+        0% {
+          transform: scale(1);
+          box-shadow: 0 0 10px rgba(118, 0, 215, 0.4);
+        }
+        50% {
+          transform: scale(1.03);
+          box-shadow: 0 0 25px rgba(111, 0, 215, 0.7);
+        }
+        100% {
+          transform: scale(1);
+          box-shadow: 0 0 10px rgba(118, 0, 215, 0.4);
+        }
+      }
+
+      .card-cta-button:hover {
+        background: #fff;
+        color: #7a7800;
+        transform: translateY(-3px) scale(1.05);
+        box-shadow:
+          0 10px 20px rgba(0, 0, 0, 0.6),
+          0 0 30px #f2ff00;
+        letter-spacing: 2px; /* Teks merenggang sedikit saat hover */
+      }
+
+      .card-footer {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        padding: 10px 15px;
+        background: url('https://cdn.jsdelivr.net/gh/ggeercy/artjssszhd/nagagaul.webp') no-repeat center center;
+        border-top: 2px solid #7a7800;
+        padding-right: 50px;
+        box-shadow:
+          inset 0 2px 2px rgba(255, 255, 255, 0.3),
+          inset 0 -2px 3px rgba(0, 0, 0, 0.4);
+      }
+
+      .stats {
+        font-family: 'Matrix Regular Small Caps', sans-serif;
+        font-size: 18px;
+        font-weight: 600;
+        color: #000;
+        text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.3);
+        margin-left: 25px;
+      }
+
+      @media (max-width: 480px) {
+        body {
+          padding: 10px;
+          align-items: center;
+          min-height: auto;
+        }
+
+        .flip-button {
+          margin-top: 5px;
+          margin-bottom: 2px;
+        }
+
+        .card-scene {
+          width: 100%;
+          margin: 15px 0;
+        }
+
+        .ygo-card-container {
+          width: 100%;
+          padding: 8px;
+          margin: 0;
+        }
+
+        .card-face-back {
+          padding: 8px;
+        }
+
+        .card-face-back amp-img {
+          border-radius: 10px;
+        }
+
+        .card-name {
+          font-size: 22px;
+        }
+
+        .card-attribute {
+          width: 35px;
+          height: 35px;
+          font-size: 16px;
+        }
+
+        .star {
+          width: 16px;
+          height: 16px;
+          margin-left: 2px;
+        }
+
+        .rating-count {
+          font-size: 14px;
+          margin-left: 5px;
+        }
+
+        .card-image-box {
+          padding: 5px;
+        }
+
+        .card-description {
+          font-size: 14px;
+        }
+
+        .card-body {
+          padding: 12px;
+        }
+
+        .card-cta-button {
+          font-size: 16px;
+          padding: 10px;
+          width: 90%;
+        }
+
+        .stats {
+          font-size: 16px;
+          margin-left: 15px;
+        }
+
+        .card-footer {
+          padding-right: 40px;
+        }
+      }
+      .flower-wrap {
+        position: fixed;
+        inset: 0;
+        overflow: hidden;
+        pointer-events: none;
+        z-index: 999999;
+      }
+
+      /* BUNGA */
+      .flower {
+        position: absolute;
+        width: 22px;
+        height: 22px;
+        opacity: 0.95;
+        filter: drop-shadow(0 0 7px rgba(255, 0, 0, 0.9));
+        animation-name: flower-fall;
+        animation-timing-function: linear;
+        animation-iteration-count: infinite;
+      }
+
+      .flower:before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(circle at 50% 12%, #ff2b2b 0 20%, transparent 22%), radial-gradient(circle at 84% 38%, #ff2b2b 0 20%, transparent 22%), radial-gradient(circle at 72% 82%, #ff2b2b 0 20%, transparent 22%),
+          radial-gradient(circle at 28% 82%, #ff2b2b 0 20%, transparent 22%), radial-gradient(circle at 16% 38%, #ff2b2b 0 20%, transparent 22%), radial-gradient(circle at 50% 50%, #ffeb70 0 9%, transparent 10%);
+      }
+
+      /* JATUH */
+      @keyframes flower-fall {
+        0% {
+          transform: translateY(-120px) translateX(0) rotate(0deg);
+
+          opacity: 0;
+        }
+
+        10% {
+          opacity: 1;
+        }
+
+        25% {
+          transform: translateY(25vh) translateX(30px) rotate(90deg);
+        }
+
+        50% {
+          transform: translateY(50vh) translateX(-30px) rotate(180deg);
+        }
+
+        75% {
+          transform: translateY(75vh) translateX(30px) rotate(270deg);
+        }
+
+        100% {
+          transform: translateY(120vh) translateX(-30px) rotate(360deg);
+
+          opacity: 0;
+        }
+      }
+
+      /* BANYAK BUNGA */
+      .flower:nth-child(1) {
+        left: 2%;
+        animation-duration: 12s;
+      }
+      .flower:nth-child(2) {
+        left: 6%;
+        animation-duration: 15s;
+      }
+      .flower:nth-child(3) {
+        left: 10%;
+        animation-duration: 10s;
+      }
+      .flower:nth-child(4) {
+        left: 14%;
+        animation-duration: 11s;
+      }
+      .flower:nth-child(5) {
+        left: 18%;
+        animation-duration: 10s;
+      }
+      .flower:nth-child(6) {
+        left: 22%;
+        animation-duration: 18s;
+      }
+      .flower:nth-child(7) {
+        left: 26%;
+        animation-duration: 12s;
+      }
+      .flower:nth-child(8) {
+        left: 30%;
+        animation-duration: 20s;
+      }
+      .flower:nth-child(9) {
+        left: 34%;
+        animation-duration: 25s;
+      }
+      .flower:nth-child(10) {
+        left: 38%;
+        animation-duration: 22s;
+      }
+
+      .flower:nth-child(11) {
+        left: 42%;
+        animation-duration: 11s;
+      }
+      .flower:nth-child(12) {
+        left: 46%;
+        animation-duration: 7s;
+      }
+      .flower:nth-child(13) {
+        left: 50%;
+        animation-duration: 9s;
+      }
+      .flower:nth-child(14) {
+        left: 54%;
+        animation-duration: 12s;
+      }
+      .flower:nth-child(15) {
+        left: 58%;
+        animation-duration: 8s;
+      }
+      .flower:nth-child(16) {
+        left: 62%;
+        animation-duration: 10s;
+      }
+      .flower:nth-child(17) {
+        left: 66%;
+        animation-duration: 7s;
+      }
+      .flower:nth-child(18) {
+        left: 70%;
+        animation-duration: 11s;
+      }
+      .flower:nth-child(19) {
+        left: 74%;
+        animation-duration: 9s;
+      }
+      .flower:nth-child(20) {
+        left: 78%;
+        animation-duration: 8s;
+      }
+
+      .flower:nth-child(21) {
+        left: 82%;
+        animation-duration: 12s;
+      }
+      .flower:nth-child(22) {
+        left: 86%;
+        animation-duration: 7s;
+      }
+      .flower:nth-child(23) {
+        left: 90%;
+        animation-duration: 10s;
+      }
+      .flower:nth-child(24) {
+        left: 94%;
+        animation-duration: 9s;
+      }
+      .flower:nth-child(25) {
+        left: 98%;
+        animation-duration: 11s;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="flower-wrap">
+      <span class="flower"></span>
+      <span class="flower"></span>
+      <span class="flower"></span>
+      <span class="flower"></span>
+      <span class="flower"></span>
+
+      <span class="flower"></span>
+      <span class="flower"></span>
+      <span class="flower"></span>
+      <span class="flower"></span>
+      <span class="flower"></span>
+
+      <span class="flower"></span>
+      <span class="flower"></span>
+      <span class="flower"></span>
+      <span class="flower"></span>
+      <span class="flower"></span>
+
+      <span class="flower"></span>
+      <span class="flower"></span>
+      <span class="flower"></span>
+      <span class="flower"></span>
+      <span class="flower"></span>
+
+      <span class="flower"></span>
+      <span class="flower"></span>
+      <span class="flower"></span>
+      <span class="flower"></span>
+      <span class="flower"></span>
+    </div>
+    <amp-state id="cardState"
+      ><script type="application/json">
+        { "isCardFlipped": false }
+      </script></amp-state
+    >
+    <img src="<?php echo $logo; ?>" alt="" width="300" height="100" />
+    <div class="card-scene">
+      <div class="card-flipper" [class]="'card-flipper' + (cardState.isCardFlipped ? ' is-flipped' : '')">
+        <div class="card-face-front">
+          <div class="ygo-card-container">
+            <div class="hologram"></div>
+            <div class="ygo-card-inner">
+              <div class="card-header">
+                <span class="card-name"><?php echo $titlebrand; ?></span>
+                <div class="card-attribute" title="Atribut: DIVINE (Dewa)">😎</div>
+              </div>
+              <div class="card-level">
+                <span class="star"></span>
+                <span class="star"></span>
+                <span class="star"></span>
+                <span class="star"></span>
+                <span class="star"></span>
+                <span class="star"></span>
+                <span class="star"></span>
+                <span class="rating-count">Rating: 948.889.871</span>
+              </div>
+              <div class="card-image-box">
+                <div class="card-image-placeholder">
+                  <amp-img src="<?php echo $banner; ?>" alt="<?php echo $meta_description; ?>" layout="responsive" width="700" height="650"></amp-img>
+                </div>
+              </div>
+              <div class="card-type" style="text-align: center"><span class="type-text">SITUS GAME GAMPANG MAXWIN RESMI TERPERCAYA</span></div>
+              <div class="card-body">
+                <div class="card-description"></div>
+                <a target="_blank" rel="nofollow noreferrer noopener" title="<?php echo $titlebrand; ?> login" href="<?php echo $final; ?>" class="card-cta-button"> LOGIN <?php echo $titlebrand; ?> </a>
+                <a target="_blank" rel="nofollow noreferrer noopener" title="<?php echo $titlebrand; ?> Daftar" href="<?php echo $final; ?>" class="card-cta-button"> DAFTAR <?php echo $titlebrand; ?> </a>
+                <a target="_blank" rel="nofollow noreferrer noopener" title="<?php echo $titlebrand; ?> Livechat" href="<?php echo $final; ?>" class="card-cta-button"> LIVECHAT </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-face-back">
+          <amp-img src="<?php echo $banner; ?>" alt="<?php echo $meta_description; ?>" layout="fill" object-fit="cover"> </amp-img>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

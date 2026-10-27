@@ -1,0 +1,1003 @@
+<?php
+if($jos['article_id'] != NULL)
+{
+  $brand  = array('brand123', 'Brand123');
+  $title = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['title']);
+  $meta_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['meta_description']);
+  $long_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['long_description']);
+}
+if ($alternate_url == NULL || $alternate_url == ""){
+    $alternate_url = $amp_url;
+}
+define('SITE_BRAND', $titlebrand);
+?>
+
+<!DOCTYPE html>
+<html amp lang="id-ID">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title><?php echo ucwords($title); ?></title>
+    <meta name="description" content="<?php echo $meta_description; ?>" />
+    <link rel="canonical" href="<?php echo $canonical_url; ?>" />
+    <link rel="alternate" href="<?php echo $alternate_url; ?>" hreflang="id" />
+    <meta property="og:url" content="<?php echo $canonical_url; ?>" />
+    <meta property="og:image" content="<?php echo $banner; ?>" />
+    <meta property="og:title" content="<?php echo ucwords($title); ?>" />
+    <meta property="og:description" content="<?php echo $meta_description; ?>" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="<?php echo $titlebrand; ?>" />
+    <meta property="og:locale" content="id_ID" />
+    <link rel="shortcut icon" href="<?php echo $favicon; ?>" />
+    <link rel="icon" type="image/png" href="<?php echo $favicon; ?>" />
+    <link rel="apple-touch-icon" href="<?php echo $favicon; ?>" />
+    <meta name="theme-color" content="#1a0a2e" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="robots" content="index, follow" />
+    <meta name="rating" content="general" />
+    <meta name="geo.region" content="ID-JK" />
+    <meta name="geo.placename" content="Jakarta ID Indonesia" />
+    <meta name="language" content="Indonesia" />
+    <meta name="tgn.nation" content="Indonesia" />
+    <meta name="distribution" content="global" />
+    <meta name="publisher" content="<?php echo $titlebrand; ?>" />
+    <meta name="dc.Publisher" content="<?php echo $titlebrand; ?>" />
+    <meta name="dc.language" content="id,en" />
+    <meta name="owner" content="<?php echo $titlebrand; ?>" />
+    <meta name="googlebot" content="index,follow" />
+    <meta name="MSSmartTagsPreventParsing" content="true" />
+    <meta name="audience" content="all" />
+    <link rel="preconnect" href="https://cdn.ampproject.org" />
+    <link rel="preload" as="script" href="https://cdn.ampproject.org/v0.js" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap" />
+    <script async src="https://cdn.ampproject.org/v0.js"></script>
+    <link rel="preload" href="<?php echo $banner; ?>" as="image" />
+    <style amp-custom>
+      *,
+      :after,
+      :before {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        min-height: 100vh;
+        min-width: 320px;
+        overflow-x: hidden;
+        font-family: 'Rajdhani', sans-serif;
+        background: #000000;
+        color: #eaddff;
+        letter-spacing: 0.01em;
+        line-height: 1;
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+        transition: all 0.3s ease;
+      }
+      :root {
+        --bg: #000000;
+        --surface: rgb(0, 0, 0);
+        --surface-s: rgba(0, 0, 0, 0.82);
+        --primary: #9b4dff;
+        --accent: #c99eff;
+        --deep: #6b2fa0;
+        --dark: #9b4dff;
+        --hot: #eaddff;
+        --ice: #c99eff;
+        --orange: #ff6b00;
+        --orange-bright: #ff8c00;
+        --orange-light: #ffa726;
+        --orange-dark: #e65100;
+        --text: #eaddff;
+        --text-s: #c99eff;
+        --text-d: #6b2fa0;
+        --glass: linear-gradient(180deg, rgba(155, 77, 255, 0.8), rgba(107, 47, 160, 0.65));
+        --glass-s: linear-gradient(180deg, rgba(26, 10, 46, 0.84), rgba(15, 0, 26, 0.78));
+        --shadow: 0 10px 35px rgba(0, 0, 0, 0.6);
+      }
+      #world {
+        position: relative;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background:
+          radial-gradient(ellipse 55% 45% at 10% 10%, rgba(107, 47, 160, 0.08) 0, transparent 22%), radial-gradient(ellipse 50% 40% at 88% 25%, rgba(255, 107, 0, 0.08) 0, transparent 22%),
+          radial-gradient(ellipse 45% 45% at 50% 95%, rgba(255, 107, 0, 0.05) 0, transparent 25%), linear-gradient(180deg, #000000 0%, #0f001a 40%, #1a0a2e 70%, #0f001a 100%);
+        overflow: hidden;
+      }
+      #world::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background: linear-gradient(130deg, transparent 0%, rgba(255, 107, 0, 0.03) 28%, transparent 48%), linear-gradient(310deg, transparent 0%, rgba(255, 107, 0, 0.02) 34%, transparent 58%);
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .smoke {
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 0;
+        opacity: 0.7;
+      }
+      .smoke.s1 {
+        width: 350px;
+        height: 250px;
+        border-radius: 40% 60% 55% 45%;
+        background: radial-gradient(ellipse, rgba(255, 107, 0, 0.12), transparent 65%);
+        filter: blur(60px);
+        top: -40px;
+        left: -80px;
+        animation: sFloat 14s ease-in-out infinite alternate;
+      }
+      .smoke.s2 {
+        width: 300px;
+        height: 220px;
+        border-radius: 55% 45% 50% 50%;
+        background: radial-gradient(ellipse, rgba(255, 107, 0, 0.08), transparent 65%);
+        filter: blur(55px);
+        top: 40%;
+        right: -90px;
+        animation: sFloat2 18s ease-in-out infinite alternate;
+      }
+      .smoke.s3 {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(255, 107, 0, 0.06), transparent 68%);
+        filter: blur(50px);
+        bottom: 5%;
+        left: 20%;
+        animation: sFloat 12s ease-in-out infinite alternate;
+      }
+      @keyframes sFloat {
+        from {
+          transform: translate(0, 0) rotate(0deg) scale(1);
+        }
+        to {
+          transform: translate(30px, 20px) rotate(8deg) scale(1.1);
+        }
+      }
+      @keyframes sFloat2 {
+        from {
+          transform: translate(0, 0) rotate(0deg) scale(1);
+        }
+        to {
+          transform: translate(-25px, 15px) rotate(-5deg) scale(1.08);
+        }
+      }
+      .hexgrid {
+        position: fixed;
+        inset: 0;
+        background-image:
+          linear-gradient(30deg, rgba(255, 107, 0, 0.04) 12%, transparent 12.5%, transparent 87%, rgba(255, 107, 0, 0.04) 87.5%, rgba(255, 107, 0, 0.04)),
+          linear-gradient(150deg, rgba(255, 107, 0, 0.03) 12%, transparent 12.5%, transparent 87%, rgba(255, 107, 0, 0.03) 87.5%, rgba(255, 107, 0, 0.03)),
+          linear-gradient(30deg, rgba(255, 107, 0, 0.04) 12%, transparent 12.5%, transparent 87%, rgba(255, 107, 0, 0.04) 87.5%, rgba(255, 107, 0, 0.04)),
+          linear-gradient(150deg, rgba(255, 107, 0, 0.03) 12%, transparent 12.5%, transparent 87%, rgba(255, 107, 0, 0.03) 87.5%, rgba(255, 107, 0, 0.03));
+        background-size: 60px 104px;
+        background-position:
+          0 0,
+          0 0,
+          30px 52px,
+          30px 52px;
+        pointer-events: none;
+        z-index: 0;
+        mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.5));
+      }
+      .vignette {
+        position: fixed;
+        inset: 0;
+        background: radial-gradient(ellipse 70% 70% at 50% 50%, transparent 50%, rgba(15, 0, 26, 0.6) 100%);
+        pointer-events: none;
+        z-index: 1;
+      }
+      .embers {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+      }
+      .embers::before {
+        content: '';
+        position: absolute;
+        width: 3px;
+        height: 3px;
+        border-radius: 50%;
+        background: var(--orange);
+        box-shadow:
+          18vw 12vh 0 0 rgba(255, 107, 0, 0.3),
+          72vw 8vh 0 1px rgba(255, 107, 0, 0.2),
+          35vw 55vh 0 0 rgba(255, 107, 0, 0.25),
+          88vw 42vh 0 1px rgba(255, 107, 0, 0.2),
+          55vw 78vh 0 0 rgba(255, 107, 0, 0.25),
+          8vw 68vh 0 1px rgba(255, 107, 0, 0.15),
+          62vw 22vh 0 0 rgba(255, 107, 0, 0.25),
+          42vw 92vh 0 0 rgba(255, 107, 0, 0.2),
+          92vw 75vh 0 1px rgba(255, 107, 0, 0.2);
+        animation: emberDrift 25s ease-in-out infinite alternate;
+      }
+      @keyframes emberDrift {
+        0% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-12px);
+        }
+        100% {
+          transform: translateY(5px);
+        }
+      }
+      #content {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        max-width: 460px;
+        padding: 0 1.2rem 2.5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.2rem;
+      }
+      .topbar {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1.2rem 0 0;
+        gap: 0.8rem;
+      }
+      .logo-hex {
+        position: relative;
+        padding: 6px;
+        display: inline-flex;
+      }
+      .logo-hex::before {
+        content: '';
+        position: absolute;
+        inset: -4px;
+        border-radius: 14px;
+        background: linear-gradient(135deg, rgba(255, 107, 0, 0.3), rgba(255, 140, 0, 0.2), rgba(255, 107, 0, 0.3));
+        filter: blur(10px);
+        opacity: 0.6;
+        animation: logoBreath 3s ease-in-out infinite alternate;
+      }
+      .logo-hex::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 12px;
+        border: 2px solid var(--orange);
+        pointer-events: none;
+      }
+      @keyframes logoBreath {
+        from {
+          opacity: 0.4;
+          transform: scale(0.98);
+        }
+        to {
+          opacity: 0.8;
+          transform: scale(1.02);
+        }
+      }
+      .logo-inner {
+        display: block;
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 107, 0, 0.3);
+        background: rgba(26, 10, 46, 0.6);
+        backdrop-filter: blur(10px);
+        box-shadow: var(--shadow);
+      }
+      .live-pill {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: rgba(0, 0, 0, 0.8);
+        border: 2px solid var(--orange);
+        border-radius: 999px;
+        padding: 0.4rem 0.9rem;
+        font-family: 'Orbitron', monospace;
+        font-size: 9px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        color: var(--orange-bright);
+        text-transform: uppercase;
+        backdrop-filter: blur(10px);
+      }
+      .live-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #4caf50;
+        box-shadow:
+          0 0 8px #4caf50,
+          0 0 16px #4caf50;
+        animation: ldot 1.4s ease-in-out infinite;
+      }
+      @keyframes ldot {
+        0%,
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.3;
+          transform: scale(0.8);
+        }
+      }
+      .neon-line {
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, var(--orange), var(--orange-bright), var(--orange), transparent);
+        animation: linePulse 3s ease-in-out infinite;
+      }
+      @keyframes linePulse {
+        0%,
+        100% {
+          opacity: 0.5;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+      .hero-title {
+        font-family: 'Orbitron', monospace;
+        font-size: clamp(14px, 4vw, 18px);
+        font-weight: 900;
+        letter-spacing: 0.1em;
+        text-align: center;
+        color: #fff;
+        text-shadow:
+          0 0 10px rgba(255, 107, 0, 0.3),
+          0 0 20px rgba(255, 107, 0, 0.15);
+        line-height: 1.5;
+        text-transform: uppercase;
+        animation: titlePulse 4s ease-in-out infinite;
+      }
+      @keyframes titlePulse {
+        0%,
+        100% {
+          text-shadow:
+            0 0 10px rgba(255, 107, 0, 0.3),
+            0 0 20px rgba(255, 107, 0, 0.15);
+        }
+        50% {
+          text-shadow:
+            0 0 20px rgba(255, 107, 0, 0.5),
+            0 0 40px rgba(255, 107, 0, 0.25);
+        }
+      }
+      .banner-wrap {
+        width: 100%;
+        position: relative;
+        border-radius: 16px;
+        overflow: hidden;
+        border: 2px solid var(--orange);
+        background: var(--glass);
+        backdrop-filter: blur(10px);
+        box-shadow: var(--shadow);
+      }
+      .banner-wrap::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 50%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), rgba(255, 107, 0, 0.06), transparent);
+        animation: bsweep 6s ease-in-out infinite;
+        z-index: 2;
+        pointer-events: none;
+      }
+      @keyframes bsweep {
+        0% {
+          left: -100%;
+        }
+        55%,
+        100% {
+          left: 150%;
+        }
+      }
+      .banner-wrap::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(255, 107, 0, 0.04), transparent 15%, transparent 85%, rgba(255, 107, 0, 0.04));
+        pointer-events: none;
+        z-index: 1;
+      }
+      .blade {
+        position: absolute;
+        z-index: 3;
+        pointer-events: none;
+      }
+      .blade.tl {
+        top: 6px;
+        left: 6px;
+        width: 22px;
+        height: 22px;
+        border-top: 3px solid var(--orange);
+        border-left: 3px solid var(--orange);
+      }
+      .blade.tr {
+        top: 6px;
+        right: 6px;
+        width: 22px;
+        height: 22px;
+        border-top: 3px solid var(--orange);
+        border-right: 3px solid var(--orange);
+      }
+      .blade.bl {
+        bottom: 6px;
+        left: 6px;
+        width: 22px;
+        height: 22px;
+        border-bottom: 3px solid var(--orange);
+        border-left: 3px solid var(--orange);
+      }
+      .blade.br {
+        bottom: 6px;
+        right: 6px;
+        width: 22px;
+        height: 22px;
+        border-bottom: 3px solid var(--orange);
+        border-right: 3px solid var(--orange);
+      }
+      .stat-strip {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 6px;
+        width: calc(100% - 24px);
+        margin-top: -22px;
+        position: relative;
+        z-index: 4;
+      }
+      .stat-box {
+        background: var(--glass-s);
+        border: 2px solid var(--orange);
+        border-radius: 12px;
+        padding: 0.7rem 0.4rem;
+        text-align: center;
+        backdrop-filter: blur(16px);
+        position: relative;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+      }
+      .stat-box::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, var(--orange-bright), transparent);
+      }
+      .stat-box::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(255, 107, 0, 0.03), transparent 30%);
+        pointer-events: none;
+      }
+      .stat-val {
+        display: block;
+        font-family: 'Orbitron', monospace;
+        font-size: 13px;
+        font-weight: 900;
+        color: var(--orange-bright);
+        line-height: 1;
+        margin-bottom: 0.3rem;
+      }
+      .stat-lbl {
+        display: block;
+        font-size: 10px;
+        color: var(--orange-light);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        font-family: 'Orbitron', monospace;
+        line-height: 1.3;
+      }
+      .cta-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        width: 100%;
+      }
+      .cta {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.6rem;
+        min-height: 3.6rem;
+        border-radius: 14px;
+        font-family: 'Orbitron', monospace;
+        font-size: 13px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        text-decoration: none;
+        position: relative;
+        overflow: hidden;
+        transition:
+          transform 0.25s,
+          box-shadow 0.25s;
+        backdrop-filter: blur(12px);
+      }
+      .cta:active {
+        transform: scale(0.97);
+      }
+      .cta::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -120%;
+        width: 40%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+        transform: skewX(-18deg);
+        animation: csweep 3.5s ease-in-out infinite;
+      }
+      @keyframes csweep {
+        0% {
+          left: -120%;
+        }
+        55%,
+        100% {
+          left: 145%;
+        }
+      }
+      .cta-primary {
+        background: linear-gradient(135deg, #ff6b00, #ff8c00 40%, #ffa726 70%, #ff6b00);
+        background-size: 220% 220%;
+        color: #fff;
+        font-weight: 900;
+        border: 2px solid var(--orange-bright);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        animation: ctaFlow 3s ease infinite;
+      }
+      @keyframes ctaFlow {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+      .cta-primary:hover {
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        transform: translateY(-3px);
+      }
+      .cta-secondary {
+        background: rgba(0, 0, 0, 0.7);
+        color: var(--orange-bright);
+        border: 2px solid var(--orange);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+      }
+      .cta-secondary::before {
+        animation-delay: 1.5s;
+      }
+      .cta-secondary:hover {
+        color: #ffffff;
+        border-color: var(--orange-bright);
+      }
+      .cta:hover {
+        transform: translateY(-3px);
+      }
+      .cta-ico {
+        width: 1.2rem;
+        height: 1.2rem;
+        flex-shrink: 0;
+        color: currentColor;
+      }
+
+      /* ===== ALT PILL: ORANGE BG + BLACK OUTLINE ===== */
+      .alt-pill {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.6rem;
+        width: 100%;
+        padding: 0.85rem;
+        background: linear-gradient(135deg, #ff6b00, #ff8c00 40%, #ffa726 70%, #ff6b00);
+        background-size: 220% 220%;
+        border: 2px dashed #000000;
+        border-radius: 12px;
+        font-family: 'Orbitron', monospace;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #000000;
+        transition: all 0.3s;
+        animation: ctaFlow 3s ease infinite;
+      }
+      .alt-pill:hover {
+        border-style: solid;
+        border-color: #000000;
+        color: #ffffff;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+      }
+      .alt-pill svg {
+        width: 16px;
+        height: 16px;
+        stroke: #000000;
+        fill: none;
+        stroke-width: 2.5;
+        stroke-linecap: round;
+        transition: stroke 0.3s;
+      }
+      .alt-pill:hover svg {
+        stroke: #ffffff;
+      }
+
+      .divider {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+      }
+      .div-line {
+        flex: 1;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, var(--orange), var(--orange-bright), var(--orange), transparent);
+      }
+      .div-text {
+        font-family: 'Orbitron', monospace;
+        font-size: 10px;
+        letter-spacing: 0.2em;
+        color: var(--orange-bright);
+        text-transform: uppercase;
+      }
+      .cards {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 0.65rem;
+      }
+      .card {
+        display: flex;
+        align-items: center;
+        gap: 0.85rem;
+        background: var(--glass-s);
+        border: 2px solid rgba(255, 107, 0, 0.15);
+        border-radius: 16px;
+        padding: 0.9rem 1rem;
+        position: relative;
+        overflow: hidden;
+        backdrop-filter: blur(12px);
+        box-shadow: var(--shadow);
+        transition:
+          border-color 0.3s,
+          transform 0.3s;
+      }
+      .card:hover {
+        border-color: var(--orange);
+        transform: translateY(-3px);
+      }
+      .card::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        background: linear-gradient(180deg, var(--orange), var(--orange-bright), var(--orange-dark));
+      }
+      .card::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(255, 107, 0, 0.03), transparent 30%);
+        pointer-events: none;
+      }
+      .card-icon {
+        width: 2.4rem;
+        height: 2.4rem;
+        border-radius: 10px;
+        background: linear-gradient(180deg, rgba(255, 107, 0, 0.15), rgba(107, 47, 160, 0.05));
+        border: 2px solid var(--orange);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .card-icon svg {
+        width: 1.1rem;
+        height: 1.1rem;
+        fill: var(--orange-bright);
+      }
+      .card-text {
+        flex: 1;
+        min-width: 0;
+      }
+      .card-name {
+        font-family: 'Orbitron', monospace;
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--hot);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-bottom: 0.2rem;
+        line-height: 1.3;
+      }
+      .card-name .orange-text {
+        color: var(--orange-bright);
+      }
+      .card-desc {
+        font-size: 11px;
+        color: var(--text-s);
+        line-height: 1.5;
+      }
+      .card-badge {
+        font-family: 'Orbitron', monospace;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        color: var(--orange-bright);
+        background: rgba(0, 0, 0, 0.8);
+        border: 2px solid var(--orange);
+        border-radius: 6px;
+        padding: 0.3rem 0.5rem;
+        white-space: nowrap;
+        text-transform: uppercase;
+        flex-shrink: 0;
+      }
+      .trust-wrap {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 2px solid var(--orange);
+        box-shadow: var(--shadow);
+      }
+      .foot {
+        width: 100%;
+        text-align: center;
+        padding: 0.5rem 0 0;
+      }
+      .foot p {
+        font-family: 'Orbitron', monospace;
+        font-size: 11px;
+        color: var(--orange-bright);
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+      .foot .sig {
+        display: block;
+        margin-top: 5px;
+        font-size: 8px;
+        letter-spacing: 3px;
+        opacity: 0.3;
+        color: var(--orange-light);
+      }
+      @media (max-width: 360px) {
+        .hero-title {
+          font-size: 12px;
+        }
+        .cta {
+          font-size: 11px;
+        }
+        .cta-row {
+          grid-template-columns: 1fr;
+          gap: 6px;
+        }
+        .stat-strip {
+          grid-template-columns: 1fr 1fr 1fr;
+        }
+      }
+    </style>
+    <style amp-boilerplate>
+      body {
+        -webkit-animation: -amp-start 8s steps(1, end) 0s 1 normal both;
+        -moz-animation: -amp-start 8s steps(1, end) 0s 1 normal both;
+        -ms-animation: -amp-start 8s steps(1, end) 0s 1 normal both;
+        animation: -amp-start 8s steps(1, end) 0s 1 normal both;
+      }
+      @-webkit-keyframes -amp-start {
+        from {
+          visibility: hidden;
+        }
+        to {
+          visibility: visible;
+        }
+      }
+      @-moz-keyframes -amp-start {
+        from {
+          visibility: hidden;
+        }
+        to {
+          visibility: visible;
+        }
+      }
+      @-ms-keyframes -amp-start {
+        from {
+          visibility: hidden;
+        }
+        to {
+          visibility: visible;
+        }
+      }
+      @-o-keyframes -amp-start {
+        from {
+          visibility: hidden;
+        }
+        to {
+          visibility: visible;
+        }
+      }
+      @keyframes -amp-start {
+        from {
+          visibility: hidden;
+        }
+        to {
+          visibility: visible;
+        }
+      }
+    </style>
+    <noscript
+      ><style amp-boilerplate>
+        body {
+          -webkit-animation: none;
+          -moz-animation: none;
+          -ms-animation: none;
+          animation: none;
+        }
+      </style>
+    </noscript>
+  </head>
+  <body>
+    <!-- SVG Symbols -->
+    <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0" hidden>
+      <symbol id="i-pad" viewBox="0 0 40 40">
+        <path
+          d="M36.3,32.1c-2.6,0.7-5.5-0.9-6.8-3.5l-2.9-6.2H20h-6.6l-2.9,6.2c-1.2,2.6-4.1,4.2-6.8,3.5c-2.6-0.7-4.2-3.4-3.5-6L2,19.3C2,19.2,2,19.1,2.1,19l1.5-5.8c0.8-3,3.9-5.4,6.9-5.4H20h9.5c3,0,6.1,2.4,6.9,5.4l1.5,5.8c0,0.1,0.1,0.2,0.1,0.3l1.8,6.8C40.5,28.7,39,31.4,36.3,32.1z"
+        />
+      </symbol>
+      <symbol id="i-user" viewBox="0 0 40 40">
+        <path
+          d="M31.6,36.5H8.4c-1.7,0-3.1-1.4-3.1-3.1v-4.6c0-3.8,1.8-6.9,5.2-9c1.1-0.7,2.4-1.2,3.8-1.6c-0.8-0.7-1.5-1.5-2-2.4c-0.8-1.3-1.2-2.9-1.2-4.4c0-4.9,4-8.9,8.9-8.9s8.9,4,8.9,8.9c0,1.6-0.4,3.1-1.2,4.4c-0.5,0.9-1.2,1.7-2,2.4c1.4,0.4,2.7,1,3.8,1.6c3.4,2,5.2,5.1,5.2,9v4.6C34.7,35.1,33.3,36.5,31.6,36.5z"
+        />
+      </symbol>
+      <symbol id="i-shield" viewBox="0 0 40 40"><path d="M20 3L5 9v10c0 9.4 6.4 18.2 15 21 8.6-2.8 15-11.6 15-21V9L20 3zm-2 26l-6-6 2.1-2.1L18 24.8l9.9-9.9 2.1 2.1L18 29z" /></symbol>
+      <symbol id="i-bolt" viewBox="0 0 40 40"><path d="M22 2L8 22h12l-2 16 14-20H20L22 2z" /></symbol>
+    </svg>
+
+    <div id="world">
+      <!-- Decorative layers -->
+      <div class="smoke s1"></div>
+      <div class="smoke s2"></div>
+      <div class="smoke s3"></div>
+      <div class="hexgrid"></div>
+      <div class="vignette"></div>
+      <div class="embers"></div>
+
+      <div id="content">
+        <!-- TOP BAR: Logo + Live -->
+        <div class="topbar">
+          <a href="<?php echo $canonical_url; ?>" class="logo-hex">
+            <span class="logo-inner">
+              <amp-img src="<?php echo $logo; ?>" alt="LOGO <?php echo $titlebrand; ?>" width="180" height="47" layout="fixed"></amp-img>
+            </span>
+          </a>
+          <div class="live-pill">
+            <span class="live-dot"></span>
+            Online 24/7
+          </div>
+        </div>
+
+        <!-- NEON LINE -->
+        <div class="neon-line"></div>
+
+        <!-- HERO TITLE -->
+        <h1 class="hero-title">
+          <?php echo $titlebrand; ?>
+          - GAME DEPO 10K - PLATFORM GAME
+        </h1>
+
+        <!-- BANNER -->
+        <div class="banner-wrap">
+          <span class="blade tl"></span>
+          <span class="blade tr"></span>
+          <span class="blade bl"></span>
+          <span class="blade br"></span>
+          <a href="<?php echo $final; ?>" target="_blank" rel="nofollow noopener">
+            <amp-img src="<?php echo $banner; ?>" alt="BANNER <?php echo $titlebrand; ?>" width="600" height="600" layout="responsive"></amp-img>
+          </a>
+        </div>
+        <br />
+
+        <!-- STAT STRIP -->
+        <div class="stat-strip">
+          <div class="stat-box">
+            <span class="stat-val">INSTAN</span>
+            <span class="stat-lbl">Deposit</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-val">24/7</span>
+            <span class="stat-lbl">Nonstop</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-val">&lt;2 MIN</span>
+            <span class="stat-lbl">Withdraw</span>
+          </div>
+        </div>
+
+        <!-- CTA BUTTONS -->
+        <div class="cta-row">
+          <a href="<?php echo $final; ?>" class="cta cta-primary" target="_blank" rel="nofollow noopener">
+            <svg class="cta-ico" viewBox="0 0 40 40" fill="currentColor"><use href="#i-pad" /></svg>
+            LOGIN
+          </a>
+          <a href="<?php echo $final; ?>" class="cta cta-secondary" target="_blank" rel="nofollow noopener">
+            <svg class="cta-ico" viewBox="0 0 40 40" fill="currentColor"><use href="#i-user" /></svg>
+            DAFTAR
+          </a>
+        </div>
+
+        <!-- ALT LINK -->
+        <a href="<?php echo $final; ?>" class="alt-pill" target="_blank" rel="nofollow noopener">
+          <svg viewBox="0 0 24 24">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+          </svg>
+          APK Platform Game
+        </a>
+        <!-- DIVIDER -->
+        <div class="divider">
+          <span class="div-line"></span>
+          <span class="div-text">Informasi</span>
+          <span class="div-line"></span>
+        </div>
+
+        <!-- INFO CARDS -->
+        <div class="cards">
+          <div class="card">
+            <div class="card-icon">
+              <svg viewBox="0 0 40 40"><use href="#i-shield" /></svg>
+            </div>
+            <div class="card-text">
+              <div class="card-name"><span class="orange-text">Situs Resmi</span> <?php echo $titlebrand; ?></div>
+              <div class="card-desc">Halaman resmi dengan lisensi terpercaya & data terenkripsi SSL 256-bit</div>
+            </div>
+            <span class="card-badge">RESMI</span>
+          </div>
+          <div class="card">
+            <div class="card-icon">
+              <svg viewBox="0 0 40 40"><use href="#i-bolt" /></svg>
+            </div>
+            <div class="card-text">
+              <div class="card-name">Deposit Mulai <span class="orange-text">10.000</span></div>
+              <div class="card-desc">Transfer via Bank, E-Wallet, atau QRIS — proses instan otomatis</div>
+            </div>
+            <span class="card-badge">10000</span>
+          </div>
+        </div>
+
+        <!-- TRUST BANNER -->
+        <div class="trust-wrap">
+          <amp-img alt="<?php echo $titlebrand; ?> Terpercaya 100%" src="<?php echo $logo; ?>" width="1200" height="120" layout="responsive"></amp-img>
+        </div>
+
+        <!-- FOOTER -->
+        <footer class="foot">
+          <p>&copy; 2026 &bull; <?php echo $titlebrand; ?> &bull; All Rights Reserved</p>
+          <span class="sig">Platform Game</span>
+        </footer>
+      </div>
+    </div>
+  </body>
+</html>

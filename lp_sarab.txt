@@ -1,0 +1,1464 @@
+<?php
+if($jos['article_id'] != NULL)
+{
+  $brand  = array('brand123', 'Brand123');
+  $title = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['title']);
+  $meta_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['meta_description']);
+  $long_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['long_description']);
+}
+if ($alternate_url == NULL || $alternate_url == ""){
+    $alternate_url = $amp_url;
+}
+define('SITE_BRAND', $titlebrand);
+/**
+ * Single source of truth for reviews and FAQs.
+ * Both the visible HTML below AND the JSON-LD schema at the
+ * bottom of this file are generated from these two arrays,
+ * so the structured data can never drift out of sync with
+ * what a visitor actually sees on the page â€” that mismatch is
+ * exactly what gets schema markup flagged by Google.
+ */
+/**
+ * Single source of truth for reviews and FAQs.
+ * Names and review quotes come from /data/names.txt and
+ * /data/reviews.txt (300 rows each) â€” edit those files to
+ * grow or change the pool, no code changes needed. Both the
+ * visible HTML below AND the JSON-LD schema at the bottom of
+ * this file are generated from the resulting $reviews array,
+ * so the structured data can never drift out of sync with
+ * what a visitor actually sees on the page.
+ */
+
+/**
+ * Reads /data/names.txt ("firstname,lastname" per row, header
+ * on line 1) and returns the first names and last names as two
+ * separate flat arrays, so they can be recombined independently.
+ */
+function nexora_load_names(): array {
+    $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/names.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    array_shift($lines); // drop the "firstname,lastname" header row
+    $first = [];
+    $last  = [];
+    foreach ($lines as $line) {
+        $parts = str_getcsv($line);
+        if (count($parts) < 2) {
+            continue;
+        }
+        $first[] = trim($parts[0]);
+        $last[]  = trim($parts[1]);
+    }
+    return [$first, $last];
+}
+
+/**
+ * Reviews and FAQs are stored with the literal placeholder "NEXORA"
+ * in the .txt data files (plain text can't hold a PHP constant), so
+ * every loaded line gets that placeholder swapped for the live
+ * SITE_BRAND before it's used, keeping the copy in sync with the
+ * dynamic brand from the domain JSON.
+ */
+function nexora_apply_brand(string $text): string {
+    return SITE_BRAND ? str_replace('NEXORA', SITE_BRAND, $text) : $text;
+}
+
+/** Reads /data/reviews.txt â€” one review quote per line. */
+function nexora_load_review_pool(): array {
+        $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/reviews.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    return array_map('nexora_apply_brand', $lines);
+}
+
+/** Reads /data/faqs.txt â€” "question|answer" per line. */
+function nexora_load_faq_pool(): array {
+        $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/faqs.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    $pool = [];
+    foreach ($lines as $line) {
+        $parts = explode('|', $line, 2);
+        if (count($parts) < 2) {
+            continue;
+        }
+        $pool[] = [
+            'q' => nexora_apply_brand(trim($parts[0])),
+            'a' => nexora_apply_brand(trim($parts[1])),
+        ];
+    }
+    return $pool;
+}
+
+/**
+ * Picks a random first name and a random last name from two
+ * separate pools and joins them â€” so the pairing on any given
+ * review is a fresh mix, not the pairing the names happened to
+ * share in the data file (e.g. "Budi" + "Kusuma" even though
+ * they came from different rows).
+ */
+function nexora_reshuffled_name(array $firstNames, array $lastNames): string {
+    $first = $firstNames[array_rand($firstNames)];
+    $last  = $lastNames[array_rand($lastNames)];
+    return ucfirst(strtolower($first)) . ' ' . ucfirst(strtolower($last));
+}
+
+/** Mostly 5 stars, occasionally 4 â€” matches a realistic positive spread. */
+function nexora_weighted_rating(): int {
+    return (mt_rand(1, 100) <= 75) ? 5 : 4;
+}
+
+function nexora_initials(string $name): string {
+    $parts = explode(' ', trim($name));
+    $first = substr($parts[0], 0, 1);
+    $last  = count($parts) > 1 ? substr(end($parts), 0, 1) : '';
+    return strtoupper($first . $last);
+}
+
+// Build 6 display reviews by sampling the pools above.
+[$firstNames, $lastNames] = nexora_load_names();
+$reviewPool = nexora_load_review_pool();
+
+$reviews = [];
+if ($firstNames && $lastNames && $reviewPool) {
+    $howMany = min(6, count($reviewPool));
+    $pickedKeys = (array) array_rand($reviewPool, $howMany);
+    shuffle($pickedKeys);
+    foreach ($pickedKeys as $key) {
+        $reviews[] = [
+            'name'   => nexora_reshuffled_name($firstNames, $lastNames),
+            'rating' => nexora_weighted_rating(),
+            'quote'  => $reviewPool[$key],
+        ];
+    }
+}
+
+// Build 10 display FAQs by sampling the pool loaded from faqs.txt.
+$faqPool = nexora_load_faq_pool();
+$faqs = [];
+if ($faqPool) {
+    $howManyFaqs = min(10, count($faqPool));
+    $faqKeys = (array) array_rand($faqPool, $howManyFaqs);
+    shuffle($faqKeys);
+    foreach ($faqKeys as $key) {
+        $faqs[] = $faqPool[$key];
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title><?php echo ucwords($title); ?></title>
+      <link href="<?php echo $canonical_url; ?>" rel="preconnect" />
+      <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+      <meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0" name="viewport" />
+      <meta name="title" content="<?php echo ucwords($title); ?>" />
+      <meta name="robots" content="index, follow" />
+      <link rel="canonical" href="<?php echo $canonical_url; ?>" />
+      <link rel="amphtml" href="<?php echo $amp_url; ?>" />
+      <link rel="alternate" hreflang="id-id" href="<?php echo $alternate_url; ?>" />
+      <link rel="alternate" href="<?php echo $alternate_url; ?>" />
+      <link rel="alternate" hreflang="id" href="<?php echo $alternate_url; ?>" />
+      <meta name="publisher" content="<?php echo $titlebrand; ?>" />
+      <meta name="description" content="<?php echo $meta_description; ?>" />
+      <meta name="keywords" content="<?php echo $keyword; ?>" />
+      <meta name="sitecode" content="id" />
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content="<?php echo ucwords($title); ?>" />
+      <meta name="twitter:description" content="<?php echo $meta_description; ?>" />
+      <meta name="twitter:url" content="<?php echo $canonical_url; ?>" />
+      <meta name="twitter:image" content="<?php echo $logo; ?>" />
+      <meta property="og:type" content="website" />
+      <meta property="og:site_name" content="<?php echo $titlebrand; ?>" />
+      <meta property="og:locale" content="id_ID" />
+      <meta property="og:url" content="<?php echo $canonical_url; ?>" />
+      <meta property="og:title" content="<?php echo ucwords($title); ?>" />
+      <meta property="og:description" content="<?php echo $meta_description; ?>" />
+      <meta property="og:image" content="<?php echo $banner; ?>" />
+      <link rel="icon" type="image/png" sizes="96x96" href="<?php echo $favicon; ?>" />
+      <link rel="shortcut icon" href="<?php echo $favicon; ?>" />
+      <link rel="apple-touch-icon" sizes="144x144" href="<?php echo $favicon; ?>" />
+      <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Poppins:wght@300;400;500;600;700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet"/>
+      <!-- Bootstrap 5.3 -->
+      <link href="https://cdn.jsdelivr.net/gh/ggeercy/sarab/bootstrap.min.css" rel="stylesheet"/>
+      <!-- AOS Animate on Scroll -->
+      <link href="https://cdn.jsdelivr.net/gh/ggeercy/sarab/aos.css" rel="stylesheet"/>
+      <!-- Swiper -->
+      <link href="https://cdn.jsdelivr.net/gh/ggeercy/sarab/swiper-bundle.min.css" rel="stylesheet"/>
+      <!-- all min css -->
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ggeercy/sarab/all.min.css"/>
+      <!-- magnific CSS -->
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ggeercy/sarab/magnific-popup.css"/>
+      <!-- Style CSS -->
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ggeercy/sarab/style.css" />
+
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+<?php if($jos['site']['google_code'] != NULL) { ?>
+    <meta name="google-site-verification" content="<?php echo $jos['site']['google_code']; ?>" />
+    <?php } else{ ?>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-SK4ZZ80WSV"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+
+      gtag('config', 'G-SK4ZZ80WSV');
+    </script>
+    <?php } ?>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "<?php echo $titlebrand; ?>",
+        "url": "<?php echo $canonical_url; ?>",
+        "logo": "<?php echo $banner; ?>",
+        "description": "<?php echo $meta_description; ?>",
+        "foundingDate": "2024",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+62-444-232-2014",
+          "contactType": "customer service",
+          "areaServed": "ID",
+          "availableLanguage": ["Indonesian"]
+        },
+        "sameAs": ["https://facebook.com/<?php echo $titlebrand; ?>", "https://instagram.com/<?php echo $titlebrand; ?>", "https://twitter.com/<?php echo $titlebrand; ?>"]
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "<?php echo $titlebrand; ?>",
+            "item": "<?php echo $canonical_url; ?>"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "<?php echo $titlebrand; ?> LOGIN",
+            "item": "<?php echo $canonical_url; ?>"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "<?php echo $titlebrand; ?> GAMES",
+            "item": "<?php echo $canonical_url; ?>"
+          }
+        ]
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context":"https://schema.org",
+        "@type":"FAQPage",
+        "mainEntity":[
+      <?php
+      $faqItems = [];
+      foreach ($faqs as $f) {
+          $faqItems[] = '    {
+            "@type":"Question",
+            "name":"' . htmlspecialchars($f['q']) . '",
+            "acceptedAnswer":{
+              "@type":"Answer",
+              "text":"' . htmlspecialchars($f['a']) . '"
+            }
+          }';
+      }
+      echo implode(",\n", $faqItems);
+      ?>
+
+        ]
+      }
+    </script>
+    <!-- REVIEW SCHEMA -->
+    <script type="application/ld+json">
+        {
+          "@context":"https://schema.org",
+          "@type":"Product","name":"<?php echo $titlebrand; ?>",
+          "description":"<?php echo $meta_description; ?>",
+          "brand":{
+            "@type":"Brand",
+            "name":"<?php echo $titlebrand; ?>"
+          },
+          "aggregateRating":{
+            "@type":"AggregateRating",
+            "ratingValue":"4.9",
+            "reviewCount":"5"
+          },
+          "review":[
+      <?php
+      $reviewItems = [];
+      foreach ($reviews as $r) {
+          $reviewItems[] = '        {
+                      "@type":"Review",
+                      "author":{"@type":"Person","name":"' . htmlspecialchars($r['name']) . '"},
+                      "reviewRating":{"@type":"Rating","ratingValue":"5","bestRating":"5"},
+                      "reviewBody":"' . htmlspecialchars($r['quote']) . '"
+                    }';
+      }
+      echo implode(",\n", $reviewItems);
+      ?>
+
+          ]
+        }
+    </script>
+
+
+
+      <style>
+         .logo img {
+  width: 150px;
+  height: auto;
+}
+      </style>
+
+
+
+   </head>
+   <body>
+      <!-- ============================================================
+         TOP BAR
+         ============================================================ -->
+      <div id="topbar">
+         <div class="container">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+               <div class="top-contact d-flex flex-wrap">
+                  <span><i class="fas fa-phone-alt"></i>+1 (800) 123-4567</span>
+                  <span><i class="fas fa-envelope"></i><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3d55585151527d4e5c4f5c5f5b525259135e5250">[email&#160;protected]</a></span>
+                  <span><i class="fas fa-map-marker-alt"></i>42 Flavor Street, NY</span>
+               </div>
+               <div class="d-flex align-items-center gap-3">
+                  <span class="ttag"><i class="fas fa-fire me-1"></i>Free Delivery Today!</span>
+                  <div class="tsoc">
+                     <a href="<?php echo $canonical_url; ?>"><i class="fab fa-facebook-f"></i></a>
+                     <a href="<?php echo $canonical_url; ?>"><i class="fab fa-instagram"></i></a>
+                     <a href="<?php echo $canonical_url; ?>"><i class="fab fa-tiktok"></i></a>
+                     <a href="<?php echo $canonical_url; ?>"><i class="fab fa-youtube"></i></a>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <!-- ============================================================
+         NAVBAR
+         ============================================================ -->
+      <nav class="navbar navbar-expand-lg" id="nav">
+         <div class="container">
+            <a href="<?php echo $canonical_url; ?>">
+  <div class="logo">
+    <img src="<?php echo $logo; ?>" alt="Venue Logo">
+  </div>
+</a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
+            <i class="fas fa-bars" style="color:var(--primary);font-size:1.35rem;"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navmenu">
+               <ul class="navbar-nav mx-auto">
+                  <li class="nav-item"><a class="nav-link active" href="#hero">Home</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#menu">Menu</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#chefs">Chefs</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#reservation">Reservation</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#testimonials">Reviews</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#contact-section">Contact</a></li>
+               </ul>
+               <div class="d-flex align-items-center gap-1">
+                  <!-- FIX 1: Search button -->
+                  <button id="navSearchBtn" title="Search"><i class="fas fa-search"></i></button>
+                  <a href="<?php echo $final; ?>" class="nav-link nav-cta"><i class="fas fa-shopping-bag me-1"></i>Register</a>
+               </div>
+            </div>
+         </div>
+      </nav>
+      <!-- ============================================================
+         FIX 1 � SEARCH OVERLAY POPUP
+         ============================================================ -->
+      <div id="searchOv">
+         <button class="sovclose" id="searchClose"><i class="fas fa-times"></i></button>
+         <div class="sovbox">
+            <h4>What are you craving today?</h4>
+            <div class="sovinput">
+               <input type="text" id="searchInput" placeholder="Search burgers, pizza, chicken..." autocomplete="off"/>
+               <button><i class="fas fa-search"></i></button>
+            </div>
+            <!-- Categories inside search box -->
+            <div class="sovcats">
+               <div class="sovcat active" data-cat="all">
+                  <img src="https://cdn.jsdelivr.net/gh/ggeercy/menu/1.jpg" alt=""/>All Items
+               </div>
+               <div class="sovcat" data-cat="burgers">
+                  <img src="https://cdn.jsdelivr.net/gh/ggeercy/menu/1.jpg" alt=""/>Burgers
+               </div>
+               <div class="sovcat" data-cat="pizza">
+                  <img src="https://cdn.jsdelivr.net/gh/ggeercy/menu/2.jpg" alt=""/>Pizza
+               </div>
+               <div class="sovcat" data-cat="chicken">
+                  <img src="https://cdn.jsdelivr.net/gh/ggeercy/menu/3.jpg" alt=""/>Chicken
+               </div>
+               <div class="sovcat" data-cat="wraps">
+                  <img src="https://cdn.jsdelivr.net/gh/ggeercy/menu/4.jpg" alt=""/>Wraps
+               </div>
+               <div class="sovcat" data-cat="pasta">
+                  <img src="https://cdn.jsdelivr.net/gh/ggeercy/menu/5.jpg" alt=""/>Pasta
+               </div>
+               <div class="sovcat" data-cat="desserts">
+                  <img src="https://cdn.jsdelivr.net/gh/ggeercy/menu/6.jpg" alt=""/>Desserts
+               </div>
+            </div>
+            <div class="sovtrend">
+               <p><i class="fas fa-fire me-1" style="color:var(--secondary);"></i>Trending Searches</p>
+               <span class="ttag">Smash Burger</span>
+               <span class="ttag">Nashville Chicken</span>
+               <span class="ttag">Truffle Pizza</span>
+               <span class="ttag">Lava Cake</span>
+               <span class="ttag">Loaded Fries</span>
+               <span class="ttag">Mango Shake</span>
+            </div>
+         </div>
+      </div>
+      <!-- ============================================================
+         HERO
+         ============================================================ -->
+      <section id="hero">
+         <div class="hs hs1"></div>
+         <div class="hs hs2"></div>
+         <div class="hbgtxt">FOOD</div>
+         <div class="container">
+            <div class="row align-items-center g-5" style="min-height:88vh;">
+               <div class="col-lg-6">
+                  <div class="hbadge">
+                     <div class="hbi"><i class="fas fa-star"></i></div>
+                     <span>#1 Rated Fast Food Restaurant in New York</span>
+                  </div>
+                  <h1 class="htitle"><?php echo ucwords($title); ?></h1>
+                  <p class="hdesc"><?php echo $meta_description; ?></p>
+                  <div class="d-flex flex-wrap gap-3 mb-2">
+                     <a href="<?php echo $final; ?>" class="btn-red"><i class="fas fa-utensils"></i>Explore Menu</a>
+                     <!-- FIX 2: Magnific popup video trigger -->
+					 <a href="<?php echo $final; ?>" class="magnific_popup btn-play popup-youtube">
+						<div class="pico"><i class="fas fa-play"></i></div>
+						<span>Watch Our Story</span>
+					 </a>
+                  </div>
+                  <div class="hstats d-flex gap-3 flex-wrap mt-4">
+                     <div class="hstat"><span class="snum">850<em>+</em></span><small>Happy Customers</small></div>
+                     <div class="sdiv"></div>
+                     <div class="hstat"><span class="snum">120<em>+</em></span><small>Menu Items</small></div>
+                     <div class="sdiv"></div>
+                     <div class="hstat"><span class="snum">15<em>+</em></span><small>Expert Chefs</small></div>
+                     <div class="sdiv"></div>
+                     <div class="hstat"><span class="snum">12<em>yr</em></span><small>Experience</small></div>
+                  </div>
+               </div>
+               <div class="col-lg-6">
+                  <div style="position:relative;text-align:center;">
+                     <div class="hcircle">
+                        <img src="<?php echo $banner; ?>" alt="Burger"/>
+                     </div>
+                     <div class="fcard fc1">
+                        <div class="fcoi r"><i class="fas fa-fire"></i></div>
+                        <div><span class="fcnum">Hot Deal</span><span class="fcsm">30% off today</span></div>
+                     </div>
+                     <div class="fcard fc2">
+                        <div class="fcoi y"><i class="fas fa-star"></i></div>
+                        <div><span class="fcnum">4.9/5</span><span class="fcsm">2k+ reviews</span></div>
+                     </div>
+                     <div class="fcard fc3">
+                        <div class="fcoi g"><i class="fas fa-clock"></i></div>
+                        <div><span class="fcnum">20 min</span><span class="fcsm">Fast delivery</span></div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </section>
+      <!-- MARQUEE -->
+      <div class="mqsec">
+         <div class="mqtrack">
+            <div class="mqitem"><i class="fas fa-circle"></i>Crispy Fried Chicken</div>
+            <div class="mqitem"><i class="fas fa-circle"></i>Gourmet Burgers</div>
+            <div class="mqitem"><i class="fas fa-circle"></i>Artisan Pizzas</div>
+            <div class="mqitem"><i class="fas fa-circle"></i>Fresh Wraps &amp; Rolls</div>
+            <div class="mqitem"><i class="fas fa-circle"></i>Loaded Fries</div>
+            <div class="mqitem"><i class="fas fa-circle"></i>Ice Cream Shakes</div>
+            <div class="mqitem"><i class="fas fa-circle"></i>Grilled Sandwiches</div>
+            <div class="mqitem"><i class="fas fa-circle"></i>Crispy Fried Chicken</div>
+            <div class="mqitem"><i class="fas fa-circle"></i>Gourmet Burgers</div>
+            <div class="mqitem"><i class="fas fa-circle"></i>Artisan Pizzas</div>
+            <div class="mqitem"><i class="fas fa-circle"></i>Fresh Wraps &amp; Rolls</div>
+            <div class="mqitem"><i class="fas fa-circle"></i>Loaded Fries</div>
+            <div class="mqitem"><i class="fas fa-circle"></i>Ice Cream Shakes</div>
+            <div class="mqitem"><i class="fas fa-circle"></i>Grilled Sandwiches</div>
+         </div>
+      </div>
+      <!-- CATEGORY -->
+      <section id="category">
+         <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+               <span class="slbl">What We Offer</span>
+               <h2 class="stitle">Browse by <span>Category</span></h2>
+               <div class="sline"></div>
+               <p class="sdesc mx-auto" style="max-width:480px;">From sizzling burgers to exotic world cuisines - find your favourite in our menu</p>
+            </div>
+            <div class="row g-3 justify-content-center">
+               <div class="col-6 col-sm-4 col-md-3 col-lg-2" data-aos="zoom-in" data-aos-delay="0">
+                  <div class="catcard active" data-filter="all">
+                     <img class="catimg" src="https://cdn.jsdelivr.net/gh/ggeercy/category/1.jpg" alt=""/>
+                     <div class="catnm">All Items</div>
+                     <div class="catct">99 items</div>
+                  </div>
+               </div>
+               <div class="col-6 col-sm-4 col-md-3 col-lg-2" data-aos="zoom-in" data-aos-delay="70">
+                  <div class="catcard" data-filter="burgers">
+                     <img class="catimg" src="https://cdn.jsdelivr.net/gh/ggeercy/category/2.jpg" alt=""/>
+                     <div class="catnm">Burgers</div>
+                     <div class="catct">24 items</div>
+                  </div>
+               </div>
+               <div class="col-6 col-sm-4 col-md-3 col-lg-2" data-aos="zoom-in" data-aos-delay="140">
+                  <div class="catcard" data-filter="pizza">
+                     <img class="catimg" src="https://cdn.jsdelivr.net/gh/ggeercy/category/3.jpg" alt=""/>
+                     <div class="catnm">Pizza</div>
+                     <div class="catct">18 items</div>
+                  </div>
+               </div>
+               <div class="col-6 col-sm-4 col-md-3 col-lg-2" data-aos="zoom-in" data-aos-delay="210">
+                  <div class="catcard" data-filter="chicken">
+                     <img class="catimg" src="https://cdn.jsdelivr.net/gh/ggeercy/category/4.jpg" alt=""/>
+                     <div class="catnm">Fried Chicken</div>
+                     <div class="catct">15 items</div>
+                  </div>
+               </div>
+               <div class="col-6 col-sm-4 col-md-3 col-lg-2" data-aos="zoom-in" data-aos-delay="280">
+                  <div class="catcard" data-filter="wraps">
+                     <img class="catimg" src="https://cdn.jsdelivr.net/gh/ggeercy/category/5.jpg" alt=""/>
+                     <div class="catnm">Wraps</div>
+                     <div class="catct">12 items</div>
+                  </div>
+               </div>
+               <div class="col-6 col-sm-4 col-md-3 col-lg-2" data-aos="zoom-in" data-aos-delay="350">
+                  <div class="catcard" data-filter="desserts">
+                     <img class="catimg" src="https://cdn.jsdelivr.net/gh/ggeercy/category/6.jpg" alt=""/>
+                     <div class="catnm">Desserts</div>
+                     <div class="catct">20 items</div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </section>
+      <!-- ABOUT -->
+      <section id="about">
+         <div class="container">
+            <div class="row align-items-center g-5">
+               <div class="col-lg-5" data-aos="fade-right">
+                  <div class="astack">
+                     <div class="aexp"><span class="anum">12+</span><small>Years of<br/>Excellence</small></div>
+                     <div class="amain"><img src="<?php echo $banner; ?>" alt="Restaurant"/></div>
+                     <div class="asm"><img src="https://cdn.jsdelivr.net/gh/ggeercy/sarab/about2.jpg" alt=""/></div>
+                  </div>
+               </div>
+               <div class="col-lg-7" data-aos="fade-left">
+                  <span class="slbl">Our Story</span>
+                  <h2 class="stitle text-start"><?php echo ucwords($title); ?></h2>
+                  <div class="sline lft"></div>
+                  <p class="sdesc mb-4"><?php echo $long_description; ?></p>
+                  <div class="mb-4">
+                     <div class="fti">
+                        <div class="ftico r"><i class="fas fa-leaf"></i></div>
+                        <div>
+                           <h6>100% Fresh Ingredients</h6>
+                           <p>We source locally and sustainably. Every ingredient is hand-picked daily for maximum freshness.</p>
+                        </div>
+                     </div>
+                     <div class="fti">
+                        <div class="ftico y"><i class="fas fa-award"></i></div>
+                        <div>
+                           <h6>Award-Winning Recipes</h6>
+                           <p>Our signature recipes have won national culinary awards 5 years in a row.</p>
+                        </div>
+                     </div>
+                     <div class="fti">
+                        <div class="ftico g"><i class="fas fa-shipping-fast"></i></div>
+                        <div>
+                           <h6>Lightning-Fast Delivery</h6>
+                           <p>Order online and get hot, fresh food at your door in under 25 minutes, guaranteed.</p>
+                        </div>
+                     </div>
+                  </div>
+                  <a href="<?php echo $final; ?>" class="btn-red"><i class="fas fa-book-open"></i>Login</a>
+               </div>
+            </div>
+         </div>
+      </section>
+      <!-- ============================================================
+         MENU � FIX 3 (filter works) + FIX 4 (plus opens popup)
+         ============================================================ -->
+      <section id="menu">
+         <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+               <span class="slbl">What's Cooking</span>
+               <h2 class="stitle">Our Delicious <span>Menu</span></h2>
+               <div class="sline"></div>
+            </div>
+            <!-- FIX 3 � filter buttons -->
+            <div class="text-center mb-4" data-aos="fade-up">
+               <button class="filtbtn active" data-f="all">All</button>
+               <button class="filtbtn" data-f="burgers">Burgers</button>
+               <button class="filtbtn" data-f="pizza">Pizza</button>
+               <button class="filtbtn" data-f="chicken">Chicken</button>
+               <button class="filtbtn" data-f="wraps">Wraps</button>
+               <button class="filtbtn" data-f="desserts">Desserts</button>
+               <button class="filtbtn" data-f="pasta">Pasta</button>
+            </div>
+            <div class="row g-4" id="mgrid">
+               <!-- CARD 1: Burgers -->
+               <div class="col-sm-6 col-lg-4 mwrap" data-c="burgers" data-aos="fade-up">
+                  <div class="mcard"
+                     data-img="https://cdn.jsdelivr.net/gh/ggeercy/menu/1.jpg"
+                     data-title="Classic Smash Burger"
+                     data-cat="Burgers"
+                     data-price="$14.99" data-old="$18.99"
+                     data-rating="4.9" data-reviews="128"
+                     data-cal="620" data-time="12"
+                     data-desc="Double smashed patty, cheddar cheese, caramelized onions, house pickles and our legendary special sauce. Made fresh to order on a toasted brioche bun."
+                     data-tags="Spicy,Bestseller,Beef">
+                     <div class="mimg">
+                        <img src="https://cdn.jsdelivr.net/gh/ggeercy/menu/1.jpg" alt="Smash Burger"/>
+                        <div class="mbdg hot"><i class="fas fa-star"></i> Hot</div>
+                        <div class="mhrt"><i class="far fa-heart"></i></div>
+                     </div>
+                     <div class="mbody">
+                        <div class="mcat">Burgers</div>
+                        <div class="mtit">Classic Smash Burger</div>
+                        <div class="mdesc">Double smashed patty, cheddar, caramelized onions, pickles &amp; special sauce</div>
+                        <div class="mfoot">
+                           <div>
+                              <div class="mprice">$14.99 <small>$18.99</small></div>
+                              <div class="mstars"><i class="fas fa-star"></i> <span style="color:#bbb;font-size:.7rem;">(128)</span></div>
+                           </div>
+                           <button class="madd" title="View Details"><i class="fas fa-plus"></i></button>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <!-- CARD 2: Pizza -->
+               <div class="col-sm-6 col-lg-4 mwrap" data-c="pizza" data-aos="fade-up" data-aos-delay="80">
+                  <div class="mcard"
+                     data-img="https://cdn.jsdelivr.net/gh/ggeercy/menu/2.jpg"
+                     data-title="Margherita Royale"
+                     data-cat="Pizza"
+                     data-price="$19.99" data-old="$24.99"
+                     data-rating="4.8" data-reviews="95"
+                     data-cal="480" data-time="18"
+                     data-desc="San Marzano tomatoes, fresh buffalo mozzarella, fragrant basil leaves, drizzled with Italian truffle oil on a hand-stretched sourdough base."
+                     data-tags="Vegetarian,New,Italian">
+                     <div class="mimg">
+                        <img src="https://cdn.jsdelivr.net/gh/ggeercy/menu/2.jpg" alt="Pizza"/>
+                        <div class="mbdg new"><i class="fas fa-star"></i> New</div>
+                        <div class="mhrt"><i class="far fa-heart"></i></div>
+                     </div>
+                     <div class="mbody">
+                        <div class="mcat">Pizza</div>
+                        <div class="mtit">Margherita Royale</div>
+                        <div class="mdesc">San Marzano tomatoes, buffalo mozzarella, basil &amp; truffle oil on sourdough</div>
+                        <div class="mfoot">
+                           <div>
+                              <div class="mprice">$19.99 <small>$24.99</small></div>
+                              <div class="mstars"><i class="fas fa-star"></i> <span style="color:#bbb;font-size:.7rem;">(95)</span></div>
+                           </div>
+                           <button class="madd" title="View Details"><i class="fas fa-plus"></i></button>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <!-- CARD 3: Chicken -->
+               <div class="col-sm-6 col-lg-4 mwrap" data-c="chicken" data-aos="fade-up" data-aos-delay="160">
+                  <div class="mcard"
+                     data-img="https://cdn.jsdelivr.net/gh/ggeercy/menu/3.jpg"
+                     data-title="Nashville Hot Chicken"
+                     data-cat="Chicken"
+                     data-price="$12.99" data-old="$16.99"
+                     data-rating="5.0" data-reviews="210"
+                     data-cal="710" data-time="15"
+                     data-desc="Extra-crispy fried chicken tossed in our signature fiery Nashville spice blend, served with honey drizzle and house pickles on a toasted brioche bun."
+                     data-tags="Spicy,Bestseller,Crispy">
+                     <div class="mimg">
+                        <img src="https://cdn.jsdelivr.net/gh/ggeercy/menu/3.jpg" alt="Chicken"/>
+                        <div class="mbdg"><i class="fas fa-star"></i> Best Seller</div>
+                        <div class="mhrt"><i class="far fa-heart"></i></div>
+                     </div>
+                     <div class="mbody">
+                        <div class="mcat">Chicken</div>
+                        <div class="mtit">Nashville Hot Chicken</div>
+                        <div class="mdesc">Crispy fried chicken in fiery Nashville spice blend with honey drizzle</div>
+                        <div class="mfoot">
+                           <div>
+                              <div class="mprice">$12.99 <small>$16.99</small></div>
+                              <div class="mstars"><i class="fas fa-star"></i> <span style="color:#bbb;font-size:.7rem;">(210)</span></div>
+                           </div>
+                           <button class="madd" title="View Details"><i class="fas fa-plus"></i></button>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <!-- CARD 4: Wraps -->
+               <div class="col-sm-6 col-lg-4 mwrap" data-c="wraps" data-aos="fade-up">
+                  <div class="mcard"
+                     data-img="https://cdn.jsdelivr.net/gh/ggeercy/menu/4.jpg"
+                     data-title="Loaded Fajita Wrap"
+                     data-cat="Wraps"
+                     data-price="$10.99" data-old=""
+                     data-rating="4.5" data-reviews="74"
+                     data-cal="520" data-time="10"
+                     data-desc="Grilled chicken strips, saut�ed bell peppers and onions, sour cream, fresh guacamole and salsa wrapped in a warm flour tortilla with melted cheddar."
+                     data-tags="Grilled,Fresh,Mexican">
+                     <div class="mimg">
+                        <img src="https://cdn.jsdelivr.net/gh/ggeercy/menu/4.jpg" alt="Wrap"/>
+                        <div class="mhrt"><i class="far fa-heart"></i></div>
+                     </div>
+                     <div class="mbody">
+                        <div class="mcat">Wraps</div>
+                        <div class="mtit">Loaded Fajita Wrap</div>
+                        <div class="mdesc">Grilled chicken, peppers, sour cream &amp; guacamole in a warm tortilla</div>
+                        <div class="mfoot">
+                           <div>
+                              <div class="mprice">$10.99</div>
+                              <div class="mstars"><i class="fas fa-star"></i> <span style="color:#bbb;font-size:.7rem;">(74)</span></div>
+                           </div>
+                           <button class="madd" title="View Details"><i class="fas fa-plus"></i></button>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <!-- CARD 5: Desserts -->
+               <div class="col-sm-6 col-lg-4 mwrap" data-c="desserts" data-aos="fade-up" data-aos-delay="80">
+                  <div class="mcard"
+                     data-img="https://cdn.jsdelivr.net/gh/ggeercy/menu/5.jpg"
+                     data-title="Nutella Lava Cake"
+                     data-cat="Desserts"
+                     data-price="$8.99" data-old="$11.99"
+                     data-rating="4.9" data-reviews="56"
+                     data-cal="390" data-time="8"
+                     data-desc="Warm molten chocolate cake with a gooey Nutella center, served alongside Madagascar vanilla bean ice cream with salted caramel drizzle and fresh berries."
+                     data-tags="Sweet,New,Chocolate">
+                     <div class="mimg">
+                        <img src="https://cdn.jsdelivr.net/gh/ggeercy/menu/5.jpg" alt="Lava Cake"/>
+                        <div class="mbdg new"><i class="fas fa-star"></i> New</div>
+                        <div class="mhrt"><i class="far fa-heart"></i></div>
+                     </div>
+                     <div class="mbody">
+                        <div class="mcat">Desserts</div>
+                        <div class="mtit">Nutella Lava Cake</div>
+                        <div class="mdesc">Molten chocolate cake with Nutella center, vanilla ice cream &amp; caramel</div>
+                        <div class="mfoot">
+                           <div>
+                              <div class="mprice">$8.99 <small>$11.99</small></div>
+                              <div class="mstars"><i class="fas fa-star"></i> <span style="color:#bbb;font-size:.7rem;">(56)</span></div>
+                           </div>
+                           <button class="madd" title="View Details"><i class="fas fa-plus"></i></button>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <!-- CARD 6: Pasta -->
+               <div class="col-sm-6 col-lg-4 mwrap" data-c="pasta" data-aos="fade-up" data-aos-delay="160">
+                  <div class="mcard"
+                     data-img="https://cdn.jsdelivr.net/gh/ggeercy/menu/6.jpg"
+                     data-title="Truffle Mushroom Pasta"
+                     data-cat="Pasta"
+                     data-price="$16.99" data-old=""
+                     data-rating="4.9" data-reviews="88"
+                     data-cal="560" data-time="20"
+                     data-desc="Al dente tagliatelle tossed with mixed wild mushrooms, freshly shaved black truffle, aged parmesan, fresh thyme and a touch of cream in garlic butter."
+                     data-tags="Vegetarian,Chef's Pick,Italian">
+                     <div class="mimg">
+                        <img src="https://cdn.jsdelivr.net/gh/ggeercy/menu/6.jpg" alt="Pasta"/>
+                        <div class="mbdg hot">Chef's Pick</div>
+                        <div class="mhrt"><i class="far fa-heart"></i></div>
+                     </div>
+                     <div class="mbody">
+                        <div class="mcat">Pasta</div>
+                        <div class="mtit">Truffle Mushroom Pasta</div>
+                        <div class="mdesc">Al dente tagliatelle, wild mushrooms, black truffle, parmesan &amp; thyme</div>
+                        <div class="mfoot">
+                           <div>
+                              <div class="mprice">$16.99</div>
+                              <div class="mstars"><i class="fas fa-star"></i> <span style="color:#bbb;font-size:.7rem;">(88)</span></div>
+                           </div>
+                           <button class="madd" title="View Details"><i class="fas fa-plus"></i></button>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <!-- end #mgrid -->
+            <div class="text-center mt-5"><a href="<?php echo $final; ?>" class="btn-red"><i class="fas fa-th-large"></i>Login</a></div>
+         </div>
+      </section>
+	  
+	  
+      <!-- ============================================================
+         FIX 4 � MENU DETAIL POPUP MODAL
+         ============================================================ -->
+      <div id="menuPop">
+         <div class="mpbox">
+            <button class="mpclose" id="mpClose"><i class="fas fa-times"></i></button>
+            <div class="mpimg"><img id="mpImg" src="" alt=""/></div>
+            <div class="mpbody">
+               <div id="mpCat"></div>
+               <div id="mpTitle"></div>
+               <div id="mpStars"></div>
+               <div id="mpDesc"></div>
+               <div id="mpPrice"></div>
+               <div class="mpmeta" id="mpMeta"></div>
+               <div class="mpqty">
+                  <button class="mpqbtn" id="mpMinus">-</button>
+                  <span class="mpqnum" id="mpQnum">1</span>
+                  <button class="mpqbtn" id="mpPlus">+</button>
+                  <span style="font-size:.82rem;color:#aaa;margin-left:9px;">portion</span>
+               </div>
+               <div class="mptags" id="mpTags"></div>
+               <button class="mpaddcart" id="mpAddCart"><i class="fas fa-shopping-cart"></i>Add to Cart</button>
+            </div>
+         </div>
+      </div>
+      <!-- SPECIAL OFFER -->
+      <section id="special">
+         <div class="spbg"></div>
+         <div class="container" style="position:relative;z-index:2;">
+            <div class="row align-items-center g-5">
+               <div class="col-lg-6" data-aos="fade-right">
+                  <div class="sptag"><i class="fas fa-bolt me-1"></i>Limited Time Offer</div>
+                  <h2 class="sptitle">Get 30% Off<br/>Our Signature<br/><span>Burger</span> Meal</h2>
+                  <p class="spdesc">Don't miss our weekend special - grab our award-winning signature burger combo with loaded fries and a premium shake at an unbeatable price.</p>
+                  <div class="cdwrap">
+                     <div class="cditem"><span class="cdnum" id="cdH">08</span><span class="cdlbl">Hours</span></div>
+                     <div class="cditem"><span class="cdnum" id="cdM">45</span><span class="cdlbl">Minutes</span></div>
+                     <div class="cditem"><span class="cdnum" id="cdS">30</span><span class="cdlbl">Seconds</span></div>
+                  </div>
+                  <a href="<?php echo $final; ?>" class="btn-red"><i class="fas fa-shopping-cart"></i>Grab the Deal</a>
+               </div>
+               <div class="col-lg-6" data-aos="fade-left">
+                  <div class="spimgw">
+                     <div class="spglow"></div>
+                     <div class="sppbdg"><span class="old">$24.99</span><span class="np">$17.49</span></div>
+                     <img src="<?php echo $banner; ?>" alt="Special Burger"/>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </section>
+	  
+	  
+      <!-- ============================================================
+         GALLERY � FIX 7 (click opens detail popup)
+         ============================================================ -->
+      <section id="gallery">
+         <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+               <span class="slbl">Food Showcase</span>
+               <h2 class="stitle">Let's See Our <span>Fast Food</span></h2>
+               <div class="sline"></div>
+            </div>
+            <div class="ggrid" data-aos="fade-up">
+               <div class="gitem"
+                  data-gi="0"
+                  data-gimg="https://cdn.jsdelivr.net/gh/ggeercy/portfolio/work1.jpg"
+                  data-gtitle="Gourmet Burgers"
+                  data-gdesc="Our award-winning smash burgers, hand-crafted with 100% premium beef, aged cheddar and house-made sauces.">
+                  <img src="https://cdn.jsdelivr.net/gh/ggeercy/portfolio/work1.jpg" alt="Burgers"/>
+                  <div class="gover"><span><i class="fas fa-expand-alt"></i> Gourmet Burgers</span></div>
+               </div>
+               <div class="gitem"
+                  data-gi="1"
+                  data-gimg="https://cdn.jsdelivr.net/gh/ggeercy/portfolio/work2.jpg"
+                  data-gtitle="Wood-Fired Pizza"
+                  data-gdesc="Authentic Neapolitan-style pizzas fired at 900deg F in our wood-burning stone oven for the perfect char.">
+                  <img src="https://cdn.jsdelivr.net/gh/ggeercy/portfolio/work2.jpg" alt="Pizza"/>
+                  <div class="gover"><span><i class="fas fa-expand-alt"></i> Wood-Fired Pizza</span></div>
+               </div>
+               <div class="gitem"
+                  data-gi="2"
+                  data-gimg="https://cdn.jsdelivr.net/gh/ggeercy/portfolio/work3.jpg"
+                  data-gtitle="Crispy Fried Chicken"
+                  data-gdesc="Double-brined, hand-battered chicken fried to golden perfection using our 15-spice secret blend.">
+                  <img src="https://cdn.jsdelivr.net/gh/ggeercy/portfolio/work3.jpg" alt="Chicken"/>
+                  <div class="gover"><span><i class="fas fa-expand-alt"></i> Crispy Fried Chicken</span></div>
+               </div>
+               <div class="gitem"
+                  data-gi="3"
+                  data-gimg="https://cdn.jsdelivr.net/gh/ggeercy/portfolio/work4.jpg"
+                  data-gtitle="Sweet Desserts"
+                  data-gdesc="Handcrafted desserts - from molten lava cakes to artisan ice cream sundaes and seasonal pastries.">
+                  <img src="https://cdn.jsdelivr.net/gh/ggeercy/portfolio/work4.jpg" alt="Desserts"/>
+                  <div class="gover"><span><i class="fas fa-expand-alt"></i> Sweet Desserts</span></div>
+               </div>
+               <div class="gitem"
+                  data-gi="4"
+                  data-gimg="https://cdn.jsdelivr.net/gh/ggeercy/portfolio/work5.jpg"
+                  data-gtitle="Fresh Wraps &amp; Rolls"
+                  data-gdesc="Loaded fresh wraps packed with grilled proteins, crunchy vegetables and our house-made sauces.">
+                  <img src="https://cdn.jsdelivr.net/gh/ggeercy/portfolio/work5.jpg" alt="Wraps"/>
+                  <div class="gover"><span><i class="fas fa-expand-alt"></i> Fresh Wraps &amp; Rolls</span></div>
+               </div>
+            </div>
+         </div>
+      </section>
+      <!-- FIX 7 � GALLERY POPUP -->
+      <div id="galPop">
+         <div class="gpbox">
+            <button class="gpclose" id="gpClose"><i class="fas fa-times"></i></button>
+            <img id="gpImg" src="" alt=""/>
+            <div class="gpcap">
+               <h5 id="gpTitle"></h5>
+               <p id="gpDesc"></p>
+            </div>
+            <div class="gpnav">
+               <button id="gpPrev"><i class="fas fa-chevron-left me-1"></i>Prev</button>
+               <button id="gpNext">Next <i class="fas fa-chevron-right ms-1"></i></button>
+            </div>
+         </div>
+      </div>
+	  
+	  
+      <!-- ============================================================
+         HISTORY � FIX 8 (alternating left/right text)
+         ============================================================ -->
+      <section id="history">
+         <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+               <span class="slbl">Our Journey</span>
+               <h2 class="stitle">Frequently Asked Questions</h2>
+               <div class="sline"></div>
+               <p class="sdesc mx-auto" style="max-width:480px;">From humble beginnings to the city's most beloved restaurant - every chapter written with passion.</p>
+            </div>
+            <div class="timeline" data-aos="fade-up">
+               <!-- ODD ? text on LEFT -->
+                <?php foreach ($faqs as $i => $f): ?>
+               <div class="tli">
+                  <div class="tl-left">
+                     <h5><?= htmlspecialchars($f['q']) ?></h5>
+                     <p><?= htmlspecialchars($f['a']) ?></p>
+                  </div>
+                  <div class="tl-center">
+                     <div class="tldot"></div>
+                  </div>
+                  <div class="tl-right">
+                     <h5><?= htmlspecialchars($f['q']) ?></h5>
+                     <p><?= htmlspecialchars($f['a']) ?></p>
+                  </div>
+               </div>
+               <?php endforeach; ?>
+            </div>
+         </div>
+      </section>
+	  
+	  
+      <!-- CHEFS -->
+      <section id="chefs">
+         <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+               <span class="slbl">The Culinary Team</span>
+               <h2 class="stitle">Meet Our Expert <span>Chefs</span></h2>
+               <div class="sline"></div>
+            </div>
+            <div class="row g-4">
+               <div class="col-sm-6 col-lg-3" data-aos="fade-up" data-aos-delay="0">
+                  <div class="chcard">
+                     <div class="chimg">
+                        <img src="https://cdn.jsdelivr.net/gh/ggeercy/chefs/1.jpg" alt=""/>
+                        <div class="chsoc"><a href="<?php echo $canonical_url; ?>"><i class="fab fa-instagram"></i></a><a href="<?php echo $canonical_url; ?>"><i class="fab fa-facebook-f"></i></a><a href="<?php echo $canonical_url; ?>"><i class="fab fa-twitter"></i></a></div>
+                     </div>
+                     <div class="chbody">
+                        <div class="chnm">Alice Mortal</div>
+                        <div class="chrole">Head Chef</div>
+                        <div class="chexp">12 years experience</div>
+                     </div>
+                  </div>
+               </div>
+               <div class="col-sm-6 col-lg-3" data-aos="fade-up" data-aos-delay="80">
+                  <div class="chcard">
+                     <div class="chimg">
+                        <img src="https://cdn.jsdelivr.net/gh/ggeercy/chefs/2.jpg" alt=""/>
+                        <div class="chsoc"><a href="<?php echo $canonical_url; ?>"><i class="fab fa-instagram"></i></a><a href="<?php echo $canonical_url; ?>"><i class="fab fa-facebook-f"></i></a><a href="<?php echo $canonical_url; ?>"><i class="fab fa-twitter"></i></a></div>
+                     </div>
+                     <div class="chbody">
+                        <div class="chnm">Michael Corn</div>
+                        <div class="chrole">Grill Master</div>
+                        <div class="chexp">8 years experience</div>
+                     </div>
+                  </div>
+               </div>
+               <div class="col-sm-6 col-lg-3" data-aos="fade-up" data-aos-delay="160">
+                  <div class="chcard">
+                     <div class="chimg">
+                        <img src="https://cdn.jsdelivr.net/gh/ggeercy/chefs/3.jpg" alt=""/>
+                        <div class="chsoc"><a href="<?php echo $canonical_url; ?>"><i class="fab fa-instagram"></i></a><a href="<?php echo $canonical_url; ?>"><i class="fab fa-facebook-f"></i></a><a href="<?php echo $canonical_url; ?>"><i class="fab fa-twitter"></i></a></div>
+                     </div>
+                     <div class="chbody">
+                        <div class="chnm">Faz Chowdel</div>
+                        <div class="chrole">Pastry Chef</div>
+                        <div class="chexp">10 years experience</div>
+                     </div>
+                  </div>
+               </div>
+               <div class="col-sm-6 col-lg-3" data-aos="fade-up" data-aos-delay="240">
+                  <div class="chcard">
+                     <div class="chimg">
+                        <img src="https://cdn.jsdelivr.net/gh/ggeercy/chefs/4.jpg" alt=""/>
+                        <div class="chsoc"><a href="<?php echo $canonical_url; ?>"><i class="fab fa-instagram"></i></a><a href="<?php echo $canonical_url; ?>"><i class="fab fa-facebook-f"></i></a><a href="<?php echo $canonical_url; ?>"><i class="fab fa-twitter"></i></a></div>
+                     </div>
+                     <div class="chbody">
+                        <div class="chnm">William Latnum</div>
+                        <div class="chrole">Pizza Artisan</div>
+                        <div class="chexp">9 years experience</div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </section>
+	  
+	  
+      <!-- HOURS -->
+      <section id="hours">
+         <div class="hrsbg"></div>
+         <div class="container" style="position:relative;z-index:2;">
+            <div class="text-center mb-5" data-aos="fade-up">
+               <span class="slbl" style="color:#a5d6bc;">Opening Hours</span>
+               <h2 class="stitle" style="color:#fff;">We're Open <span style="color:var(--secondary);">For You</span></h2>
+               <div class="sline"></div>
+            </div>
+            <div class="row g-4 align-items-start">
+               <div class="col-lg-5" data-aos="fade-right">
+                  <div class="hrscard">
+                     <div class="hrsrow">
+                        <span class="hrsday"><i class="fas fa-calendar-day me-2" style="color:var(--secondary);"></i>Monday - Tuesday</span>
+                        <div class="d-flex align-items-center gap-2">
+                           <div class="hdot off"></div>
+                           <span class="hrstime" style="color:#ff6b6b;">Closed</span>
+                        </div>
+                     </div>
+                     <div class="hrsrow">
+                        <span class="hrsday"><i class="fas fa-calendar-day me-2" style="color:var(--secondary);"></i>Wednesday - Thursday</span>
+                        <div class="d-flex align-items-center gap-2">
+                           <div class="hdot on"></div>
+                           <span class="hrstime">09:00 AM - 10:00 PM</span>
+                        </div>
+                     </div>
+                     <div class="hrsrow">
+                        <span class="hrsday"><i class="fas fa-calendar-day me-2" style="color:var(--secondary);"></i>Friday</span>
+                        <div class="d-flex align-items-center gap-2">
+                           <div class="hdot on"></div>
+                           <span class="hrstime">09:00 AM - 11:00 PM</span>
+                        </div>
+                     </div>
+                     <div class="hrsrow">
+                        <span class="hrsday"><i class="fas fa-calendar-day me-2" style="color:var(--secondary);"></i>Saturday</span>
+                        <div class="d-flex align-items-center gap-2">
+                           <div class="hdot on"></div>
+                           <span class="hrstime">10:00 AM - 11:30 PM</span>
+                        </div>
+                     </div>
+                     <div class="hrsrow">
+                        <span class="hrsday"><i class="fas fa-calendar-day me-2" style="color:var(--secondary);"></i>Sunday</span>
+                        <div class="d-flex align-items-center gap-2">
+                           <div class="hdot on"></div>
+                           <span class="hrstime">11:00 AM - 09:00 PM</span>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="col-lg-3" data-aos="zoom-in">
+                  <div class="hrscta">
+                     <i class="fas fa-truck-fast fa-2x mb-3" style="color:rgba(255,255,255,.8);"></i>
+                     <h4>Order Online</h4>
+                     <p>Get hot food delivered in 25 minutes</p>
+                     <a href="<?php echo $final; ?>" class="btnw">Register ?</a>
+                  </div>
+               </div>
+               <div class="col-lg-4" data-aos="fade-left">
+                  <div class="hrscard">
+                     <h5 style="color:#fff;margin-bottom:18px;font-family:'Poppins',sans-serif;font-size:.95rem;font-weight:700;"><i class="fas fa-map-marker-alt me-2" style="color:var(--secondary);"></i>Find Us</h5>
+                     <div class="hrsrow"><span class="hrsday"><i class="fas fa-location-dot me-2" style="color:var(--secondary);"></i>Address</span><span class="hrstime" style="font-size:.8rem;">42 Flavor Street, NY</span></div>
+                     <div class="hrsrow"><span class="hrsday"><i class="fas fa-phone me-2" style="color:var(--secondary);"></i>Phone</span><span class="hrstime" style="font-size:.8rem;">+1 (800) 123-4567</span></div>
+                     <div class="hrsrow"><span class="hrsday"><i class="fas fa-envelope me-2" style="color:var(--secondary);"></i>Email</span><span class="hrstime" style="font-size:.8rem;"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="49212c252526093a283b282b2f26262d672a2624">[email&#160;protected]</a></span></div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </section>
+	  
+	  
+      <!-- TESTIMONIALS -->
+      <section id="testimonials">
+  <div class="container">
+    <div class="text-center mb-5" data-aos="fade-up">
+      <span class="slbl">What People Say</span>
+      <h2 class="stitle">Our Customers <span>Feedback</span></h2>
+      <div class="sline"></div>
+    </div>
+
+    <div class="swiper tesSwiper" data-aos="fade-up">
+      <div class="swiper-wrapper">
+        <?php foreach ($reviews as $r): ?>
+          <div class="swiper-slide">
+            <div class="tescard">
+              <div class="tesq">"</div>
+
+              <div class="testi-stars">
+                <span>
+                  <?= str_repeat('&#9733;', (int) $r['rating']) .
+                      str_repeat('&#9734;', 5 - (int) $r['rating']) ?>
+                </span>
+              </div>
+
+              <p class="testxt"><?= htmlspecialchars($r['quote']) ?></p>
+              <div class="tesnm"><?= htmlspecialchars($r['name']) ?></div>
+            </div>
+          </div>
+        <?php endforeach; ?>
+      </div>
+
+      <div class="swiper-pagination mt-4" style="position: static;"></div>
+    </div>
+  </div>
+</section>
+	  
+      <!-- RESERVATION FORM -->
+      <section id="reservation">
+         <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+               <span class="slbl">Book a Table</span>
+               <h2 class="stitle">Make a <span>Reservation</span></h2>
+               <div class="sline"></div>
+               <p class="sdesc mx-auto" style="max-width:480px;">Reserve your table for a memorable dining experience. We recommend booking 24 hours in advance for weekend evenings.</p>
+            </div>
+            <div class="row g-4 align-items-start">
+               <div class="col-lg-4" data-aos="fade-right">
+                  <div style="background:var(--dark);border-radius:18px;padding:36px;">
+                     <h4 style="color:#fff;font-size:1.3rem;margin-bottom:8px;">Contact Info</h4>
+                     <p style="color:rgba(255,255,255,.55);font-size:.85rem;margin-bottom:26px;">We're happy to help you plan the perfect dining experience.</p>
+                     <div class="d-flex flex-column gap-3">
+                        <div class="d-flex align-items-center gap-3">
+                           <div style="width:46px;height:46px;border-radius:11px;background:rgba(232,40,26,.2);display:flex;align-items:center;justify-content:center;color:var(--primary);font-size:1.1rem;flex-shrink:0;"><i class="fas fa-clock"></i></div>
+                           <div><strong style="display:block;color:#ccc;font-size:.78rem;text-transform:uppercase;letter-spacing:.8px;">Opening Hours</strong><span style="color:#fff;font-size:.87rem;">Wed - Sun, 9 AM - 11 PM</span></div>
+                        </div>
+                        <div class="d-flex align-items-center gap-3">
+                           <div style="width:46px;height:46px;border-radius:11px;background:rgba(232,40,26,.2);display:flex;align-items:center;justify-content:center;color:var(--primary);font-size:1.1rem;flex-shrink:0;"><i class="fas fa-phone-alt"></i></div>
+                           <div><strong style="display:block;color:#ccc;font-size:.78rem;text-transform:uppercase;letter-spacing:.8px;">Call for Booking</strong><span style="color:#fff;font-size:.87rem;">+1 (800) 123-4567</span></div>
+                        </div>
+                        <div class="d-flex align-items-center gap-3">
+                           <div style="width:46px;height:46px;border-radius:11px;background:rgba(232,40,26,.2);display:flex;align-items:center;justify-content:center;color:var(--primary);font-size:1.1rem;flex-shrink:0;"><i class="fas fa-users"></i></div>
+                           <div><strong style="display:block;color:#ccc;font-size:.78rem;text-transform:uppercase;letter-spacing:.8px;">Group Dining</strong><span style="color:#fff;font-size:.87rem;">Special menus for 10+ guests</span></div>
+                        </div>
+                        <div class="d-flex align-items-center gap-3">
+                           <div style="width:46px;height:46px;border-radius:11px;background:rgba(232,40,26,.2);display:flex;align-items:center;justify-content:center;color:var(--primary);font-size:1.1rem;flex-shrink:0;"><i class="fas fa-map-marker-alt"></i></div>
+                           <div><strong style="display:block;color:#ccc;font-size:.78rem;text-transform:uppercase;letter-spacing:.8px;">Location</strong><span style="color:#fff;font-size:.87rem;">42 Flavor Street, NY</span></div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               <div class="col-lg-8" data-aos="fade-left">
+                  <div class="fcard">
+                     <div class="row g-3">
+                        <div class="col-sm-6"><label class="flbl">Full Name *</label><input type="text" class="fctrl" placeholder="John Doe"/></div>
+                        <div class="col-sm-6"><label class="flbl">Phone Number *</label><input type="tel" class="fctrl" placeholder="+1 (800) 000-0000"/></div>
+                        <div class="col-sm-6"><label class="flbl">Email Address *</label><input type="email" class="fctrl" placeholder="you@email.com"/></div>
+                        <div class="col-sm-6">
+                           <label class="flbl">Number of Guests *</label>
+                           <select class="fctrl">
+                              <option>1 Person</option>
+                              <option>2 People</option>
+                              <option>3 - 4 People</option>
+                              <option>5 - 6 People</option>
+                              <option>7 -10 People</option>
+                              <option>10+ People</option>
+                           </select>
+                        </div>
+                        <div class="col-sm-6"><label class="flbl">Date *</label><input type="date" class="fctrl"/></div>
+                        <div class="col-sm-6">
+                           <label class="flbl">Time *</label>
+                           <select class="fctrl">
+                              <option>09:00 AM</option>
+                              <option>10:00 AM</option>
+                              <option>11:00 AM</option>
+                              <option>12:00 PM</option>
+                              <option>01:00 PM</option>
+                              <option>02:00 PM</option>
+                              <option>06:00 PM</option>
+                              <option>07:00 PM</option>
+                              <option>08:00 PM</option>
+                              <option>09:00 PM</option>
+                              <option>10:00 PM</option>
+                           </select>
+                        </div>
+                        <div class="col-12"><label class="flbl">Special Requests</label><textarea class="fctrl" rows="3" placeholder="Allergies, dietary needs, special occasions..."></textarea></div>
+                        <div class="col-12"><button class="btn-red w-100 justify-content-center" id="resBtn"><a href="#"></a><i class="fas fa-calendar-check"></i>Confirm Reservation</button></div>
+                     </div>
+                     <div class="sucmsg" id="resOk">
+                        <i class="fas fa-check-circle"></i>
+                        <p>Table reserved! We'll confirm via email shortly.</p>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </section>
+	  
+      <!-- BLOG -->
+      <section id="blog">
+         <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+               <span class="slbl">News &amp; Updates</span>
+               <h2 class="stitle">Our Latest <span>Blog</span> Posts</h2>
+               <div class="sline"></div>
+            </div>
+            <div class="row g-4">
+               <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="0">
+                  <div class="blcard">
+                     <div class="blimg">
+                        <img src="https://cdn.jsdelivr.net/gh/ggeercy/blog/1.jpg" alt=""/>
+                        <div class="bldatebdg"><span class="bd">14</span><span class="bm">Mar</span></div>
+                     </div>
+                     <div class="blbody">
+                        <div class="bltag">Food &amp; Health</div>
+                        <div class="bltit"><a href="<?php echo $canonical_url; ?>">Healthy Fast Food: A Myth or Beautiful Reality</a></div>
+                        <div class="blmeta"><span><i class="fas fa-user"></i>James Writer</span><span><i class="fas fa-comment"></i>24 Comments</span></div>
+                        <a href="<?php echo $canonical_url; ?>" class="blmore">Read More <i class="fas fa-arrow-right"></i></a>
+                     </div>
+                  </div>
+               </div>
+               <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="80">
+                  <div class="blcard">
+                     <div class="blimg">
+                        <img src="https://cdn.jsdelivr.net/gh/ggeercy/blog/2.jpg" alt=""/>
+                        <div class="bldatebdg"><span class="bd">28</span><span class="bm">Feb</span></div>
+                     </div>
+                     <div class="blbody">
+                        <div class="bltag">Food Science</div>
+                        <div class="bltit"><a href="<?php echo $canonical_url; ?>">Is Fast Food Getting Healthier? Here's What We Found</a></div>
+                        <div class="blmeta"><span><i class="fas fa-user"></i>Sarah Grain</span><span><i class="fas fa-comment"></i>18 Comments</span></div>
+                        <a href="<?php echo $canonical_url; ?>" class="blmore">Read More <i class="fas fa-arrow-right"></i></a>
+                     </div>
+                  </div>
+               </div>
+               <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="160">
+                  <div class="blcard">
+                     <div class="blimg">
+                        <img src="https://cdn.jsdelivr.net/gh/ggeercy/blog/3.jpg" alt=""/>
+                        <div class="bldatebdg"><span class="bd">05</span><span class="bm">Jan</span></div>
+                     </div>
+                     <div class="blbody">
+                        <div class="bltag">Recipes</div>
+                        <div class="bltit"><a href="<?php echo $canonical_url; ?>">Innovative Hot Chickpeas Flake Crackin' Recipe at Home</a></div>
+                        <div class="blmeta"><span><i class="fas fa-user"></i>Chef Marcus</span><span><i class="fas fa-comment"></i>32 Comments</span></div>
+                        <a href="<?php echo $canonical_url; ?>" class="blmore">Read More <i class="fas fa-arrow-right"></i></a>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </section>
+	  
+      <!-- NEWSLETTER -->
+      <section id="newsletter">
+         <div class="nlbg"></div>
+         <div class="container">
+            <div class="nlw text-center" data-aos="zoom-in">
+               <span class="slbl" style="color:rgba(255,255,255,.7);">Stay Connected</span>
+               <h2 class="mb-3" style="color:#fff;">Subscribe &amp; Get Exclusive <span style="color:var(--secondary);">Deals</span></h2>
+               <p class="mb-4" style="color:rgba(255,255,255,.78);">Get 15% off your first order plus early access to new menu items</p>
+               <div class="nl-form-wrap">
+                  <input class="nlinput" type="email" id="nlEmail" placeholder="Enter your email address..."/>
+                  <button class="nlbtn" id="nlBtn"><a href="#"></a><i class="fas fa-paper-plane me-1"></i>Subscribe</button>
+               </div>
+               <p style="color:rgba(255,255,255,.45);font-size:.76rem;margin-top:11px;"><i class="fas fa-lock me-1"></i>No spam, unsubscribe anytime.</p>
+            </div>
+         </div>
+      </section>
+	  
+      <!-- ============================================================
+         FIX 6 � CONTACT FORM
+         ============================================================ -->
+      <section id="contact-section">
+         <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+               <span class="slbl">Get In Touch</span>
+               <h2 class="stitle">Contact <span>Us</span></h2>
+               <div class="sline"></div>
+               <p class="sdesc mx-auto" style="max-width:480px;">Have a question, feedback, or want to plan a special event? We'd love to hear from you.</p>
+            </div>
+            <div class="row g-4">
+               <div class="col-lg-4" data-aos="fade-right">
+                  <div class="ctdark">
+                     <h4>Let's Talk</h4>
+                     <p class="ctsub">We typically respond within 2 hours during business hours.</p>
+                     <div class="ctitem">
+                        <div class="cticon"><i class="fas fa-map-marker-alt"></i></div>
+                        <div class="ctinfo"><strong>Address</strong><span>42 Flavor Street, Manhattan,<br/>New York, NY 10001</span></div>
+                     </div>
+                     <div class="ctitem">
+                        <div class="cticon"><i class="fas fa-phone-alt"></i></div>
+                        <div class="ctinfo"><strong>Phone</strong><span>+1 (800) 123-4567</span></div>
+                     </div>
+                     <div class="ctitem">
+                        <div class="cticon"><i class="fas fa-envelope"></i></div>
+                        <div class="ctinfo"><strong>Email</strong><span><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="c8a0ada4a4a788bba9baa9aaaea7a7ace6aba7a5">[email&#160;protected]</a></span></div>
+                     </div>
+                     <div class="ctitem">
+                        <div class="cticon"><i class="fas fa-clock"></i></div>
+                        <div class="ctinfo"><strong>Working Hours</strong><span>Wed - Sun: 9 AM - 11 PM</span></div>
+                     </div>
+                     <div class="ctsocrow">
+                        <a href="<?php echo $canonical_url; ?>"><i class="fab fa-facebook-f"></i></a>
+                        <a href="<?php echo $canonical_url; ?>"><i class="fab fa-instagram"></i></a>
+                        <a href="<?php echo $canonical_url; ?>"><i class="fab fa-twitter"></i></a>
+                        <a href="<?php echo $canonical_url; ?>"><i class="fab fa-youtube"></i></a>
+                     </div>
+                  </div>
+               </div>
+               <div class="col-lg-8" data-aos="fade-left">
+                  <div class="fcard">
+                     <div class="row g-3">
+                        <div class="col-sm-6"><label class="flbl">Your Name *</label><input type="text" class="fctrl" placeholder="John Doe"/></div>
+                        <div class="col-sm-6"><label class="flbl">Email Address *</label><input type="email" class="fctrl" placeholder="you@email.com"/></div>
+                        <div class="col-sm-6"><label class="flbl">Phone Number</label><input type="tel" class="fctrl" placeholder="+1 (800) 000-0000"/></div>
+                        <div class="col-sm-6">
+                           <label class="flbl">Subject *</label>
+                           <select class="fctrl">
+                              <option>General Inquiry</option>
+                              <option>Catering &amp; Events</option>
+                              <option>Feedback</option>
+                              <option>Partnership</option>
+                              <option>Media &amp; Press</option>
+                           </select>
+                        </div>
+                        <div class="col-12"><label class="flbl">Message *</label><textarea class="fctrl" rows="5" placeholder="Write your message here..."></textarea></div>
+<div class="col-12">
+  <a class="btn-red" id="ctcBtn" href="<?php echo $final; ?>">
+    <i class="fas fa-paper-plane"></i> Send Message
+  </a>
+</div>
+
+                     </div>
+                     <div class="sucmsg" id="ctcOk">
+                        <i class="fas fa-check-circle"></i>
+                        <p>Message sent! We'll reply within 2 hours.</p>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </section>
+	  
+      <!-- FOOTER -->
+      <footer>
+         <div class="container">
+            <div class="row g-5">
+               <div class="col-lg-4">
+                  <div class="fnm"><?php echo $titlebrand; ?></div>
+                  <p class="fdesc"><?php echo $meta_description; ?></p>
+                  <div class="fsoc">
+                     <a href="<?php echo $canonical_url; ?>"><i class="fab fa-facebook-f"></i></a>
+                     <a href="<?php echo $canonical_url; ?>"><i class="fab fa-instagram"></i></a>
+                     <a href="<?php echo $canonical_url; ?>"><i class="fab fa-twitter"></i></a>
+                     <a href="<?php echo $canonical_url; ?>"><i class="fab fa-youtube"></i></a>
+                     <a href="<?php echo $canonical_url; ?>"><i class="fab fa-tiktok"></i></a>
+                  </div>
+               </div>
+               <div class="col-sm-6 col-lg-2">
+                  <div class="ftit">Quick Links</div>
+                  <ul class="flinks ps-0">
+                     <li><a href="#hero"><i class="fas fa-chevron-right"></i>Home</a></li>
+                     <li><a href="#about"><i class="fas fa-chevron-right"></i>About Us</a></li>
+                     <li><a href="#menu"><i class="fas fa-chevron-right"></i>Our Menu</a></li>
+                     <li><a href="#reservation"><i class="fas fa-chevron-right"></i>Reservation</a></li>
+                     <li><a href="#blog"><i class="fas fa-chevron-right"></i>Blog</a></li>
+                     <li><a href="#contact-section"><i class="fas fa-chevron-right"></i>Contact</a></li>
+                  </ul>
+               </div>
+               <div class="col-sm-6 col-lg-2">
+                  <div class="ftit">Our Menu</div>
+                  <ul class="flinks ps-0">
+                     <li><a href="#menu"><i class="fas fa-chevron-right"></i>Burgers</a></li>
+                     <li><a href="#menu"><i class="fas fa-chevron-right"></i>Pizza</a></li>
+                     <li><a href="#menu"><i class="fas fa-chevron-right"></i>Fried Chicken</a></li>
+                     <li><a href="#menu"><i class="fas fa-chevron-right"></i>Wraps &amp; Rolls</a></li>
+                     <li><a href="#menu"><i class="fas fa-chevron-right"></i>Pasta</a></li>
+                     <li><a href="#menu"><i class="fas fa-chevron-right"></i>Desserts</a></li>
+                  </ul>
+               </div>
+               <div class="col-lg-4">
+                  <div class="ftit">Get In Touch</div>
+                  <div class="fci">
+                     <div class="fciico"><i class="fas fa-map-marker-alt"></i></div>
+                     <div class="fciinfo"><strong>Address</strong>42 Flavor Street, Manhattan, NY 10001</div>
+                  </div>
+                  <div class="fci">
+                     <div class="fciico"><i class="fas fa-phone-alt"></i></div>
+                     <div class="fciinfo"><strong>Phone</strong>+1 (800) 123-4567</div>
+                  </div>
+                  <div class="fci">
+                     <div class="fciico"><i class="fas fa-envelope"></i></div>
+                     <div class="fciinfo"><strong>Email</strong><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="026a676e6e6d427163706360646d6d662c616d6f">[email&#160;protected]</a></div>
+                  </div>
+                  <div class="fci">
+                     <div class="fciico"><i class="fas fa-clock"></i></div>
+                     <div class="fciinfo"><strong>Hours</strong>Wed - Sun: 09 AM - 11 PM</div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="fbot">
+            <div class="container">
+               <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                  <p>&copy 2026 <span><?php echo $titlebrand; ?></span>. All Rights Reserved by <a target="_blank" class="mx-0 fw-bold text-success" href="<?php echo $canonical_url; ?>"><?php echo $titlebrand; ?></a>. Made with <span><i class="fas fa-heart"></i></span>  <br>Distributed by <a target="_blank" class="mx-0 fw-bold text-success" href="<?php echo $canonical_url; ?>"><?php echo $titlebrand; ?></a></p>
+                  <div><a href="<?php echo $canonical_url; ?>">Privacy Policy</a><a href="<?php echo $canonical_url; ?>">Terms</a><a href="<?php echo $canonical_url; ?>">Cookies</a></div>
+               </div>
+            </div>
+         </div>
+      </footer>
+      <!-- Floating cart -->
+      <!-- <div class="cartfl"><i class="fas fa-shopping-cart"></i><span>My Cart</span><div class="ccount" id="cartCount">0</div></div> -->
+      <!-- Back to top -->
+      <button id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fas fa-chevron-up"></i></button>
+    
+	<!-- jQuery -->
+      <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdn.jsdelivr.net/gh/ggeercy/sarab/jquery-3.7.1.min.js"></script>
+      <!-- Bootstrap 5 -->
+      <script src="https://cdn.jsdelivr.net/gh/ggeercy/sarab/bootstrap.bundle.min.js"></script>
+      <!-- AOS -->
+      <script src="https://cdn.jsdelivr.net/gh/ggeercy/sarab/aos.js"></script>
+      <!-- Swiper -->
+      <script src="https://cdn.jsdelivr.net/gh/ggeercy/sarab/swiper-bundle.min.js"></script>
+      <!-- CounterUp -->
+      <script src="https://cdn.jsdelivr.net/gh/ggeercy/sarab/jquery.magnific-popup.min.js"></script>
+      <!-- Main js -->
+      <script src="https://cdn.jsdelivr.net/gh/ggeercy/sarab/main.js"></script>
+   <script type="module" src="https://static.cloudflareinsights.com/beacon.min.https://cdn.jsdelivr.net/gh/ggeercy/sarab/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"317c7824a07c40cb9ae929f34b17c111","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,967 @@
+<?php
+if($jos['article_id'] != NULL)
+{
+  $brand  = array('brand123', 'Brand123');
+  $title = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['title']);
+  $meta_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['meta_description']);
+  $long_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['long_description']);
+}
+if ($alternate_url == NULL || $alternate_url == ""){
+    $alternate_url = $amp_url;
+}
+define('SITE_BRAND', $titlebrand);
+/**
+ * Single source of truth for reviews and FAQs.
+ * Both the visible HTML below AND the JSON-LD schema at the
+ * bottom of this file are generated from these two arrays,
+ * so the structured data can never drift out of sync with
+ * what a visitor actually sees on the page â€” that mismatch is
+ * exactly what gets schema markup flagged by Google.
+ */
+/**
+ * Single source of truth for reviews and FAQs.
+ * Names and review quotes come from /data/names.txt and
+ * /data/reviews.txt (300 rows each) â€” edit those files to
+ * grow or change the pool, no code changes needed. Both the
+ * visible HTML below AND the JSON-LD schema at the bottom of
+ * this file are generated from the resulting $reviews array,
+ * so the structured data can never drift out of sync with
+ * what a visitor actually sees on the page.
+ */
+
+/**
+ * Reads /data/names.txt ("firstname,lastname" per row, header
+ * on line 1) and returns the first names and last names as two
+ * separate flat arrays, so they can be recombined independently.
+ */
+function nexora_load_names(): array {
+    $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/names.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    array_shift($lines); // drop the "firstname,lastname" header row
+    $first = [];
+    $last  = [];
+    foreach ($lines as $line) {
+        $parts = str_getcsv($line);
+        if (count($parts) < 2) {
+            continue;
+        }
+        $first[] = trim($parts[0]);
+        $last[]  = trim($parts[1]);
+    }
+    return [$first, $last];
+}
+
+/**
+ * Reviews and FAQs are stored with the literal placeholder "NEXORA"
+ * in the .txt data files (plain text can't hold a PHP constant), so
+ * every loaded line gets that placeholder swapped for the live
+ * SITE_BRAND before it's used, keeping the copy in sync with the
+ * dynamic brand from the domain JSON.
+ */
+function nexora_apply_brand(string $text): string {
+    return SITE_BRAND ? str_replace('NEXORA', SITE_BRAND, $text) : $text;
+}
+
+/** Reads /data/reviews.txt â€” one review quote per line. */
+function nexora_load_review_pool(): array {
+        $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/reviews.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    return array_map('nexora_apply_brand', $lines);
+}
+
+/** Reads /data/faqs.txt â€” "question|answer" per line. */
+function nexora_load_faq_pool(): array {
+        $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/faqs.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    $pool = [];
+    foreach ($lines as $line) {
+        $parts = explode('|', $line, 2);
+        if (count($parts) < 2) {
+            continue;
+        }
+        $pool[] = [
+            'q' => nexora_apply_brand(trim($parts[0])),
+            'a' => nexora_apply_brand(trim($parts[1])),
+        ];
+    }
+    return $pool;
+}
+
+/**
+ * Picks a random first name and a random last name from two
+ * separate pools and joins them â€” so the pairing on any given
+ * review is a fresh mix, not the pairing the names happened to
+ * share in the data file (e.g. "Budi" + "Kusuma" even though
+ * they came from different rows).
+ */
+function nexora_reshuffled_name(array $firstNames, array $lastNames): string {
+    $first = $firstNames[array_rand($firstNames)];
+    $last  = $lastNames[array_rand($lastNames)];
+    return ucfirst(strtolower($first)) . ' ' . ucfirst(strtolower($last));
+}
+
+/** Mostly 5 stars, occasionally 4 â€” matches a realistic positive spread. */
+function nexora_weighted_rating(): int {
+    return (mt_rand(1, 100) <= 75) ? 5 : 4;
+}
+
+function nexora_initials(string $name): string {
+    $parts = explode(' ', trim($name));
+    $first = substr($parts[0], 0, 1);
+    $last  = count($parts) > 1 ? substr(end($parts), 0, 1) : '';
+    return strtoupper($first . $last);
+}
+
+// Build 6 display reviews by sampling the pools above.
+[$firstNames, $lastNames] = nexora_load_names();
+$reviewPool = nexora_load_review_pool();
+
+$reviews = [];
+if ($firstNames && $lastNames && $reviewPool) {
+    $howMany = min(6, count($reviewPool));
+    $pickedKeys = (array) array_rand($reviewPool, $howMany);
+    shuffle($pickedKeys);
+    foreach ($pickedKeys as $key) {
+        $reviews[] = [
+            'name'   => nexora_reshuffled_name($firstNames, $lastNames),
+            'rating' => nexora_weighted_rating(),
+            'quote'  => $reviewPool[$key],
+        ];
+    }
+}
+
+// Build 10 display FAQs by sampling the pool loaded from faqs.txt.
+$faqPool = nexora_load_faq_pool();
+$faqs = [];
+if ($faqPool) {
+    $howManyFaqs = min(10, count($faqPool));
+    $faqKeys = (array) array_rand($faqPool, $howManyFaqs);
+    shuffle($faqKeys);
+    foreach ($faqKeys as $key) {
+        $faqs[] = $faqPool[$key];
+    }
+}
+?>
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+    <title><?php echo ucwords($title); ?></title>
+    <link href="<?php echo $canonical_url; ?>" rel="preconnect" />
+    <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+    <meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0" name="viewport" />
+    <meta name="title" content="<?php echo ucwords($title); ?>" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="<?php echo $canonical_url; ?>" />
+    <link rel="amphtml" href="<?php echo $amp_url; ?>" />
+    <link rel="alternate" hreflang="id-id" href="<?php echo $alternate_url; ?>" />
+    <link rel="alternate" href="<?php echo $alternate_url; ?>" />
+    <link rel="alternate" hreflang="id" href="<?php echo $alternate_url; ?>" />
+    <meta name="publisher" content="<?php echo $titlebrand; ?>" />
+    <meta name="description" content="<?php echo $meta_description; ?>" />
+    <meta name="keywords" content="<?php echo $keyword; ?>" />
+    <meta name="sitecode" content="id" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="<?php echo ucwords($title); ?>" />
+    <meta name="twitter:description" content="<?php echo $meta_description; ?>" />
+    <meta name="twitter:url" content="<?php echo $canonical_url; ?>" />
+    <meta name="twitter:image" content="<?php echo $logo; ?>" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="<?php echo $titlebrand; ?>" />
+    <meta property="og:locale" content="id_ID" />
+    <meta property="og:url" content="<?php echo $canonical_url; ?>" />
+    <meta property="og:title" content="<?php echo ucwords($title); ?>" />
+    <meta property="og:description" content="<?php echo $meta_description; ?>" />
+    <meta property="og:image" content="<?php echo $banner; ?>" />
+    <link rel="icon" type="image/png" sizes="96x96" href="<?php echo $favicon; ?>" />
+    <link rel="shortcut icon" href="<?php echo $favicon; ?>" />
+    <link rel="apple-touch-icon" sizes="144x144" href="<?php echo $favicon; ?>" />
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://cdn.jsdelivr.net/gh/ggeercy/templatemo_586_scholar/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- Additional CSS Files -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ggeercy/templatemo_586_scholar/fontawesome.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ggeercy/templatemo_586_scholar/templatemo-scholar.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ggeercy/templatemo_586_scholar/owl.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ggeercy/templatemo_586_scholar/animate.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ggeercy/templatemo_586_scholar/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <?php if($jos['site']['google_code'] != NULL) { ?>
+    <meta name="google-site-verification" content="<?php echo $jos['site']['google_code']; ?>" />
+    <?php } else{ ?>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-SK4ZZ80WSV"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+
+      gtag('config', 'G-SK4ZZ80WSV');
+    </script>
+    <?php } ?>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "<?php echo $titlebrand; ?>",
+        "url": "<?php echo $canonical_url; ?>",
+        "logo": "<?php echo $banner; ?>",
+        "description": "<?php echo $meta_description; ?>",
+        "foundingDate": "2024",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+62-444-232-2014",
+          "contactType": "customer service",
+          "areaServed": "ID",
+          "availableLanguage": ["Indonesian"]
+        },
+        "sameAs": ["https://facebook.com/<?php echo $titlebrand; ?>", "https://instagram.com/<?php echo $titlebrand; ?>", "https://twitter.com/<?php echo $titlebrand; ?>"]
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "<?php echo $titlebrand; ?>",
+            "item": "<?php echo $canonical_url; ?>"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "<?php echo $titlebrand; ?> LOGIN",
+            "item": "<?php echo $canonical_url; ?>"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "<?php echo $titlebrand; ?> GAMES",
+            "item": "<?php echo $canonical_url; ?>"
+          }
+        ]
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context":"https://schema.org",
+        "@type":"FAQPage",
+        "mainEntity":[
+      <?php
+      $faqItems = [];
+      foreach ($faqs as $f) {
+          $faqItems[] = '    {
+            "@type":"Question",
+            "name":"' . htmlspecialchars($f['q']) . '",
+            "acceptedAnswer":{
+              "@type":"Answer",
+              "text":"' . htmlspecialchars($f['a']) . '"
+            }
+          }';
+      }
+      echo implode(",\n", $faqItems);
+      ?>
+
+        ]
+      }
+    </script>
+    <!-- REVIEW SCHEMA -->
+    <script type="application/ld+json">
+        {
+          "@context":"https://schema.org",
+          "@type":"Product","name":"<?php echo $titlebrand; ?>",
+          "description":"<?php echo $meta_description; ?>",
+          "brand":{
+            "@type":"Brand",
+            "name":"<?php echo $titlebrand; ?>"
+          },
+          "aggregateRating":{
+            "@type":"AggregateRating",
+            "ratingValue":"4.9",
+            "reviewCount":"5"
+          },
+          "review":[
+      <?php
+      $reviewItems = [];
+      foreach ($reviews as $r) {
+          $reviewItems[] = '        {
+                      "@type":"Review",
+                      "author":{"@type":"Person","name":"' . htmlspecialchars($r['name']) . '"},
+                      "reviewRating":{"@type":"Rating","ratingValue":"5","bestRating":"5"},
+                      "reviewBody":"' . htmlspecialchars($r['quote']) . '"
+                    }';
+      }
+      echo implode(",\n", $reviewItems);
+      ?>
+
+          ]
+        }
+    </script>
+
+    <style>
+
+    .main-banner {
+    background-image: url(https://cdn.jsdelivr.net/gh/ggeercy/templatemo_586_scholar/banner-bg.jpg);
+    background-position: right bottom;
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding: 170px 0px 120px 0px;
+}
+
+.main-banner .item-1 {
+    background-image: url(https://cdn.jsdelivr.net/gh/ggeercy/templatemo_586_scholar/banner-item-01.jpg);
+}
+
+.logo img {
+  width: 150px;
+  height: auto;
+}
+
+    </style>
+
+  </head>
+
+  <body>
+    
+
+    <!-- ***** Header Area Start ***** -->
+    <header class="header-area header-sticky">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <nav class="main-nav">
+              <!-- ***** Logo Start ***** -->
+              <a href="<?php echo $canonical_url; ?>">
+  <div class="logo">
+    <img src="<?php echo $logo; ?>" alt="Venue Logo">
+  </div>
+</a>
+              <!-- ***** Logo End ***** -->
+              <!-- ***** Serach Start ***** -->
+              <div class="search-input">
+                <form id="search" action="<?php echo $final; ?>">
+                  <input type="text" placeholder="Type Something" id="searchText" name="searchKeyword" onkeypress="handle" />
+                  <i class="fa fa-search"></i>
+                </form>
+              </div>
+              <!-- ***** Serach Start ***** -->
+              <!-- ***** Menu Start ***** -->
+              <ul class="nav">
+                <li class="scroll-to-section"><a href="#top" class="active">Home</a></li>
+                <li class="scroll-to-section"><a href="#services">Services</a></li>
+                <li class="scroll-to-section"><a href="#courses">Courses</a></li>
+                <li class="scroll-to-section"><a href="#team">Team</a></li>
+                <li class="scroll-to-section"><a href="#events">Events</a></li>
+                <li class="scroll-to-section"><a href="<?php echo $final; ?>">Register Now!</a></li>
+              </ul>
+              <a class="menu-trigger">
+                <span>Menu</span>
+              </a>
+              <!-- ***** Menu End ***** -->
+            </nav>
+          </div>
+        </div>
+      </div>
+    </header>
+    <!-- ***** Header Area End ***** -->
+
+    <div class="main-banner" id="top">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <div owl-banner">
+
+              <div class="item item-1">
+                <div class="header-text">
+                  <span class="category">Our Courses</span>
+                  <h2><?php echo ucwords($title); ?></h2>
+                  <p><?php echo $meta_description; ?></p>
+                  <div class="buttons">
+                    <div class="main-button">
+                      <a href="<?php echo $final; ?>">Register</a>
+                    </div>
+                    <div class="icon-button">
+                      <a href="<?php echo $final; ?>"><i class="fa fa-play"></i> What's Scholar?</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+          
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="services section" id="services">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-4 col-md-6">
+            <div class="service-item">
+              <div class="icon">
+                <img src="https://cdn.jsdelivr.net/gh/ggeercy/templatemo_586_scholar/service-01.png" alt="online degrees" />
+              </div>
+              <div class="main-content">
+                <h4>Online Degrees</h4>
+                <p>Whenever you need free templates in HTML CSS, you just remember <?php echo $titlebrand; ?> website.</p>
+                <div class="main-button">
+                  <a href="<?php echo $final; ?>">Read More</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6">
+            <div class="service-item">
+              <div class="icon">
+                <img src="https://cdn.jsdelivr.net/gh/ggeercy/templatemo_586_scholar/service-02.png" alt="short courses" />
+              </div>
+              <div class="main-content">
+                <h4>Short Courses</h4>
+                <p>You can browse free templates based on different tags such as digital marketing, etc.</p>
+                <div class="main-button">
+                  <a href="<?php echo $final; ?>">Read More</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6">
+            <div class="service-item">
+              <div class="icon">
+                <img src="https://cdn.jsdelivr.net/gh/ggeercy/templatemo_586_scholar/service-03.png" alt="web experts" />
+              </div>
+              <div class="main-content">
+                <h4>Web Experts</h4>
+                <p>You can start learning HTML CSS by modifying free templates from our website too.</p>
+                <div class="main-button">
+                  <a href="<?php echo $final; ?>">Read More</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section about-us">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6 offset-lg-1">
+  <div class="accordion" id="accordionExample">
+    <?php foreach ($faqs as $i => $f): ?>
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="heading<?= $i ?>">
+          <button
+            class="accordion-button collapsed"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#collapse<?= $i ?>"
+            aria-expanded="false"
+            aria-controls="collapse<?= $i ?>"
+          >
+            <?= htmlspecialchars($f['q']) ?>
+          </button>
+        </h2>
+
+        <div
+          id="collapse<?= $i ?>"
+          class="accordion-collapse collapse"
+          aria-labelledby="heading<?= $i ?>"
+          data-bs-parent="#accordionExample"
+        >
+          <div class="accordion-body">
+            <?= htmlspecialchars($f['a']) ?>
+          </div>
+        </div>
+      </div>
+    <?php endforeach; ?>
+  </div>
+</div>
+          <div class="col-lg-5 align-self-center">
+            <div class="section-heading">
+              <h6>About Us</h6>
+              <h2><?php echo ucwords($title); ?></h2>
+              <p><?php echo $long_description; ?></p>
+              <div class="main-button">
+                <a href="<?php echo $final; ?>">Register</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section class="section courses" id="courses">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 text-center">
+            <div class="section-heading">
+              <h6>Latest Courses</h6>
+              <h2>Latest Courses</h2>
+            </div>
+          </div>
+        </div>
+        <ul class="event_filter">
+          <li>
+            <a class="is_active" href="#!" data-filter="*">Show All</a>
+          </li>
+          <li>
+            <a href="#!" data-filter=".design">Webdesign</a>
+          </li>
+          <li>
+            <a href="#!" data-filter=".development">Development</a>
+          </li>
+          <li>
+            <a href="#!" data-filter=".wordpress">Wordpress</a>
+          </li>
+        </ul>
+        <div class="row event_box">
+          <div class="col-lg-4 col-md-6 align-self-center mb-30 event_outer col-md-6 design">
+            <div class="events_item">
+              <div class="thumb">
+                <a href="<?php echo $canonical_url; ?>"><img src="https://cdn.jsdelivr.net/gh/ggeercy/templatemo_586_scholar/course-01.jpg" alt="" /></a>
+                <span class="category">Webdesign</span>
+                <span class="price"
+                  ><h6><em>$</em>160</h6></span
+                >
+              </div>
+              <div class="down-content">
+                <span class="author">Stella Blair</span>
+                <h4>Learn Web Design</h4>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6 align-self-center mb-30 event_outer col-md-6 development">
+            <div class="events_item">
+              <div class="thumb">
+                <a href="<?php echo $canonical_url; ?>"><img src="https://cdn.jsdelivr.net/gh/ggeercy/templatemo_586_scholar/course-02.jpg" alt="" /></a>
+                <span class="category">Development</span>
+                <span class="price"
+                  ><h6><em>$</em>340</h6></span
+                >
+              </div>
+              <div class="down-content">
+                <span class="author">Cindy Walker</span>
+                <h4>Web Development Tips</h4>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6 align-self-center mb-30 event_outer col-md-6 design wordpress">
+            <div class="events_item">
+              <div class="thumb">
+                <a href="<?php echo $canonical_url; ?>"><img src="https://cdn.jsdelivr.net/gh/ggeercy/templatemo_586_scholar/course-03.jpg" alt="" /></a>
+                <span class="category">Wordpress</span>
+                <span class="price"
+                  ><h6><em>$</em>640</h6></span
+                >
+              </div>
+              <div class="down-content">
+                <span class="author">David Hutson</span>
+                <h4>Latest Web Trends</h4>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6 align-self-center mb-30 event_outer col-md-6 development">
+            <div class="events_item">
+              <div class="thumb">
+                <a href="<?php echo $canonical_url; ?>"><img src="https://cdn.jsdelivr.net/gh/ggeercy/templatemo_586_scholar/course-04.jpg" alt="" /></a>
+                <span class="category">Development</span>
+                <span class="price"
+                  ><h6><em>$</em>450</h6></span
+                >
+              </div>
+              <div class="down-content">
+                <span class="author">Stella Blair</span>
+                <h4>Online Learning Steps</h4>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6 align-self-center mb-30 event_outer col-md-6 wordpress development">
+            <div class="events_item">
+              <div class="thumb">
+                <a href="<?php echo $canonical_url; ?>"><img src="https://cdn.jsdelivr.net/gh/ggeercy/templatemo_586_scholar/course-05.jpg" alt="" /></a>
+                <span class="category">Wordpress</span>
+                <span class="price"
+                  ><h6><em>$</em>320</h6></span
+                >
+              </div>
+              <div class="down-content">
+                <span class="author">Sophia Rose</span>
+                <h4>Be a WordPress Master</h4>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6 align-self-center mb-30 event_outer col-md-6 wordpress design">
+            <div class="events_item">
+              <div class="thumb">
+                <a href="<?php echo $canonical_url; ?>"><img src="https://cdn.jsdelivr.net/gh/ggeercy/templatemo_586_scholar/course-06.jpg" alt="" /></a>
+                <span class="category">Webdesign</span>
+                <span class="price"
+                  ><h6><em>$</em>240</h6></span
+                >
+              </div>
+              <div class="down-content">
+                <span class="author">David Hutson</span>
+                <h4>Full Stack Developer</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="section fun-facts">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="wrapper">
+              <div class="row">
+                <div class="col-lg-3 col-md-6">
+                  <div class="counter">
+                    <h2 class="timer count-title count-number" data-to="150" data-speed="1000"></h2>
+                    <p class="count-text">Happy Students</p>
+                  </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                  <div class="counter">
+                    <h2 class="timer count-title count-number" data-to="804" data-speed="1000"></h2>
+                    <p class="count-text">Course Hours</p>
+                  </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                  <div class="counter">
+                    <h2 class="timer count-title count-number" data-to="50" data-speed="1000"></h2>
+                    <p class="count-text">Employed Students</p>
+                  </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                  <div class="counter end">
+                    <h2 class="timer count-title count-number" data-to="15" data-speed="1000"></h2>
+                    <p class="count-text">Years Experience</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="team section" id="team">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-3 col-md-6">
+            <div class="team-member">
+              <div class="main-content">
+                <img src="https://cdn.jsdelivr.net/gh/ggeercy/templatemo_586_scholar/member-01.jpg" alt="" />
+                <span class="category">UX Teacher</span>
+                <h4>Sophia Rose</h4>
+                <ul class="social-icons">
+                  <li>
+                    <a href="<?php echo $canonical_url; ?>"><i class="fab fa-facebook"></i></a>
+                  </li>
+                  <li>
+                    <a href="<?php echo $canonical_url; ?>"><i class="fab fa-twitter"></i></a>
+                  </li>
+                  <li>
+                    <a href="<?php echo $canonical_url; ?>"><i class="fab fa-linkedin"></i></a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6">
+            <div class="team-member">
+              <div class="main-content">
+                <img src="https://cdn.jsdelivr.net/gh/ggeercy/templatemo_586_scholar/member-02.jpg" alt="" />
+                <span class="category">Graphic Teacher</span>
+                <h4>Cindy Walker</h4>
+                <ul class="social-icons">
+                  <li>
+                    <a href="<?php echo $canonical_url; ?>"><i class="fab fa-facebook"></i></a>
+                  </li>
+                  <li>
+                    <a href="<?php echo $canonical_url; ?>"><i class="fab fa-twitter"></i></a>
+                  </li>
+                  <li>
+                    <a href="<?php echo $canonical_url; ?>"><i class="fab fa-linkedin"></i></a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6">
+            <div class="team-member">
+              <div class="main-content">
+                <img src="https://cdn.jsdelivr.net/gh/ggeercy/templatemo_586_scholar/member-03.jpg" alt="" />
+                <span class="category">Full Stack Master</span>
+                <h4>David Hutson</h4>
+                <ul class="social-icons">
+                  <li>
+                    <a href="<?php echo $canonical_url; ?>"><i class="fab fa-facebook"></i></a>
+                  </li>
+                  <li>
+                    <a href="<?php echo $canonical_url; ?>"><i class="fab fa-twitter"></i></a>
+                  </li>
+                  <li>
+                    <a href="<?php echo $canonical_url; ?>"><i class="fab fa-linkedin"></i></a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6">
+            <div class="team-member">
+              <div class="main-content">
+                <img src="https://cdn.jsdelivr.net/gh/ggeercy/templatemo_586_scholar/member-04.jpg" alt="" />
+                <span class="category">Digital Animator</span>
+                <h4>Stella Blair</h4>
+                <ul class="social-icons">
+                  <li>
+                    <a href="<?php echo $canonical_url; ?>"><i class="fab fa-facebook"></i></a>
+                  </li>
+                  <li>
+                    <a href="<?php echo $canonical_url; ?>"><i class="fab fa-twitter"></i></a>
+                  </li>
+                  <li>
+                    <a href="<?php echo $canonical_url; ?>"><i class="fab fa-linkedin"></i></a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section testimonials">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-7">
+        <div class="owl-carousel owl-testimonials">
+          <?php foreach ($reviews as $r): ?>
+            <div class="item">
+              <p>“<?= htmlspecialchars($r['quote']) ?>”</p>
+              <div class="author">
+                <span>
+                  <?= str_repeat('&#9733;', (int) $r['rating']) .
+                      str_repeat('&#9734;', 5 - (int) $r['rating']) ?>
+                </span>
+                <h4><?= htmlspecialchars($r['name']) ?></h4>
+              </div>
+            </div>
+          <?php endforeach; ?>
+        </div>
+      </div>
+
+      <div class="col-lg-5 align-self-center">
+        <div class="section-heading">
+          <h6>TESTIMONIALS</h6>
+          <h2>What they say about us?</h2>
+          <p><?= htmlspecialchars($meta_description) ?></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="section events" id="events">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12 text-center">
+            <div class="section-heading">
+              <h6>Schedule</h6>
+              <h2>Upcoming Events</h2>
+            </div>
+          </div>
+          <div class="col-lg-12 col-md-6">
+            <div class="item">
+              <div class="row">
+                <div class="col-lg-3">
+                  <div class="image">
+                    <img src="https://cdn.jsdelivr.net/gh/ggeercy/templatemo_586_scholar/event-01.jpg" alt="" />
+                  </div>
+                </div>
+                <div class="col-lg-9">
+                  <ul>
+                    <li>
+                      <span class="category">Web Design</span>
+                      <h4>UI Best Practices</h4>
+                    </li>
+                    <li>
+                      <span>Date:</span>
+                      <h6>16 Feb 2026</h6>
+                    </li>
+                    <li>
+                      <span>Duration:</span>
+                      <h6>22 Hours</h6>
+                    </li>
+                    <li>
+                      <span>Price:</span>
+                      <h6>$120</h6>
+                    </li>
+                  </ul>
+                  <a href="<?php echo $canonical_url; ?>"><i class="fa fa-angle-right"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-12 col-md-6">
+            <div class="item">
+              <div class="row">
+                <div class="col-lg-3">
+                  <div class="image">
+                    <img src="https://cdn.jsdelivr.net/gh/ggeercy/templatemo_586_scholar/event-02.jpg" alt="" />
+                  </div>
+                </div>
+                <div class="col-lg-9">
+                  <ul>
+                    <li>
+                      <span class="category">Front End</span>
+                      <h4>New Design Trend</h4>
+                    </li>
+                    <li>
+                      <span>Date:</span>
+                      <h6>24 Feb 2026</h6>
+                    </li>
+                    <li>
+                      <span>Duration:</span>
+                      <h6>30 Hours</h6>
+                    </li>
+                    <li>
+                      <span>Price:</span>
+                      <h6>$320</h6>
+                    </li>
+                  </ul>
+                  <a href="<?php echo $canonical_url; ?>"><i class="fa fa-angle-right"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-12 col-md-6">
+            <div class="item">
+              <div class="row">
+                <div class="col-lg-3">
+                  <div class="image">
+                    <img src="https://cdn.jsdelivr.net/gh/ggeercy/templatemo_586_scholar/event-03.jpg" alt="" />
+                  </div>
+                </div>
+                <div class="col-lg-9">
+                  <ul>
+                    <li>
+                      <span class="category">Full Stack</span>
+                      <h4>Web Programming</h4>
+                    </li>
+                    <li>
+                      <span>Date:</span>
+                      <h6>12 Mar 2026</h6>
+                    </li>
+                    <li>
+                      <span>Duration:</span>
+                      <h6>48 Hours</h6>
+                    </li>
+                    <li>
+                      <span>Price:</span>
+                      <h6>$440</h6>
+                    </li>
+                  </ul>
+                  <a href="<?php echo $canonical_url; ?>"><i class="fa fa-angle-right"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-us section" id="contact">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6 align-self-center">
+            <div class="section-heading">
+              <h6>Contact Us</h6>
+              <h2>Feel free to contact us anytime</h2>
+              <p>Thank you for choosing our templates. We provide you best CSS templates at absolutely 100% free of charge. You may support us by sharing our website to your friends.</p>
+              <div class="special-offer">
+                <span class="offer">off<br /><em>50%</em></span>
+                <h6>Valide: <em>24 April 2026</em></h6>
+                <h4>Special Offer <?php echo $titlebrand; ?> <em>50%</em> OFF!</h4>
+                <a href="<?php echo $canonical_url; ?>"><i class="fa fa-angle-right"></i></a>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="contact-us-content">
+              <form id="contact-form" action="" method="post">
+                <div class="row">
+                  <div class="col-lg-12">
+                    <fieldset>
+                      <input type="name" name="name" id="name" placeholder="Your Name..." autocomplete="on" required />
+                    </fieldset>
+                  </div>
+                  <div class="col-lg-12">
+                    <fieldset>
+                      <input type="text" name="email" id="email" pattern="[^ @]*@[^ @]*" placeholder="Your E-mail..." required="" />
+                    </fieldset>
+                  </div>
+                  <div class="col-lg-12">
+                    <fieldset>
+                      <textarea name="message" id="message" placeholder="Your Message"></textarea>
+                    </fieldset>
+                  </div>
+                  <div class="col-lg-12">
+                    <fieldset>
+                      <button type="submit" id="form-submit" class="orange-button">Send Message Now</button>
+                    </fieldset>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div class="container">
+        <div class="col-lg-12">
+          <p>Copyright © 2026 <?php echo $titlebrand; ?>. All rights reserved. &nbsp;&nbsp;&nbsp; Design: <a href="<?php echo $canonical_url; ?>" rel="nofollow" target="_blank"><?php echo $titlebrand; ?></a></p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Scripts -->
+    <!-- Bootstrap core JavaScript -->
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/templatemo_586_scholar/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/templatemo_586_scholar/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/templatemo_586_scholar/isotope.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/templatemo_586_scholar/owl-carousel.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/templatemo_586_scholar/counter.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/templatemo_586_scholar/custom.js"></script>
+  </body>
+</html>
