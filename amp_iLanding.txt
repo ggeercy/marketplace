@@ -1,0 +1,908 @@
+<?php
+if($jos['article_id'] != NULL)
+{
+  $brand  = array('brand123', 'Brand123');
+  $title = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['title']);
+  $meta_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['meta_description']);
+  $long_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['long_description']);
+}
+if ($alternate_url == NULL || $alternate_url == ""){
+    $alternate_url = $amp_url;
+}
+define('SITE_BRAND', $titlebrand);
+?>
+
+<!doctype html>
+<html ⚡ lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <title><?php echo ucwords($title); ?></title>
+
+    <!-- Canonical Tag (Wajib untuk AMP) -->
+    <link rel="canonical" href="<?php echo $canonical_url; ?>" />
+    <link rel="shortcut icon" href="<?php echo $favicon; ?>" />
+    <link rel="icon" type="image/webp" sizes="32x32" href="<?php echo $favicon; ?>" />
+    <link rel="icon" type="image/webp" sizes="16x16" href="<?php echo $favicon; ?>" />
+    <link rel="apple-touch-icon" sizes="180x180" href="<?php echo $favicon; ?>" />
+
+    <!-- Viewport & Mobile Optimization -->
+    <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1" />
+
+    <!-- SEO Meta Tags Deskripsi & Keywords -->
+    <meta name="description" content="<?php echo $meta_description; ?>" />
+    <meta name="keywords" content="<?php echo $keyword; ?>" />
+
+    <!-- Robots Meta Tag untuk Maksimalisasi Indeks Mesin Pencari -->
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="author" content="<?php echo $titlebrand; ?>" />
+    <meta name="theme-color" content="#90ee90" />
+
+    <!-- Open Graph (OG) / Facebook / WhatsApp Meta Tags -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="<?php echo $canonical_url; ?>" />
+    <meta property="og:title" content="<?php echo ucwords($title); ?>" />
+    <meta property="og:description" content="<?php echo $meta_description; ?>" />
+    <meta property="og:image" content="<?php echo $banner; ?>" />
+    <meta property="og:image:width" content="500" />
+    <meta property="og:image:height" content="500" />
+    <meta property="og:locale" content="id_ID" />
+    <meta property="og:site_name" content="<?php echo $titlebrand; ?>" />
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="<?php echo $canonical_url; ?>" />
+    <meta name="twitter:title" content="<?php echo ucwords($title); ?>" />
+    <meta name="twitter:description" content="<?php echo $meta_description; ?>" />
+    <meta name="twitter:image" content="<?php echo $banner; ?>" />
+
+    <!-- Schema.org JSON-LD Structured Data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "<?php echo $titlebrand; ?>",
+        "alternateName": "<?php echo $titlebrand; ?>",
+        "url": "<?php echo $canonical_url; ?>",
+        "description": "<?php echo $meta_description; ?>",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "<?php echo $canonical_url; ?>?s={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "<?php echo $titlebrand; ?>",
+        "url": "<?php echo $canonical_url; ?>",
+        "logo": "<?php echo $logo; ?>"
+      }
+    </script>
+
+    <!-- AMP Boilerplate CSS -->
+    <style amp-boilerplate>
+      body {
+        -webkit-animation: -amp-start 8s steps(1, end) 0s 1 normal both;
+        -moz-animation: -amp-start 8s steps(1, end) 0s 1 normal both;
+        -ms-animation: -amp-start 8s steps(1, end) 0s 1 normal both;
+        animation: -amp-start 8s steps(1, end) 0s 1 normal both;
+      }
+      @-webkit-keyframes -amp-start {
+        from {
+          visibility: hidden;
+        }
+        to {
+          visibility: visible;
+        }
+      }
+      @-moz-keyframes -amp-start {
+        from {
+          visibility: hidden;
+        }
+        to {
+          visibility: visible;
+        }
+      }
+      @-ms-keyframes -amp-start {
+        from {
+          visibility: hidden;
+        }
+        to {
+          visibility: visible;
+        }
+      }
+      @-o-keyframes -amp-start {
+        from {
+          visibility: hidden;
+        }
+        to {
+          visibility: visible;
+        }
+      }
+      @keyframes -amp-start {
+        from {
+          visibility: hidden;
+        }
+        to {
+          visibility: visible;
+        }
+      }
+    </style>
+    <noscript
+      ><style amp-boilerplate>
+        body {
+          -webkit-animation: none;
+          -moz-animation: none;
+          -ms-animation: none;
+          animation: none;
+        }
+      </style></noscript
+    >
+
+    <!-- AMP JS Core Engine -->
+    <script async src="https://cdn.ampproject.org/v0.js"></script>
+
+    <!-- AMP Custom Styling -->
+    <style amp-custom>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      }
+
+      body {
+        background-color: #080808;
+        background-image: radial-gradient(circle at center, rgba(35, 28, 10, 0.85) 0%, rgba(5, 5, 5, 0.98) 100%);
+        color: #ffffff;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 20px 10px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* Container Bintang-Bintang Glowing Redup */
+      .stars-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 0;
+        overflow: hidden;
+      }
+
+      .star {
+        position: absolute;
+        border-radius: 50%;
+        opacity: 0.3;
+        animation: pulseStar linear infinite alternate;
+      }
+
+      /* Variasi Warna Bintang Sesuai Tema (Gold, Warm White, Cyan Glow) */
+      .star.gold {
+        background-color: #90ee90;
+        box-shadow: 0 0 6px rgba(255, 215, 0, 0.8);
+      }
+      .star.amber {
+        background-color: #ffaa00;
+        box-shadow: 0 0 5px rgba(255, 170, 0, 0.7);
+      }
+      .star.white {
+        background-color: #ffffff;
+        box-shadow: 0 0 4px rgba(255, 255, 255, 0.9);
+      }
+      .star.blue {
+        background-color: #00d2ff;
+        box-shadow: 0 0 6px rgba(0, 210, 255, 0.7);
+      }
+
+      /* Keyframes Animasi Redup-Glow Bintang */
+      @keyframes pulseStar {
+        0% {
+          opacity: 0.15;
+          transform: scale(0.8);
+        }
+        50% {
+          opacity: 0.8;
+          transform: scale(1.3);
+        }
+        100% {
+          opacity: 0.2;
+          transform: scale(0.9);
+        }
+      }
+
+      /* Container Utama */
+      .main-container {
+        width: 100%;
+        max-width: 480px;
+        background: rgba(15, 15, 15, 0.95);
+        border: 2px solid #90ee90;
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 0 25px rgba(212, 175, 55, 0.25);
+        text-align: center;
+        position: relative;
+        z-index: 10;
+      }
+
+      /* Frame Logo Atas */
+      .top-logo {
+        margin-bottom: 15px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .top-logo-badge {
+        display: inline-block;
+        border: 2px solid #90ee90;
+        border-radius: 8px;
+        background: #000;
+        box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        overflow: hidden;
+        width: 180px;
+        height: 50px;
+        position: relative;
+      }
+
+      /* Efek Shiny untuk Logo */
+      .top-logo-badge::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -150%;
+        width: 80%;
+        height: 100%;
+        background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.6) 50%, rgba(255, 255, 255, 0) 100%);
+        transform: skewX(-25deg);
+        animation: shinySweep 3.5s infinite ease-in-out;
+        pointer-events: none;
+      }
+
+      .top-logo-badge amp-img {
+        width: 100%;
+        height: 100%;
+      }
+
+      .top-logo-badge amp-img img {
+        object-fit: contain;
+      }
+
+      /* Frame Banner Box */
+      .banner-box {
+        border: 2px solid #90ee90;
+        border-radius: 12px;
+        background: #000;
+        margin-bottom: 20px;
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+      }
+
+      /* Efek Shiny untuk Banner */
+      .banner-box::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -150%;
+        width: 70%;
+        height: 100%;
+        background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.45) 50%, rgba(255, 255, 255, 0) 100%);
+        transform: skewX(-25deg);
+        animation: shinySweep 4s infinite ease-in-out 0.5s;
+        pointer-events: none;
+      }
+
+      .banner-box amp-img img {
+        object-fit: cover;
+      }
+
+      /* Keyframes Animasi Shiny */
+      @keyframes shinySweep {
+        0% {
+          left: -150%;
+        }
+        30% {
+          left: 150%;
+        }
+        100% {
+          left: 150%;
+        }
+      }
+
+      /* Daftar Tombol Navigasi */
+      .button-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .btn-card {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border: 1.5px solid #90ee90;
+        border-radius: 10px;
+        padding: 10px 15px;
+        background: linear-gradient(180deg, #1f1b0c 0%, #0a0a05 100%);
+        text-decoration: none;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      }
+
+      .btn-card:hover {
+        transform: translateY(-2px) scale(1.02);
+        border-color: #90ee90;
+        box-shadow: 0 0 15px rgba(255, 230, 0, 0.4);
+        background: linear-gradient(180deg, #2a2410 0%, #121208 100%);
+      }
+
+      .btn-info {
+        text-align: left;
+      }
+
+      .btn-title {
+        font-size: 14px;
+        font-weight: 800;
+        color: #90ee90;
+        letter-spacing: 0.5px;
+        transition: color 0.3s ease;
+      }
+
+      .btn-card:hover .btn-title {
+        color: #ffffff;
+      }
+
+      .btn-subtitle {
+        font-size: 10px;
+        color: #cccccc;
+        margin-top: 2px;
+      }
+
+      .btn-action {
+        background: linear-gradient(180deg, #90ee90 0%, #ffffff 100%);
+        color: #000000;
+        font-weight: 900;
+        font-size: 12px;
+        padding: 8px 16px;
+        border-radius: 6px;
+        border: 1px solid #ffffff;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        transition: all 0.3s ease;
+      }
+
+      .btn-card:hover .btn-action {
+        background: linear-gradient(180deg, #ffffff 0%, #90ee90 100%);
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+      }
+
+      /* Footer Copyright */
+      .footer-copyright {
+        margin-top: 18px;
+        font-size: 11px;
+        color: #888888;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        text-align: center;
+        z-index: 10;
+      }
+
+      /* ANIMASI ROCKET DENGAN ARAH ACAK & BERBALIK */
+      .rocket-container {
+        position: absolute;
+        z-index: 2;
+        pointer-events: none;
+        filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.7));
+      }
+
+      /* Pengganti tag <animate> SVG menggunakan CSS Keyframes yang sah untuk AMP */
+      .flame-1 {
+        animation: flameFlickerOuter 0.2s infinite alternate ease-in-out;
+        transform-origin: 15px 30px;
+      }
+
+      .flame-2 {
+        animation: flameFlickerInner 0.15s infinite alternate ease-in-out;
+        transform-origin: 18px 30px;
+      }
+
+      @keyframes flameFlickerOuter {
+        0% {
+          transform: scaleX(1);
+        }
+        100% {
+          transform: scaleX(1.3) scaleY(0.9);
+        }
+      }
+
+      @keyframes flameFlickerInner {
+        0% {
+          transform: scaleX(1);
+        }
+        100% {
+          transform: scaleX(1.4) scaleY(0.85);
+        }
+      }
+
+      /* Konfigurasi Ukuran & Jalur Gerak Masing-Masing Roket */
+      .rocket-1 {
+        width: 85px;
+        animation: pathDiagonalDown 14s ease-in-out infinite;
+      }
+      .rocket-2 {
+        width: 65px;
+        animation: pathDiagonalUp 18s ease-in-out infinite 2s;
+      }
+      .rocket-3 {
+        width: 75px;
+        animation: pathVertical 15s ease-in-out infinite 1s;
+      }
+      .rocket-4 {
+        width: 55px;
+        animation: pathZigZag 20s ease-in-out infinite 3s;
+      }
+      .rocket-5 {
+        width: 80px;
+        animation: pathReverseDiagonal 16s ease-in-out infinite 0.5s;
+      }
+      .rocket-6 {
+        width: 60px;
+        animation: pathHorizontalSlight 13s ease-in-out infinite 4s;
+      }
+      .rocket-7 {
+        width: 70px;
+        animation: pathDiagonalCross 17s ease-in-out infinite 2.5s;
+      }
+      .rocket-8 {
+        width: 50px;
+        animation: pathVerticalLeft 19s ease-in-out infinite 1.5s;
+      }
+
+      /* Keyframes Jalur Gerak Roket */
+      @keyframes pathDiagonalDown {
+        0% {
+          top: -10%;
+          left: -10%;
+          transform: rotate(35deg);
+        }
+        48% {
+          top: 105%;
+          left: 105%;
+          transform: rotate(35deg);
+        }
+        50% {
+          top: 105%;
+          left: 105%;
+          transform: rotate(215deg);
+        }
+        98% {
+          top: -10%;
+          left: -10%;
+          transform: rotate(215deg);
+        }
+        100% {
+          top: -10%;
+          left: -10%;
+          transform: rotate(35deg);
+        }
+      }
+
+      @keyframes pathDiagonalUp {
+        0% {
+          top: 105%;
+          left: -10%;
+          transform: rotate(-35deg);
+        }
+        48% {
+          top: -10%;
+          left: 105%;
+          transform: rotate(-35deg);
+        }
+        50% {
+          top: -10%;
+          left: 105%;
+          transform: rotate(145deg);
+        }
+        98% {
+          top: 105%;
+          left: -10%;
+          transform: rotate(145deg);
+        }
+        100% {
+          top: 105%;
+          left: -10%;
+          transform: rotate(-35deg);
+        }
+      }
+
+      @keyframes pathVertical {
+        0% {
+          top: 105%;
+          left: 85%;
+          transform: rotate(-90deg);
+        }
+        48% {
+          top: -10%;
+          left: 85%;
+          transform: rotate(-90deg);
+        }
+        50% {
+          top: -10%;
+          left: 85%;
+          transform: rotate(90deg);
+        }
+        98% {
+          top: 105%;
+          left: 85%;
+          transform: rotate(90deg);
+        }
+        100% {
+          top: 105%;
+          left: 85%;
+          transform: rotate(-90deg);
+        }
+      }
+
+      @keyframes pathZigZag {
+        0% {
+          top: -10%;
+          left: 95%;
+          transform: rotate(135deg);
+        }
+        25% {
+          top: 40%;
+          left: 50%;
+          transform: rotate(200deg);
+        }
+        48% {
+          top: 105%;
+          left: -10%;
+          transform: rotate(135deg);
+        }
+        50% {
+          top: 105%;
+          left: -10%;
+          transform: rotate(-45deg);
+        }
+        75% {
+          top: 40%;
+          left: 50%;
+          transform: rotate(20deg);
+        }
+        98% {
+          top: -10%;
+          left: 95%;
+          transform: rotate(-45deg);
+        }
+        100% {
+          top: -10%;
+          left: 95%;
+          transform: rotate(135deg);
+        }
+      }
+
+      @keyframes pathReverseDiagonal {
+        0% {
+          top: -10%;
+          left: 105%;
+          transform: rotate(145deg);
+        }
+        48% {
+          top: 105%;
+          left: -10%;
+          transform: rotate(145deg);
+        }
+        50% {
+          top: 105%;
+          left: -10%;
+          transform: rotate(-35deg);
+        }
+        98% {
+          top: -10%;
+          left: 105%;
+          transform: rotate(-35deg);
+        }
+        100% {
+          top: -10%;
+          left: 105%;
+          transform: rotate(145deg);
+        }
+      }
+
+      @keyframes pathHorizontalSlight {
+        0% {
+          top: 45%;
+          left: -15%;
+          transform: rotate(-15deg);
+        }
+        25% {
+          top: 35%;
+          left: 45%;
+          transform: rotate(15deg);
+        }
+        48% {
+          top: 50%;
+          left: 110%;
+          transform: rotate(-15deg);
+        }
+        50% {
+          top: 50%;
+          left: 110%;
+          transform: rotate(165deg);
+        }
+        75% {
+          top: 35%;
+          left: 45%;
+          transform: rotate(195deg);
+        }
+        98% {
+          top: 45%;
+          left: -15%;
+          transform: rotate(165deg);
+        }
+        100% {
+          top: 45%;
+          left: -15%;
+          transform: rotate(-15deg);
+        }
+      }
+
+      @keyframes pathDiagonalCross {
+        0% {
+          top: 105%;
+          left: 105%;
+          transform: rotate(-135deg);
+        }
+        48% {
+          top: -10%;
+          left: -10%;
+          transform: rotate(-135deg);
+        }
+        50% {
+          top: -10%;
+          left: -10%;
+          transform: rotate(45deg);
+        }
+        98% {
+          top: 105%;
+          left: 105%;
+          transform: rotate(45deg);
+        }
+        100% {
+          top: 105%;
+          left: 105%;
+          transform: rotate(-135deg);
+        }
+      }
+
+      @keyframes pathVerticalLeft {
+        0% {
+          top: -10%;
+          left: 10%;
+          transform: rotate(90deg);
+        }
+        48% {
+          top: 105%;
+          left: 10%;
+          transform: rotate(90deg);
+        }
+        50% {
+          top: 105%;
+          left: 10%;
+          transform: rotate(-90deg);
+        }
+        98% {
+          top: -10%;
+          left: 10%;
+          transform: rotate(-90deg);
+        }
+        100% {
+          top: -10%;
+          left: 10%;
+          transform: rotate(90deg);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .rocket-container {
+          opacity: 0.45;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- BINTANG GLOWING REDUP TERSEBAR DI SELURUH HALAMAN -->
+    <div class="stars-container">
+      <div class="star gold" style="width: 3px; height: 3px; top: 8%; left: 12%; animation-duration: 2.5s; animation-delay: 0s"></div>
+      <div class="star amber" style="width: 4px; height: 4px; top: 15%; left: 85%; animation-duration: 3.2s; animation-delay: 0.5s"></div>
+      <div class="star white" style="width: 2px; height: 2px; top: 22%; left: 45%; animation-duration: 2.1s; animation-delay: 1.2s"></div>
+      <div class="star blue" style="width: 3px; height: 3px; top: 5%; left: 65%; animation-duration: 4s; animation-delay: 0.3s"></div>
+
+      <div class="star gold" style="width: 4px; height: 4px; top: 35%; left: 8%; animation-duration: 3s; animation-delay: 1.5s"></div>
+      <div class="star white" style="width: 3px; height: 3px; top: 42%; left: 92%; animation-duration: 2.8s; animation-delay: 0.8s"></div>
+      <div class="star amber" style="width: 2px; height: 2px; top: 50%; left: 18%; animation-duration: 3.5s; animation-delay: 2s"></div>
+      <div class="star gold" style="width: 3px; height: 3px; top: 58%; left: 80%; animation-duration: 2.3s; animation-delay: 0.4s"></div>
+
+      <div class="star blue" style="width: 4px; height: 4px; top: 68%; left: 10%; animation-duration: 3.8s; animation-delay: 1.1s"></div>
+      <div class="star white" style="width: 2px; height: 2px; top: 75%; left: 88%; animation-duration: 2.2s; animation-delay: 0.2s"></div>
+      <div class="star gold" style="width: 3px; height: 3px; top: 85%; left: 25%; animation-duration: 3.1s; animation-delay: 1.7s"></div>
+      <div class="star amber" style="width: 4px; height: 4px; top: 92%; left: 75%; animation-duration: 2.7s; animation-delay: 0.9s"></div>
+
+      <div class="star white" style="width: 3px; height: 3px; top: 12%; left: 30%; animation-duration: 3.6s; animation-delay: 1.4s"></div>
+      <div class="star gold" style="width: 2px; height: 2px; top: 28%; left: 72%; animation-duration: 2.4s; animation-delay: 0.6s"></div>
+      <div class="star blue" style="width: 3px; height: 3px; top: 62%; left: 35%; animation-duration: 4.2s; animation-delay: 1.9s"></div>
+      <div class="star amber" style="width: 3px; height: 3px; top: 80%; left: 60%; animation-duration: 2.9s; animation-delay: 0.1s"></div>
+    </div>
+
+    <!-- 8 ROCKET SPACE SHIP ANIMASI LATAR BELAKANG -->
+    <div class="rocket-container rocket-1">
+      <svg viewBox="0 0 120 60" xmlns="http://www.w3.org/2000/svg">
+        <path class="flame-1" d="M 15 30 L 0 20 L 8 30 L 0 40 Z" fill="#ff3300" />
+        <path class="flame-2" d="M 18 30 L 5 24 L 10 30 L 5 36 Z" fill="#ff9900" />
+        <path d="M 25 20 L 10 5 L 35 18 Z" fill="#cc0000" />
+        <path d="M 25 40 L 10 55 L 35 42 Z" fill="#cc0000" />
+        <path d="M 15 18 L 80 18 Q 115 30 80 42 L 15 42 Z" fill="#e0e0e0" />
+        <path d="M 75 18 Q 115 30 75 42 Z" fill="#ff4d4d" />
+        <rect x="40" y="18" width="6" height="24" fill="#90ee90" />
+        <circle cx="60" cy="30" r="9" fill="#00d2ff" stroke="#ffffff" stroke-width="2" />
+        <ellipse cx="58" cy="28" rx="3" ry="2" fill="#ffffff" opacity="0.8" />
+      </svg>
+    </div>
+
+    <div class="rocket-container rocket-2">
+      <svg viewBox="0 0 120 60" xmlns="http://www.w3.org/2000/svg">
+        <path class="flame-1" d="M 15 30 L 0 20 L 8 30 L 0 40 Z" fill="#00e5ff" />
+        <path class="flame-2" d="M 18 30 L 5 24 L 10 30 L 5 36 Z" fill="#ffffff" />
+        <path d="M 25 20 L 10 5 L 35 18 Z" fill="#90ee90" />
+        <path d="M 25 40 L 10 55 L 35 42 Z" fill="#90ee90" />
+        <path d="M 15 18 L 80 18 Q 115 30 80 42 L 15 42 Z" fill="#1a1a1a" stroke="#90ee90" stroke-width="1.5" />
+        <path d="M 75 18 Q 115 30 75 42 Z" fill="#90ee90" />
+        <circle cx="60" cy="30" r="9" fill="#00e5ff" stroke="#ffffff" stroke-width="2" />
+        <ellipse cx="58" cy="28" rx="3" ry="2" fill="#ffffff" opacity="0.8" />
+      </svg>
+    </div>
+
+    <div class="rocket-container rocket-3">
+      <svg viewBox="0 0 120 60" xmlns="http://www.w3.org/2000/svg">
+        <path class="flame-1" d="M 15 30 L 0 20 L 8 30 L 0 40 Z" fill="#ff9900" />
+        <path class="flame-2" d="M 18 30 L 5 24 L 10 30 L 5 36 Z" fill="#ffea00" />
+        <path d="M 25 20 L 10 5 L 35 18 Z" fill="#0088cc" />
+        <path d="M 25 40 L 10 55 L 35 42 Z" fill="#0088cc" />
+        <path d="M 15 18 L 80 18 Q 115 30 80 42 L 15 42 Z" fill="#f0f0f0" />
+        <path d="M 75 18 Q 115 30 75 42 Z" fill="#00c3ff" />
+        <circle cx="60" cy="30" r="9" fill="#ff0055" stroke="#ffffff" stroke-width="2" />
+        <ellipse cx="58" cy="28" rx="3" ry="2" fill="#ffffff" opacity="0.8" />
+      </svg>
+    </div>
+
+    <div class="rocket-container rocket-4">
+      <svg viewBox="0 0 120 60" xmlns="http://www.w3.org/2000/svg">
+        <path class="flame-1" d="M 15 30 L 0 20 L 8 30 L 0 40 Z" fill="#00ff88" />
+        <path class="flame-2" d="M 18 30 L 5 24 L 10 30 L 5 36 Z" fill="#ffffff" />
+        <path d="M 25 20 L 10 5 L 35 18 Z" fill="#ffaa00" />
+        <path d="M 25 40 L 10 55 L 35 42 Z" fill="#ffaa00" />
+        <path d="M 15 18 L 80 18 Q 115 30 80 42 L 15 42 Z" fill="#222" />
+        <path d="M 75 18 Q 115 30 75 42 Z" fill="#00ff88" />
+        <circle cx="60" cy="30" r="9" fill="#90ee90" stroke="#ffffff" stroke-width="2" />
+        <ellipse cx="58" cy="28" rx="3" ry="2" fill="#ffffff" opacity="0.8" />
+      </svg>
+    </div>
+
+    <div class="rocket-container rocket-5">
+      <svg viewBox="0 0 120 60" xmlns="http://www.w3.org/2000/svg">
+        <path class="flame-1" d="M 15 30 L 0 20 L 8 30 L 0 40 Z" fill="#ff3300" />
+        <path class="flame-2" d="M 18 30 L 5 24 L 10 30 L 5 36 Z" fill="#ff9900" />
+        <path d="M 25 20 L 10 5 L 35 18 Z" fill="#cc0000" />
+        <path d="M 25 40 L 10 55 L 35 42 Z" fill="#cc0000" />
+        <path d="M 15 18 L 80 18 Q 115 30 80 42 L 15 42 Z" fill="#e0e0e0" />
+        <path d="M 75 18 Q 115 30 75 42 Z" fill="#ff4d4d" />
+        <rect x="40" y="18" width="6" height="24" fill="#90ee90" />
+        <circle cx="60" cy="30" r="9" fill="#00d2ff" stroke="#ffffff" stroke-width="2" />
+        <ellipse cx="58" cy="28" rx="3" ry="2" fill="#ffffff" opacity="0.8" />
+      </svg>
+    </div>
+
+    <div class="rocket-container rocket-6">
+      <svg viewBox="0 0 120 60" xmlns="http://www.w3.org/2000/svg">
+        <path class="flame-1" d="M 15 30 L 0 20 L 8 30 L 0 40 Z" fill="#00e5ff" />
+        <path class="flame-2" d="M 18 30 L 5 24 L 10 30 L 5 36 Z" fill="#ffffff" />
+        <path d="M 25 20 L 10 5 L 35 18 Z" fill="#90ee90" />
+        <path d="M 25 40 L 10 55 L 35 42 Z" fill="#90ee90" />
+        <path d="M 15 18 L 80 18 Q 115 30 80 42 L 15 42 Z" fill="#1a1a1a" stroke="#90ee90" stroke-width="1.5" />
+        <path d="M 75 18 Q 115 30 75 42 Z" fill="#90ee90" />
+        <circle cx="60" cy="30" r="9" fill="#00e5ff" stroke="#ffffff" stroke-width="2" />
+        <ellipse cx="58" cy="28" rx="3" ry="2" fill="#ffffff" opacity="0.8" />
+      </svg>
+    </div>
+
+    <div class="rocket-container rocket-7">
+      <svg viewBox="0 0 120 60" xmlns="http://www.w3.org/2000/svg">
+        <path class="flame-1" d="M 15 30 L 0 20 L 8 30 L 0 40 Z" fill="#ff9900" />
+        <path class="flame-2" d="M 18 30 L 5 24 L 10 30 L 5 36 Z" fill="#ffea00" />
+        <path d="M 25 20 L 10 5 L 35 18 Z" fill="#0088cc" />
+        <path d="M 25 40 L 10 55 L 35 42 Z" fill="#0088cc" />
+        <path d="M 15 18 L 80 18 Q 115 30 80 42 L 15 42 Z" fill="#f0f0f0" />
+        <path d="M 75 18 Q 115 30 75 42 Z" fill="#00c3ff" />
+        <circle cx="60" cy="30" r="9" fill="#ff0055" stroke="#ffffff" stroke-width="2" />
+        <ellipse cx="58" cy="28" rx="3" ry="2" fill="#ffffff" opacity="0.8" />
+      </svg>
+    </div>
+
+    <div class="rocket-container rocket-8">
+      <svg viewBox="0 0 120 60" xmlns="http://www.w3.org/2000/svg">
+        <path class="flame-1" d="M 15 30 L 0 20 L 8 30 L 0 40 Z" fill="#00ff88" />
+        <path class="flame-2" d="M 18 30 L 5 24 L 10 30 L 5 36 Z" fill="#ffffff" />
+        <path d="M 25 20 L 10 5 L 35 18 Z" fill="#ffaa00" />
+        <path d="M 25 40 L 10 55 L 35 42 Z" fill="#ffaa00" />
+        <path d="M 15 18 L 80 18 Q 115 30 80 42 L 15 42 Z" fill="#222" />
+        <path d="M 75 18 Q 115 30 75 42 Z" fill="#00ff88" />
+        <circle cx="60" cy="30" r="9" fill="#90ee90" stroke="#ffffff" stroke-width="2" />
+        <ellipse cx="58" cy="28" rx="3" ry="2" fill="#ffffff" opacity="0.8" />
+      </svg>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <div class="main-container">
+      <!-- FRAME LOGO RECTANGLE ATAS -->
+      <div class="top-logo">
+        <div class="top-logo-badge">
+          <amp-img src="<?php echo $logo; ?>" width="180" height="50" layout="responsive" alt="<?php echo $titlebrand; ?> Logo"></amp-img>
+        </div>
+      </div>
+
+      <!-- FRAME BANNER 500x500 -->
+      <div class="banner-box">
+        <amp-img src="<?php echo $banner; ?>" width="500" height="500" layout="responsive" alt="<?php echo $titlebrand; ?> Banner"></amp-img>
+      </div>
+
+      <!-- DAFTAR TOMBOL NAVIGASI -->
+      <div class="button-list">
+        <a href="<?php echo $final; ?>" class="btn-card" target="_blank" rel="noopener">
+          <div class="btn-info">
+            <div class="btn-title">MASUK</div>
+            <div class="btn-subtitle">Akses Akun Resmi</div>
+          </div>
+          <div class="btn-action">DISINI</div>
+        </a>
+
+        <a href="<?php echo $final; ?>" class="btn-card" target="_blank" rel="noopener">
+          <div class="btn-info">
+            <div class="btn-title">DAFTAR</div>
+            <div class="btn-subtitle">Buat Akun Baru</div>
+          </div>
+          <div class="btn-action">DISINI</div>
+        </a>
+
+        <a href="<?php echo $final; ?>" class="btn-card" target="_blank" rel="noopener">
+          <div class="btn-info">
+            <div class="btn-title">LINK PREDIKSI 4D</div>
+            <div class="btn-subtitle">Ramalan Angka Terjitu</div>
+          </div>
+          <div class="btn-action">DISINI</div>
+        </a>
+
+        <a href="<?php echo $final; ?>" class="btn-card" target="_blank" rel="noopener">
+          <div class="btn-info">
+            <div class="btn-title">LINK PROMOSI</div>
+            <div class="btn-subtitle">Bonus & Event Spesial</div>
+          </div>
+          <div class="btn-action">DISINI</div>
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-copyright">&copy; 2026 <?php echo $titlebrand; ?>. All Rights Reserved.</div>
+  </body>
+</html>

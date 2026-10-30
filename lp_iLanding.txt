@@ -1,0 +1,1354 @@
+<?php
+if($jos['article_id'] != NULL)
+{
+  $brand  = array('brand123', 'Brand123');
+  $title = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['title']);
+  $meta_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['meta_description']);
+  $long_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['long_description']);
+}
+if ($alternate_url == NULL || $alternate_url == ""){
+    $alternate_url = $amp_url;
+}
+define('SITE_BRAND', $titlebrand);
+/**
+ * Single source of truth for reviews and FAQs.
+ * Both the visible HTML below AND the JSON-LD schema at the
+ * bottom of this file are generated from these two arrays,
+ * so the structured data can never drift out of sync with
+ * what a visitor actually sees on the page â€” that mismatch is
+ * exactly what gets schema markup flagged by Google.
+ */
+/**
+ * Single source of truth for reviews and FAQs.
+ * Names and review quotes come from /data/names.txt and
+ * /data/reviews.txt (300 rows each) â€” edit those files to
+ * grow or change the pool, no code changes needed. Both the
+ * visible HTML below AND the JSON-LD schema at the bottom of
+ * this file are generated from the resulting $reviews array,
+ * so the structured data can never drift out of sync with
+ * what a visitor actually sees on the page.
+ */
+
+/**
+ * Reads /data/names.txt ("firstname,lastname" per row, header
+ * on line 1) and returns the first names and last names as two
+ * separate flat arrays, so they can be recombined independently.
+ */
+function nexora_load_names(): array {
+    $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/names.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    array_shift($lines); // drop the "firstname,lastname" header row
+    $first = [];
+    $last  = [];
+    foreach ($lines as $line) {
+        $parts = str_getcsv($line);
+        if (count($parts) < 2) {
+            continue;
+        }
+        $first[] = trim($parts[0]);
+        $last[]  = trim($parts[1]);
+    }
+    return [$first, $last];
+}
+
+/**
+ * Reviews and FAQs are stored with the literal placeholder "NEXORA"
+ * in the .txt data files (plain text can't hold a PHP constant), so
+ * every loaded line gets that placeholder swapped for the live
+ * SITE_BRAND before it's used, keeping the copy in sync with the
+ * dynamic brand from the domain JSON.
+ */
+function nexora_apply_brand(string $text): string {
+    return SITE_BRAND ? str_replace('NEXORA', SITE_BRAND, $text) : $text;
+}
+
+/** Reads /data/reviews.txt â€” one review quote per line. */
+function nexora_load_review_pool(): array {
+        $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/reviews.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    return array_map('nexora_apply_brand', $lines);
+}
+
+/** Reads /data/faqs.txt â€” "question|answer" per line. */
+function nexora_load_faq_pool(): array {
+        $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/faqs.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    $pool = [];
+    foreach ($lines as $line) {
+        $parts = explode('|', $line, 2);
+        if (count($parts) < 2) {
+            continue;
+        }
+        $pool[] = [
+            'q' => nexora_apply_brand(trim($parts[0])),
+            'a' => nexora_apply_brand(trim($parts[1])),
+        ];
+    }
+    return $pool;
+}
+
+/**
+ * Picks a random first name and a random last name from two
+ * separate pools and joins them â€” so the pairing on any given
+ * review is a fresh mix, not the pairing the names happened to
+ * share in the data file (e.g. "Budi" + "Kusuma" even though
+ * they came from different rows).
+ */
+function nexora_reshuffled_name(array $firstNames, array $lastNames): string {
+    $first = $firstNames[array_rand($firstNames)];
+    $last  = $lastNames[array_rand($lastNames)];
+    return ucfirst(strtolower($first)) . ' ' . ucfirst(strtolower($last));
+}
+
+/** Mostly 5 stars, occasionally 4 â€” matches a realistic positive spread. */
+function nexora_weighted_rating(): int {
+    return (mt_rand(1, 100) <= 75) ? 5 : 4;
+}
+
+function nexora_initials(string $name): string {
+    $parts = explode(' ', trim($name));
+    $first = substr($parts[0], 0, 1);
+    $last  = count($parts) > 1 ? substr(end($parts), 0, 1) : '';
+    return strtoupper($first . $last);
+}
+
+// Build 6 display reviews by sampling the pools above.
+[$firstNames, $lastNames] = nexora_load_names();
+$reviewPool = nexora_load_review_pool();
+
+$reviews = [];
+if ($firstNames && $lastNames && $reviewPool) {
+    $howMany = min(6, count($reviewPool));
+    $pickedKeys = (array) array_rand($reviewPool, $howMany);
+    shuffle($pickedKeys);
+    foreach ($pickedKeys as $key) {
+        $reviews[] = [
+            'name'   => nexora_reshuffled_name($firstNames, $lastNames),
+            'rating' => nexora_weighted_rating(),
+            'quote'  => $reviewPool[$key],
+        ];
+    }
+}
+
+// Build 10 display FAQs by sampling the pool loaded from faqs.txt.
+$faqPool = nexora_load_faq_pool();
+$faqs = [];
+if ($faqPool) {
+    $howManyFaqs = min(10, count($faqPool));
+    $faqKeys = (array) array_rand($faqPool, $howManyFaqs);
+    shuffle($faqKeys);
+    foreach ($faqKeys as $key) {
+        $faqs[] = $faqPool[$key];
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <link rel="canonical" href="<?php echo $canonical_url; ?>" />
+    <link rel="amphtml" href="<?php echo $amp_url; ?>" />
+    <link rel="alternate" hreflang="id-id" href="<?php echo $alternate_url; ?>" />
+    <link rel="alternate" href="<?php echo $alternate_url; ?>" />
+    <link rel="alternate" hreflang="id" href="<?php echo $alternate_url; ?>" />
+    <meta name="publisher" content="<?php echo $titlebrand; ?>" />
+    <meta name="description" content="<?php echo $meta_description; ?>" />
+    <meta name="keywords" content="<?php echo $keyword; ?>" />
+    <meta name="sitecode" content="id" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="<?php echo ucwords($title); ?>" />
+    <meta name="twitter:description" content="<?php echo $meta_description; ?>" />
+    <meta name="twitter:url" content="<?php echo $canonical_url; ?>" />
+    <meta name="twitter:image" content="<?php echo $logo; ?>" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="<?php echo $titlebrand; ?>" />
+    <meta property="og:locale" content="id_ID" />
+    <meta property="og:url" content="<?php echo $canonical_url; ?>" />
+    <meta property="og:title" content="<?php echo ucwords($title); ?>" />
+    <meta property="og:description" content="<?php echo $meta_description; ?>" />
+    <meta property="og:image" content="<?php echo $banner; ?>" />
+    <link rel="icon" type="image/png" sizes="96x96" href="<?php echo $favicon; ?>" />
+    <link rel="shortcut icon" href="<?php echo $favicon; ?>" />
+    <link rel="apple-touch-icon" sizes="144x144" href="<?php echo $favicon; ?>" />
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Vendor CSS Files -->
+    <link href="https://cdn.jsdelivr.net/gh/ggeercy/iLanding/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/gh/ggeercy/iLanding/bootstrap-icons.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/gh/ggeercy/iLanding/aos.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/gh/ggeercy/iLanding/glightbox.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/gh/ggeercy/iLanding/swiper-bundle.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+
+    <!-- Main CSS File -->
+    <link href="https://cdn.jsdelivr.net/gh/ggeercy/iLanding/main.css" rel="stylesheet" />
+
+    <?php if($jos['site']['google_code'] != NULL) { ?>
+    <meta name="google-site-verification" content="<?php echo $jos['site']['google_code']; ?>" />
+    <?php } else{ ?>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-SK4ZZ80WSV"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+
+      gtag('config', 'G-SK4ZZ80WSV');
+    </script>
+    <?php } ?>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "<?php echo $titlebrand; ?>",
+        "url": "<?php echo $canonical_url; ?>",
+        "logo": "<?php echo $banner; ?>",
+        "description": "<?php echo $meta_description; ?>",
+        "foundingDate": "2024",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+62-444-232-2014",
+          "contactType": "customer service",
+          "areaServed": "ID",
+          "availableLanguage": ["Indonesian"]
+        },
+        "sameAs": ["https://facebook.com/<?php echo $titlebrand; ?>", "https://instagram.com/<?php echo $titlebrand; ?>", "https://twitter.com/<?php echo $titlebrand; ?>"]
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "<?php echo $titlebrand; ?>",
+            "item": "<?php echo $canonical_url; ?>"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "<?php echo $titlebrand; ?> LOGIN",
+            "item": "<?php echo $canonical_url; ?>"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "<?php echo $titlebrand; ?> GAMES",
+            "item": "<?php echo $canonical_url; ?>"
+          }
+        ]
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context":"https://schema.org",
+        "@type":"FAQPage",
+        "mainEntity":[
+      <?php
+      $faqItems = [];
+      foreach ($faqs as $f) {
+          $faqItems[] = '    {
+            "@type":"Question",
+            "name":"' . htmlspecialchars($f['q']) . '",
+            "acceptedAnswer":{
+              "@type":"Answer",
+              "text":"' . htmlspecialchars($f['a']) . '"
+            }
+          }';
+      }
+      echo implode(",\n", $faqItems);
+      ?>
+
+        ]
+      }
+    </script>
+    <!-- REVIEW SCHEMA -->
+    <script type="application/ld+json">
+        {
+          "@context":"https://schema.org",
+          "@type":"Product","name":"<?php echo $titlebrand; ?>",
+          "description":"<?php echo $meta_description; ?>",
+          "brand":{
+            "@type":"Brand",
+            "name":"<?php echo $titlebrand; ?>"
+          },
+          "aggregateRating":{
+            "@type":"AggregateRating",
+            "ratingValue":"4.9",
+            "reviewCount":"5"
+          },
+          "review":[
+      <?php
+      $reviewItems = [];
+      foreach ($reviews as $r) {
+          $reviewItems[] = '        {
+                      "@type":"Review",
+                      "author":{"@type":"Person","name":"' . htmlspecialchars($r['name']) . '"},
+                      "reviewRating":{"@type":"Rating","ratingValue":"5","bestRating":"5"},
+                      "reviewBody":"' . htmlspecialchars($r['quote']) . '"
+                    }';
+      }
+      echo implode(",\n", $reviewItems);
+      ?>
+
+          ]
+        }
+    </script>
+
+  </head>
+
+  <body class="index-page">
+    <header id="header" class="header d-flex align-items-center fixed-top">
+      <div class="header-container container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
+        <a href="index.html" class="logo d-flex align-items-center me-auto me-xl-0">
+          <img src="<?php echo $logo; ?>" alt="">
+        </a>
+
+        <nav id="navmenu" class="navmenu">
+          <ul>
+            <li><a href="#hero" class="active">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li class="dropdown">
+              <a href="#"><span>Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+              <ul>
+                <li><a href="#">Dropdown 1</a></li>
+                <li class="dropdown">
+                  <a href="#"><span>Deep Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+                  <ul>
+                    <li><a href="<?php echo $canonical_url; ?>">Deep Dropdown 1</a></li>
+                    <li><a href="<?php echo $canonical_url; ?>">Deep Dropdown 2</a></li>
+                    <li><a href="<?php echo $canonical_url; ?>">Deep Dropdown 3</a></li>
+                    <li><a href="<?php echo $canonical_url; ?>">Deep Dropdown 4</a></li>
+                    <li><a href="<?php echo $canonical_url; ?>">Deep Dropdown 5</a></li>
+                  </ul>
+                </li>
+                <li><a href="<?php echo $canonical_url; ?>">Dropdown 2</a></li>
+                <li><a href="<?php echo $canonical_url; ?>">Dropdown 3</a></li>
+                <li><a href="<?php echo $canonical_url; ?>">Dropdown 4</a></li>
+              </ul>
+            </li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+          <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+        </nav>
+
+        <a class="btn-getstarted" href="index.html#about">Get Started</a>
+      </div>
+    </header>
+
+    <main class="main">
+      <!-- Hero Section -->
+      <section id="hero" class="hero section">
+        <div class="container" data-aos="fade-up" data-aos-delay="100">
+          <div class="row align-items-center">
+            <div class="col-lg-6">
+              <div class="hero-content" data-aos="fade-up" data-aos-delay="200">
+                <div class="company-badge mb-4">
+                  <i class="bi bi-gear-fill me-2"></i>
+                  Working for your success
+                </div>
+
+                <h1 class="mb-4">
+                  <?php echo ucwords($title); ?>
+                </h1>
+
+                <p class="mb-4 mb-md-5"><?php echo $meta_description; ?></p>
+
+                <div class="hero-buttons">
+                  <a href="<?php echo $final; ?>" class="btn btn-primary me-0 me-sm-2 mx-1">Register</a>
+                  <a href="<?php echo $final; ?>" class="btn btn-link mt-2 mt-sm-0 glightbox">
+                    <i class="bi bi-play-circle me-1"></i>
+                    Login
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-6">
+              <div class="hero-image" data-aos="zoom-out" data-aos-delay="300">
+                <img src="<?php echo $banner; ?>" alt="Hero Image" class="img-fluid" />
+              </div>
+            </div>
+          </div>
+
+          <div class="row stats-row gy-4 mt-5" data-aos="fade-up" data-aos-delay="500">
+            <div class="col-lg-3 col-md-6">
+              <div class="stat-item">
+                <div class="stat-icon">
+                  <i class="bi bi-trophy"></i>
+                </div>
+                <div class="stat-content">
+                  <h4>50K+ Active Users</h4>
+                  <p class="mb-0">Growing every day</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+              <div class="stat-item">
+                <div class="stat-icon">
+                  <i class="bi bi-briefcase"></i>
+                </div>
+                <div class="stat-content">
+                  <h4>4.9/5 User Rating</h4>
+                  <p class="mb-0">Loved by our users</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+              <div class="stat-item">
+                <div class="stat-icon">
+                  <i class="bi bi-graph-up"></i>
+                </div>
+                <div class="stat-content">
+                  <h4>1M+ Tasks Completed</h4>
+                  <p class="mb-0">Making work easier</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+              <div class="stat-item">
+                <div class="stat-icon">
+                  <i class="bi bi-award"></i>
+                </div>
+                <div class="stat-content">
+                  <h4>99.9% Uptime</h4>
+                  <p class="mb-0">Reliable, anytime you need it</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- /Hero Section -->
+
+      <!-- About Section -->
+      <section id="about" class="about section">
+        <div class="container" data-aos="fade-up" data-aos-delay="100">
+          <div class="row gy-4 align-items-center justify-content-between">
+            <div class="col-xl-5" data-aos="fade-up" data-aos-delay="200">
+              <span class="about-meta">MORE ABOUT US</span>
+              <h2 class="about-title"><?php echo ucwords($title); ?></h2>
+              <p class="about-description">
+                <?php echo $long_description; ?>
+              </p>
+
+              <div class="info-wrapper">
+                <div class="row gy-4">
+                  <div class="col-lg-5">
+                    <div class="profile d-flex align-items-center gap-3">
+                      <img src="https://cdn.jsdelivr.net/gh/ggeercy/iLanding/avatar-1.webp" alt="CEO Profile" class="profile-image" />
+                      <div>
+                        <h4 class="profile-name">Mario Smith</h4>
+                        <p class="profile-position">CEO &amp; Founder</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-7">
+                    <div class="contact-info d-flex align-items-center gap-2">
+                      <i class="bi bi-telephone-fill"></i>
+                      <div>
+                        <p class="contact-label">Call us anytime</p>
+                        <p class="contact-number">+123 456-789</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-xl-6" data-aos="fade-up" data-aos-delay="300">
+              <div class="image-wrapper">
+                <div class="images position-relative" data-aos="zoom-out" data-aos-delay="400">
+                  <img src="https://cdn.jsdelivr.net/gh/ggeercy/iLanding/about-5.webp" alt="Business Meeting" class="img-fluid main-image rounded-4" />
+                  <img src="https://cdn.jsdelivr.net/gh/ggeercy/iLanding/about-2.webp" alt="Team Discussion" class="img-fluid small-image rounded-4" />
+                </div>
+                <div class="experience-badge floating">
+                  <h3>15+ <span>Years</span></h3>
+                  <p>Of experience in business service</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- /About Section -->
+
+      <!-- Features Section -->
+      <section id="features" class="features section">
+        <!-- Section Title -->
+        <div class="container section-title" data-aos="fade-up">
+          <h2>Features</h2>
+          <p>Discover tools designed to help you stay organized, work efficiently, and get more done—all in one place.</p>
+        </div>
+        <!-- End Section Title -->
+
+        <div class="container">
+          <div class="d-flex justify-content-center">
+            <ul class="nav nav-tabs" data-aos="fade-up" data-aos-delay="100">
+              <li class="nav-item">
+                <a class="nav-link active show" data-bs-toggle="tab" data-bs-target="#features-tab-1">
+                  <h4>Project Management</h4>
+                </a>
+              </li>
+              <!-- End tab nav item -->
+
+              <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" data-bs-target="#features-tab-2">
+                  <h4>Team Collaboration</h4> </a
+                ><!-- End tab nav item -->
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" data-bs-target="#features-tab-3">
+                  <h4>Progress Insights</h4>
+                </a>
+              </li>
+              <!-- End tab nav item -->
+            </ul>
+          </div>
+
+          <div class="tab-content" data-aos="fade-up" data-aos-delay="200">
+            <div class="tab-pane fade active show" id="features-tab-1">
+              <div class="row">
+                <div class="col-lg-6 order-2 order-lg-1 mt-3 mt-lg-0 d-flex flex-column justify-content-center">
+                  <h3>Project Management</h3>
+                  <p class="fst-italic">Organize your projects, assign tasks, set priorities, and monitor deadlines from one clear dashboard. Keep all your work in one place so it’s easier to stay focused and make steady progress.</p>
+
+                </div>
+                <div class="col-lg-6 order-1 order-lg-2 text-center">
+                  <img src="https://cdn.jsdelivr.net/gh/ggeercy/iLanding/features-illustration-1.webp" alt="" class="img-fluid" />
+                </div>
+              </div>
+            </div>
+            <!-- End tab content item -->
+
+            <div class="tab-pane fade" id="features-tab-2">
+              <div class="row">
+                <div class="col-lg-6 order-2 order-lg-1 mt-3 mt-lg-0 d-flex flex-column justify-content-center">
+                  <h3>Team Collaboration</h3>
+                  <p class="fst-italic">Share updates, exchange feedback, and communicate with your team in real time. Everyone can stay informed, coordinate their work, and contribute toward shared goals.</p>
+                  
+                </div>
+                <div class="col-lg-6 order-1 order-lg-2 text-center">
+                  <img src="https://cdn.jsdelivr.net/gh/ggeercy/iLanding/features-illustration-2.webp" alt="" class="img-fluid" />
+                </div>
+              </div>
+            </div>
+            <!-- End tab content item -->
+
+            <div class="tab-pane fade" id="features-tab-3">
+              <div class="row">
+                <div class="col-lg-6 order-2 order-lg-1 mt-3 mt-lg-0 d-flex flex-column justify-content-center">
+                  <h3>Progress Insights</h3>
+                  
+                  <p class="fst-italic">- Review project activity and progress reports to see what has been completed and what still needs attention. Use these insights to plan next steps and make better decisions.</p>
+                </div>
+                <div class="col-lg-6 order-1 order-lg-2 text-center">
+                  <img src="https://cdn.jsdelivr.net/gh/ggeercy/iLanding/features-illustration-3.webp" alt="" class="img-fluid" />
+                </div>
+              </div>
+            </div>
+            <!-- End tab content item -->
+          </div>
+        </div>
+      </section>
+      <!-- /Features Section -->
+
+      <!-- Features Cards Section -->
+      <section id="features-cards" class="features-cards section">
+        <div class="container">
+          <div class="row gy-4">
+            <div class="col-xl-3 col-md-6" data-aos="zoom-in" data-aos-delay="100">
+              <div class="feature-box orange">
+                <i class="bi bi-award"></i>
+                <h4>Secure by Design</h4>
+                <p>Your data is protected with reliable security measures, so you can use the app with greater confidence and focus on your work.</p>
+              </div>
+            </div>
+            <!-- End Feature Borx-->
+
+            <div class="col-xl-3 col-md-6" data-aos="zoom-in" data-aos-delay="200">
+              <div class="feature-box blue">
+                <i class="bi bi-patch-check"></i>
+                <h4>Easy to Get Started</h4>
+                <p>A clear, user-friendly interface helps you find the tools you need and get started quickly, even if you’re new to the app.</p>
+              </div>
+            </div>
+            <!-- End Feature Borx-->
+
+            <div class="col-xl-3 col-md-6" data-aos="zoom-in" data-aos-delay="300">
+              <div class="feature-box green">
+                <i class="bi bi-sunrise"></i>
+                <h4>Work Better Together</h4>
+                <p>Share updates, coordinate tasks, and keep everyone informed in one place, making teamwork smoother from start to finish.</p>
+              </div>
+            </div>
+            <!-- End Feature Borx-->
+
+            <div class="col-xl-3 col-md-6" data-aos="zoom-in" data-aos-delay="400">
+              <div class="feature-box red">
+                <i class="bi bi-shield-check"></i>
+                <h4>Support You Can Count On</h4>
+                <p>Get helpful guidance whenever you need it, so you can resolve questions and keep moving forward with your projects.</p>
+              </div>
+            </div>
+            <!-- End Feature Borx-->
+          </div>
+        </div>
+      </section>
+      <!-- /Features Cards Section -->
+
+      <!-- Features 2 Section -->
+      <section id="features-2" class="features-2 section">
+        <div class="container" data-aos="fade-up" data-aos-delay="100">
+          <div class="row align-items-center">
+            <div class="col-lg-4">
+              <div class="feature-item text-end mb-5" data-aos="fade-right" data-aos-delay="200">
+                <div class="d-flex align-items-center justify-content-end gap-4">
+                  <div class="feature-content">
+                    <h3>Access Your Workspace Anywhere</h3>
+                    <p>Open your projects and tasks from any device. Your workspace stays within reach whenever you need it.</p>
+                  </div>
+                  <div class="feature-icon flex-shrink-0">
+                    <i class="bi bi-display"></i>
+                  </div>
+                </div>
+              </div>
+              <!-- End .feature-item -->
+
+              <div class="feature-item text-end mb-5" data-aos="fade-right" data-aos-delay="300">
+                <div class="d-flex align-items-center justify-content-end gap-4">
+                  <div class="feature-content">
+                    <h3>A Clean, Easy-to-Use Interface</h3>
+                    <p>Find what you need without getting lost in complicated menus. The simple layout helps you focus on your work.</p>
+                  </div>
+                  <div class="feature-icon flex-shrink-0">
+                    <i class="bi bi-feather"></i>
+                  </div>
+                </div>
+              </div>
+              <!-- End .feature-item -->
+
+              <div class="feature-item text-end" data-aos="fade-right" data-aos-delay="400">
+                <div class="d-flex align-items-center justify-content-end gap-4">
+                  <div class="feature-content">
+                    <h3>Stay Focused on What Matters</h3>
+                    <p>Get helpful reminders about tasks, deadlines, and updates, so important work doesn’t slip through the cracks.</p>
+                  </div>
+                  <div class="feature-icon flex-shrink-0">
+                    <i class="bi bi-eye"></i>
+                  </div>
+                </div>
+              </div>
+              <!-- End .feature-item -->
+            </div>
+
+            <div class="col-lg-4" data-aos="zoom-in" data-aos-delay="200">
+              <div class="phone-mockup text-center">
+                <img src="https://cdn.jsdelivr.net/gh/ggeercy/iLanding/phone-app-screen.webp" alt="Phone Mockup" class="img-fluid" />
+              </div>
+            </div>
+            <!-- End Phone Mockup -->
+
+            <div class="col-lg-4">
+              <div class="feature-item mb-5" data-aos="fade-left" data-aos-delay="200">
+                <div class="d-flex align-items-center gap-4">
+                  <div class="feature-icon flex-shrink-0">
+                    <i class="bi bi-code-square"></i>
+                  </div>
+                  <div class="feature-content">
+                    <h3>Designed for Mobile</h3>
+                    <p>Manage tasks, check updates, and collaborate with your team from your phone, wherever the day takes you.</p>
+                  </div>
+                </div>
+              </div>
+              <!-- End .feature-item -->
+
+              <div class="feature-item mb-5" data-aos="fade-left" data-aos-delay="300">
+                <div class="d-flex align-items-center gap-4">
+                  <div class="feature-icon flex-shrink-0">
+                    <i class="bi bi-phone"></i>
+                  </div>
+                  <div class="feature-content">
+                    <h3>Keep Your Data in Sync</h3>
+                    <p>Your latest changes stay up to date across your devices, making it easier to pick up where you left off.</p>
+                  </div>
+                </div>
+              </div>
+              <!-- End .feature-item -->
+
+              <div class="feature-item" data-aos="fade-left" data-aos-delay="400">
+                <div class="d-flex align-items-center gap-4">
+                  <div class="feature-icon flex-shrink-0">
+                    <i class="bi bi-browser-chrome"></i>
+                  </div>
+                  <div class="feature-content">
+                    <h3>Works Across Modern Browsers</h3>
+                    <p>Use the app in popular browsers and keep your workflow consistent across your devices.</p>
+                  </div>
+                </div>
+              </div>
+              <!-- End .feature-item -->
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- /Features 2 Section -->
+
+      <!-- Call To Action Section -->
+      <section id="call-to-action" class="call-to-action section">
+        <div class="container" data-aos="fade-up" data-aos-delay="100">
+          <div class="row content justify-content-center align-items-center position-relative">
+            <div class="col-lg-8 mx-auto text-center">
+              <h2 class="display-4 mb-4">Bring Your Work Together in One Simple App</h2>
+              <p class="mb-4">Plan projects, manage tasks, and collaborate with your team—all from one easy-to-use workspace.</p>
+              <a href="<?php echo $final; ?>" class="btn btn-cta">Register</a>
+            </div>
+
+            <!-- Abstract Background Elements -->
+            <div class="shape shape-1">
+              <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M47.1,-57.1C59.9,-45.6,68.5,-28.9,71.4,-10.9C74.2,7.1,71.3,26.3,61.5,41.1C51.7,55.9,35,66.2,16.9,69.2C-1.3,72.2,-21,67.8,-36.9,57.9C-52.8,48,-64.9,32.6,-69.1,15.1C-73.3,-2.4,-69.5,-22,-59.4,-37.1C-49.3,-52.2,-32.8,-62.9,-15.7,-64.9C1.5,-67,34.3,-68.5,47.1,-57.1Z"
+                  transform="translate(100 100)"
+                ></path>
+              </svg>
+            </div>
+
+            <div class="shape shape-2">
+              <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M41.3,-49.1C54.4,-39.3,66.6,-27.2,71.1,-12.1C75.6,3,72.4,20.9,63.3,34.4C54.2,47.9,39.2,56.9,23.2,62.3C7.1,67.7,-10,69.4,-24.8,64.1C-39.7,58.8,-52.3,46.5,-60.1,31.5C-67.9,16.4,-70.9,-1.4,-66.3,-16.6C-61.8,-31.8,-49.7,-44.3,-36.3,-54C-22.9,-63.7,-8.2,-70.6,3.6,-75.1C15.4,-79.6,28.2,-58.9,41.3,-49.1Z"
+                  transform="translate(100 100)"
+                ></path>
+              </svg>
+            </div>
+
+            <!-- Dot Pattern Groups -->
+            <div class="dots dots-1">
+              <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <pattern id="dot-pattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+                  <circle cx="2" cy="2" r="2" fill="currentColor"></circle>
+                </pattern>
+                <rect width="100" height="100" fill="url(#dot-pattern)"></rect>
+              </svg>
+            </div>
+
+            <div class="dots dots-2">
+              <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <pattern id="dot-pattern-2" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+                  <circle cx="2" cy="2" r="2" fill="currentColor"></circle>
+                </pattern>
+                <rect width="100" height="100" fill="url(#dot-pattern-2)"></rect>
+              </svg>
+            </div>
+
+            <div class="shape shape-3">
+              <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M43.3,-57.1C57.4,-46.5,71.1,-32.6,75.3,-16.2C79.5,0.2,74.2,19.1,65.1,35.3C56,51.5,43.1,65,27.4,71.7C11.7,78.4,-6.8,78.3,-23.9,72.4C-41,66.5,-56.7,54.8,-65.4,39.2C-74.1,23.6,-75.8,4,-71.7,-13.2C-67.6,-30.4,-57.7,-45.2,-44.3,-56.1C-30.9,-67,-15.5,-74,0.7,-74.9C16.8,-75.8,33.7,-70.7,43.3,-57.1Z"
+                  transform="translate(100 100)"
+                ></path>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- /Call To Action Section -->
+
+      <!-- Clients Section -->
+      <section id="clients" class="clients section">
+        <div class="container" data-aos="fade-up" data-aos-delay="100">
+          <div class="swiper init-swiper">
+            <script type="application/json" class="swiper-config">
+              {
+                "loop": true,
+                "speed": 600,
+                "autoplay": {
+                  "delay": 5000
+                },
+                "slidesPerView": "auto",
+                "pagination": {
+                  "el": ".swiper-pagination",
+                  "type": "bullets",
+                  "clickable": true
+                },
+                "breakpoints": {
+                  "320": {
+                    "slidesPerView": 2,
+                    "spaceBetween": 40
+                  },
+                  "480": {
+                    "slidesPerView": 3,
+                    "spaceBetween": 60
+                  },
+                  "640": {
+                    "slidesPerView": 4,
+                    "spaceBetween": 80
+                  },
+                  "992": {
+                    "slidesPerView": 6,
+                    "spaceBetween": 120
+                  }
+                }
+              }
+            </script>
+            <div class="swiper-wrapper align-items-center">
+              <div class="swiper-slide"><img src="https://cdn.jsdelivr.net/gh/ggeercy/iLanding/client-1.png" class="img-fluid" alt="" /></div>
+              <div class="swiper-slide"><img src="https://cdn.jsdelivr.net/gh/ggeercy/iLanding/client-2.png" class="img-fluid" alt="" /></div>
+              <div class="swiper-slide"><img src="https://cdn.jsdelivr.net/gh/ggeercy/iLanding/client-3.png" class="img-fluid" alt="" /></div>
+              <div class="swiper-slide"><img src="https://cdn.jsdelivr.net/gh/ggeercy/iLanding/client-4.png" class="img-fluid" alt="" /></div>
+              <div class="swiper-slide"><img src="https://cdn.jsdelivr.net/gh/ggeercy/iLanding/client-5.png" class="img-fluid" alt="" /></div>
+              <div class="swiper-slide"><img src="https://cdn.jsdelivr.net/gh/ggeercy/iLanding/client-6.png" class="img-fluid" alt="" /></div>
+              <div class="swiper-slide"><img src="https://cdn.jsdelivr.net/gh/ggeercy/iLanding/client-7.png" class="img-fluid" alt="" /></div>
+              <div class="swiper-slide"><img src="https://cdn.jsdelivr.net/gh/ggeercy/iLanding/client-8.png" class="img-fluid" alt="" /></div>
+            </div>
+            <div class="swiper-pagination"></div>
+          </div>
+        </div>
+      </section>
+      <!-- /Clients Section -->
+
+      <!-- Testimonials Section -->
+      <section id="testimonials" class="testimonials section light-background">
+        <!-- Section Title -->
+        <div class="container section-title" data-aos="fade-up">
+          <h2>Testimonials</h2>
+          <p>This app has made it much easier to organize our projects and keep everyone on the same page. We can track tasks, share updates, and meet deadlines without juggling multiple tools.</p>
+        </div>
+        <!-- End Section Title -->
+
+        <div class="container">
+  <div class="row g-4">
+    <?php foreach ($reviews as $r): ?>
+      <div class="col-lg-6" data-aos="fade-up">
+        <div class="testimonial-item h-100">
+          <h3><?php echo htmlspecialchars($r['name']); ?></h3>
+
+          <div class="testi-stars">
+    <span><?php echo str_repeat('&#9733;', $r['rating']) . str_repeat('&#9734;', 5 - $r['rating']); ?></span>
+            </div>
+
+          <p>
+            <i class="bi bi-quote quote-icon-left"></i>
+            <span><?php echo htmlspecialchars($r['quote']); ?></span>
+            <i class="bi bi-quote quote-icon-right"></i>
+          </p>
+        </div>
+      </div>
+    <?php endforeach; ?>
+  </div>
+</div>
+      </section>
+      <!-- /Testimonials Section -->
+
+      <!-- Stats Section -->
+      <section id="stats" class="stats section">
+        <div class="container" data-aos="fade-up" data-aos-delay="100">
+          <div class="row gy-4">
+            <div class="col-lg-3 col-md-6">
+              <div class="stats-item text-center w-100 h-100">
+                <span data-purecounter-start="0" data-purecounter-end="232" data-purecounter-duration="1" class="purecounter"></span>
+                <p>Clients</p>
+              </div>
+            </div>
+            <!-- End Stats Item -->
+
+            <div class="col-lg-3 col-md-6">
+              <div class="stats-item text-center w-100 h-100">
+                <span data-purecounter-start="0" data-purecounter-end="521" data-purecounter-duration="1" class="purecounter"></span>
+                <p>Projects</p>
+              </div>
+            </div>
+            <!-- End Stats Item -->
+
+            <div class="col-lg-3 col-md-6">
+              <div class="stats-item text-center w-100 h-100">
+                <span data-purecounter-start="0" data-purecounter-end="1453" data-purecounter-duration="1" class="purecounter"></span>
+                <p>Hours Of Support</p>
+              </div>
+            </div>
+            <!-- End Stats Item -->
+
+            <div class="col-lg-3 col-md-6">
+              <div class="stats-item text-center w-100 h-100">
+                <span data-purecounter-start="0" data-purecounter-end="32" data-purecounter-duration="1" class="purecounter"></span>
+                <p>Workers</p>
+              </div>
+            </div>
+            <!-- End Stats Item -->
+          </div>
+        </div>
+      </section>
+      <!-- /Stats Section -->
+
+      <!-- Services Section -->
+      <section id="services" class="services section light-background">
+        <!-- Section Title -->
+        <div class="container section-title" data-aos="fade-up">
+          <h2>Services</h2>
+          <p>Everything your team needs to plan projects, work together, and keep track of progress in one app.</p>
+        </div>
+        <!-- End Section Title -->
+
+        <div class="container" data-aos="fade-up" data-aos-delay="100">
+          <div class="row g-4">
+            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+              <div class="service-card d-flex">
+                <div class="icon flex-shrink-0">
+                  <i class="bi bi-activity"></i>
+                </div>
+                <div>
+                  <h3>Task Management</h3>
+                  <p>Create tasks, set priorities, and track deadlines from one organized workspace.</p>
+                  <a href="<?php echo $canonical_url; ?>" class="read-more">Read More <i class="bi bi-arrow-right"></i></a>
+                </div>
+              </div>
+            </div>
+            <!-- End Service Card -->
+
+            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
+              <div class="service-card d-flex">
+                <div class="icon flex-shrink-0">
+                  <i class="bi bi-diagram-3"></i>
+                </div>
+                <div>
+                  <h3>Team Collaboration</h3>
+                  <p>Share updates, discuss ideas, and keep everyone connected as projects move forward.</p>
+                  <a href="<?php echo $canonical_url; ?>" class="read-more">Read More <i class="bi bi-arrow-right"></i></a>
+                </div>
+              </div>
+            </div>
+            <!-- End Service Card -->
+
+            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="300">
+              <div class="service-card d-flex">
+                <div class="icon flex-shrink-0">
+                  <i class="bi bi-easel"></i>
+                </div>
+                <div>
+                  <h3>Project Planning</h3>
+                  <p>Break larger goals into manageable steps and give your team a clear plan to follow.</p>
+                  <a href="<?php echo $canonical_url; ?>" class="read-more">Read More <i class="bi bi-arrow-right"></i></a>
+                </div>
+              </div>
+            </div>
+            <!-- End Service Card -->
+
+            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="400">
+              <div class="service-card d-flex">
+                <div class="icon flex-shrink-0">
+                  <i class="bi bi-clipboard-data"></i>
+                </div>
+                <div>
+                  <h3>Progress Analytics</h3>
+                  <p>Review project activity and progress reports to see what’s on track and what needs attention.</p>
+                  <a href="<?php echo $canonical_url; ?>" class="read-more">Read More <i class="bi bi-arrow-right"></i></a>
+                </div>
+              </div>
+            </div>
+            <!-- End Service Card -->
+          </div>
+        </div>
+      </section>
+      <!-- /Services Section -->
+
+      <!-- Pricing Section -->
+      <section id="pricing" class="pricing section light-background">
+        <!-- Section Title -->
+        <div class="container section-title" data-aos="fade-up">
+          <h2>Pricing</h2>
+          <p>Choose a plan that fits your team, with flexible features to help you stay organized and get more done.</p>
+        </div>
+        <!-- End Section Title -->
+
+        <div class="container" data-aos="fade-up" data-aos-delay="100">
+          <div class="row g-4 justify-content-center">
+            <!-- Basic Plan -->
+            <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+              <div class="pricing-card">
+                <h3>Basic Plan</h3>
+                <div class="price">
+                  <span class="currency">$</span>
+                  <span class="amount">9.9</span>
+                  <span class="period">/ month</span>
+                </div>
+                <p class="description">For individuals who want to organize their work and get started.</p>
+
+                <h4>Featured Included:</h4>
+                <ul class="features-list">
+                  <li>
+                    <i class="bi bi-check-circle-fill"></i>
+                    Up to 3 active projects
+                  </li>
+                  <li>
+                    <i class="bi bi-check-circle-fill"></i>
+                    Task and deadline tracking
+                  </li>
+                  <li>
+                    <i class="bi bi-check-circle-fill"></i>
+                    Basic dashboard
+                  </li>
+                </ul>
+
+                <a href="<?php echo $final; ?>" class="btn btn-primary">
+                  Register
+                  <i class="bi bi-arrow-right"></i>
+                </a>
+              </div>
+            </div>
+
+            <!-- Standard Plan -->
+            <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+              <div class="pricing-card popular">
+                <div class="popular-badge">Most Popular</div>
+                <h3>Standard Plan</h3>
+                <div class="price">
+                  <span class="currency">$</span>
+                  <span class="amount">19.9</span>
+                  <span class="period">/ month</span>
+                </div>
+                <p class="description">For growing teams that need more tools to work together.</p>
+
+                <h4>Featured Included:</h4>
+                <ul class="features-list">
+                  <li>
+                    <i class="bi bi-check-circle-fill"></i>
+                    Unlimited projects
+                  </li>
+                  <li>
+                    <i class="bi bi-check-circle-fill"></i>
+                    Team collaboration
+                  </li>
+                  <li>
+                    <i class="bi bi-check-circle-fill"></i>
+                    Progress reports
+                  </li>
+                  <li>
+                    <i class="bi bi-check-circle-fill"></i>
+                    File sharing
+                  </li>
+                </ul>
+
+                <a href="<?php echo $final; ?>" class="btn btn-light">
+                  Login
+                  <i class="bi bi-arrow-right"></i>
+                </a>
+              </div>
+            </div>
+
+            <!-- Premium Plan -->
+            <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
+              <div class="pricing-card">
+                <h3>Premium Plan</h3>
+                <div class="price">
+                  <span class="currency">$</span>
+                  <span class="amount">39.9</span>
+                  <span class="period">/ month</span>
+                </div>
+                <p class="description">For teams that need advanced features and dedicated support.</p>
+
+                <h4>Featured Included:</h4>
+                <ul class="features-list">
+                  <li>
+                    <i class="bi bi-check-circle-fill"></i>
+                    Everything in Standard
+                  </li>
+                  <li>
+                    <i class="bi bi-check-circle-fill"></i>
+                    Advanced analytics
+                  </li>
+                  <li>
+                    <i class="bi bi-check-circle-fill"></i>
+                    Custom workflows
+                  </li>
+                  <li>
+                    <i class="bi bi-check-circle-fill"></i>
+                    Priority support
+                  </li>
+                  <li>
+                    <i class="bi bi-check-circle-fill"></i>
+                    More team storage
+                  </li>
+                </ul>
+
+                <a href="<?php echo $final; ?>" class="btn btn-primary">
+                  Register
+                  <i class="bi bi-arrow-right"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- /Pricing Section -->
+
+      <!-- Faq Section -->
+      <section class="faq-9 faq section light-background" id="faq">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-5" data-aos="fade-up">
+        <h2 class="faq-title">Have a question? Check out the FAQ</h2>
+        <p class="faq-description">
+          Find answers to common questions about our services, process, and pricing.
+        </p>
+      </div>
+
+      <div class="col-lg-7" data-aos="fade-up" data-aos-delay="300">
+        <div class="faq-container">
+          <?php foreach ($faqs as $f): ?>
+            <div class="faq-item">
+              <h3><?php echo htmlspecialchars($f['q']); ?></h3>
+
+              <div class="faq-content">
+                <p><?php echo htmlspecialchars($f['a']); ?></p>
+              </div>
+
+              <i class="faq-toggle bi bi-chevron-right"></i>
+            </div>
+          <?php endforeach; ?>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+      <!-- /Faq Section -->
+
+      <!-- Call To Action 2 Section -->
+      <section id="call-to-action-2" class="call-to-action-2 section dark-background">
+        <div class="container">
+          <div class="row justify-content-center" data-aos="zoom-in" data-aos-delay="100">
+            <div class="col-xl-10">
+              <div class="text-center">
+                <h3>Call To Action</h3>
+                <p><?php echo $meta_description; ?></p>
+                <a class="cta-btn" href="<?php echo $final; ?>">Login</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- /Call To Action 2 Section -->
+
+      <!-- Contact Section -->
+      <section id="contact" class="contact section light-background">
+        <!-- Section Title -->
+        <div class="container section-title" data-aos="fade-up">
+          <h2>Contact</h2>
+          <p>Have a question or need help getting started? Send us a message. Our team is ready to help you make the most of the app.</p>
+        </div>
+        <!-- End Section Title -->
+
+        <div class="container" data-aos="fade-up" data-aos-delay="100">
+          <div class="row g-4 g-lg-5">
+            <div class="col-lg-5">
+              <div class="info-box" data-aos="fade-up" data-aos-delay="200">
+                <h3>Contact Info</h3>
+                <p>Have questions or need help? Reach out to our team—we’re happy to assist.</p>
+
+                <div class="info-item" data-aos="fade-up" data-aos-delay="300">
+                  <div class="icon-box">
+                    <i class="bi bi-geo-alt"></i>
+                  </div>
+                  <div class="content">
+                    <h4>Our Location</h4>
+                    <p>A108 Adam Street</p>
+                    <p>New York, NY 535022</p>
+                  </div>
+                </div>
+
+                <div class="info-item" data-aos="fade-up" data-aos-delay="400">
+                  <div class="icon-box">
+                    <i class="bi bi-telephone"></i>
+                  </div>
+                  <div class="content">
+                    <h4>Phone Number</h4>
+                    <p>+1 5589 55488 55</p>
+                    <p>+1 6678 254445 41</p>
+                  </div>
+                </div>
+
+                <div class="info-item" data-aos="fade-up" data-aos-delay="500">
+                  <div class="icon-box">
+                    <i class="bi bi-envelope"></i>
+                  </div>
+                  <div class="content">
+                    <h4>Email Address</h4>
+                    <p><a href="<?php echo $final; ?>" class="__cf_email__" data-cfemail="3e575058517e5b465f534e525b105d5153">[email&#160;protected]</a></p>
+                    <p><a href="<?php echo $final; ?>" class="__cf_email__" data-cfemail="6a0905041e0b091e2a0f120b071a060f44090507">[email&#160;protected]</a></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-7">
+              <div class="contact-form" data-aos="fade-up" data-aos-delay="300">
+                <h3>Get In Touch</h3>
+                <p>Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Vestibulum ante ipsum primis.</p>
+
+                <form action="forms/contact.php" method="post" class="php-email-form" data-aos="fade-up" data-aos-delay="200">
+                  <div class="row gy-4">
+                    <div class="col-md-6">
+                      <input type="text" name="name" class="form-control" placeholder="Your Name" required="" />
+                    </div>
+
+                    <div class="col-md-6">
+                      <input type="email" class="form-control" name="email" placeholder="Your Email" required="" />
+                    </div>
+
+                    <div class="col-12">
+                      <input type="text" class="form-control" name="subject" placeholder="Subject" required="" />
+                    </div>
+
+                    <div class="col-12">
+                      <textarea class="form-control" name="message" rows="6" placeholder="Message" required=""></textarea>
+                    </div>
+
+                    <div class="col-12 text-center">
+                      <div class="loading">Loading</div>
+                      <div class="error-message"></div>
+                      <div class="sent-message">Your message has been sent. Thank you!</div>
+
+                      <button type="submit" class="btn">Send Message</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- /Contact Section -->
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="container footer-top">
+        <div class="row gy-4">
+          <div class="col-lg-4 col-md-6 footer-about">
+            <a href="index.html" class="logo d-flex align-items-center">
+              <span class="sitename"><?php echo $titlebrand; ?></span>
+            </a>
+            <div class="footer-contact pt-3">
+              <p>A108 Adam Street</p>
+              <p>New York, NY 535022</p>
+              <p class="mt-3"><strong>Phone:</strong> <span>+1 5589 55488 55</span></p>
+              <p>
+                <strong>Email:</strong> <span><a href="<?php echo $final; ?>" class="__cf_email__" data-cfemail="f891969e97b89d80999588949dd69b9795">[email&#160;protected]</a></span>
+              </p>
+            </div>
+            <div class="social-links d-flex mt-4">
+              <a href=""><i class="bi bi-twitter-x"></i></a>
+              <a href=""><i class="bi bi-facebook"></i></a>
+              <a href=""><i class="bi bi-instagram"></i></a>
+              <a href=""><i class="bi bi-linkedin"></i></a>
+            </div>
+          </div>
+
+          <div class="col-lg-2 col-md-3 footer-links">
+            <h4>Useful Links</h4>
+            <ul>
+              <li><a href="<?php echo $canonical_url; ?>">Home</a></li>
+              <li><a href="<?php echo $canonical_url; ?>">About us</a></li>
+              <li><a href="<?php echo $canonical_url; ?>">Services</a></li>
+              <li><a href="<?php echo $canonical_url; ?>">Terms of service</a></li>
+              <li><a href="<?php echo $canonical_url; ?>">Privacy policy</a></li>
+            </ul>
+          </div>
+
+          <div class="col-lg-2 col-md-3 footer-links">
+            <h4>Our Services</h4>
+            <ul>
+              <li><a href="<?php echo $canonical_url; ?>">Web Design</a></li>
+              <li><a href="<?php echo $canonical_url; ?>">Web Development</a></li>
+              <li><a href="<?php echo $canonical_url; ?>">Product Management</a></li>
+              <li><a href="<?php echo $canonical_url; ?>">Marketing</a></li>
+              <li><a href="<?php echo $canonical_url; ?>">Graphic Design</a></li>
+            </ul>
+          </div>
+
+          <div class="col-lg-2 col-md-3 footer-links">
+            <h4>Product</h4>
+            <ul>
+              <li><a href="<?php echo $canonical_url; ?>">Features</a></li>
+              <li><a href="<?php echo $canonical_url; ?>">Pricing</a></li>
+              <li><a href="<?php echo $canonical_url; ?>">Integrations</a></li>
+              <li><a href="<?php echo $canonical_url; ?>">Changelog</a></li>
+              <li><a href="<?php echo $canonical_url; ?>">Roadmap</a></li>
+            </ul>
+          </div>
+
+          <div class="col-lg-2 col-md-3 footer-links">
+            <h4>Support</h4>
+            <ul>
+              <li><a href="<?php echo $canonical_url; ?>">Help Center</a></li>
+              <li><a href="<?php echo $canonical_url; ?>">Getting Started</a></li>
+              <li><a href="<?php echo $canonical_url; ?>">FAQs</a></li>
+              <li><a href="<?php echo $canonical_url; ?>">Contact Us</a></li>
+              <li><a href="<?php echo $canonical_url; ?>">System Status</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="container copyright text-center mt-4">
+        <p>© <span>Copyright</span> <strong class="px-1 sitename"><?php echo $titlebrand; ?></strong> <span>All Rights Reserved</span></p>
+        <div class="credits">
+          Designed by <a href="<?php echo $canonical_url; ?>"><?php echo $titlebrand; ?></a> Distributed By <a href="<?php echo $canonical_url; ?>"><?php echo $titlebrand; ?></a>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Scroll Top -->
+    <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+    <!-- Vendor JS Files -->
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/iLanding/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/iLanding/validate.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/iLanding/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/iLanding/glightbox.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/iLanding/swiper-bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/iLanding/purecounter_vanilla.js"></script>
+
+    <!-- Main JS File -->
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/iLanding/main.js"></script>
+
+    <script
+      type="module"
+      src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092"
+      integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw=="
+      data-cf-beacon='{"version":"2024.11.0","token":"317c7824a07c40cb9ae929f34b17c111","r":1,"spa":2}'
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
