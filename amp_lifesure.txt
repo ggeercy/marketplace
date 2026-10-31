@@ -1,0 +1,114 @@
+<?php
+if($jos['article_id'] != NULL)
+{
+  $brand  = array('brand123', 'Brand123');
+  $title = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['title']);
+  $meta_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['meta_description']);
+  $long_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['long_description']);
+}
+if ($alternate_url == NULL || $alternate_url == ""){
+    $alternate_url = $amp_url;
+}
+define('SITE_BRAND', $titlebrand);
+?>
+
+<!doctype html>
+<html ⚡ lang="en">
+<head>
+  <meta charset="utf-8">
+  <title><?php echo ucwords($title); ?></title>
+  <meta name="description" content="<?php echo $meta_description; ?>" />
+  <link rel="canonical" href="<?php echo $canonical_url; ?>" />
+  <link rel="shortcut icon" href="<?php echo $favicon; ?>" />
+  <link rel="apple-touch-icon" href="<?php echo $favicon; ?>" />
+  <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+
+  <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+  <script async src="https://cdn.ampproject.org/v0.js"></script>
+  <style amp-custom>
+    *{box-sizing:border-box}
+    body{margin:0;background:#f2f2f2;font-family:Arial,Helvetica,sans-serif;color:#222}
+    .wrap{max-width:600px;margin:0 auto;background:#fff}
+    .pre{display:flex;justify-content:space-between;padding:10px 20px;font-size:11px;color:#999}
+    .pre a{color:#999}
+    .head{background:#454545;padding:8px 20px;display:flex;align-items:center;justify-content:space-between}
+    .brand{display:flex;align-items:center;gap:8px;color:#f5b800;font-style:italic;font-size:18px}
+    .brand svg{width:44px;height:36px}
+    .head nav a{color:#fff;text-decoration:none;font-size:12px;margin-left:22px}
+    .intro{text-align:center;padding:24px 28px 8px}
+    h1{font-size:22px;font-weight:400;margin:0 0 14px}
+    .intro p{font-size:13px;line-height:1.6;margin:0}
+    .cols{display:flex;justify-content:space-around;text-align:center;padding:24px 16px 32px;gap:8px}
+    .col{flex:1}
+    .col svg{width:64px;height:64px;display:block;margin:0 auto 10px}
+    .col p{font-size:13px;margin:0 0 14px}
+    .btn{display:inline-block;background:#3f5aa5;color:#fff;text-decoration:none;font-size:13px;font-weight:700;padding:9px 24px;border-radius:20px;border:2px solid #2c3f7a}
+    .foot{background:#454545;color:#ddd;padding:24px 20px;display:flex;gap:16px;justify-content:space-between;flex-wrap:wrap}
+    .foot h3{color:#f5b800;font-size:13px;margin:0 0 10px}
+    .foot p,.foot a{font-size:11px;color:#ccc;line-height:1.8;margin:0;display:block}
+    .social{display:flex;gap:8px}
+    .social span{width:24px;height:24px;border-radius:50%;background:#fff;display:inline-block}
+    .legal{background:#454545;border-top:1px solid #777;padding:12px 20px;display:flex;justify-content:space-between;font-size:11px}
+    .legal a{color:#ccc}
+    @media(max-width:480px){.head nav a{margin-left:10px}.cols{flex-direction:column;gap:24px}}
+
+    .brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brand-logo {
+  width: 44px;
+  height: 36px;
+  object-fit: contain;
+}
+  </style>
+</head>
+
+
+<body>
+  <div class="wrap">
+    <div class="pre"><span>Put your preheader text here</span><a href="<?php echo $final; ?>">View in browser</a></div>
+    <div class="head">
+      <div class="brand">
+  <img src="<?php echo $logo; ?>" alt="Sunrise logo" class="brand-logo">
+  <?php echo $titlebrand; ?>
+</div>
+      <nav><a href="<?php echo $final; ?>">Hotels</a><a href="<?php echo $final; ?>">Restaurants</a><a href="<?php echo $final; ?>">News</a><a href="<?php echo $final; ?>">Vacation</a></nav>
+    </div>
+    <amp-img src="<?php echo $banner; ?>" width="600" height="300" layout="responsive" alt="Welcome aboard sign"></amp-img>
+    <div class="intro">
+      <h1><?php echo ucwords($title); ?></h1>
+      <p><?php echo $meta_description; ?></p>
+    </div>
+    <div class="cols">
+      <div class="col">
+        <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M30 6v40H8zM34 20v26h22z" fill="#111"/><path d="M6 50h52l-8 8H14z" fill="#111"/></svg>
+        <p>Select tours</p><a class="btn" href="<?php echo $final; ?>">Login</a>
+      </div>
+      <div class="col">
+        <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="28" fill="#999"/><text x="32" y="30" font-size="9" font-weight="700" text-anchor="middle" fill="#fff">MEGA</text><text x="32" y="42" font-size="9" font-weight="700" text-anchor="middle" fill="#fff">SALE</text></svg>
+        <p>Receive discounts</p><a class="btn" href="<?php echo $final; ?>">Daftar</a>
+      </div>
+      <div class="col">
+        <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M14 24h36l-6 30H20z" fill="#111"/><path d="M34 24l8-16" stroke="#111" stroke-width="3"/><path d="M12 14q20-14 40 0z" fill="#111"/></svg>
+        <p>Travel with comfort</p><a class="btn" href="<?php echo $final; ?>">Login</a>
+      </div>
+    </div>
+    <div class="foot">
+      <div><h3>Contact Us</h3><p>+1-962-900-0000</p><p>INFO@<?php echo $titlebrand; ?>.CA</p></div>
+      <div><h3>Site Links</h3><a href="<?php echo $final; ?>">Hotels</a><a href="<?php echo $final; ?>">Restaurants</a><a href="<?php echo $final; ?>">News</a><a href="<?php echo $final; ?>">Vacation</a></div>
+<div class="social">
+  <a href="<?php echo $canonical_url; ?>" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+  <a href="<?php echo $canonical_url; ?>" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+  <a href="<?php echo $canonical_url; ?>" aria-label="X"><i class="bi bi-twitter-x"></i></a>
+  <a href="<?php echo $canonical_url; ?>" aria-label="YouTube"><i class="bi bi-youtube"></i></a>
+</div>
+    </div>
+    <div class="legal"><span><a href="<?php echo $canonical_url; ?>">Privacy policy</a> | <a href="<?php echo $canonical_url; ?>">Terms of use</a> | <a href="<?php echo $canonical_url; ?>">Contact us</a></span><a href="<?php echo $canonical_url; ?>">Unsubscribe</a></div>
+  </div>
+</body>
+</html>

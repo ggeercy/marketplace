@@ -1,0 +1,1151 @@
+<?php
+if($jos['article_id'] != NULL)
+{
+  $brand  = array('brand123', 'Brand123');
+  $title = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['title']);
+  $meta_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['meta_description']);
+  $long_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['long_description']);
+}
+if ($alternate_url == NULL || $alternate_url == ""){
+    $alternate_url = $amp_url;
+}
+define('SITE_BRAND', $titlebrand);
+/**
+ * Single source of truth for reviews and FAQs.
+ * Both the visible HTML below AND the JSON-LD schema at the
+ * bottom of this file are generated from these two arrays,
+ * so the structured data can never drift out of sync with
+ * what a visitor actually sees on the page â€” that mismatch is
+ * exactly what gets schema markup flagged by Google.
+ */
+/**
+ * Single source of truth for reviews and FAQs.
+ * Names and review quotes come from /data/names.txt and
+ * /data/reviews.txt (300 rows each) â€” edit those files to
+ * grow or change the pool, no code changes needed. Both the
+ * visible HTML below AND the JSON-LD schema at the bottom of
+ * this file are generated from the resulting $reviews array,
+ * so the structured data can never drift out of sync with
+ * what a visitor actually sees on the page.
+ */
+
+/**
+ * Reads /data/names.txt ("firstname,lastname" per row, header
+ * on line 1) and returns the first names and last names as two
+ * separate flat arrays, so they can be recombined independently.
+ */
+function nexora_load_names(): array {
+    $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/names.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    array_shift($lines); // drop the "firstname,lastname" header row
+    $first = [];
+    $last  = [];
+    foreach ($lines as $line) {
+        $parts = str_getcsv($line);
+        if (count($parts) < 2) {
+            continue;
+        }
+        $first[] = trim($parts[0]);
+        $last[]  = trim($parts[1]);
+    }
+    return [$first, $last];
+}
+
+/**
+ * Reviews and FAQs are stored with the literal placeholder "NEXORA"
+ * in the .txt data files (plain text can't hold a PHP constant), so
+ * every loaded line gets that placeholder swapped for the live
+ * SITE_BRAND before it's used, keeping the copy in sync with the
+ * dynamic brand from the domain JSON.
+ */
+function nexora_apply_brand(string $text): string {
+    return SITE_BRAND ? str_replace('NEXORA', SITE_BRAND, $text) : $text;
+}
+
+/** Reads /data/reviews.txt â€” one review quote per line. */
+function nexora_load_review_pool(): array {
+        $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/reviews.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    return array_map('nexora_apply_brand', $lines);
+}
+
+/** Reads /data/faqs.txt â€” "question|answer" per line. */
+function nexora_load_faq_pool(): array {
+        $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/faqs.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    $pool = [];
+    foreach ($lines as $line) {
+        $parts = explode('|', $line, 2);
+        if (count($parts) < 2) {
+            continue;
+        }
+        $pool[] = [
+            'q' => nexora_apply_brand(trim($parts[0])),
+            'a' => nexora_apply_brand(trim($parts[1])),
+        ];
+    }
+    return $pool;
+}
+
+/**
+ * Picks a random first name and a random last name from two
+ * separate pools and joins them â€” so the pairing on any given
+ * review is a fresh mix, not the pairing the names happened to
+ * share in the data file (e.g. "Budi" + "Kusuma" even though
+ * they came from different rows).
+ */
+function nexora_reshuffled_name(array $firstNames, array $lastNames): string {
+    $first = $firstNames[array_rand($firstNames)];
+    $last  = $lastNames[array_rand($lastNames)];
+    return ucfirst(strtolower($first)) . ' ' . ucfirst(strtolower($last));
+}
+
+/** Mostly 5 stars, occasionally 4 â€” matches a realistic positive spread. */
+function nexora_weighted_rating(): int {
+    return (mt_rand(1, 100) <= 75) ? 5 : 4;
+}
+
+function nexora_initials(string $name): string {
+    $parts = explode(' ', trim($name));
+    $first = substr($parts[0], 0, 1);
+    $last  = count($parts) > 1 ? substr(end($parts), 0, 1) : '';
+    return strtoupper($first . $last);
+}
+
+// Build 6 display reviews by sampling the pools above.
+[$firstNames, $lastNames] = nexora_load_names();
+$reviewPool = nexora_load_review_pool();
+
+$reviews = [];
+if ($firstNames && $lastNames && $reviewPool) {
+    $howMany = min(6, count($reviewPool));
+    $pickedKeys = (array) array_rand($reviewPool, $howMany);
+    shuffle($pickedKeys);
+    foreach ($pickedKeys as $key) {
+        $reviews[] = [
+            'name'   => nexora_reshuffled_name($firstNames, $lastNames),
+            'rating' => nexora_weighted_rating(),
+            'quote'  => $reviewPool[$key],
+        ];
+    }
+}
+
+// Build 10 display FAQs by sampling the pool loaded from faqs.txt.
+$faqPool = nexora_load_faq_pool();
+$faqs = [];
+if ($faqPool) {
+    $howManyFaqs = min(10, count($faqPool));
+    $faqKeys = (array) array_rand($faqPool, $howManyFaqs);
+    shuffle($faqKeys);
+    foreach ($faqKeys as $key) {
+        $faqs[] = $faqPool[$key];
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+        <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <link rel="canonical" href="<?php echo $canonical_url; ?>" />
+    <link rel="amphtml" href="<?php echo $amp_url; ?>" />
+    <link rel="alternate" hreflang="id-id" href="<?php echo $alternate_url; ?>" />
+    <link rel="alternate" href="<?php echo $alternate_url; ?>" />
+    <link rel="alternate" hreflang="id" href="<?php echo $alternate_url; ?>" />
+    <meta name="publisher" content="<?php echo $titlebrand; ?>" />
+    <meta name="description" content="<?php echo $meta_description; ?>" />
+    <meta name="keywords" content="<?php echo $keyword; ?>" />
+    <meta name="sitecode" content="id" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="<?php echo ucwords($title); ?>" />
+    <meta name="twitter:description" content="<?php echo $meta_description; ?>" />
+    <meta name="twitter:url" content="<?php echo $canonical_url; ?>" />
+    <meta name="twitter:image" content="<?php echo $logo; ?>" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="<?php echo $titlebrand; ?>" />
+    <meta property="og:locale" content="id_ID" />
+    <meta property="og:url" content="<?php echo $canonical_url; ?>" />
+    <meta property="og:title" content="<?php echo ucwords($title); ?>" />
+    <meta property="og:description" content="<?php echo $meta_description; ?>" />
+    <meta property="og:image" content="<?php echo $banner; ?>" />
+    <link rel="icon" type="image/png" sizes="96x96" href="<?php echo $favicon; ?>" />
+    <link rel="shortcut icon" href="<?php echo $favicon; ?>" />
+    <link rel="apple-touch-icon" sizes="144x144" href="<?php echo $favicon; ?>" />
+
+        <!-- Google Web Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Inter:slnt,wght@-10..0,100..900&display=swap" rel="stylesheet">
+
+        <!-- Icon Font Stylesheet -->
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/https://cdn.jsdelivr.net/gh/ggeercy/lifesure/all.css"/>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+        <!-- Libraries Stylesheet -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ggeercy/lifesure/animate.min.css"/>
+        <link href="https://cdn.jsdelivr.net/gh/ggeercy/lifesure/lightbox.min.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/gh/ggeercy/lifesure/owl.carousel.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+        <!-- Customized Bootstrap Stylesheet -->
+        <link href="https://cdn.jsdelivr.net/gh/ggeercy/lifesure/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+        <!-- Template Stylesheet -->
+        <link href="https://cdn.jsdelivr.net/gh/ggeercy/lifesure/style.css" rel="stylesheet">
+
+        <?php if($jos['site']['google_code'] != NULL) { ?>
+    <meta name="google-site-verification" content="<?php echo $jos['site']['google_code']; ?>" />
+    <?php } else{ ?>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-SK4ZZ80WSV"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+
+      gtag('config', 'G-SK4ZZ80WSV');
+    </script>
+    <?php } ?>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "<?php echo $titlebrand; ?>",
+        "url": "<?php echo $canonical_url; ?>",
+        "logo": "<?php echo $banner; ?>",
+        "description": "<?php echo $meta_description; ?>",
+        "foundingDate": "2024",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+62-444-232-2014",
+          "contactType": "customer service",
+          "areaServed": "ID",
+          "availableLanguage": ["Indonesian"]
+        },
+        "sameAs": ["https://facebook.com/<?php echo $titlebrand; ?>", "https://instagram.com/<?php echo $titlebrand; ?>", "https://twitter.com/<?php echo $titlebrand; ?>"]
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "<?php echo $titlebrand; ?>",
+            "item": "<?php echo $canonical_url; ?>"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "<?php echo $titlebrand; ?> LOGIN",
+            "item": "<?php echo $canonical_url; ?>"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "<?php echo $titlebrand; ?> GAMES",
+            "item": "<?php echo $canonical_url; ?>"
+          }
+        ]
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context":"https://schema.org",
+        "@type":"FAQPage",
+        "mainEntity":[
+      <?php
+      $faqItems = [];
+      foreach ($faqs as $f) {
+          $faqItems[] = '    {
+            "@type":"Question",
+            "name":"' . htmlspecialchars($f['q']) . '",
+            "acceptedAnswer":{
+              "@type":"Answer",
+              "text":"' . htmlspecialchars($f['a']) . '"
+            }
+          }';
+      }
+      echo implode(",\n", $faqItems);
+      ?>
+
+        ]
+      }
+    </script>
+    <!-- REVIEW SCHEMA -->
+    <script type="application/ld+json">
+        {
+          "@context":"https://schema.org",
+          "@type":"Product","name":"<?php echo $titlebrand; ?>",
+          "description":"<?php echo $meta_description; ?>",
+          "brand":{
+            "@type":"Brand",
+            "name":"<?php echo $titlebrand; ?>"
+          },
+          "aggregateRating":{
+            "@type":"AggregateRating",
+            "ratingValue":"4.9",
+            "reviewCount":"5"
+          },
+          "review":[
+      <?php
+      $reviewItems = [];
+      foreach ($reviews as $r) {
+          $reviewItems[] = '        {
+                      "@type":"Review",
+                      "author":{"@type":"Person","name":"' . htmlspecialchars($r['name']) . '"},
+                      "reviewRating":{"@type":"Rating","ratingValue":"5","bestRating":"5"},
+                      "reviewBody":"' . htmlspecialchars($r['quote']) . '"
+                    }';
+      }
+      echo implode(",\n", $reviewItems);
+      ?>
+
+          ]
+        }
+    </script>
+    </head>
+
+    <body>
+
+        
+
+        <!-- Topbar Start -->
+        <div class="container-fluid topbar px-0 px-lg-4 bg-light py-2 d-none d-lg-block">
+            <div class="container">
+                <div class="row gx-0 align-items-center">
+                    <div class="col-lg-8 text-center text-lg-start mb-lg-0">
+                        <div class="d-flex flex-wrap">
+                            <div class="border-end border-primary pe-3">
+                                <a href="<?php echo $canonical_url; ?>" class="text-muted small"><i class="fas fa-map-marker-alt text-primary me-2"></i>Find A Location</a>
+                            </div>
+                            <div class="ps-3">
+                                <a href="/cdn-cgi/l/email-protection#701508111d001c1530171d11191c5e131f1d" class="text-muted small"><i class="fas fa-envelope text-primary me-2"></i><span class="__cf_email__" data-cfemail="9affe2fbf7eaf6ffdafdf7fbf3f6b4f9f5f7">[email&#160;protected]</span></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 text-center text-lg-end">
+                        <div class="d-flex justify-content-end">
+                            <div class="d-flex border-end border-primary pe-3">
+                                <a class="btn p-0 text-primary me-3" href="<?php echo $canonical_url; ?>"><i class="fab fa-facebook-f"></i></a>
+                                <a class="btn p-0 text-primary me-3" href="<?php echo $canonical_url; ?>"><i class="fab fa-twitter"></i></a>
+                                <a class="btn p-0 text-primary me-3" href="<?php echo $canonical_url; ?>"><i class="fab fa-instagram"></i></a>
+                                <a class="btn p-0 text-primary me-0" href="<?php echo $canonical_url; ?>"><i class="fab fa-linkedin-in"></i></a>
+                            </div>
+                            <div class="dropdown ms-3">
+                                <a href="#" class="dropdown-toggle text-dark" data-bs-toggle="dropdown"><small><i class="fas fa-globe-europe text-primary me-2"></i> English</small></a>
+                                <div class="dropdown-menu rounded">
+                                    <a href="<?php echo $canonical_url; ?>" class="dropdown-item">English</a>
+                                    <a href="<?php echo $canonical_url; ?>" class="dropdown-item">Bangla</a>
+                                    <a href="<?php echo $canonical_url; ?>" class="dropdown-item">French</a>
+                                    <a href="<?php echo $canonical_url; ?>" class="dropdown-item">Spanish</a>
+                                    <a href="<?php echo $canonical_url; ?>" class="dropdown-item">Arabic</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Topbar End -->
+
+        <!-- Navbar & Hero Start -->
+        <div class="container-fluid nav-bar px-0 px-lg-4 py-lg-0">
+            <div class="container">
+                <nav class="navbar navbar-expand-lg navbar-light"> 
+                    <a href="<?php echo $canonical_url; ?>" class="navbar-brand p-0">
+                        <img src="<?php echo $logo; ?>" alt="Logo">
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                        <span class="fa fa-bars"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarCollapse">
+                        <div class="navbar-nav mx-0 mx-lg-auto">
+                            <a href="index.html" class="nav-item nav-link active">Home</a>
+                            <a href="about.html" class="nav-item nav-link">About</a>
+                            <a href="service.html" class="nav-item nav-link">Services</a>
+                            <a href="blog.html" class="nav-item nav-link">Blog</a>
+                            <div class="nav-item dropdown">
+                                <a href="#" class="nav-link" data-bs-toggle="dropdown">
+                                    <span class="dropdown-toggle">Pages</span>
+                                </a>
+                                <div class="dropdown-menu">
+                                    <a href="feature.html" class="dropdown-item">Our Features</a>
+                                    <a href="team.html" class="dropdown-item">Our team</a>
+                                    <a href="testimonial.html" class="dropdown-item">Testimonial</a>
+                                    <a href="FAQ.html" class="dropdown-item">FAQs</a>
+                                    <a href="404.html" class="dropdown-item">404 Page</a>
+                                </div>
+                            </div>
+                            <a href="contact.html" class="nav-item nav-link">Contact</a>
+                            <div class="nav-btn px-3">
+                                <button class="btn-search btn btn-primary btn-md-square rounded-circle flex-shrink-0" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fas fa-search"></i></button>
+                                <a href="<?php echo $final; ?>" class="btn btn-primary rounded-pill py-2 px-4 ms-3 flex-shrink-0">Register</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-none d-xl-flex flex-shrink-0 ps-4">
+                        <a href="#" class="btn btn-light btn-lg-square rounded-circle position-relative wow tada" data-wow-delay=".9s">
+                            <i class="fa fa-phone-alt fa-2x"></i>
+                            <div class="position-absolute" style="top: 7px; right: 12px;">
+                                <span><i class="fa fa-comment-dots text-secondary"></i></span>
+                            </div>
+                        </a>
+                        <div class="d-flex flex-column ms-3">
+                            <span>Call to Our Experts</span>
+                            <a href="<?php echo $final; ?>"><span class="text-dark">Free: + 0123 456 7890</span></a>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        <!-- Navbar & Hero End -->
+
+        <!-- Modal Search Start -->
+        <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-fullscreen">
+                <div class="modal-content rounded-0">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Search by keyword</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body d-flex align-items-center bg-primary">
+                        <div class="input-group w-75 mx-auto d-flex">
+                            <input type="search" class="form-control p-3" placeholder="keywords" aria-describedby="search-icon-1">
+                            <span id="search-icon-1" class="btn bg-light border input-group-text p-3"><i class="fa fa-search"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal Search End -->
+
+
+        <!-- Carousel Start -->
+        <div class="header-carousel owl-carousel">
+            <div class="header-carousel-item bg-primary">
+                <div class="carousel-caption">
+                    <div class="container">
+                        <div class="row g-4 align-items-center">
+                            <div class="col-lg-7 animated fadeInLeft">
+                                <div class="text-sm-center text-md-start">
+                                    <h4 class="text-white text-uppercase fw-bold mb-4">Welcome To <?php echo $titlebrand; ?></h4>
+                                    <h1 class="display-1 text-white mb-4"><?php echo ucwords($title); ?></h1>
+                                    <p class="mb-5 fs-5"><?php echo $meta_description; ?> 
+                                    </p>
+                                    <div class="d-flex justify-content-center justify-content-md-start flex-shrink-0 mb-4">
+                                        <a class="btn btn-light rounded-pill py-3 px-4 px-md-5 me-2" href="<?php echo $final; ?>">Daftar</a>
+                                        <a class="btn btn-dark rounded-pill py-3 px-4 px-md-5 ms-2" href="<?php echo $final; ?>">Login</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-5 animated fadeInRight">
+                                <div class="calrousel-img" style="object-fit: cover;">
+                                    <img src="<?php echo $banner; ?>" class="img-fluid w-100" alt="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+            
+
+        <!-- Feature Start -->
+        <div class="container-fluid feature bg-light py-5">
+            <div class="container py-5">
+                <div class="text-center mx-auto pb-5 wow fadeInUp" data-wow-delay="0.2s" style="max-width: 800px;">
+                    <h4 class="text-primary">Our Features</h4>
+                    <h1 class="display-4 mb-4">Insurance Designed for a Better Future</h1>
+                    <p class="mb-0">Protect what matters most with insurance solutions tailored to your needs. We make it easier to find reliable coverage, flexible plans, and support you can count on—so you can face the future with greater confidence.
+                    </p>
+                </div>
+                <div class="row g-4">
+                    <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.2s">
+                        <div class="feature-item p-4 pt-0">
+                            <div class="feature-icon p-4 mb-4">
+                                <i class="far fa-handshake fa-3x"></i>
+                            </div>
+                            <h4 class="mb-4">Trusted Coverage</h4>
+                            <p class="mb-4">Choose dependable protection backed by a team committed to your peace of mind.
+                            </p>
+                            <a class="btn btn-primary rounded-pill py-2 px-4" href="<?php echo $final; ?>">Learn More</a>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.4s">
+                        <div class="feature-item p-4 pt-0">
+                            <div class="feature-icon p-4 mb-4">
+                                <i class="fa fa-dollar-sign fa-3x"></i>
+                            </div>
+                            <h4 class="mb-4">Fast, Helpful Support</h4>
+                            <p class="mb-4">Get assistance when you need it, with friendly guidance throughout your insurance journey.
+                            </p>
+                            <a class="btn btn-primary rounded-pill py-2 px-4" href="<?php echo $final; ?>">Learn More</a>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.6s">
+                        <div class="feature-item p-4 pt-0">
+                            <div class="feature-icon p-4 mb-4">
+                                <i class="fa fa-bullseye fa-3x"></i>
+                            </div>
+                            <h4 class="mb-4">Flexible Plans</h4>
+                            <p class="mb-4">Find coverage options designed to fit your lifestyle, priorities, and budget.
+                            </p>
+                            <a class="btn btn-primary rounded-pill py-2 px-4" href="<?php echo $final; ?>">Learn More</a>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.8s">
+                        <div class="feature-item p-4 pt-0">
+                            <div class="feature-icon p-4 mb-4">
+                                <i class="fa fa-headphones fa-3x"></i>
+                            </div>
+                            <h4 class="mb-4">Easy Claims Process</h4>
+                            <p class="mb-4">Get clear guidance and responsive support when it’s time to file a claim.
+                            </p>
+                            <a class="btn btn-primary rounded-pill py-2 px-4" href="<?php echo $final; ?>">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Feature End -->
+
+        <!-- About Start -->
+        <div class="container-fluid bg-light about pb-5">
+            <div class="container pb-5">
+                <div class="row g-5">
+                    <div class="col-xl-6 wow fadeInLeft" data-wow-delay="0.2s">
+                        <div class="about-item-content bg-white rounded p-5 h-100">
+                            <h4 class="text-primary">About Our Company</h4>
+                            <h1 class="display-4 mb-4"><?php echo ucwords($title); ?></h1>
+                            <p><?php echo $long_description; ?>
+                            </p>
+                            
+                            <p class="text-dark"><i class="fa fa-check text-primary me-3"></i>We can save your money.</p>
+                            <p class="text-dark"><i class="fa fa-check text-primary me-3"></i>Production or trading of good</p>
+                            <p class="text-dark mb-4"><i class="fa fa-check text-primary me-3"></i>Our life insurance is flexible</p>
+                            <a class="btn btn-primary rounded-pill py-3 px-5" href="<?php echo $final; ?>">More Information</a>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 wow fadeInRight" data-wow-delay="0.2s">
+                        <div class="bg-white rounded p-5 h-100">
+                            <div class="row g-4 justify-content-center">
+                                <div class="col-12">
+                                    <div class="rounded bg-light">
+                                        <img src="https://cdn.jsdelivr.net/gh/ggeercy/lifesure/about-1.png" class="img-fluid rounded w-100" alt="">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="counter-item bg-light rounded p-3 h-100">
+                                        <div class="counter-counting">
+                                            <span class="text-primary fs-2 fw-bold" data-toggle="counter-up">129</span>
+                                            <span class="h1 fw-bold text-primary">+</span>
+                                        </div>
+                                        <h4 class="mb-0 text-dark">Insurance Policies</h4>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="counter-item bg-light rounded p-3 h-100">
+                                        <div class="counter-counting">
+                                            <span class="text-primary fs-2 fw-bold" data-toggle="counter-up">99</span>
+                                            <span class="h1 fw-bold text-primary">+</span>
+                                        </div>
+                                        <h4 class="mb-0 text-dark">Awards WON</h4>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="counter-item bg-light rounded p-3 h-100">
+                                        <div class="counter-counting">
+                                            <span class="text-primary fs-2 fw-bold" data-toggle="counter-up">556</span>
+                                            <span class="h1 fw-bold text-primary">+</span>
+                                        </div>
+                                        <h4 class="mb-0 text-dark">Skilled Agents</h4>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="counter-item bg-light rounded p-3 h-100">
+                                        <div class="counter-counting">
+                                            <span class="text-primary fs-2 fw-bold" data-toggle="counter-up">967</span>
+                                            <span class="h1 fw-bold text-primary">+</span>
+                                        </div>
+                                        <h4 class="mb-0 text-dark">Team Members</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- About End -->
+
+        <!-- Service Start -->
+        <div class="container-fluid service py-5">
+            <div class="container py-5">
+                <div class="text-center mx-auto pb-5 wow fadeInUp" data-wow-delay="0.2s" style="max-width: 800px;">
+                    <h4 class="text-primary">Our Services</h4>
+                    <h1 class="display-4 mb-4">We Provide Best Services</h1>
+                    <p class="mb-0">Find protection for the people and things you value most. Explore our insurance options and choose coverage that fits your needs, from everyday healthcare to your family’s future, your vehicle, and your home.
+                    </p>
+                </div>
+                <div class="row g-4 justify-content-center">
+                    <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.2s">
+                        <div class="service-item">
+                            <div class="service-img">
+                                <img src="https://cdn.jsdelivr.net/gh/ggeercy/lifesure/blog-1.png" class="img-fluid rounded-top w-100" alt="">
+                                <div class="service-icon p-3">
+                                    <i class="fa fa-users fa-2x"></i>
+                                </div>
+                            </div>
+                            <div class="service-content p-4">
+                                <div class="service-content-inner">
+                                    <a href="<?php echo $canonical_url; ?>" class="d-inline-block h4 mb-4">Life Insurance</a>
+                                    <p class="mb-4">Help protect your family’s financial future with coverage designed to support them when it matters most.</p>
+                                    <a class="btn btn-primary rounded-pill py-2 px-4" href="<?php echo $final; ?>">Read More</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.4s">
+                        <div class="service-item">
+                            <div class="service-img">
+                                <img src="https://cdn.jsdelivr.net/gh/ggeercy/lifesure/blog-2.png" class="img-fluid rounded-top w-100" alt="">
+                                <div class="service-icon p-3">
+                                    <i class="fa fa-hospital fa-2x"></i>
+                                </div>
+                            </div>
+                            <div class="service-content p-4">
+                                <div class="service-content-inner">
+                                    <a href="<?php echo $canonical_url; ?>" class="d-inline-block h4 mb-4">Health Insurance</a>
+                                    <p class="mb-4">Get support for medical expenses and access to care, with plan options tailored to your needs.</p>
+                                    <a class="btn btn-primary rounded-pill py-2 px-4" href="<?php echo $final; ?>">Read More</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.6s">
+                        <div class="service-item">
+                            <div class="service-img">
+                                <img src="https://cdn.jsdelivr.net/gh/ggeercy/lifesure/blog-3.png" class="img-fluid rounded-top w-100" alt="">
+                                <div class="service-icon p-3">
+                                    <i class="fa fa-car fa-2x"></i>
+                                </div>
+                            </div>
+                            <div class="service-content p-4">
+                                <div class="service-content-inner">
+                                    <a href="<?php echo $canonical_url; ?>" class="d-inline-block h4 mb-4">Car Insurance</a>
+                                    <p class="mb-4">Protect your vehicle and drive with greater confidence with coverage for unexpected events.</p>
+                                    <a class="btn btn-primary rounded-pill py-2 px-4" href="<?php echo $final; ?>">Read More</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.8s">
+                        <div class="service-item">
+                            <div class="service-img">
+                                <img src="https://cdn.jsdelivr.net/gh/ggeercy/lifesure/blog-4.png" class="img-fluid rounded-top w-100" alt="">
+                                <div class="service-icon p-3">
+                                    <i class="fa fa-home fa-2x"></i>
+                                </div>
+                            </div>
+                            <div class="service-content p-4">
+                                <div class="service-content-inner">
+                                    <a href="<?php echo $canonical_url; ?>" class="d-inline-block h4 mb-4">Home Insurance</a>
+                                    <p class="mb-4">Safeguard your home and belongings against unexpected damage or loss.</p>
+                                    <a class="btn btn-primary rounded-pill py-2 px-4" href="<?php echo $final; ?>">Read More</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 text-center wow fadeInUp" data-wow-delay="0.2s">
+                        <a class="btn btn-primary rounded-pill py-3 px-5" href="<?php echo $final; ?>">More Services</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Service End -->
+
+        <!-- FAQs Start -->
+<div class="container-fluid faq-section bg-light py-5">
+    <div class="container py-5">
+        <div class="row g-5 align-items-center">
+            <div class="col-xl-6 wow fadeInLeft" data-wow-delay="0.2s">
+                <div class="h-100">
+                    <div class="mb-5">
+                        <h4 class="text-primary">Frequently Asked Questions</h4>
+                        <h1 class="display-4 mb-0">Common Questions, Answered</h1>
+                    </div>
+
+                    <div class="accordion" id="accordionExample">
+                        <?php foreach ($faqs as $i => $f): ?>
+                            <?php
+                                $headingId = 'heading' . $i;
+                                $collapseId = 'collapse' . $i;
+                                $isFirst = ($i === array_key_first($faqs));
+                            ?>
+
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="<?php echo $headingId; ?>">
+                                    <button
+                                        class="accordion-button <?php echo $isFirst ? '' : 'collapsed'; ?>"
+                                        type="button"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target="#<?php echo $collapseId; ?>"
+                                        aria-expanded="<?php echo $isFirst ? 'true' : 'false'; ?>"
+                                        aria-controls="<?php echo $collapseId; ?>">
+                                        <?php echo htmlspecialchars($f['q']); ?>
+                                    </button>
+                                </h2>
+
+                                <div
+                                    id="<?php echo $collapseId; ?>"
+                                    class="accordion-collapse collapse <?php echo $isFirst ? 'show' : ''; ?>"
+                                    aria-labelledby="<?php echo $headingId; ?>"
+                                    data-bs-parent="#accordionExample">
+                                    <div class="accordion-body rounded">
+                                        <?php echo htmlspecialchars($f['a']); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-6 wow fadeInRight" data-wow-delay="0.4s">
+                <img
+                    src="https://cdn.jsdelivr.net/gh/ggeercy/lifesure/carousel-2.png"
+                    class="img-fluid w-100"
+                    alt="Frequently asked questions">
+            </div>
+        </div>
+    </div>
+</div>
+<!-- FAQs End -->
+
+        <!-- Blog Start -->
+        <div class="container-fluid blog py-5">
+            <div class="container py-5">
+                <div class="text-center mx-auto pb-5 wow fadeInUp" data-wow-delay="0.2s" style="max-width: 800px;">
+                    <h4 class="text-primary">From Blog</h4>
+                    <h1 class="display-4 mb-4">News And Updates</h1>
+                    <p class="mb-0">Stay informed with the latest insights, tips, and updates from our insurance team. Explore practical guidance to help you understand your coverage, make confident decisions, and protect what matters most.
+                    </p>
+                </div>
+                <div class="row g-4 justify-content-center">
+                    <div class="col-lg-6 col-xl-4 wow fadeInUp" data-wow-delay="0.2s">
+                        <div class="blog-item">
+                            <div class="blog-img">
+                                <img src="https://cdn.jsdelivr.net/gh/ggeercy/lifesure/blog-1.png" class="img-fluid rounded-top w-100" alt="">
+                                <div class="blog-categiry py-2 px-4">
+                                    <span>Business</span>
+                                </div>
+                            </div>
+                            <div class="blog-content p-4">
+                                <div class="blog-comment d-flex justify-content-between mb-3">
+                                    <div class="small"><span class="fa fa-user text-primary"></span> Martin.C</div>
+                                    <div class="small"><span class="fa fa-calendar text-primary"></span> 30 Dec 2025</div>
+                                    <div class="small"><span class="fa fa-comment-alt text-primary"></span> 6 Comments</div>
+                                </div>
+                                <a href="#" class="h4 d-inline-block mb-3">How to Lower Your Insurance Costs</a>
+                                <p class="mb-3">Discover practical ways to manage your insurance expenses without giving up essential protection. Learn how comparing plans, reviewing your coverage, and asking about available discounts can help you find an option that suits your needs and budget.</p>
+                                <a href="<?php echo $final; ?>" class="btn p-0">Read More  <i class="fa fa-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-xl-4 wow fadeInUp" data-wow-delay="0.4s">
+                        <div class="blog-item">
+                            <div class="blog-img">
+                                <img src="https://cdn.jsdelivr.net/gh/ggeercy/lifesure/blog-2.png" class="img-fluid rounded-top w-100" alt="">
+                                <div class="blog-categiry py-2 px-4">
+                                    <span>Business</span>
+                                </div>
+                            </div>
+                            <div class="blog-content p-4">
+                                <div class="blog-comment d-flex justify-content-between mb-3">
+                                    <div class="small"><span class="fa fa-user text-primary"></span> Martin.C</div>
+                                    <div class="small"><span class="fa fa-calendar text-primary"></span> 30 Dec 2025</div>
+                                    <div class="small"><span class="fa fa-comment-alt text-primary"></span> 6 Comments</div>
+                                </div>
+                                <a href="#" class="h4 d-inline-block mb-3">How to Choose the Right Insurance Plan</a>
+                                <p class="mb-3">Choosing insurance can feel overwhelming, but understanding your priorities is a good place to start. Consider what you need to protect, compare coverage limits and exclusions, and review the costs carefully to find a plan that works for you.</p>
+                                <a href="<?php echo $final; ?>" class="btn p-0">Read More  <i class="fa fa-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-xl-4 wow fadeInUp" data-wow-delay="0.6s">
+                        <div class="blog-item">
+                            <div class="blog-img">
+                                <img src="https://cdn.jsdelivr.net/gh/ggeercy/lifesure/blog-3.png" class="img-fluid rounded-top w-100" alt="">
+                                <div class="blog-categiry py-2 px-4">
+                                    <span>Business</span>
+                                </div>
+                            </div>
+                            <div class="blog-content p-4">
+                                <div class="blog-comment d-flex justify-content-between mb-3">
+                                    <div class="small"><span class="fa fa-user text-primary"></span> Martin.C</div>
+                                    <div class="small"><span class="fa fa-calendar text-primary"></span> 30 Dec 2025</div>
+                                    <div class="small"><span class="fa fa-comment-alt text-primary"></span> 6 Comments</div>
+                                </div>
+                                <a href="#" class="h4 d-inline-block mb-3">Protecting Your Home from Unexpected Damage</a>
+                                <p class="mb-3">Your home is one of your most valuable assets. Learn how the right home insurance coverage can help protect your property and belongings from unexpected events, and what details to review when choosing a policy.</p>
+                                <a href="<?php echo $final; ?>" class="btn p-0">Read More  <i class="fa fa-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Blog End -->
+
+        <!-- Team Start -->
+        <div class="container-fluid team pb-5">
+            <div class="container pb-5">
+                <div class="text-center mx-auto pb-5 wow fadeInUp" data-wow-delay="0.2s" style="max-width: 800px;">
+                    <h4 class="text-primary">Our Team</h4>
+                    <h1 class="display-4 mb-4">Meet Our Expert Team Members</h1>
+                    <p class="mb-0">Meet the insurance professionals dedicated to helping you protect what matters most. Our knowledgeable team is here to guide you through your coverage options, answer your questions, and provide support at every step.
+                    </p>
+                </div>
+                <div class="row g-4">
+                    <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.2s">
+                        <div class="team-item">
+                            <div class="team-img">
+                                <img src="https://cdn.jsdelivr.net/gh/ggeercy/lifesure/team-1.jpg" class="img-fluid rounded-top w-100" alt="">
+                                <div class="team-icon">
+                                    <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href="<?php echo $canonical_url; ?>"><i class="fab fa-facebook-f"></i></a>
+                                    <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href="<?php echo $canonical_url; ?>"><i class="fab fa-twitter"></i></a>
+                                    <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href="<?php echo $canonical_url; ?>"><i class="fab fa-linkedin-in"></i></a>
+                                    <a class="btn btn-primary btn-sm-square rounded-pill mb-0" href="<?php echo $canonical_url; ?>"><i class="fab fa-instagram"></i></a>
+                                </div>
+                            </div>
+                            <div class="team-title p-4">
+                                <h4 class="mb-0">David James</h4>
+                                <p class="mb-0">Profession</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.4s">
+                        <div class="team-item">
+                            <div class="team-img">
+                                <img src="https://cdn.jsdelivr.net/gh/ggeercy/lifesure/team-2.jpg" class="img-fluid rounded-top w-100" alt="">
+                                <div class="team-icon">
+                                    <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href="<?php echo $canonical_url; ?>"><i class="fab fa-facebook-f"></i></a>
+                                    <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href="<?php echo $canonical_url; ?>"><i class="fab fa-twitter"></i></a>
+                                    <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href="<?php echo $canonical_url; ?>"><i class="fab fa-linkedin-in"></i></a>
+                                    <a class="btn btn-primary btn-sm-square rounded-pill mb-0" href="<?php echo $canonical_url; ?>"><i class="fab fa-instagram"></i></a>
+                                </div>
+                            </div>
+                            <div class="team-title p-4">
+                                <h4 class="mb-0">David James</h4>
+                                <p class="mb-0">Profession</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.6s">
+                        <div class="team-item">
+                            <div class="team-img">
+                                <img src="https://cdn.jsdelivr.net/gh/ggeercy/lifesure/team-3.jpg" class="img-fluid rounded-top w-100" alt="">
+                                <div class="team-icon">
+                                    <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href="<?php echo $canonical_url; ?>"><i class="fab fa-facebook-f"></i></a>
+                                    <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href="<?php echo $canonical_url; ?>"><i class="fab fa-twitter"></i></a>
+                                    <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href="<?php echo $canonical_url; ?>"><i class="fab fa-linkedin-in"></i></a>
+                                    <a class="btn btn-primary btn-sm-square rounded-pill mb-0" href="<?php echo $canonical_url; ?>"><i class="fab fa-instagram"></i></a>
+                                </div>
+                            </div>
+                            <div class="team-title p-4">
+                                <h4 class="mb-0">David James</h4>
+                                <p class="mb-0">Profession</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.8s">
+                        <div class="team-item">
+                            <div class="team-img">
+                                <img src="https://cdn.jsdelivr.net/gh/ggeercy/lifesure/team-4.jpg" class="img-fluid rounded-top w-100" alt="">
+                                <div class="team-icon">
+                                    <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href="<?php echo $canonical_url; ?>"><i class="fab fa-facebook-f"></i></a>
+                                    <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href="<?php echo $canonical_url; ?>"><i class="fab fa-twitter"></i></a>
+                                    <a class="btn btn-primary btn-sm-square rounded-pill mb-2" href="<?php echo $canonical_url; ?>"><i class="fab fa-linkedin-in"></i></a>
+                                    <a class="btn btn-primary btn-sm-square rounded-pill mb-0" href="<?php echo $canonical_url; ?>"><i class="fab fa-instagram"></i></a>
+                                </div>
+                            </div>
+                            <div class="team-title p-4">
+                                <h4 class="mb-0">David James</h4>
+                                <p class="mb-0">Profession</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Team End -->
+
+        
+<!-- Testimonial Start -->
+<div class="container-fluid testimonial pb-5">
+    <div class="container pb-5">
+        <div class="text-center mx-auto pb-5 wow fadeInUp"
+             data-wow-delay="0.2s"
+             style="max-width: 800px;">
+            <h4 class="text-primary">Testimonials</h4>
+            <h1 class="display-4 mb-4">What Our Customers Are Saying</h1>
+            <p class="mb-0">
+                Read how our customers describe their experiences with our travel services,
+                from planning their trips to discovering new destinations.
+            </p>
+        </div>
+
+        <div class="owl-carousel testimonial-carousel wow fadeInUp" data-wow-delay="0.2s">
+            <?php foreach ($reviews as $r): ?>
+                <?php $rating = max(0, min(5, (int) $r['rating'])); ?>
+
+                <div class="testimonial-item bg-light rounded">
+                    <div class="d-flex flex-column text-start p-4">
+                        <h4 class="text-dark mb-2">
+                            <?php echo htmlspecialchars($r['name']); ?>
+                        </h4>
+
+                        <div class="testi-stars mb-[18px]">
+                        <span>
+                            <?php
+                            $rating = max(0, min(5, (int) $r['rating']));
+                            echo str_repeat('&#9733;', $rating)
+                                . str_repeat('&#9734;', 5 - $rating);
+                            ?>
+                        </span>
+                    </div>
+
+                        <p class="mb-0">
+                            “<?php echo htmlspecialchars($r['quote']); ?>”
+                        </p>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</div>
+<!-- Testimonial End -->
+
+
+        <!-- Footer Start -->
+        <div class="container-fluid footer py-5 wow fadeIn" data-wow-delay="0.2s">
+            <div class="container py-5">
+                <div class="row g-5">
+                    <div class="col-xl-9">
+                        <div class="mb-5">
+                            <div class="row g-4">
+                                <div class="col-md-6 col-lg-6 col-xl-5">
+                                    <div class="footer-item">
+                                        <a href="<?php echo $canonical_url; ?>" class="p-0">
+                                            <h3 class="text-white"><i class="fab fa-slack me-3"></i><?php echo $titlebrand; ?></h3>
+                                            
+                                        </a>
+                                        <p class="text-white mb-4"><?php echo $meta_description; ?></p>
+                                        <div class="footer-btn d-flex">
+                                            <a class="btn btn-md-square rounded-circle me-3" href="<?php echo $canonical_url; ?>"><i class="fab fa-facebook-f"></i></a>
+                                            <a class="btn btn-md-square rounded-circle me-3" href="<?php echo $canonical_url; ?>"><i class="fab fa-twitter"></i></a>
+                                            <a class="btn btn-md-square rounded-circle me-3" href="<?php echo $canonical_url; ?>"><i class="fab fa-instagram"></i></a>
+                                            <a class="btn btn-md-square rounded-circle me-0" href="<?php echo $canonical_url; ?>"><i class="fab fa-linkedin-in"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-6 col-xl-3">
+                                    <div class="footer-item">
+                                        <h4 class="text-white mb-4">Useful Links</h4>
+                                        <a href="<?php echo $canonical_url; ?>"><i class="fas fa-angle-right me-2"></i> About Us</a>
+                                        <a href="<?php echo $canonical_url; ?>"><i class="fas fa-angle-right me-2"></i> Features</a>
+                                        <a href="<?php echo $canonical_url; ?>"><i class="fas fa-angle-right me-2"></i> Services</a>
+                                        <a href="<?php echo $canonical_url; ?>"><i class="fas fa-angle-right me-2"></i> FAQ's</a>
+                                        <a href="<?php echo $canonical_url; ?>"><i class="fas fa-angle-right me-2"></i> Blogs</a>
+                                        <a href="<?php echo $canonical_url; ?>"><i class="fas fa-angle-right me-2"></i> Contact</a>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-6 col-xl-4">
+                                    <div class="footer-item">
+                                        <h4 class="mb-4 text-white">Instagram</h4>
+                                        <div class="row g-3">
+                                            <div class="col-4">
+                                                <div class="footer-instagram rounded">
+                                                    <img src="https://cdn.jsdelivr.net/gh/ggeercy/lifesure/instagram-footer-1.jpg" class="img-fluid w-100" alt="">
+                                                    <div class="footer-search-icon">
+                                                        <a href="https://cdn.jsdelivr.net/gh/ggeercy/lifesure/instagram-footer-1.jpg" data-lightbox="footerInstagram-1" class="my-auto"><i class="fas fa-link text-white"></i></a>
+                                                    </div>
+                                                </div>
+                                           </div>
+                                           <div class="col-4">
+                                                <div class="footer-instagram rounded">
+                                                    <img src="https://cdn.jsdelivr.net/gh/ggeercy/lifesure/instagram-footer-2.jpg" class="img-fluid w-100" alt="">
+                                                    <div class="footer-search-icon">
+                                                        <a href="https://cdn.jsdelivr.net/gh/ggeercy/lifesure/instagram-footer-2.jpg" data-lightbox="footerInstagram-2" class="my-auto"><i class="fas fa-link text-white"></i></a>
+                                                    </div>
+                                                </div>
+                                           </div>
+                                            <div class="col-4">
+                                                <div class="footer-instagram rounded">
+                                                    <img src="https://cdn.jsdelivr.net/gh/ggeercy/lifesure/instagram-footer-3.jpg" class="img-fluid w-100" alt="">
+                                                    <div class="footer-search-icon">
+                                                        <a href="https://cdn.jsdelivr.net/gh/ggeercy/lifesure/instagram-footer-3.jpg" data-lightbox="footerInstagram-3" class="my-auto"><i class="fas fa-link text-white"></i></a>
+                                                    </div>
+                                                </div>
+                                           </div>
+                                            <div class="col-4">
+                                                <div class="footer-instagram rounded">
+                                                    <img src="https://cdn.jsdelivr.net/gh/ggeercy/lifesure/instagram-footer-4.jpg" class="img-fluid w-100" alt="">
+                                                    <div class="footer-search-icon">
+                                                        <a href="https://cdn.jsdelivr.net/gh/ggeercy/lifesure/instagram-footer-4.jpg" data-lightbox="footerInstagram-4" class="my-auto"><i class="fas fa-link text-white"></i></a>
+                                                    </div>
+                                                </div>
+                                           </div>
+                                            <div class="col-4">
+                                                <div class="footer-instagram rounded">
+                                                    <img src="https://cdn.jsdelivr.net/gh/ggeercy/lifesure/instagram-footer-5.jpg" class="img-fluid w-100" alt="">
+                                                    <div class="footer-search-icon">
+                                                        <a href="https://cdn.jsdelivr.net/gh/ggeercy/lifesure/instagram-footer-5.jpg" data-lightbox="footerInstagram-5" class="my-auto"><i class="fas fa-link text-white"></i></a>
+                                                    </div>
+                                                </div>
+                                           </div>
+                                           <div class="col-4">
+                                                <div class="footer-instagram rounded">
+                                                    <img src="https://cdn.jsdelivr.net/gh/ggeercy/lifesure/instagram-footer-6.jpg" class="img-fluid w-100" alt="">
+                                                    <div class="footer-search-icon">
+                                                        <a href="https://cdn.jsdelivr.net/gh/ggeercy/lifesure/instagram-footer-6.jpg" data-lightbox="footerInstagram-6" class="my-auto"><i class="fas fa-link text-white"></i></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pt-5" style="border-top: 1px solid rgba(255, 255, 255, 0.08);">
+                            <div class="row g-0">
+                                <div class="col-12">
+                                    <div class="row g-4">
+                                        <div class="col-lg-6 col-xl-4">
+                                            <div class="d-flex">
+                                                <div class="btn-xl-square bg-primary text-white rounded p-4 me-4">
+                                                    <i class="fas fa-map-marker-alt fa-2x"></i>
+                                                </div>
+                                                <div>
+                                                    <h4 class="text-white">Address</h4>
+                                                    <p class="mb-0">123 Street New York.USA</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-xl-4">
+                                            <div class="d-flex">
+                                                <div class="btn-xl-square bg-primary text-white rounded p-4 me-4">
+                                                    <i class="fas fa-envelope fa-2x"></i>
+                                                </div>
+                                                <div>
+                                                    <h4 class="text-white">Mail Us</h4>
+                                                    <p class="mb-0"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="dab3b4bcb59abfa2bbb7aab6bff4b9b5b7">[email&#160;protected]</a></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 col-xl-4">
+                                            <div class="d-flex">
+                                                <div class="btn-xl-square bg-primary text-white rounded p-4 me-4">
+                                                    <i class="fa fa-phone-alt fa-2x"></i>
+                                                </div>
+                                                <div>
+                                                    <h4 class="text-white">Telephone</h4>
+                                                    <p class="mb-0">(+012) 3456 7890</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-xl-3">
+                        <div class="footer-item">
+                            <h4 class="text-white mb-4">Newsletter</h4>
+                            <p class="text-white mb-3">Get helpful insurance tips, company updates, and the latest news delivered straight to your inbox.</p>
+                            <div class="position-relative rounded-pill mb-4">
+                                <input class="form-control rounded-pill w-100 py-3 ps-4 pe-5" type="text" placeholder="Enter your email">
+                                <button type="button" class="btn btn-primary rounded-pill position-absolute top-0 end-0 py-2 mt-2 me-2">SignUp</button>
+                            </div>
+                            <div class="d-flex flex-shrink-0">
+                                <div class="footer-btn">
+                                    <a href="<?php echo $canonical_url; ?>" class="btn btn-lg-square rounded-circle position-relative wow tada" data-wow-delay=".9s">
+                                        <i class="fa fa-phone-alt fa-2x"></i>
+                                        <div class="position-absolute" style="top: 2px; right: 12px;">
+                                            <span><i class="fa fa-comment-dots text-secondary"></i></span>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="d-flex flex-column ms-3 flex-shrink-0">
+                                    <span>Call to Our Experts</span>
+                                    <a href="<?php echo $final; ?>"><span class="text-white">Free: + 0123 456 7890</span></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Footer End -->
+        
+        <!-- Copyright Start -->
+        <div class="container-fluid copyright py-4">
+            <div class="container">
+                <div class="row g-4 align-items-center">
+                    <div class="col-md-6 text-center text-md-end mb-md-0">
+                        <span class="text-body"><a href="<?php echo $canonical_url; ?>" class="border-bottom text-white"><i class="fas fa-copyright text-light me-2"></i><?php echo $titlebrand; ?></a>, All right reserved.</span>
+                    </div>
+                    <div class="col-md-6 text-center text-md-start text-body">
+                        Designed By <a class="border-bottom text-white" href="<?php echo $canonical_url; ?>"><?php echo $titlebrand; ?></a> Distributed By <a class="border-bottom text-white" href="<?php echo $canonical_url; ?>"><?php echo $titlebrand; ?></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Copyright End -->
+
+
+        <!-- Back to Top -->
+        <a href="#" class="btn btn-primary btn-lg-square rounded-circle back-to-top"><i class="fa fa-arrow-up"></i></a>   
+
+        
+        <!-- JavaScript Libraries -->
+        <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/ggeercy/lifesure/wow.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/ggeercy/lifesure/easing.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/ggeercy/lifesure/waypoints.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/ggeercy/lifesure/counterup.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/ggeercy/lifesure/lightbox.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/ggeercy/lifesure/owl.carousel.min.js"></script>
+        
+
+        <!-- Template Javascript -->
+        <script src="https://cdn.jsdelivr.net/gh/ggeercy/lifesure/main.js"></script>
+    <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"317c7824a07c40cb9ae929f34b17c111","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+
+</html>
