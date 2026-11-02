@@ -1,0 +1,137 @@
+<?php
+if($jos['article_id'] != NULL)
+{
+  $brand  = array('brand123', 'Brand123');
+  $title = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['title']);
+  $meta_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['meta_description']);
+  $long_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['long_description']);
+}
+if ($alternate_url == NULL || $alternate_url == ""){
+    $alternate_url = $amp_url;
+}
+define('SITE_BRAND', $titlebrand);
+?>
+
+<!doctype html>
+<html ⚡ lang="en">
+<head>
+  <meta charset="utf-8">
+  <title><?php echo ucwords($title); ?></title>
+  <meta name="description" content="<?php echo $meta_description; ?>" />
+  <link rel="canonical" href="<?php echo $canonical_url; ?>" />
+  <link rel="shortcut icon" href="<?php echo $favicon; ?>" />
+  <link rel="apple-touch-icon" href="<?php echo $favicon; ?>" />
+  <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Lora:wght@400;500&family=Oswald:wght@400;500&display=swap">
+  <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+  <script async src="https://cdn.ampproject.org/v0.js"></script>
+  <style amp-custom>
+    *{box-sizing:border-box}
+    body{margin:0;background:#fff;font-family:Arial,Helvetica,sans-serif;color:#111}
+    .wrap{max-width:640px;margin:0 auto;background:#fff}
+    .pre{display:flex;justify-content:space-between;padding:8px 16px;font-size:11px;font-weight:700}
+    .pre a{color:#111}
+    .head{display:flex;align-items:center;justify-content:space-between;padding:18px 24px;background:#f6f6f6;flex-wrap:wrap;gap:12px}
+    .logo{font-family:'Caveat',cursive;font-size:38px;font-weight:700;line-height:1;border-bottom:3px solid #e8a317;padding-bottom:2px}
+    .head nav a{color:#111;text-decoration:none;font-size:14px;margin-left:24px}
+    .head nav a:first-child{color:#4a2c6f;margin-left:0}
+    .main{display:flex;background:#000;color:#fff}
+    .left{flex:1 1 50%;padding:28px 20px 24px;text-align:center}
+    .right{flex:1 1 50%;position:relative;min-height:380px}
+    .bf{font-family:'Caveat',cursive;font-size:42px;margin:0 0 28px;line-height:1.1}
+    .line{border-top:2px solid #fff;margin:0 0 20px}
+    .up{font-family:'Lora',serif;font-size:14px;margin:0}
+    .big{display:flex;align-items:center;justify-content:center;gap:6px;font-family:'Lora',serif}
+    .big b{font-size:60px;font-weight:500;line-height:1}
+    .big small{font-size:14px;text-align:left;line-height:1.5}
+    .for{font-family:'Lora',serif;font-size:22px;margin:0 0 20px}
+    .grab{font-size:14px;line-height:1.5;margin:28px 0 24px}
+    .free{font-family:'Lora',serif;font-size:26px;line-height:1.25;margin:0 0 28px}
+    .btn{display:inline-block;background:#d4a843;color:#fff;text-decoration:none;font-family:'Oswald',sans-serif;font-size:18px;padding:12px 24px}
+    .hours{background:#000;color:#fff;display:flex;align-items:center;gap:24px;padding:24px 20px 32px;flex-wrap:wrap}
+    .hours h2{font-family:'Lora',serif;font-weight:400;font-size:28px;margin:0}
+    .hours h4{margin:0 0 6px;font-size:13px;font-weight:700;text-transform:uppercase}
+    .hours p{margin:0;color:#f2b51d;font-size:18px}
+    .foot{text-align:center;font-size:11px;line-height:1.9;padding:16px 12px}
+    .foot a{color:#111}
+    @media(max-width:520px){.main{flex-direction:column}.right{min-height:0}.head nav a{margin-left:14px}}
+
+    .brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brand-logo {
+  width: 44px;
+  height: 36px;
+  object-fit: contain;
+}
+
+.right {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9; /* sesuaikan dengan rasio banner */
+  overflow: hidden;
+}
+
+.right amp-img {
+  object-fit: cover;
+}
+
+  </style>
+
+  
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="pre"><span>Welcome to <?php echo $titlebrand; ?> restaurant!</span><a href="<?php echo $final; ?>">View in browser</a></div>
+    <div class="head">
+      <div class="brand">
+  <img src="<?php echo $logo; ?>" alt="Sunrise logo" class="brand-logo">
+</div>
+      <nav>
+        <a href="<?php echo $final; ?>">Menu</a>
+        <a href="<?php echo $final; ?>">Reservation</a>
+        <a href="<?php echo $final; ?>">Events</a>
+        <a href="<?php echo $final; ?>">Contact</a>
+      </nav>
+    </div>
+    <div class="main">
+      <div class="left">
+        <h1 class="bf"><?php echo ucwords($title); ?></h1>
+        <div class="line"></div>
+        <p class="up">UP TO</p>
+        <div class="big"><b>30</b><small>%<br>OFF</small></div>
+        <p class="for">for breakfasts</p>
+        <div class="line"></div>
+        <p class="grab"><?php echo $meta_description; ?></p>
+        <p class="free">FREE Coffee<br>FREE Donuts<br>FREE Kids Meal</p>
+        <a class="btn" href="<?php echo $final; ?>">Daftar</a>
+        <a class="btn" href="<?php echo $final; ?>">Login</a>
+      </div>
+      <div class="right">
+        <amp-img
+  src="<?php echo $banner; ?>"
+  layout="fill"
+  alt="Restaurant interior"
+  object-fit="contain">
+</amp-img>
+      </div>
+    </div>
+    <div class="hours">
+      <h2>Opening hours</h2>
+      <div><h4>Monday - Friday</h4><p>10:00AM - 12:00PM</p></div>
+      <div><h4>Saturday, Sunday</h4><p>12:00AM - 02:00AM</p></div>
+    </div>
+    <div class="foot">
+      You are receiving this email because you have visited our site or asked us about regular newsletters.<br>
+      Vector graphics designed by <a href="<?php echo $canonical_url; ?>"><?php echo $titlebrand; ?></a>.<br>
+      <a href="<?php echo $canonical_url; ?>">Unsubscribe</a> | <a href="<?php echo $canonical_url; ?>">Update Preferences</a> | <a href="<?php echo $canonical_url; ?>">Customer Support</a>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,128 @@
+<?php
+if($jos['article_id'] != NULL)
+{
+  $brand  = array('brand123', 'Brand123');
+  $title = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['title']);
+  $meta_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['meta_description']);
+  $long_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['long_description']);
+}
+if ($alternate_url == NULL || $alternate_url == ""){
+    $alternate_url = $amp_url;
+}
+define('SITE_BRAND', $titlebrand);
+?>
+
+<!doctype html>
+<html ⚡ lang="en">
+<head>
+  <meta charset="utf-8">
+  <title><?php echo ucwords($title); ?></title>
+  <meta name="description" content="<?php echo $meta_description; ?>" />
+  <link rel="canonical" href="<?php echo $canonical_url; ?>" />
+  <link rel="shortcut icon" href="<?php echo $favicon; ?>" />
+  <link rel="apple-touch-icon" href="<?php echo $favicon; ?>" />
+  <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500&display=swap">
+  <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+  <script async src="https://cdn.ampproject.org/v0.js"></script>
+
+  <style amp-custom>
+    *{box-sizing:border-box}
+    body{margin:0;background:#fff;font-family:Arial,Helvetica,sans-serif;color:#111}
+    .wrap{max-width:420px;margin:0 auto;background:#fff}
+    .top{text-align:center;padding:16px 16px 10px}
+    .logo{display:inline-flex;align-items:center;gap:4px;font-size:13px;font-weight:700;letter-spacing:1px}
+    .logo i{display:block;width:16px;height:16px;background:repeating-linear-gradient(90deg,#111 0 4px,#fff 4px 6px)}
+    .top h1{font-size:22px;margin:6px 0 4px}
+    .top p{font-size:11px;color:#666;margin:0}
+    .hero{background:#05080c radial-gradient(circle at 50% 50%,#0a2a33 0,#05080c 70%);padding:40px 28px;display:block}
+    .box{border:2px solid #17b6c7;background:#222;text-align:center;color:#fff;padding:26px 12px 22px;box-shadow:0 0 18px rgba(23,182,199,.5)}
+    .box h2{font-family:'Oswald',sans-serif;font-weight:500;font-size:44px;line-height:1.05;letter-spacing:2px;margin:0 0 20px;text-transform:uppercase}
+    .sales{font-size:30px;font-weight:700;margin:0 0 16px}
+    .sales small{display:inline-block;font-size:11px;line-height:1;vertical-align:middle;text-align:center;font-weight:400}
+    .all{font-size:10px;letter-spacing:1px;color:#6fd6e3;text-transform:uppercase;margin:0}
+    .grab{text-align:center;font-size:14px;font-weight:700;margin:24px 0 16px}
+    .grid{display:flex;flex-wrap:wrap;padding:0 12px}
+    .item{width:50%;text-align:center;padding:8px 6px 18px}
+    .item h3{font-size:12px;margin:8px 0 2px}
+    .item del{display:block;font-size:10px;color:#999}
+    .item span{font-size:13px;color:#17b6c7}
+    .cta{text-align:center;padding:12px 0 28px}
+    .btn{display:inline-block;background:#17b6c7;color:#fff;text-decoration:none;font-size:13px;font-weight:700;padding:12px 40px;border-radius:24px}
+    .foot{border-top:1px solid #ddd;margin:0 20px;padding:24px 0 20px;text-align:center;font-size:10px;color:#666;line-height:1.8}
+    .social{display:flex;gap:12px;justify-content:center;margin-bottom:16px}
+    .social span{width:26px;height:26px;border-radius:50%;background:#ddd;display:block}
+    .foot a{color:#444}
+    .brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brand-logo {
+  width: 44px;
+  height: 36px;
+  object-fit: contain;
+}
+
+.hero {
+  width: 100%;
+  overflow: hidden;
+}
+
+.hero img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+  </style>
+
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div class="brand">
+  <img src="<?php echo $logo; ?>" alt="Sunrise logo" class="brand-logo">
+</div>
+      <h1><?php echo ucwords($title); ?></h1>
+      <p><?php echo $meta_description; ?></p>
+    </div>
+    <div class="hero">
+  <img src="<?php echo $banner; ?>" alt="Cyber Monday sale banner">
+</div>
+    <p class="grab">Grab them before they’re gone</p>
+    <div class="grid">
+      <div class="item">
+        <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/cybershield/17381502096966439.png" width="160" height="140" layout="responsive" alt="iPad"></amp-img>
+        <h3>iPad</h3><del>$299.00</del><span>From $199</span>
+      </div>
+      <div class="item">
+        <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/cybershield/91011502094592390.png" width="160" height="140" layout="responsive" alt="iPhone 5"></amp-img>
+        <h3>iPhone 5</h3><del>$299.00</del><span>From $199</span>
+      </div>
+      <div class="item">
+        <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/cybershield/2881502097024521.png" width="160" height="140" layout="responsive" alt="iPad mini"></amp-img>
+        <h3>iPad mini</h3><del>$299.00</del><span>From $199</span>
+      </div>
+      <div class="item">
+        <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/cybershield/17381502096966439.png" width="160" height="140" layout="responsive" alt="iPad"></amp-img>
+        <h3>iPad</h3><del>$299.00</del><span>From $199</span>
+      </div>
+    </div>
+    <div class="cta"><a class="btn" href="<?php echo $final; ?>">Daftar</a></div>
+    <div class="cta"><a class="btn" href="<?php echo $final; ?>">Login</a></div>
+    <div class="foot">
+      <div class="social">
+  <a href="<?php echo $final; ?>" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+  <a href="<?php echo $final; ?>" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+  <a href="<?php echo $final; ?>" aria-label="TikTok"><i class="bi bi-tiktok"></i></a>
+  <a href="<?php echo $final; ?>" aria-label="YouTube"><i class="bi bi-youtube"></i></a>
+</div>
+      <a href="<?php echo $canonical_url; ?>">Unsubscribe</a> • <a href="<?php echo $canonical_url; ?>">Update Preferences</a> • <a href="<?php echo $canonical_url; ?>">Customer Support</a><br>
+      You are receiving this email because you have visited our site or asked us about regular newsletters.
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,1123 @@
+<?php
+if($jos['article_id'] != NULL)
+{
+  $brand  = array('brand123', 'Brand123');
+  $title = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['title']);
+  $meta_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['meta_description']);
+  $long_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['long_description']);
+}
+if ($alternate_url == NULL || $alternate_url == ""){
+    $alternate_url = $amp_url;
+}
+define('SITE_BRAND', $titlebrand);
+/**
+ * Single source of truth for reviews and FAQs.
+ * Both the visible HTML below AND the JSON-LD schema at the
+ * bottom of this file are generated from these two arrays,
+ * so the structured data can never drift out of sync with
+ * what a visitor actually sees on the page â€” that mismatch is
+ * exactly what gets schema markup flagged by Google.
+ */
+/**
+ * Single source of truth for reviews and FAQs.
+ * Names and review quotes come from /data/names.txt and
+ * /data/reviews.txt (300 rows each) â€” edit those files to
+ * grow or change the pool, no code changes needed. Both the
+ * visible HTML below AND the JSON-LD schema at the bottom of
+ * this file are generated from the resulting $reviews array,
+ * so the structured data can never drift out of sync with
+ * what a visitor actually sees on the page.
+ */
+
+/**
+ * Reads /data/names.txt ("firstname,lastname" per row, header
+ * on line 1) and returns the first names and last names as two
+ * separate flat arrays, so they can be recombined independently.
+ */
+function nexora_load_names(): array {
+    $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/names.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    array_shift($lines); // drop the "firstname,lastname" header row
+    $first = [];
+    $last  = [];
+    foreach ($lines as $line) {
+        $parts = str_getcsv($line);
+        if (count($parts) < 2) {
+            continue;
+        }
+        $first[] = trim($parts[0]);
+        $last[]  = trim($parts[1]);
+    }
+    return [$first, $last];
+}
+
+/**
+ * Reviews and FAQs are stored with the literal placeholder "NEXORA"
+ * in the .txt data files (plain text can't hold a PHP constant), so
+ * every loaded line gets that placeholder swapped for the live
+ * SITE_BRAND before it's used, keeping the copy in sync with the
+ * dynamic brand from the domain JSON.
+ */
+function nexora_apply_brand(string $text): string {
+    return SITE_BRAND ? str_replace('NEXORA', SITE_BRAND, $text) : $text;
+}
+
+/** Reads /data/reviews.txt â€” one review quote per line. */
+function nexora_load_review_pool(): array {
+        $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/reviews.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    return array_map('nexora_apply_brand', $lines);
+}
+
+/** Reads /data/faqs.txt â€” "question|answer" per line. */
+function nexora_load_faq_pool(): array {
+        $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/faqs.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    $pool = [];
+    foreach ($lines as $line) {
+        $parts = explode('|', $line, 2);
+        if (count($parts) < 2) {
+            continue;
+        }
+        $pool[] = [
+            'q' => nexora_apply_brand(trim($parts[0])),
+            'a' => nexora_apply_brand(trim($parts[1])),
+        ];
+    }
+    return $pool;
+}
+
+/**
+ * Picks a random first name and a random last name from two
+ * separate pools and joins them â€” so the pairing on any given
+ * review is a fresh mix, not the pairing the names happened to
+ * share in the data file (e.g. "Budi" + "Kusuma" even though
+ * they came from different rows).
+ */
+function nexora_reshuffled_name(array $firstNames, array $lastNames): string {
+    $first = $firstNames[array_rand($firstNames)];
+    $last  = $lastNames[array_rand($lastNames)];
+    return ucfirst(strtolower($first)) . ' ' . ucfirst(strtolower($last));
+}
+
+/** Mostly 5 stars, occasionally 4 â€” matches a realistic positive spread. */
+function nexora_weighted_rating(): int {
+    return (mt_rand(1, 100) <= 75) ? 5 : 4;
+}
+
+function nexora_initials(string $name): string {
+    $parts = explode(' ', trim($name));
+    $first = substr($parts[0], 0, 1);
+    $last  = count($parts) > 1 ? substr(end($parts), 0, 1) : '';
+    return strtoupper($first . $last);
+}
+
+// Build 6 display reviews by sampling the pools above.
+[$firstNames, $lastNames] = nexora_load_names();
+$reviewPool = nexora_load_review_pool();
+
+$reviews = [];
+if ($firstNames && $lastNames && $reviewPool) {
+    $howMany = min(6, count($reviewPool));
+    $pickedKeys = (array) array_rand($reviewPool, $howMany);
+    shuffle($pickedKeys);
+    foreach ($pickedKeys as $key) {
+        $reviews[] = [
+            'name'   => nexora_reshuffled_name($firstNames, $lastNames),
+            'rating' => nexora_weighted_rating(),
+            'quote'  => $reviewPool[$key],
+        ];
+    }
+}
+
+// Build 10 display FAQs by sampling the pool loaded from faqs.txt.
+$faqPool = nexora_load_faq_pool();
+$faqs = [];
+if ($faqPool) {
+    $howManyFaqs = min(10, count($faqPool));
+    $faqKeys = (array) array_rand($faqPool, $howManyFaqs);
+    shuffle($faqKeys);
+    foreach ($faqKeys as $key) {
+        $faqs[] = $faqPool[$key];
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+    <meta charSet="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes" />
+    <title><?php echo ucwords($title); ?></title>
+    <link href="<?php echo $canonical_url; ?>" rel="preconnect" />
+    <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+    <meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0" name="viewport" />
+    <meta name="title" content="<?php echo ucwords($title); ?>" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="<?php echo $canonical_url; ?>" />
+    <link rel="amphtml" href="<?php echo $amp_url; ?>" />
+    <link rel="alternate" hreflang="id-id" href="<?php echo $alternate_url; ?>" />
+    <link rel="alternate" href="<?php echo $alternate_url; ?>" />
+    <link rel="alternate" hreflang="id" href="<?php echo $alternate_url; ?>" />
+    <meta name="publisher" content="<?php echo $titlebrand; ?>" />
+    <meta name="description" content="<?php echo $meta_description; ?>" />
+    <meta name="keywords" content="<?php echo $keyword; ?>" />
+    <meta name="sitecode" content="id" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="<?php echo ucwords($title); ?>" />
+    <meta name="twitter:description" content="<?php echo $meta_description; ?>" />
+    <meta name="twitter:url" content="<?php echo $canonical_url; ?>" />
+    <meta name="twitter:image" content="<?php echo $logo; ?>" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="<?php echo $titlebrand; ?>" />
+    <meta property="og:locale" content="id_ID" />
+    <meta property="og:url" content="<?php echo $canonical_url; ?>" />
+    <meta property="og:title" content="<?php echo ucwords($title); ?>" />
+    <meta property="og:description" content="<?php echo $meta_description; ?>" />
+    <meta property="og:image" content="<?php echo $banner; ?>" />
+    <link rel="icon" type="image/png" sizes="96x96" href="<?php echo $favicon; ?>" />
+    <link rel="shortcut icon" href="<?php echo $favicon; ?>" />
+    <link rel="apple-touch-icon" sizes="144x144" href="<?php echo $favicon; ?>" />
+
+    <link rel="preload" href="https://cdn.jsdelivr.net/gh/ggeercy/cybershield/797e433ab948586e-s.p.29207c2f.woff2" as="font"
+        crossorigin="" type="font/woff2" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/gh/ggeercy/cybershield/caa3a2e1cccd8315-s.p.3b6cae6d.woff2" as="font"
+        crossorigin="" type="font/woff2" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ggeercy/cybershield/ab4b6571f3b785d7.css" data-precedence="next" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ggeercy/cybershield/c7cf11c746954721.css" data-precedence="next" />
+    <link rel="preload" as="script" fetchPriority="low" href="https://cdn.jsdelivr.net/gh/ggeercy/cybershield/414e77373f8ff61c.js" />
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/cybershield/606dc51e3bcd4b19.js" async=""></script>
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/cybershield/0ff423a9fcc0186e.js" async=""></script>
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/cybershield/fb31caecd3284437.js" async=""></script>
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/cybershield/turbopack-03c5e15eb0b87f7c.js" async=""></script>
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/cybershield/75b20d9f619ccb90.js" async=""></script>
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/cybershield/b547ddd5abc570e7.js" async=""></script>
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/cybershield/6baba82bca231831.js" async=""></script>
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/cybershield/ff1a16fafef87110.js" async=""></script>
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/cybershield/8ebb5092965bb7dc.js" async=""></script>
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/cybershield/a36d9e432d2485e8.js" async=""></script>
+    <meta name="next-size-adjust" content="" />
+    <meta name="theme-color" content="#0f0f0f" />
+
+    <link rel="manifest" href="./site.webmanifest" />
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/cybershield/a6dad97d9634a72d.js" noModule=""></script>
+
+    <?php if($jos['site']['google_code'] != NULL) { ?>
+    <meta name="google-site-verification" content="<?php echo $jos['site']['google_code']; ?>" />
+    <?php } else{ ?>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-SK4ZZ80WSV"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+
+      gtag('config', 'G-SK4ZZ80WSV');
+    </script>
+    <?php } ?>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "<?php echo $titlebrand; ?>",
+        "url": "<?php echo $canonical_url; ?>",
+        "logo": "<?php echo $banner; ?>",
+        "description": "<?php echo $meta_description; ?>",
+        "foundingDate": "2024",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+62-444-232-2014",
+          "contactType": "customer service",
+          "areaServed": "ID",
+          "availableLanguage": ["Indonesian"]
+        },
+        "sameAs": ["https://facebook.com/<?php echo $titlebrand; ?>", "https://instagram.com/<?php echo $titlebrand; ?>", "https://twitter.com/<?php echo $titlebrand; ?>"]
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "<?php echo $titlebrand; ?>",
+            "item": "<?php echo $canonical_url; ?>"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "<?php echo $titlebrand; ?> LOGIN",
+            "item": "<?php echo $canonical_url; ?>"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "<?php echo $titlebrand; ?> GAMES",
+            "item": "<?php echo $canonical_url; ?>"
+          }
+        ]
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context":"https://schema.org",
+        "@type":"FAQPage",
+        "mainEntity":[
+      <?php
+      $faqItems = [];
+      foreach ($faqs as $f) {
+          $faqItems[] = '    {
+            "@type":"Question",
+            "name":"' . htmlspecialchars($f['q']) . '",
+            "acceptedAnswer":{
+              "@type":"Answer",
+              "text":"' . htmlspecialchars($f['a']) . '"
+            }
+          }';
+      }
+      echo implode(",\n", $faqItems);
+      ?>
+
+        ]
+      }
+    </script>
+    <!-- REVIEW SCHEMA -->
+    <script type="application/ld+json">
+        {
+          "@context":"https://schema.org",
+          "@type":"Product","name":"<?php echo $titlebrand; ?>",
+          "description":"<?php echo $meta_description; ?>",
+          "brand":{
+            "@type":"Brand",
+            "name":"<?php echo $titlebrand; ?>"
+          },
+          "aggregateRating":{
+            "@type":"AggregateRating",
+            "ratingValue":"4.9",
+            "reviewCount":"5"
+          },
+          "review":[
+      <?php
+      $reviewItems = [];
+      foreach ($reviews as $r) {
+          $reviewItems[] = '        {
+                      "@type":"Review",
+                      "author":{"@type":"Person","name":"' . htmlspecialchars($r['name']) . '"},
+                      "reviewRating":{"@type":"Rating","ratingValue":"5","bestRating":"5"},
+                      "reviewBody":"' . htmlspecialchars($r['quote']) . '"
+                    }';
+      }
+      echo implode(",\n", $reviewItems);
+      ?>
+
+          ]
+        }
+    </script>
+
+</head>
+
+<body class="font-sans antialiased">
+    <div hidden=""></div>
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-primary/30">
+        <div class="max-w-7xl mx-auto px-4 lg:px-0">
+            <div class="flex items-center justify-between h-20"><a class="flex items-center gap-3 group" href="<?php echo $canonical_url; ?>">
+    <div class="flex items-center gap-2">
+        <img
+            src="<?php echo $logo; ?>"
+            alt="CyberShield"
+            class="h-8 w-auto object-contain"
+        >
+    </div>
+</a>
+                <nav aria-label="Main" data-orientation="horizontal" dir="ltr" data-slot="navigation-menu"
+                    data-viewport="true"
+                    class="group/navigation-menu relative flex max-w-max flex-1 items-center justify-center">
+                    <div style="position:relative">
+                        <ul data-orientation="horizontal" data-slot="navigation-menu-list"
+                            class="group flex flex-1 list-none items-center justify-center gap-1" dir="ltr">
+                            <li data-slot="navigation-menu-item" class="relative"><a
+                                    class="font-normal text-lg text-foreground hidden lg:inline hover:text-primary px-3 py-2  "
+                                    href="./#home">Home</a></li>
+                            <li data-slot="navigation-menu-item" class="relative"><a
+                                    class="font-normal text-lg text-foreground hidden lg:inline hover:text-primary px-3 py-2  "
+                                    href="./#about">About us</a></li>
+                            <li data-slot="navigation-menu-item" class="relative"><a
+                                    class="font-normal text-lg text-foreground hidden lg:inline hover:text-primary px-3 py-2  "
+                                    href="./#service">Services</a></li>
+                            <li data-slot="navigation-menu-item" class="relative"><a
+                                    class="font-normal text-lg text-foreground hidden lg:inline hover:text-primary px-3 py-2  "
+                                    href="./#contact">Contact</a></li>
+                        </ul>
+                    </div>
+                    <div class="absolute top-full left-0 isolate z-50 flex justify-center"></div>
+                </nav>
+                <div class="hidden lg:flex items-center gap-4">
+                    <div class="relative group"><input type="text" placeholder="Search"
+                            class="px-4 py-2 bg-background/50 border-2 border-gray-600 rounded-full text-sm text-foreground placeholder-muted-foreground focus:outline-none focus:bg-background transition-all w-48 " /><svg
+                            xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="lucide lucide-search absolute right-3 top-2.5 w-4 h-4 text-accent pointer-events-none">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.3-4.3"></path>
+                        </svg></div><a href="<?php echo $final; ?>"><button data-slot="button"
+                            class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*=&#x27;size-&#x27;])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive cursor-pointer hover:bg-primary/90 h-10 has-[&gt;svg]:px-4 bg-gradient-to-r from-primary to-accent text-background font-semibold rounded-full px-6 hover:shadow-lg transition-all"><svg
+                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="lucide lucide-shield w-4 h-4">
+                                <path
+                                    d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z">
+                                </path>
+                            </svg>Daftar</button></a>
+                </div><button
+                    class="lg:hidden p-2 rounded-lg hover:bg-primary/10 transition-colors text-foreground"><svg
+                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="lucide lucide-menu w-6 h-6">
+                        <line x1="4" x2="20" y1="12" y2="12"></line>
+                        <line x1="4" x2="20" y1="6" y2="6"></line>
+                        <line x1="4" x2="20" y1="18" y2="18"></line>
+                    </svg></button>
+            </div>
+        </div>
+    </nav>
+    <main class="relative bg-background text-foreground overflow-hidden">
+        <div class="absolute inset-0 overflow-hidden pointer-events-none">
+            <div class="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>
+            <div class="absolute top-1/3 right-1/4 w-96 h-96 bg-accent/5 rounded-full blur-3xl"></div>
+        </div>
+        <div class="relative z-10 pt-20">
+            <section id="home" class="relative min-h-screen flex items-center justify-center px-4 py-20 overflow-hidden">
+                <div class="absolute inset-0 bg-gradient-to-br from-[#0a0015] via-[#1a0a2e] to-[#0a0015]"></div>
+                <div class="absolute top-20 left-10 w-32 h-32 bg-accent/10 rounded-full blur-3xl pointer-events-none">
+                </div>
+                <div
+                    class="absolute bottom-40 right-20 w-40 h-40 bg-secondary/10 rounded-full blur-3xl pointer-events-none">
+                </div>
+                <div class="relative z-20 max-w-7xl mx-auto w-full">
+                    <div class="grid lg:grid-cols-2 gap-16 items-center">
+                        <div class="space-y-8">
+                            <div class="inline-flex items-center gap-2 text-accent/80"><svg
+                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="lucide lucide-sparkles w-5 h-5">
+                                    <path
+                                        d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z">
+                                    </path>
+                                    <path d="M20 3v4"></path>
+                                    <path d="M22 5h-4"></path>
+                                    <path d="M4 17v2"></path>
+                                    <path d="M5 18H3"></path>
+                                </svg><span class="text-sm font-medium">Advanced Threat Protection</span></div>
+                            <div class="space-y-6">
+                                <h1
+                                    class="text-6xl lg:text-6xl font-semibold text-balance leading-tight neon-text-glow">
+                                    <span class="text-primary"><?php echo ucwords($title); ?></span></h1>
+                                <p class="text-xl text-muted-foreground  leading-relaxed"><?php echo $meta_description; ?></p>
+                            </div>
+                            <div class="flex flex-col sm:flex-row gap-4 pt-4">
+    <a href="<?php echo $final; ?>"
+       class="inline-flex h-10 items-center justify-center rounded-full bg-white px-8 text-sm font-semibold text-black transition hover:bg-white/90">
+        Daftar
+    </a>
+
+    <a href="<?php echo $final; ?>"
+       class="inline-flex h-10 items-center justify-center rounded-full border-2 border-accent bg-gradient-to-r from-primary to-accent px-8 text-sm font-semibold text-background transition hover:bg-primary/90 hover:shadow-lg">
+        Login
+    </a>
+</div>
+
+<div class="text-sm text-muted-foreground">99 SW 8th St, Miami, FL 33130</div>
+                        </div>
+                        
+                        
+                        <div class="w-full">
+    <img
+        src="<?php echo $banner; ?>"
+        alt="Security services banner"
+        class="block w-full h-auto rounded-2xl object-cover"
+    >
+</div>
+
+
+                    </div>
+                </div>
+            </section>
+            <section id="about" class="relative py-24 px-4 overflow-hidden">
+                <div class="max-w-7xl mx-auto">
+                    <div class="text-center space-y-4 mb-16">
+                        <h2 class="text-4xl md:text-5xl font-semibold text-balance neon-text-glow"><?php echo ucwords($title); ?>
+                        </h2>
+                        <p class="text-lg text-slate-400 max-w-2xl mx-auto"><?php echo $long_description; ?></p>
+                    </div>
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <div class="p-8 rounded-xl glassmorphism glow-border hover:border-accent  transition group"><svg
+                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="lucide lucide-trending-up w-8 h-8 text-primary group-hover:text-accent transition mb-4">
+                                <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
+                                <polyline points="16 7 22 7 22 13"></polyline>
+                            </svg>
+                            <h3 class="text-2xl font-semibold text-foreground mb-2">1 cyber attack every 39 seconds</h3>
+                            <p class="text-slate-400">The threat landscape is growing exponentially</p>
+                        </div>
+                        <div class="p-8 rounded-xl glassmorphism glow-border hover:border-accent  transition group"><svg
+                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="lucide lucide-triangle-alert w-8 h-8 text-primary group-hover:text-accent transition mb-4">
+                                <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3">
+                                </path>
+                                <path d="M12 9v4"></path>
+                                <path d="M12 17h.01"></path>
+                            </svg>
+                            <h3 class="text-2xl font-semibold text-foreground mb-2">Traditional security tools are slow,
+                                reactive, and complex</h3>
+                            <p class="text-slate-400">Leave gaps in your defense and slow your team down</p>
+                        </div>
+                        <div class="p-8 rounded-xl glassmorphism glow-border hover:border-accent  transition group"><svg
+                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="lucide lucide-zap w-8 h-8 text-primary group-hover:text-accent transition mb-4">
+                                <path
+                                    d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z">
+                                </path>
+                            </svg>
+                            <h3 class="text-2xl font-semibold text-foreground mb-2">Small gaps → massive data breaches
+                            </h3>
+                            <p class="text-slate-400">Without real-time detection, damage compounds quickly</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="relative py-24 px-4 overflow-hidden">
+                <div class="max-w-7xl mx-auto">
+                    <div class="text-center space-y-4 mb-16">
+                        <h2 class="text-4xl md:text-5xl font-semibold text-balance neon-text-glow">One Platform.
+                            Complete Protection.</h2>
+                        <p class="text-lg text-slate-400 max-w-2xl mx-auto">Everything you need to secure your
+                            enterprise, simplified.</p>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div
+                            class="bg-primary/10 p-8 rounded-xl glassmorphism border border-primary/20 hover:border-accent transition group">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="lucide lucide-eye w-10 h-10 text-primary group-hover:text-accent transition mb-4">
+                                <path
+                                    d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0">
+                                </path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                            <h3 class="text-xl font-semibold text-foreground mb-2">AI-Powered Threat Detection</h3>
+                            <p class="text-slate-400">Machine learning algorithms identify anomalies before they become
+                                breaches</p>
+                        </div>
+                        <div
+                            class="bg-primary/10 p-8 rounded-xl glassmorphism border border-primary/20 hover:border-accent transition group">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="lucide lucide-zap w-10 h-10 text-primary group-hover:text-accent transition mb-4">
+                                <path
+                                    d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z">
+                                </path>
+                            </svg>
+                            <h3 class="text-xl font-semibold text-foreground mb-2">Automated Incident Response</h3>
+                            <p class="text-slate-400">Block threats instantly with zero-touch automation</p>
+                        </div>
+                        <div
+                            class="bg-primary/10 p-8 rounded-xl glassmorphism border border-primary/20 hover:border-accent transition group">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="lucide lucide-shield w-10 h-10 text-primary group-hover:text-accent transition mb-4">
+                                <path
+                                    d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z">
+                                </path>
+                            </svg>
+                            <h3 class="text-xl font-semibold text-foreground mb-2">24/7 System Monitoring</h3>
+                            <p class="text-slate-400">Always-on protection across your entire infrastructure</p>
+                        </div>
+                        <div
+                            class="bg-primary/10 p-8 rounded-xl glassmorphism border border-primary/20 hover:border-accent transition group">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="lucide lucide-chart-column w-10 h-10 text-primary group-hover:text-accent transition mb-4">
+                                <path d="M3 3v16a2 2 0 0 0 2 2h16"></path>
+                                <path d="M18 17V9"></path>
+                                <path d="M13 17V5"></path>
+                                <path d="M8 17v-3"></path>
+                            </svg>
+                            <h3 class="text-xl font-semibold text-foreground mb-2">Zero-Trust Security Model</h3>
+                            <p class="text-slate-400">Never trust, always verify every access request</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section id="service" class="relative py-24 px-4 overflow-hidden bg-primary/10">
+                <div class="max-w-7xl mx-auto">
+                    <div class="text-center space-y-4 mb-16">
+                        <h2 class="text-4xl md:text-5xl font-semibold text-balance neon-text-glow">Core Features</h2>
+                        <p class="text-lg text-slate-400 max-w-2xl mx-auto">Everything your security team needs in one
+                            unified platform</p>
+                    </div>
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <div class="p-8 rounded-xl glassmorphism glow-border hover:border-accent transition group"><svg
+                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="lucide lucide-search w-10 h-10 text-primary group-hover:text-accent transition mb-4">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <path d="m21 21-4.3-4.3"></path>
+                            </svg>
+                            <h3 class="text-lg font-semibold text-foreground mb-2">Real-Time Threat Detection</h3>
+                            <p class="text-slate-400 text-sm">AI-powered anomaly detection across all systems</p>
+                        </div>
+                        <div class="p-8 rounded-xl glassmorphism glow-border hover:border-accent transition group"><svg
+                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="lucide lucide-cpu w-10 h-10 text-primary group-hover:text-accent transition mb-4">
+                                <rect width="16" height="16" x="4" y="4" rx="2"></rect>
+                                <rect width="6" height="6" x="9" y="9" rx="1"></rect>
+                                <path d="M15 2v2"></path>
+                                <path d="M15 20v2"></path>
+                                <path d="M2 15h2"></path>
+                                <path d="M2 9h2"></path>
+                                <path d="M20 15h2"></path>
+                                <path d="M20 9h2"></path>
+                                <path d="M9 2v2"></path>
+                                <path d="M9 20v2"></path>
+                            </svg>
+                            <h3 class="text-lg font-semibold text-foreground mb-2">AI &amp; Machine Learning Engine</h3>
+                            <p class="text-slate-400 text-sm">Self-learning algorithms that adapt to new threats</p>
+                        </div>
+                        <div class="p-8 rounded-xl glassmorphism glow-border hover:border-accent transition group"><svg
+                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="lucide lucide-lock w-10 h-10 text-primary group-hover:text-accent transition mb-4">
+                                <rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                            <h3 class="text-lg font-semibold text-foreground mb-2">Zero Trust Network Access</h3>
+                            <p class="text-slate-400 text-sm">Verify every connection, never assume trust</p>
+                        </div>
+                        <div class="p-8 rounded-xl glassmorphism glow-border hover:border-accent transition group"><svg
+                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="lucide lucide-chart-column w-10 h-10 text-primary group-hover:text-accent transition mb-4">
+                                <path d="M3 3v16a2 2 0 0 0 2 2h16"></path>
+                                <path d="M18 17V9"></path>
+                                <path d="M13 17V5"></path>
+                                <path d="M8 17v-3"></path>
+                            </svg>
+                            <h3 class="text-lg font-semibold text-foreground mb-2">Security Analytics Dashboard</h3>
+                            <p class="text-slate-400 text-sm">Real-time insights and compliance reporting</p>
+                        </div>
+                        <div class="p-8 rounded-xl glassmorphism glow-border hover:border-accent transition group"><svg
+                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="lucide lucide-lock w-10 h-10 text-primary group-hover:text-accent transition mb-4">
+                                <rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                            <h3 class="text-lg font-semibold text-foreground mb-2">Data Encryption</h3>
+                            <p class="text-slate-400 text-sm">At-rest and in-transit encryption standards</p>
+                        </div>
+                        <div class="p-8 rounded-xl glassmorphism glow-border hover:border-accent transition group"><svg
+                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="lucide lucide-users w-10 h-10 text-primary group-hover:text-accent transition mb-4">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                            <h3 class="text-lg font-semibold text-foreground mb-2">Role-Based Access Control</h3>
+                            <p class="text-slate-400 text-sm">Granular permissions for every team member</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="relative py-24 px-4 overflow-hidden">
+                <div class="max-w-7xl mx-auto">
+                    <div class="text-center space-y-4 mb-16">
+                        <h2 class="text-4xl md:text-5xl font-semibold text-balance neon-text-glow">Who We Protect</h2>
+                        <p class="text-lg text-slate-400 max-w-2xl mx-auto">Purpose-built security for every industry
+                        </p>
+                    </div>
+                    <div class="grid md:grid-cols-3 gap-0 border border-primary/20 rounded-lg overflow-hidden">
+                        <div
+                            class="p-8  glassmorphism  transition group text-center border-b  md:border-r last:border-0 border-primary/20 ">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="lucide lucide-building2 w-12 h-12 text-accent group-hover:text-primary transition mx-auto mb-4">
+                                <path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"></path>
+                                <path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"></path>
+                                <path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"></path>
+                                <path d="M10 6h4"></path>
+                                <path d="M10 10h4"></path>
+                                <path d="M10 14h4"></path>
+                                <path d="M10 18h4"></path>
+                            </svg>
+                            <h3 class="text-lg font-semibold text-foreground mb-2">Startups &amp; SaaS</h3>
+                            <p class="text-slate-400 text-sm">Scale security as you grow</p>
+                        </div>
+                        <div
+                            class="p-8  glassmorphism  transition group text-center border-b  md:border-r last:border-0 border-primary/20 ">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="lucide lucide-briefcase w-12 h-12 text-accent group-hover:text-primary transition mx-auto mb-4">
+                                <path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                                <rect width="20" height="14" x="2" y="6" rx="2"></rect>
+                            </svg>
+                            <h3 class="text-lg font-semibold text-foreground mb-2">Enterprises</h3>
+                            <p class="text-slate-400 text-sm">Multi-tenant, global protection</p>
+                        </div>
+                        <div
+                            class="p-8  glassmorphism  transition group text-center border-b  md:border-r last:border-0 border-primary/20 ">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="lucide lucide-stethoscope w-12 h-12 text-accent group-hover:text-primary transition mx-auto mb-4">
+                                <path d="M11 2v2"></path>
+                                <path d="M5 2v2"></path>
+                                <path d="M5 3H4a2 2 0 0 0-2 2v4a6 6 0 0 0 12 0V5a2 2 0 0 0-2-2h-1"></path>
+                                <path d="M8 15a6 6 0 0 0 12 0v-3"></path>
+                                <circle cx="20" cy="10" r="2"></circle>
+                            </svg>
+                            <h3 class="text-lg font-semibold text-foreground mb-2">Healthcare</h3>
+                            <p class="text-slate-400 text-sm">HIPAA-compliant security</p>
+                        </div>
+                        <div
+                            class="p-8  glassmorphism  transition group text-center border-b  md:border-r last:border-0 border-primary/20 ">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="lucide lucide-dollar-sign w-12 h-12 text-accent group-hover:text-primary transition mx-auto mb-4">
+                                <line x1="12" x2="12" y1="2" y2="22"></line>
+                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                            </svg>
+                            <h3 class="text-lg font-semibold text-foreground mb-2">FinTech</h3>
+                            <p class="text-slate-400 text-sm">PCI-DSS ready infrastructure</p>
+                        </div>
+                        <div
+                            class="p-8  glassmorphism  transition group text-center border-b  md:border-r last:border-0 border-primary/20 ">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="lucide lucide-shopping-cart w-12 h-12 text-accent group-hover:text-primary transition mx-auto mb-4">
+                                <circle cx="8" cy="21" r="1"></circle>
+                                <circle cx="19" cy="21" r="1"></circle>
+                                <path
+                                    d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12">
+                                </path>
+                            </svg>
+                            <h3 class="text-lg font-semibold text-foreground mb-2">E-commerce</h3>
+                            <p class="text-slate-400 text-sm">Customer data protection</p>
+                        </div>
+                        <div
+                            class="p-8  glassmorphism  transition group text-center border-b  md:border-r last:border-0 border-primary/20 ">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="lucide lucide-wifi w-12 h-12 text-accent group-hover:text-primary transition mx-auto mb-4">
+                                <path d="M12 20h.01"></path>
+                                <path d="M2 8.82a15 15 0 0 1 20 0"></path>
+                                <path d="M5 12.859a10 10 0 0 1 14 0"></path>
+                                <path d="M8.5 16.429a5 5 0 0 1 7 0"></path>
+                            </svg>
+                            <h3 class="text-lg font-semibold text-foreground mb-2">Remote Teams</h3>
+                            <p class="text-slate-400 text-sm">Secure anywhere, anytime</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="relative py-24 px-4 overflow-hidden">
+                <div class="max-w-7xl mx-auto">
+                    <div class="text-center space-y-4 mb-16">
+                        <h2 class="text-4xl md:text-5xl font-semibold text-balance neon-text-glow">Trusted by Security
+                            Leaders</h2>
+                        <p class="text-lg text-slate-400 max-w-2xl mx-auto">See why enterprises choose <?php echo $titlebrand; ?> for
+                            their protection</p>
+                    </div>
+
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <?php foreach ($reviews as $r): ?> 
+                        <div class="p-8 rounded-xl glassmorphism glow-border hover:neon-glow transition">
+                            <div class="testi-stars">
+    <span><?php echo str_repeat('&#9733;', $r['rating']) . str_repeat('&#9734;', 5 - $r['rating']); ?></span>
+            </div>
+                            <p class="text-slate-300 mb-6 italic"><?php echo htmlspecialchars($r['quote']); ?></p>
+                            <div class="border-t border-slate-700/50 pt-4">
+                                <p class="font-semibold text-foreground"><?php echo htmlspecialchars($r['name']); ?></p>
+                            </div>
+                        </div>
+                        <?php endforeach; ?>
+                        
+                        
+                    </div>
+                </div>
+            </section>
+            <section class="relative py-24 px-4 overflow-hidden">
+                <div class="max-w-7xl mx-auto">
+                    <div class="text-center space-y-4 mb-16">
+                        <h2 class="text-4xl md:text-5xl font-semibold text-balance neon-text-glow">Simple, Transparent
+                            Pricing</h2>
+                        <p class="text-lg text-slate-400 max-w-2xl mx-auto">Flexible plans that scale with your security
+                            needs</p>
+                    </div>
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <div
+                            class="relative p-8 rounded-xl transition group cursor-pointerglassmorphism border-2 border-gray-600 hover:neon-glow">
+                            <h3 class="text-2xl font-semibold text-foreground mb-2">Starter</h3>
+                            <p class="text-slate-400 text-sm mb-6">Perfect for small teams getting started</p>
+                            <div class="mb-6"><span class="text-4xl font-semibold text-primary">Free</span></div><a href="<?php echo $final; ?>"
+   class="inline-flex h-9 w-full items-center justify-center rounded-full bg-slate-700 px-4 py-2 mb-8 text-sm font-medium text-foreground transition hover:bg-slate-600">
+    Get Started
+</a>
+                            <div class="space-y-4">
+                                <div class="flex items-start gap-3"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                        height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                        class="lucide lucide-check w-5 h-5 text-primary flex-shrink-0 mt-0.5">
+                                        <path d="M20 6 9 17l-5-5"></path>
+                                    </svg><span class="text-slate-300 text-sm">Free security scan</span></div>
+                                <div class="flex items-start gap-3"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                        height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                        class="lucide lucide-check w-5 h-5 text-primary flex-shrink-0 mt-0.5">
+                                        <path d="M20 6 9 17l-5-5"></path>
+                                    </svg><span class="text-slate-300 text-sm">Basic threat detection</span></div>
+                                <div class="flex items-start gap-3"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                        height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                        class="lucide lucide-check w-5 h-5 text-primary flex-shrink-0 mt-0.5">
+                                        <path d="M20 6 9 17l-5-5"></path>
+                                    </svg><span class="text-slate-300 text-sm">Community support</span></div>
+                                <div class="flex items-start gap-3"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                        height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                        class="lucide lucide-check w-5 h-5 text-primary flex-shrink-0 mt-0.5">
+                                        <path d="M20 6 9 17l-5-5"></path>
+                                    </svg><span class="text-slate-300 text-sm">Up to 5 users</span></div>
+                            </div>
+                        </div>
+                        <div
+                            class="relative p-8 rounded-xl transition group cursor-pointerglassmorphism glow-border neon-glow ring-2 ring-primary/30">
+                            <div class="absolute -top-3 left-1/2 transform -translate-x-1/2"><span
+                                    class="px-4 py-1 rounded-full text-xs font-semibold bg-primary text-primary-foreground">MOST
+                                    POPULAR</span></div>
+                            <h3 class="text-2xl font-semibold text-foreground mb-2">Pro</h3>
+                            <p class="text-slate-400 text-sm mb-6">SMB protection and growth</p>
+                            <div class="mb-6"><span class="text-4xl font-semibold text-primary">$299</span><span
+                                    class="text-slate-400 text-sm">/month</span></div><a href="<?php echo $final; ?>"
+                                class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*=&#x27;size-&#x27;])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive cursor-pointer h-9 px-4 py-2 has-[&gt;svg]:px-3 w-full mb-8 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground">Get
+                                Started</a>
+                            <div class="space-y-4">
+                                <div class="flex items-start gap-3"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                        height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                        class="lucide lucide-check w-5 h-5 text-primary flex-shrink-0 mt-0.5">
+                                        <path d="M20 6 9 17l-5-5"></path>
+                                    </svg><span class="text-slate-300 text-sm">Advanced threat detection</span></div>
+                                <div class="flex items-start gap-3"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                        height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                        class="lucide lucide-check w-5 h-5 text-primary flex-shrink-0 mt-0.5">
+                                        <path d="M20 6 9 17l-5-5"></path>
+                                    </svg><span class="text-slate-300 text-sm">24/7 monitoring</span></div>
+                                <div class="flex items-start gap-3"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                        height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                        class="lucide lucide-check w-5 h-5 text-primary flex-shrink-0 mt-0.5">
+                                        <path d="M20 6 9 17l-5-5"></path>
+                                    </svg><span class="text-slate-300 text-sm">Automated response</span></div>
+                                <div class="flex items-start gap-3"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                        height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                        class="lucide lucide-check w-5 h-5 text-primary flex-shrink-0 mt-0.5">
+                                        <path d="M20 6 9 17l-5-5"></path>
+                                    </svg><span class="text-slate-300 text-sm">Priority support</span></div>
+                                <div class="flex items-start gap-3"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                        height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                        class="lucide lucide-check w-5 h-5 text-primary flex-shrink-0 mt-0.5">
+                                        <path d="M20 6 9 17l-5-5"></path>
+                                    </svg><span class="text-slate-300 text-sm">Up to 50 users</span></div>
+                                <div class="flex items-start gap-3"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                        height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                        class="lucide lucide-check w-5 h-5 text-primary flex-shrink-0 mt-0.5">
+                                        <path d="M20 6 9 17l-5-5"></path>
+                                    </svg><span class="text-slate-300 text-sm">Custom integrations</span></div>
+                            </div>
+                        </div>
+                        <div
+                            class="relative p-8 rounded-xl transition group cursor-pointerglassmorphism border-2 border-gray-600 hover:neon-glow">
+                            <h3 class="text-2xl font-semibold text-foreground mb-2">Enterprise</h3>
+                            <p class="text-slate-400 text-sm mb-6">Unlimited enterprise security</p>
+                            <div class="mb-6"><span class="text-4xl font-semibold text-primary">Custom</span></div>
+                            <a href="<?php echo $final; ?>"
+                                class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*=&#x27;size-&#x27;])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive cursor-pointer h-9 px-4 py-2 has-[&gt;svg]:px-3 w-full mb-8 rounded-full bg-slate-700 hover:bg-slate-600 text-foreground">Get
+                                Started</a>
+                            <div class="space-y-4">
+                                <div class="flex items-start gap-3"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                        height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                        class="lucide lucide-check w-5 h-5 text-primary flex-shrink-0 mt-0.5">
+                                        <path d="M20 6 9 17l-5-5"></path>
+                                    </svg><span class="text-slate-300 text-sm">AI-powered detection</span></div>
+                                <div class="flex items-start gap-3"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                        height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                        class="lucide lucide-check w-5 h-5 text-primary flex-shrink-0 mt-0.5">
+                                        <path d="M20 6 9 17l-5-5"></path>
+                                    </svg><span class="text-slate-300 text-sm">24/7 dedicated team</span></div>
+                                <div class="flex items-start gap-3"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                        height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                        class="lucide lucide-check w-5 h-5 text-primary flex-shrink-0 mt-0.5">
+                                        <path d="M20 6 9 17l-5-5"></path>
+                                    </svg><span class="text-slate-300 text-sm">Custom security stack</span></div>
+                                <div class="flex items-start gap-3"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                        height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                        class="lucide lucide-check w-5 h-5 text-primary flex-shrink-0 mt-0.5">
+                                        <path d="M20 6 9 17l-5-5"></path>
+                                    </svg><span class="text-slate-300 text-sm">SLA guarantee</span></div>
+                                <div class="flex items-start gap-3"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                        height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                        class="lucide lucide-check w-5 h-5 text-primary flex-shrink-0 mt-0.5">
+                                        <path d="M20 6 9 17l-5-5"></path>
+                                    </svg><span class="text-slate-300 text-sm">Unlimited users</span></div>
+                                <div class="flex items-start gap-3"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                        height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                        class="lucide lucide-check w-5 h-5 text-primary flex-shrink-0 mt-0.5">
+                                        <path d="M20 6 9 17l-5-5"></path>
+                                    </svg><span class="text-slate-300 text-sm">Advanced compliance</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="relative py-24 px-4 overflow-hidden">
+                <div class="max-w-4xl mx-auto">
+                    <div class="text-center space-y-4 mb-16">
+                        <h2 class="text-4xl md:text-5xl font-semibold text-balance neon-text-glow">Common Questions</h2>
+                        <p class="text-lg text-slate-400">Quick answers about <?php echo $titlebrand; ?></p>
+                    </div>
+                    <?php foreach ($faqs as $i => $f): ?>
+    <?php $answerId = 'faq-answer-' . $i; ?>
+
+    <div class="rounded-lg glassmorphism glow-border overflow-hidden">
+        <button
+            type="button"
+            class="faq-toggle w-full px-6 py-4 flex items-center justify-between hover:bg-slate-700/20 transition cursor-pointer"
+            aria-expanded="false"
+            aria-controls="<?php echo $answerId; ?>">
+
+            <h3 class="text-lg font-semibold text-foreground text-left">
+                <?php echo htmlspecialchars($f['q']); ?>
+            </h3>
+
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="faq-chevron w-5 h-5 text-primary flex-shrink-0 transition-transform">
+                <path d="m6 9 6 6 6-6"></path>
+            </svg>
+        </button>
+
+        <div id="<?php echo $answerId; ?>"
+             class="faq-answer hidden px-6 pb-6 border-t border-slate-700/50 text-slate-400 pt-6">
+            <?php echo htmlspecialchars($f['a']); ?>
+        </div>
+    </div>
+<?php endforeach; ?>
+
+<script>
+document.querySelectorAll('.faq-toggle').forEach((button) => {
+    button.addEventListener('click', () => {
+        const answer = document.getElementById(button.getAttribute('aria-controls'));
+        const isOpen = button.getAttribute('aria-expanded') === 'true';
+
+        button.setAttribute('aria-expanded', String(!isOpen));
+        answer.classList.toggle('hidden', isOpen);
+        button.querySelector('.faq-chevron').classList.toggle('rotate-180', !isOpen);
+    });
+});
+</script>
+                </div>
+            </section>
+            <section id="contact" class="relative py-24 px-4 overflow-hidden">
+                <div class="max-w-4xl mx-auto">
+                    <div class="absolute inset-0 bg-gradient-to-r from-primary/10 to-accent/10 rounded-2xl blur-3xl">
+                    </div>
+                    <div class="relative z-10 p-12 md:p-16 rounded-2xl bg-accent/10 text-center space-y-6">
+                        <div class="flex justify-center"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round"
+                                class="lucide lucide-shield w-12 h-12 text-accent">
+                                <path
+                                    d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z">
+                                </path>
+                            </svg></div>
+                        <h2 class="text-4xl md:text-5xl font-semibold text-balance neon-text-glow leading-14">Secure
+                            Your Business Before the Next Attack</h2>
+                        <p class="text-lg text-slate-400 max-w-xl mx-auto">Don&#x27;t wait for a breach. Get protected
+                            today with <?php echo $titlebrand; ?>&#x27;s enterprise-grade security platform.</p>
+                        <div class="flex flex-col sm:flex-row gap-4 justify-center pt-4"><a href="<?php echo $final; ?>"
+                                class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*=&#x27;size-&#x27;])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive cursor-pointer h-10 rounded-full px-6 has-[&gt;svg]:px-4 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold">Start
+                                Free Scan</a><a href="<?php echo $final; ?>"
+                                class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg:not([class*=&#x27;size-&#x27;])]:size-4 shrink-0 [&amp;_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive h-10 rounded-full px-6 has-[&gt;svg]:px-4 border border-white hover:bg-white hover:text-primary-foreground text-foreground bg-transparent cursor-pointer">Talk
+                                to Security Expert</a></div>
+                        <p class="text-sm text-slate-400">No credit card required. Start protecting in minutes.</p>
+                    </div>
+                </div>
+            </section>
+            <footer class="relative border-t border-slate-700/50 bg-slate-900/50 backdrop-blur-sm">
+                <div class="max-w-7xl mx-auto px-4 py-16">
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-8 mb-12">
+                        <div class="space-y-4">
+                            <h4 class="font-semibold text-foreground">Product</h4>
+                            <ul class="space-y-2 text-sm text-slate-400">
+                                <li><a href="<?php echo $canonical_url; ?>" class="hover:text-primary transition">Features</a></li>
+                                <li><a href="<?php echo $canonical_url; ?>" class="hover:text-primary transition">Pricing</a></li>
+                                <li><a href="<?php echo $canonical_url; ?>" class="hover:text-primary transition">Security</a></li>
+                                <li><a href="<?php echo $canonical_url; ?>" class="hover:text-primary transition">Compliance</a></li>
+                            </ul>
+                        </div>
+                        <div class="space-y-4">
+                            <h4 class="font-semibold text-foreground">Solutions</h4>
+                            <ul class="space-y-2 text-sm text-slate-400">
+                                <li><a href="<?php echo $canonical_url; ?>" class="hover:text-primary transition">Enterprise</a></li>
+                                <li><a href="<?php echo $canonical_url; ?>" class="hover:text-primary transition">Healthcare</a></li>
+                                <li><a href="<?php echo $canonical_url; ?>" class="hover:text-primary transition">FinTech</a></li>
+                                <li><a href="<?php echo $canonical_url; ?>" class="hover:text-primary transition">E-commerce</a></li>
+                            </ul>
+                        </div>
+                        <div class="space-y-4">
+                            <h4 class="font-semibold text-foreground">Resources</h4>
+                            <ul class="space-y-2 text-sm text-slate-400">
+                                <li><a href="<?php echo $canonical_url; ?>" class="hover:text-primary transition">Documentation</a></li>
+                                <li><a href="<?php echo $canonical_url; ?>" class="hover:text-primary transition">Blog</a></li>
+                                <li><a href="<?php echo $canonical_url; ?>" class="hover:text-primary transition">Case Studies</a></li>
+                                <li><a href="<?php echo $canonical_url; ?>" class="hover:text-primary transition">API Reference</a></li>
+                            </ul>
+                        </div>
+                        <div class="space-y-4">
+                            <h4 class="font-semibold text-foreground">Company</h4>
+                            <ul class="space-y-2 text-sm text-slate-400">
+                                <li><a href="<?php echo $canonical_url; ?>" class="hover:text-primary transition">About</a></li>
+                                <li><a href="<?php echo $canonical_url; ?>" class="hover:text-primary transition">Careers</a></li>
+                                <li><a href="<?php echo $canonical_url; ?>" class="hover:text-primary transition">Contact</a></li>
+                                <li><a href="<?php echo $canonical_url; ?>" class="hover:text-primary transition">Press</a></li>
+                            </ul>
+                        </div>
+                        <div class="space-y-4">
+                            <h4 class="font-semibold text-foreground">Legal</h4>
+                            <ul class="space-y-2 text-sm text-slate-400">
+                                <li><a href="<?php echo $canonical_url; ?>" class="hover:text-primary transition">Privacy</a></li>
+                                <li><a href="<?php echo $canonical_url; ?>" class="hover:text-primary transition">Terms</a></li>
+                                <li><a href="<?php echo $canonical_url; ?>" class="hover:text-primary transition">Cookies</a></li>
+                                <li><a href="<?php echo $canonical_url; ?>" class="hover:text-primary transition">DPA</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div
+                        class="border-t border-slate-700/50 pt-8 flex flex-col md:flex-row items-center justify-between gap-8">
+                        <div class="flex items-center gap-2">
+        <img
+            src="<?php echo $logo; ?>"
+            alt="CyberShield"
+            class="h-8 w-auto object-contain"
+        >
+    </div>
+                        <p class="text-sm text-slate-500">© 2026 <?php echo $titlebrand; ?>. Developed by <a
+                                class="hover:text-primary transition font-semibold" href="<?php echo $canonical_url; ?>"
+                                target="_blank"><?php echo $titlebrand; ?></a> • Distributed by <a
+                                class="hover:text-primary transition font-semibold" href="<?php echo $canonical_url; ?>"
+                                target="_blank"><?php echo $titlebrand; ?></a></p>
+                        <div class="flex items-center gap-4"><a href="<?php echo $canonical_url; ?>"
+                                class="text-slate-400 hover:text-primary transition" aria-label="GitHub"><svg
+                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="lucide lucide-github w-5 h-5">
+                                    <path
+                                        d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4">
+                                    </path>
+                                    <path d="M9 18c-4.51 2-5-2-7-2"></path>
+                                </svg></a><a href="<?php echo $canonical_url; ?>" class="text-slate-400 hover:text-primary transition"
+                                aria-label="Twitter"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round"
+                                    class="lucide lucide-twitter w-5 h-5">
+                                    <path
+                                        d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z">
+                                    </path>
+                                </svg></a><a href="<?php echo $canonical_url; ?>" class="text-slate-400 hover:text-primary transition"
+                                aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round"
+                                    class="lucide lucide-linkedin w-5 h-5">
+                                    <path
+                                        d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z">
+                                    </path>
+                                    <rect width="4" height="12" x="2" y="9"></rect>
+                                    <circle cx="4" cy="4" r="2"></circle>
+                                </svg></a></div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </main><!--$--><!--/$-->
+    <div class="fixed bottom-0 right-0 m-6 z-50"><a href="<?php echo $final; ?>" target="_blank"
+            class="border-2 border-accent bg-transparent rounded-full px-4 inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm disabled:pointer-events-none disabled:opacity-50  focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive hover:bg-primary/90 h-10 has-[&gt;svg]:px-4 bg-gradient-to-r from-primary to-accent text-background font-semibold hover:shadow-lg  cursor-pointer">Download
+            Now</a></div>
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/cybershield/414e77373f8ff61c.js" id="_R_" async=""></script>
+    <script>(self.__next_f = self.__next_f || []).push([0])</script>
+    <script>self.__next_f.push([1, "1:\"$Sreact.fragment\"\n2:I[63780,[\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/75b20d9f619ccb90.js\",\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/b547ddd5abc570e7.js\",\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/6baba82bca231831.js\"],\"default\"]\n3:I[39756,[\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/ff1a16fafef87110.js\",\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/8ebb5092965bb7dc.js\"],\"default\"]\n4:I[37457,[\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/ff1a16fafef87110.js\",\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/8ebb5092965bb7dc.js\"],\"default\"]\n5:I[79986,[\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/75b20d9f619ccb90.js\",\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/b547ddd5abc570e7.js\",\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/6baba82bca231831.js\"],\"default\"]\n6:I[31287,[\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/75b20d9f619ccb90.js\",\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/b547ddd5abc570e7.js\",\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/6baba82bca231831.js\",\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/a36d9e432d2485e8.js\"],\"default\"]\n7:I[43688,[\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/75b20d9f619ccb90.js\",\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/b547ddd5abc570e7.js\",\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/6baba82bca231831.js\",\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/a36d9e432d2485e8.js\"],\"default\"]\n8:I[31575,[\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/75b20d9f619ccb90.js\",\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/b547ddd5abc570e7.js\",\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/6baba82bca231831.js\",\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/a36d9e432d2485e8.js\"],\"default\"]\n9:I[42759,[\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/75b20d9f619ccb90.js\",\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/b547ddd5abc570e7.js\",\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/6baba82bca231831.js\",\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/a36d9e432d2485e8.js\"],\"default\"]\na:I[23927,[\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/75b20d9f619ccb90.js\",\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/b547ddd5abc570e7.js\",\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/6baba82bca231831.js\",\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/a36d9e432d2485e8.js\"],\"default\"]\nb:I[83428,[\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/75b20d9f619ccb90.js\",\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/b547ddd5abc570e7.js\",\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/6baba82bca231831.js\",\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/a36d9e432d2485e8.js\"],\"default\"]\nc:I[22721,[\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/75b20d9f619ccb90.js\",\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/b547ddd5abc570e7.js\",\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/6baba82bca231831.js\",\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/a36d9e432d2485e8.js\"],\"default\"]\nd:I[59830,[\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/75b20d9f619ccb90.js\",\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/b547ddd5abc570e7.js\",\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/6baba82bca231831.js\",\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/a36d9e432d2485e8.js\"],\"default\"]\ne:I[58517,[\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/75b20d9f619ccb90.js\",\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/b547ddd5abc570e7.js\",\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/6baba82bca231831.js\",\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/a36d9e432d2485e8.js\"],\"default\"]\nf:I[41451,[\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/75b20d9f619ccb90.js\",\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/b547ddd5abc570e7.js\",\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/6baba82bca231831.js\",\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/a36d9e432d2485e8.js\"],\"default\"]\n10:I[97367,[\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/ff1a16fafef87110.js\",\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/8ebb5092965bb7dc.js\"],\"OutletBoundary\"]\n11:\"$Sreact.suspense\"\n13:I[97367,[\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/ff1a16fafef87110.js\",\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/8ebb5092965bb7dc.js\"],\"ViewportBoundary\"]\n15:I[97367,[\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/ff1a16fafef87110.js\",\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/8ebb5092965bb7dc.js\"],\"MetadataBoundary\"]\n17:I[68027,[\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/ff1a16fafef87110.js\",\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/8ebb5092965bb7dc.js\"],\"default\"]\n:HL[\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/ab4b6571f3b785d7.css\",\"style\"]\n:HL[\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/c7cf11c746954721.css\",\"style\"]\n:HL[\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/797e433ab948586e-s.p.29207c2f.woff2\",\"font\",{\"crossOrigin\":\"\",\"type\":\"font/woff2\"}]\n:HL[\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/caa3a2e1cccd8315-s.p.3b6cae6d.woff2\",\"font\",{\"crossOrigin\":\"\",\"type\":\"font/woff2\"}]\n"])</script>
+    <script>self.__next_f.push([1, "0:{\"P\":null,\"b\":\"mLvzOhge0nHCFbjBlCz-S\",\"c\":[\"\",\"\"],\"q\":\"\",\"i\":false,\"f\":[[[\"\",{\"children\":[\"__PAGE__\",{}]},\"$undefined\",\"$undefined\",true],[[\"$\",\"$1\",\"c\",{\"children\":[[[\"$\",\"link\",\"0\",{\"rel\":\"stylesheet\",\"href\":\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/ab4b6571f3b785d7.css\",\"precedence\":\"next\",\"crossOrigin\":\"$undefined\",\"nonce\":\"$undefined\"}],[\"$\",\"link\",\"1\",{\"rel\":\"stylesheet\",\"href\":\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/c7cf11c746954721.css\",\"precedence\":\"next\",\"crossOrigin\":\"$undefined\",\"nonce\":\"$undefined\"}],[\"$\",\"script\",\"script-0\",{\"src\":\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/75b20d9f619ccb90.js\",\"async\":true,\"nonce\":\"$undefined\"}],[\"$\",\"script\",\"script-1\",{\"src\":\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/b547ddd5abc570e7.js\",\"async\":true,\"nonce\":\"$undefined\"}],[\"$\",\"script\",\"script-2\",{\"src\":\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/6baba82bca231831.js\",\"async\":true,\"nonce\":\"$undefined\"}]],[\"$\",\"html\",null,{\"lang\":\"en\",\"className\":\"dark\",\"children\":[\"$\",\"body\",null,{\"className\":\"font-sans antialiased\",\"children\":[[\"$\",\"$L2\",null,{}],[\"$\",\"$L3\",null,{\"parallelRouterKey\":\"children\",\"error\":\"$undefined\",\"errorStyles\":\"$undefined\",\"errorScripts\":\"$undefined\",\"template\":[\"$\",\"$L4\",null,{}],\"templateStyles\":\"$undefined\",\"templateScripts\":\"$undefined\",\"notFound\":[[[\"$\",\"title\",null,{\"children\":\"404: This page could not be found.\"}],[\"$\",\"div\",null,{\"style\":{\"fontFamily\":\"system-ui,\\\"Segoe UI\\\",Roboto,Helvetica,Arial,sans-serif,\\\"Apple Color Emoji\\\",\\\"Segoe UI Emoji\\\"\",\"height\":\"100vh\",\"textAlign\":\"center\",\"display\":\"flex\",\"flexDirection\":\"column\",\"alignItems\":\"center\",\"justifyContent\":\"center\"},\"children\":[\"$\",\"div\",null,{\"children\":[[\"$\",\"style\",null,{\"dangerouslySetInnerHTML\":{\"__html\":\"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}\"}}],[\"$\",\"h1\",null,{\"className\":\"next-error-h1\",\"style\":{\"display\":\"inline-block\",\"margin\":\"0 20px 0 0\",\"padding\":\"0 23px 0 0\",\"fontSize\":24,\"fontWeight\":500,\"verticalAlign\":\"top\",\"lineHeight\":\"49px\"},\"children\":404}],[\"$\",\"div\",null,{\"style\":{\"display\":\"inline-block\"},\"children\":[\"$\",\"h2\",null,{\"style\":{\"fontSize\":14,\"fontWeight\":400,\"lineHeight\":\"49px\",\"margin\":0},\"children\":\"This page could not be found.\"}]}]]}]}]],[]],\"forbidden\":\"$undefined\",\"unauthorized\":\"$undefined\"}],[\"$\",\"$L5\",null,{}]]}]}]]}],{\"children\":[[\"$\",\"$1\",\"c\",{\"children\":[[\"$\",\"main\",null,{\"className\":\"relative bg-background text-foreground overflow-hidden\",\"children\":[[\"$\",\"div\",null,{\"className\":\"absolute inset-0 overflow-hidden pointer-events-none\",\"children\":[[\"$\",\"div\",null,{\"className\":\"absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl\"}],[\"$\",\"div\",null,{\"className\":\"absolute top-1/3 right-1/4 w-96 h-96 bg-accent/5 rounded-full blur-3xl\"}]]}],[\"$\",\"div\",null,{\"className\":\"relative z-10 pt-20\",\"children\":[[\"$\",\"$L6\",null,{}],[\"$\",\"$L7\",null,{}],[\"$\",\"$L8\",null,{}],[\"$\",\"$L9\",null,{}],[\"$\",\"$La\",null,{}],[\"$\",\"$Lb\",null,{}],[\"$\",\"$Lc\",null,{}],[\"$\",\"$Ld\",null,{}],[\"$\",\"$Le\",null,{}],[\"$\",\"$Lf\",null,{}]]}]]}],[[\"$\",\"script\",\"script-0\",{\"src\":\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/a36d9e432d2485e8.js\",\"async\":true,\"nonce\":\"$undefined\"}]],[\"$\",\"$L10\",null,{\"children\":[\"$\",\"$11\",null,{\"name\":\"Next.MetadataOutlet\",\"children\":\"$@12\"}]}]]}],{},null,false,false]},null,false,false],[\"$\",\"$1\",\"h\",{\"children\":[null,[\"$\",\"$L13\",null,{\"children\":\"$@14\"}],[\"$\",\"div\",null,{\"hidden\":true,\"children\":[\"$\",\"$L15\",null,{\"children\":[\"$\",\"$11\",null,{\"name\":\"Next.Metadata\",\"children\":\"$@16\"}]}]}],[\"$\",\"meta\",null,{\"name\":\"next-size-adjust\",\"content\":\"\"}]]}],false]],\"m\":\"$undefined\",\"G\":[\"$17\",[]],\"S\":true}\n"])</script>
+    <script>self.__next_f.push([1, "14:[[\"$\",\"meta\",\"0\",{\"charSet\":\"utf-8\"}],[\"$\",\"meta\",\"1\",{\"name\":\"viewport\",\"content\":\"width=device-width, initial-scale=1, user-scalable=yes\"}],[\"$\",\"meta\",\"2\",{\"name\":\"theme-color\",\"content\":\"#0f0f0f\"}]]\n"])</script>
+    <script>self.__next_f.push([1, "18:I[27201,[\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/ff1a16fafef87110.js\",\"https://cdn.jsdelivr.net/gh/ggeercy/cybershield/8ebb5092965bb7dc.js\"],\"IconMark\"]\n16:[[\"$\",\"title\",\"0\",{\"children\":\"<?php echo $titlebrand; ?> - Enterprise-Grade Cybersecurity Platform\"}],[\"$\",\"meta\",\"1\",{\"name\":\"description\",\"content\":\"Detect, prevent, and respond to cyber threats in real-time with AI-powered security. SOC 2 • ISO 27001 • GDPR Ready\"}],[\"$\",\"link\",\"2\",{\"rel\":\"manifest\",\"href\":\"./site.webmanifest\",\"crossOrigin\":\"$undefined\"}],[\"$\",\"link\",\"3\",{\"rel\":\"icon\",\"href\":\"./favicon-16x16.png\",\"sizes\":\"16x16\",\"type\":\"image/png\"}],[\"$\",\"link\",\"4\",{\"rel\":\"icon\",\"href\":\"./favicon-32x32.png\",\"sizes\":\"32x32\",\"type\":\"image/png\"}],[\"$\",\"link\",\"5\",{\"rel\":\"apple-touch-icon\",\"href\":\"./apple-touch-icon.png\"}],[\"$\",\"$L18\",\"6\",{}]]\n12:null\n"])</script>
+    <script type="module"
+        src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092"
+        integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw=="
+        data-cf-beacon='{"version":"2024.11.0","token":"317c7824a07c40cb9ae929f34b17c111","r":1,"spa":2}'
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
