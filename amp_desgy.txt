@@ -1,0 +1,168 @@
+<?php
+if($jos['article_id'] != NULL)
+{
+  $brand  = array('brand123', 'Brand123');
+  $title = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['title']);
+  $meta_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['meta_description']);
+  $long_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['long_description']);
+}
+if ($alternate_url == NULL || $alternate_url == ""){
+    $alternate_url = $amp_url;
+}
+define('SITE_BRAND', $titlebrand);
+?>
+
+<!doctype html>
+<html ⚡ lang="en">
+<head>
+  <meta charset="utf-8">
+  <title><?php echo ucwords($title); ?></title>
+  <meta name="description" content="<?php echo $meta_description; ?>" />
+  <link rel="canonical" href="<?php echo $canonical_url; ?>">
+  <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+  <link rel="icon" type="image/png" sizes="96x96" href="<?php echo $favicon; ?>" />
+  <link rel="shortcut icon" href="<?php echo $favicon; ?>" />
+  <link rel="apple-touch-icon" sizes="144x144" href="<?php echo $favicon; ?>" />
+
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Open+Sans:wght@400;600&display=swap">
+  <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+  <script async src="https://cdn.ampproject.org/v0.js"></script>
+  <style amp-custom>
+    *{box-sizing:border-box}
+    body{margin:0;background:#2b2b2b;font-family:'Open Sans',Arial,sans-serif;color:#fff}
+    .wrap{max-width:480px;margin:0 auto;background:#2b2b2b}
+    .pre{display:flex;justify-content:space-between;padding:6px 16px;font-size:9px;color:#aaa}
+    .pre a{color:#aaa}
+    .head{background:#fff;display:flex;align-items:center;justify-content:space-between;padding:10px 16px}
+    .logo{background:#3b4a9c;color:#fff;font-size:9px;font-weight:700;padding:8px 10px;border:2px solid #d33;text-align:center;line-height:1.2}
+    .head nav a{color:#222;text-decoration:none;font-size:9px;margin-left:16px}
+    .hero{background:#14172b radial-gradient(circle at 20% 30%,#252a52 0,#14172b 70%);display:flex;align-items:center;justify-content:space-between;padding:44px 24px 24px;gap:12px}
+    .hero h1{font-family:'Orbitron',sans-serif;font-weight:500;font-size:28px;line-height:1.25;margin:0;text-transform:uppercase;text-shadow:0 0 8px #8fb4ff,0 0 16px #4a6fe0}
+    .off{text-align:right;color:#8fb4ff;font-size:11px}
+    .off b{display:block;font-family:'Orbitron',sans-serif;font-size:36px;line-height:1;font-weight:700;margin-top:4px;text-shadow:0 0 10px #4a6fe0}
+    .off em{display:block;font-style:normal;font-size:10px;color:#cdd6f5;margin-top:10px}
+    .promo{background:#14172b;text-align:center;font-size:10px;line-height:1.8;color:#cfd3e6;padding:20px 28px 24px;margin:0}
+    .promo b{color:#8fb4ff}
+    .feats{background:#14172b;display:flex;justify-content:space-around;text-align:center;padding:8px 8px 28px}
+    .f{flex:1}
+    .f i{display:block;width:34px;height:34px;margin:0 auto 10px;border:2px solid #8fb4ff;border-radius:4px}
+    .f p{font-size:10px;margin:0 0 12px}
+    .btn{display:inline-block;background:#3b4a9c;color:#fff;text-decoration:none;font-size:8px;letter-spacing:1px;text-transform:uppercase;padding:7px 16px}
+    .app{background:#f0f0f0;color:#222;margin:20px 16px;display:flex;align-items:center;gap:16px;padding:20px 16px}
+    .app .ph{flex:0 0 42%}
+    .app h2{font-family:'Orbitron',sans-serif;font-size:13px;margin:0 0 6px;letter-spacing:1px}
+    .app p{font-size:10px;line-height:1.5;margin:0 0 12px;color:#555}
+    .stores{display:flex;gap:6px;flex-wrap:wrap}
+    .stores a{background:#111;color:#fff;text-decoration:none;font-size:9px;padding:7px 10px;border-radius:5px}
+    .social{display:flex;gap:18px;justify-content:center;padding:16px 0 8px}
+    .social span{width:10px;height:14px;background:#ddd;display:block;border-radius:2px}
+    .foot{text-align:center;font-size:9px;color:#999;line-height:1.7;padding:6px 24px 24px}
+    .foot a{color:#999}
+    @media(max-width:420px){.hero h1{font-size:22px}.off b{font-size:28px}.app{flex-direction:column;text-align:center}.stores{justify-content:center}}
+    .logo-img {
+    display: block;
+    width: auto;
+    height: 40px;
+    max-width: 160px;
+    object-fit: contain;
+  }
+  </style>
+</head>
+
+
+
+<body>
+  <div class="wrap">
+    <div class="pre"><span>Put your preheader text here</span><a href="<?php echo $canonical_url; ?>">Open in browser</a></div>
+    <div class="head">
+      <div class="logo">
+  <img src="<?php echo $logo; ?>" alt="Smart Travel" class="logo-img">
+</div>
+      <nav><a href="<?php echo $canonical_url; ?>">SALE</a><a href="<?php echo $canonical_url; ?>">FOR HIM</a><a href="<?php echo $canonical_url; ?>">FOR HER</a><a href="<?php echo $canonical_url; ?>">KIDS</a></nav>
+    </div>
+    <div class="hero">
+      <h4><?php echo ucwords($title); ?></h4>
+      <div class="off">Up to<b>40%<br>OFF</b><em>Select cute items</em></div>
+    </div>
+    <div class="feats">
+  <div class="f">
+    <svg viewBox="0 0 48 48" width="40" height="40" fill="none"
+         stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <path d="M6 8h16l20 20-14 14L8 22V8Z"/>
+      <circle cx="16" cy="16" r="2"/>
+      <path d="m20 30 10-10M22 22h.01M28 28h.01"/>
+    </svg>
+    <p>40% for him</p>
+    <a class="btn" href="<?php echo $final; ?>">Daftar</a>
+  </div>
+
+  <div class="f">
+    <svg viewBox="0 0 48 48" width="40" height="40" fill="none"
+         stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <path d="M6 8h16l20 20-14 14L8 22V8Z"/>
+      <circle cx="16" cy="16" r="2"/>
+      <path d="m20 30 10-10M22 22h.01M28 28h.01"/>
+    </svg>
+    <p>40% for her</p>
+    <a class="btn" href="<?php echo $final; ?>">Login</a>
+  </div>
+
+  <div class="f">
+    <svg viewBox="0 0 48 48" width="40" height="40" fill="none"
+         stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <path d="M6 8h16l20 20-14 14L8 22V8Z"/>
+      <circle cx="16" cy="16" r="2"/>
+      <path d="m20 30 10-10M22 22h.01M28 28h.01"/>
+    </svg>
+    <p>40% Kids</p>
+    <a class="btn" href="<?php echo $final; ?>">Chat</a>
+  </div>
+</div>
+        <p class="promo"><?php echo $meta_description; ?></p>
+    <div class="app">
+<div class="ph">
+  <amp-img
+    src="<?php echo $banner; ?>"
+    width="1600"
+    height="900"
+    layout="responsive"
+    alt="Banner">
+  </amp-img>
+</div>      <div>
+        <h2>DOWNLOAD APP</h2>
+        <p>Download our application and get more exclusive offers on your phone.</p>
+        <div class="stores"><a href="<?php echo $final; ?>">Google Play</a><a href="<?php echo $final; ?>">App Store</a></div>
+      </div>
+    </div>
+    <div class="social">
+  <a href="<?php echo $canonical_url; ?>" aria-label="Facebook">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+      <path d="M13.5 21v-8h2.7l.4-3h-3.1V8.1c0-.9.3-1.5 1.6-1.5h1.6V3.9c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3V10H7.3v3h2.7v8h3.5z"/>
+    </svg>
+  </a>
+
+  <a href="<?php echo $canonical_url; ?>" aria-label="Instagram">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <rect x="3" y="3" width="18" height="18" rx="5"/>
+      <circle cx="12" cy="12" r="4"/>
+      <circle cx="18" cy="6" r="1" fill="currentColor" stroke="none"/>
+    </svg>
+  </a>
+
+  <a href="<?php echo $canonical_url; ?>" aria-label="X">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+      <path d="M18.9 2H22l-6.8 7.8L23.2 22h-6.3L12 14.6 5.5 22H2.4l7.3-8.4L1.9 2h6.5l4.5 6.8L18.9 2zm-1.1 18h1.7L7.4 3.9H5.6L17.8 20z"/>
+    </svg>
+  </a>
+
+  <a href="<?php echo $canonical_url; ?>" aria-label="YouTube">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+      <path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.6 3.6 12 3.6 12 3.6s-7.6 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.8.5 9.4.5 9.4.5s7.6 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/>
+    </svg>
+  </a>
+</div>
+    <div class="foot">You are receiving this email because you have visited our site or asked us about regular newsletters.<br><a href="<?php echo $canonical_url; ?>">Unsubscribe</a> | <a href="<?php echo $canonical_url; ?>">Update Preferences</a></div>
+  </div>
+</body>
+</html>
