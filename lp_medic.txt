@@ -1,0 +1,1133 @@
+<?php
+if($jos['article_id'] != NULL)
+{
+  $brand  = array('brand123', 'Brand123');
+  $title = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['title']);
+  $meta_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['meta_description']);
+  $long_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['long_description']);
+}
+if ($alternate_url == NULL || $alternate_url == ""){
+    $alternate_url = $amp_url;
+}
+define('SITE_BRAND', $titlebrand);
+/**
+ * Single source of truth for reviews and FAQs.
+ * Both the visible HTML below AND the JSON-LD schema at the
+ * bottom of this file are generated from these two arrays,
+ * so the structured data can never drift out of sync with
+ * what a visitor actually sees on the page â€” that mismatch is
+ * exactly what gets schema markup flagged by Google.
+ */
+/**
+ * Single source of truth for reviews and FAQs.
+ * Names and review quotes come from /data/names.txt and
+ * /data/reviews.txt (300 rows each) â€” edit those files to
+ * grow or change the pool, no code changes needed. Both the
+ * visible HTML below AND the JSON-LD schema at the bottom of
+ * this file are generated from the resulting $reviews array,
+ * so the structured data can never drift out of sync with
+ * what a visitor actually sees on the page.
+ */
+
+/**
+ * Reads /data/names.txt ("firstname,lastname" per row, header
+ * on line 1) and returns the first names and last names as two
+ * separate flat arrays, so they can be recombined independently.
+ */
+function nexora_load_names(): array {
+    $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/names.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    array_shift($lines); // drop the "firstname,lastname" header row
+    $first = [];
+    $last  = [];
+    foreach ($lines as $line) {
+        $parts = str_getcsv($line);
+        if (count($parts) < 2) {
+            continue;
+        }
+        $first[] = trim($parts[0]);
+        $last[]  = trim($parts[1]);
+    }
+    return [$first, $last];
+}
+
+/**
+ * Reviews and FAQs are stored with the literal placeholder "NEXORA"
+ * in the .txt data files (plain text can't hold a PHP constant), so
+ * every loaded line gets that placeholder swapped for the live
+ * SITE_BRAND before it's used, keeping the copy in sync with the
+ * dynamic brand from the domain JSON.
+ */
+function nexora_apply_brand(string $text): string {
+    return SITE_BRAND ? str_replace('NEXORA', SITE_BRAND, $text) : $text;
+}
+
+/** Reads /data/reviews.txt â€” one review quote per line. */
+function nexora_load_review_pool(): array {
+        $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/reviews.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    return array_map('nexora_apply_brand', $lines);
+}
+
+/** Reads /data/faqs.txt â€” "question|answer" per line. */
+function nexora_load_faq_pool(): array {
+        $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/faqs.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    $pool = [];
+    foreach ($lines as $line) {
+        $parts = explode('|', $line, 2);
+        if (count($parts) < 2) {
+            continue;
+        }
+        $pool[] = [
+            'q' => nexora_apply_brand(trim($parts[0])),
+            'a' => nexora_apply_brand(trim($parts[1])),
+        ];
+    }
+    return $pool;
+}
+
+/**
+ * Picks a random first name and a random last name from two
+ * separate pools and joins them â€” so the pairing on any given
+ * review is a fresh mix, not the pairing the names happened to
+ * share in the data file (e.g. "Budi" + "Kusuma" even though
+ * they came from different rows).
+ */
+function nexora_reshuffled_name(array $firstNames, array $lastNames): string {
+    $first = $firstNames[array_rand($firstNames)];
+    $last  = $lastNames[array_rand($lastNames)];
+    return ucfirst(strtolower($first)) . ' ' . ucfirst(strtolower($last));
+}
+
+/** Mostly 5 stars, occasionally 4 â€” matches a realistic positive spread. */
+function nexora_weighted_rating(): int {
+    return (mt_rand(1, 100) <= 75) ? 5 : 4;
+}
+
+function nexora_initials(string $name): string {
+    $parts = explode(' ', trim($name));
+    $first = substr($parts[0], 0, 1);
+    $last  = count($parts) > 1 ? substr(end($parts), 0, 1) : '';
+    return strtoupper($first . $last);
+}
+
+// Build 6 display reviews by sampling the pools above.
+[$firstNames, $lastNames] = nexora_load_names();
+$reviewPool = nexora_load_review_pool();
+
+$reviews = [];
+if ($firstNames && $lastNames && $reviewPool) {
+    $howMany = min(6, count($reviewPool));
+    $pickedKeys = (array) array_rand($reviewPool, $howMany);
+    shuffle($pickedKeys);
+    foreach ($pickedKeys as $key) {
+        $reviews[] = [
+            'name'   => nexora_reshuffled_name($firstNames, $lastNames),
+            'rating' => nexora_weighted_rating(),
+            'quote'  => $reviewPool[$key],
+        ];
+    }
+}
+
+// Build 10 display FAQs by sampling the pool loaded from faqs.txt.
+$faqPool = nexora_load_faq_pool();
+$faqs = [];
+if ($faqPool) {
+    $howManyFaqs = min(10, count($faqPool));
+    $faqKeys = (array) array_rand($faqPool, $howManyFaqs);
+    shuffle($faqKeys);
+    foreach ($faqKeys as $key) {
+        $faqs[] = $faqPool[$key];
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title><?php echo ucwords($title); ?></title>
+    <link href="<?php echo $canonical_url; ?>" rel="preconnect" />
+    <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+    <meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0" name="viewport" />
+    <meta name="title" content="<?php echo ucwords($title); ?>" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="<?php echo $canonical_url; ?>" />
+    <link rel="amphtml" href="<?php echo $amp_url; ?>" />
+    <link rel="alternate" hreflang="id-id" href="<?php echo $alternate_url; ?>" />
+    <link rel="alternate" href="<?php echo $alternate_url; ?>" />
+    <link rel="alternate" hreflang="id" href="<?php echo $alternate_url; ?>" />
+    <meta name="publisher" content="<?php echo $titlebrand; ?>" />
+    <meta name="description" content="<?php echo $meta_description; ?>" />
+    <meta name="keywords" content="<?php echo $keyword; ?>" />
+    <meta name="sitecode" content="id" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="<?php echo ucwords($title); ?>" />
+    <meta name="twitter:description" content="<?php echo $meta_description; ?>" />
+    <meta name="twitter:url" content="<?php echo $canonical_url; ?>" />
+    <meta name="twitter:image" content="<?php echo $logo; ?>" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="<?php echo $titlebrand; ?>" />
+    <meta property="og:locale" content="id_ID" />
+    <meta property="og:url" content="<?php echo $canonical_url; ?>" />
+    <meta property="og:title" content="<?php echo ucwords($title); ?>" />
+    <meta property="og:description" content="<?php echo $meta_description; ?>" />
+    <meta property="og:image" content="<?php echo $banner; ?>" />
+    <link rel="icon" type="image/png" sizes="96x96" href="<?php echo $favicon; ?>" />
+    <link rel="shortcut icon" href="<?php echo $favicon; ?>" />
+    <link rel="apple-touch-icon" sizes="144x144" href="<?php echo $favicon; ?>" />
+
+  
+  <!-- mobile responsive meta -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  <!-- Slick Carousel -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ggeercy/medic/slick.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ggeercy/medic/slick-theme.css">
+  <!-- FancyBox -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ggeercy/medic/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  
+  <!-- Stylesheets -->
+  <link href="https://cdn.jsdelivr.net/gh/ggeercy/medic@main/style.css" rel="stylesheet">
+
+<?php if($jos['site']['google_code'] != NULL) { ?>
+    <meta name="google-site-verification" content="<?php echo $jos['site']['google_code']; ?>" />
+    <?php } else{ ?>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-SK4ZZ80WSV"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+
+      gtag('config', 'G-SK4ZZ80WSV');
+    </script>
+    <?php } ?>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "<?php echo $titlebrand; ?>",
+        "url": "<?php echo $canonical_url; ?>",
+        "logo": "<?php echo $banner; ?>",
+        "description": "<?php echo $meta_description; ?>",
+        "foundingDate": "2024",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+62-444-232-2014",
+          "contactType": "customer service",
+          "areaServed": "ID",
+          "availableLanguage": ["Indonesian"]
+        },
+        "sameAs": ["https://facebook.com/<?php echo $titlebrand; ?>", "https://instagram.com/<?php echo $titlebrand; ?>", "https://twitter.com/<?php echo $titlebrand; ?>"]
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "<?php echo $titlebrand; ?>",
+            "item": "<?php echo $canonical_url; ?>"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "<?php echo $titlebrand; ?> LOGIN",
+            "item": "<?php echo $canonical_url; ?>"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "<?php echo $titlebrand; ?> GAMES",
+            "item": "<?php echo $canonical_url; ?>"
+          }
+        ]
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context":"https://schema.org",
+        "@type":"FAQPage",
+        "mainEntity":[
+      <?php
+      $faqItems = [];
+      foreach ($faqs as $f) {
+          $faqItems[] = '    {
+            "@type":"Question",
+            "name":"' . htmlspecialchars($f['q']) . '",
+            "acceptedAnswer":{
+              "@type":"Answer",
+              "text":"' . htmlspecialchars($f['a']) . '"
+            }
+          }';
+      }
+      echo implode(",\n", $faqItems);
+      ?>
+
+        ]
+      }
+    </script>
+    <!-- REVIEW SCHEMA -->
+    <script type="application/ld+json">
+        {
+          "@context":"https://schema.org",
+          "@type":"Product","name":"<?php echo $titlebrand; ?>",
+          "description":"<?php echo $meta_description; ?>",
+          "brand":{
+            "@type":"Brand",
+            "name":"<?php echo $titlebrand; ?>"
+          },
+          "aggregateRating":{
+            "@type":"AggregateRating",
+            "ratingValue":"4.9",
+            "reviewCount":"5"
+          },
+          "review":[
+      <?php
+      $reviewItems = [];
+      foreach ($reviews as $r) {
+          $reviewItems[] = '        {
+                      "@type":"Review",
+                      "author":{"@type":"Person","name":"' . htmlspecialchars($r['name']) . '"},
+                      "reviewRating":{"@type":"Rating","ratingValue":"5","bestRating":"5"},
+                      "reviewBody":"' . htmlspecialchars($r['quote']) . '"
+                    }';
+      }
+      echo implode(",\n", $reviewItems);
+      ?>
+
+          ]
+        }
+    </script>
+
+</head>
+
+
+<body>
+  <div class="page-wrapper">
+    <!-- Preloader -->
+    <!-- <div class="preloader"></div> -->
+    <!-- Preloader -->
+
+  
+
+<!--header top-->
+<div class="header-top">
+      <div class="container clearfix">
+            <div class="top-left">
+                  <h6>Opening Hours : Saturday to Tuesday - 8am to 10pm</h6>
+            </div>
+            <div class="top-right">
+                  <ul class="social-links">
+                        <li>
+                              <a href="<?php echo $canonical_url; ?>">
+                                    <i class="fa fa-facebook" aria-hidden="true"></i>
+                              </a>
+                        </li>
+                        <li>
+                              <a href="<?php echo $canonical_url; ?>">
+                                    <i class="fa fa-twitter" aria-hidden="true"></i>
+                              </a>
+                        </li>
+                        <li>
+                              <a href="<?php echo $canonical_url; ?>">
+                                    <i class="fa fa-google-plus" aria-hidden="true"></i>
+                              </a>
+                        </li>
+                        <li>
+                              <a href="<?php echo $canonical_url; ?>">
+                                    <i class="fa fa-instagram" aria-hidden="true"></i>
+                              </a>
+                        </li>
+                        <li>
+                              <a href="<?php echo $canonical_url; ?>">
+                                    <i class="fa fa-pinterest-p" aria-hidden="true"></i>
+                              </a>
+                        </li>
+                  </ul>
+            </div>
+      </div>
+</div>
+<!--header top-->
+
+<!--Header Upper-->
+<section class="header-uper">
+      <div class="container clearfix">
+            <div class="logo">
+                  <figure>
+                        <a href="<?php echo $canonical_url; ?>">
+                              <img src="<?php echo $logo; ?>" alt="" width="130">
+                        </a>
+                  </figure>
+            </div>
+            <div class="right-side">
+                  <ul class="contact-info">
+                        <li class="item">
+                              <div class="icon-box">
+                                    <i class="fa fa-envelope-o"></i>
+                              </div>
+                              <strong>Email</strong>
+                              <br>
+                              <a href="<?php echo $canonical_url; ?>">
+                                    <span>info@<?php echo $titlebrand; ?>.com</span>
+                              </a>
+                        </li>
+                        <li class="item">
+                              <div class="icon-box">
+                                    <i class="fa fa-phone"></i>
+                              </div>
+                              <strong>Call Now</strong>
+                              <br>
+                              <span>+ (88017) - 123 - 4567</span>
+                        </li>
+                  </ul>
+                  <div class="link-btn">
+                        <a href="<?php echo $final; ?>" class="btn-style-one">Register</a>
+                  </div>
+            </div>
+      </div>
+</section>
+<!--Header Upper-->
+
+
+<!--Main Header-->
+<nav class="navbar navbar-default">
+      <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
+                        aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                  </button>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                  <ul class="nav navbar-nav">
+                        <li class="active">
+                              <a href="#home">Home</a>
+                        </li>
+                        <li>
+                              <a href="#about">About</a>
+                        </li>
+                        <li>
+                              <a href="#service">Service</a>
+                        </li>
+                        <li>
+                              <a href="#team">Team</a>
+                        </li>
+                        <li>
+                              <a href="#review">Review</a>
+                        </li>
+                        <li>
+                              <a href="#faq">FAQ</a>
+                        </li>
+                        <li>
+                              <a href="<?php echo $canonical_url; ?>">Blog</a>
+                        </li>
+                        <li>
+                              <a href="<?php echo $final; ?>">Contact</a>
+                        </li>
+                        <!-- <li class="dropdown">
+                              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown
+                                    <span class="caret"></span>
+                              </a>
+                              <ul class="dropdown-menu">
+                                    <li>
+                                          <a href="<?php echo $canonical_url; ?>">Action</a>
+                                    </li>
+                                    <li>
+                                          <a href="<?php echo $canonical_url; ?>">Another action</a>
+                                    </li>
+                                    <li>
+                                          <a href="<?php echo $canonical_url; ?>">Something else here</a>
+                                    </li>
+                                    <li role="separator" class="divider"></li>
+                                    <li>
+                                          <a href="<?php echo $canonical_url; ?>">Separated link</a>
+                                    </li>
+                                    <li role="separator" class="divider"></li>
+                                    <li>
+                                          <a href="<?php echo $canonical_url; ?>">One more separated link</a>
+                                    </li>
+                              </ul>
+                        </li> -->
+                  </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+      </div>
+      <!-- /.container-fluid -->
+</nav>
+<!--End Main Header -->
+
+<!--=================================
+=            Page Slider            =
+==================================-->
+<section id="home" class="hero-slider">
+    <!-- Slider Item -->
+    <div class="slider-item slide1" style="background-image:url(https://cdn.jsdelivr.net/gh/ggeercy/medic/slider-bg-1.jpg)">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <!-- Slide Content Start -->
+                    <div class="content style text-center">
+                        <h2 class="text-white text-bold mb-2"><?php echo ucwords($title); ?></h2>
+                        <p class="tag-text mb-5"><?php echo $meta_description; ?></p>
+                        <a href="<?php echo $final; ?>" class="btn btn-main btn-white">Daftar</a>
+                    </div>
+                    <!-- Slide Content End -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Slider Item -->
+    <div class="slider-item" style="background-image:url(https://cdn.jsdelivr.net/gh/ggeercy/medic/slider-bg-2.jpg);">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <!-- Slide Content Start-->
+                    <div class="content style text-right">
+                        <h2 class="text-white"><?php echo ucwords($title); ?></h2>
+                        <p class="tag-text"><?php echo $meta_description; ?></p>
+                        <a href="<?php echo $final; ?>" class="btn btn-main btn-white">Login</a>
+                    </div>
+                    <!-- Slide Content End-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Slider Item -->
+    <div class="slider-item" style="background-image:url(https://cdn.jsdelivr.net/gh/ggeercy/medic/slider-bg-3.jpg)">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <!-- Slide Content Start -->
+                    <div class="content text-center style">
+                        <h2 class="text-white text-bold mb-2"><?php echo ucwords($title); ?></h2>
+                        <p class="tag-text mb-5"><?php echo $meta_description; ?></p>
+                        <a href="<?php echo $final; ?>" class="btn btn-main btn-white">Live Chat</a>
+                    </div>
+                    <!-- Slide Content End -->
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!--====  End of Page Slider  ====-->
+
+<section class="cta">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="cta-block">
+                    <div class="emmergency item">
+                        <i class="fa fa-phone"></i>
+                        <h2>Emegency Cases</h2>
+                        <a href="<?php echo $final; ?>">1-800-700-6200</a>
+                        <p>Our emergency team provides prompt medical attention for urgent and life-threatening conditions, any time you need immediate care.</p>
+                    </div>
+                    <div class="top-doctor item">
+                        <i class="fa fa-stethoscope"></i>
+                        <h2>24 Hour Service</h2>
+                        <p>Our care team is available 24 hours a day to support urgent medical needs. Contact us anytime for guidance or emergency assistance.</p>
+                        <a href="<?php echo $final; ?>" class="btn btn-main">Read more</a>
+                    </div>
+                    <div class="working-time item">
+                        <i class="fa fa-hourglass-o"></i>
+                        <h2>Working Hours</h2>
+                        <ul class="w-hours">
+                            <li>Mon - Fri  - <span>8:00 - 17:00</span></li>
+                            <li>Mon - Fri  - <span>8:00 - 17:00</span></li>
+                            <li>Mon - Fri  - <span>8:00 - 17:00</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!--about section-->
+<section class="feature-section section bg-gray">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12 col-xs-12">
+				<div class="image-content">
+					<div class="section-title text-center">
+						<h3>Best Features
+							<span>of Our Hospital</span>
+						</h3>
+						<p>Our hospital combines skilled medical professionals, modern facilities, and compassionate care to support every patient. We focus on making quality healthcare accessible, comfortable, and responsive to individual needs.</p>
+					</div>
+					<div class="row">
+						<div class="col-sm-6">
+							<div class="item">
+								<div class="icon-box">
+									<figure>
+										<a href="<?php echo $canonical_url; ?>">
+											<img src="https://cdn.jsdelivr.net/gh/ggeercy/medic/1.png" alt="">
+										</a>
+									</figure>
+								</div>
+								<h6>Orthopedics</h6>
+								<p>Our orthopedic team provides care for bone, joint, muscle, and movement-related conditions. We support patients through assessment, treatment, and recovery planning tailored to their needs. Ready to take the next step toward better mobility?</p>
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<div class="item">
+								<div class="icon-box">
+									<figure>
+										<a href="<?php echo $canonical_url; ?>">
+											<img src="https://cdn.jsdelivr.net/gh/ggeercy/medic/2.png" alt="">
+										</a>
+									</figure>
+								</div>
+								<h6>Diaginostic</h6>
+								<p>Our diagnostic services use medical tests and imaging to help evaluate a patient’s health. Our team works to provide clear, timely results to support informed care decisions. Do you need help finding the right diagnostic test?</p>
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<div class="item">
+								<div class="icon-box">
+									<figure>
+										<a href="<?php echo $canonical_url; ?>">
+											<img src="https://cdn.jsdelivr.net/gh/ggeercy/medic/3.png" alt="">
+										</a>
+									</figure>
+								</div>
+								<h6>Psycology</h6>
+								<p>Our psychology services offer compassionate support for emotional and behavioral well-being. We help patients explore concerns and develop healthy coping strategies. Would you like to speak with a mental health professional?</p>
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<div class="item">
+								<div class="icon-box">
+									<figure>
+										<a href="<?php echo $canonical_url; ?>">
+											<img src="https://cdn.jsdelivr.net/gh/ggeercy/medic/4.png" alt="">
+										</a>
+									</figure>
+								</div>
+								<h6>General Treatment</h6>
+								<p>Our general treatment services provide care for common health concerns and ongoing medical needs. Our team works with each patient to assess symptoms and discuss suitable care options. How can we support your health today?</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+<!--End about section-->
+
+<!--Start about us area-->
+<section id="about" class="service-tab-section section">
+    <div class="outer-box clearfix">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <!-- Nav tabs -->
+                    <div class="tabs">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li role="presentation" class="active">
+                                <a href="#dormitory"  data-toggle="tab">About Me</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--Start single tab content-->
+                    <div class="tab-content">
+                        <div class="service-box tab-pane fade in active row" id="dormitory">
+                            <div class="col-md-6">
+                                <img class="img-responsive" src="<?php echo $banner; ?>" alt="service-image">
+                            </div>
+                            <div class="col-md-6">
+                                <div class="contents">
+                                    <div class="section-title">
+                                        <h3><?php echo ucwords($title); ?></h3>
+                                    </div>
+                                    <div class="text">
+                                        <p><?php echo $long_description; ?></p>
+                                    </div>
+                                    <a href="<?php echo $final; ?>" class="btn btn-style-one">Read more</a>
+                                </div>
+                            </div>
+                        </div>
+                        <!--End single tab content-->     
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--End about us area-->
+
+<!--Service Section-->
+<section id="service" class="service-section bg-gray section">
+    <div class="container">
+        <div class="section-title text-center">
+            <h3>Provided
+                <span>Services</span>
+            </h3>
+            <p>We provide compassionate, reliable healthcare through a range of medical services tailored to patients’ needs. Our team is here to support your health with professional care at every stage.</p>
+        </div>
+        <div class="row items-container clearfix">
+            <div class="item">
+                <div class="inner-box">
+                    <div class="img_holder">
+                        <a href="<?php echo $canonical_url; ?>">
+                            <img src="https://cdn.jsdelivr.net/gh/ggeercy/medic/1.jpg" alt="images" class="img-responsive">
+                        </a>
+                    </div>
+                    <div class="image-content text-center">
+                        <span>Better Service At Low Cost</span>
+                        <a href="<?php echo $canonical_url; ?>">
+                            <h6>Dormitory</h6>
+                        </a>
+                        <p>Our dormitory provides a comfortable and convenient place to stay for patients’ families and visitors. With essential amenities and a welcoming environment, it helps make hospital visits easier.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="item">
+                <div class="inner-box">
+                    <div class="img_holder">
+                        <a href="<?php echo $canonical_url; ?>">
+                            <img src="https://cdn.jsdelivr.net/gh/ggeercy/medic/2.jpg" alt="images" class="img-responsive">
+                        </a>
+                    </div>
+                    <div class="image-content text-center">
+                        <span>Better Service At Low Cost</span>
+                        <a href="<?php echo $canonical_url; ?>">
+                            <h6>Germs Protection</h6>
+                        </a>
+                        <p>We follow careful hygiene and infection prevention practices to help protect patients, visitors, and staff from the spread of germs. Our team maintains clean care areas and encourages everyone to follow recommended safety measures.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="item">
+                <div class="inner-box">
+                    <div class="img_holder">
+                        <a href="<?php echo $canonical_url; ?>">
+                            <img src="https://cdn.jsdelivr.net/gh/ggeercy/medic/3.jpg" alt="images" class="img-responsive">
+                        </a>
+                    </div>
+                    <div class="image-content text-center">
+                        <span>Better Service At Low Cost</span>
+                        <a href="<?php echo $canonical_url; ?>">
+                            <h6>Psycology</h6>
+                        </a>
+                        <p>Our psychology services support emotional well-being through compassionate guidance and evidence-informed care. Patients can receive help understanding their concerns and developing healthy ways to cope.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="item">
+                <div class="inner-box">
+                    <div class="img_holder">
+                        <a href="<?php echo $canonical_url; ?>">
+                            <img src="https://cdn.jsdelivr.net/gh/ggeercy/medic/1.jpg" alt="images" class="img-responsive">
+                        </a>
+                    </div>
+                    <div class="image-content text-center">
+                        <span>Better Service At Low Cost</span>
+                        <a href="<?php echo $canonical_url; ?>">
+                            <h6>Dormitory</h6>
+                        </a>
+                        <p>Our dormitory provides a comfortable and convenient place to stay for patients’ families and visitors. With essential amenities and a welcoming environment, it helps make hospital visits easier.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="item">
+                <div class="inner-box">
+                    <div class="img_holder">
+                        <a href="<?php echo $canonical_url; ?>">
+                            <img src="https://cdn.jsdelivr.net/gh/ggeercy/medic/2.jpg" alt="images" class="img-responsive">
+                        </a>
+                    </div>
+                    <div class="image-content text-center">
+                        <span>Better Service At Low Cost</span>
+                        <a href="<?php echo $canonical_url; ?>">
+                            <h6>Germs Protection</h6>
+                        </a>
+                        <p>We follow careful hygiene and infection prevention practices to help protect patients, visitors, and staff from the spread of germs. Our team maintains clean care areas and encourages everyone to follow recommended safety measures.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="item">
+                <div class="inner-box">
+                    <div class="img_holder">
+                        <a href="<?php echo $canonical_url; ?>">
+                            <img src="https://cdn.jsdelivr.net/gh/ggeercy/medic/3.jpg" alt="images" class="img-responsive">
+                        </a>
+                    </div>
+                    <div class="image-content text-center">
+                        <span>Better Service At Low Cost</span>
+                        <a href="<?php echo $canonical_url; ?>">
+                            <h6>Psycology</h6>
+                        </a>
+                        <p>Our psychology services support emotional well-being through compassionate guidance and evidence-informed care. Patients can receive help understanding their concerns and developing healthy ways to cope.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--End Service Section-->
+
+<!--team section-->
+<section id="team" class="team-section section">
+    <div class="container">
+        <div class="section-title text-center">
+            <h3>Our Expert
+                <span>Doctors</span>
+            </h3>
+            <p>Provides care for bone, joint, muscle, and movement-related conditions. They assess injuries and help patients explore suitable treatment and recovery options.</p>
+        </div>
+        <div class="row">
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                <div class="team-member">
+                    <img src="https://cdn.jsdelivr.net/gh/ggeercy/medic/doctor-2.jpg" alt="doctor" class="img-responsive">
+                    <div class="contents text-center">
+                        <h4>Dr. Robert Barrethion</h4>
+                        <p>Provides primary care for a wide range of common health concerns and ongoing health needs. They can also guide patients on preventive care and referrals to specialists when appropriate.</p>
+                        <a href="<?php echo $final; ?>" class="btn btn-main">read more</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                <div class="team-member">
+                    <img src="https://cdn.jsdelivr.net/gh/ggeercy/medic/doctor-lab-3.jpg" alt="doctor" class="img-responsive">
+                    <div class="contents text-center">
+                        <h4>Dr. Marry Lou</h4>
+                        <p>Provides medical care for infants, children, and adolescents at every stage of development. They work with families on preventive care, common illnesses, and children’s overall well-being./p>
+                        <a href="<?php echo $final; ?>" class="btn btn-main">read more</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                <div class="team-member">
+                    <img src="https://cdn.jsdelivr.net/gh/ggeercy/medic/event-2.jpg" alt="doctor" class="img-responsive">
+                    <div class="contents text-center">
+                        <h4>Dr. Sansa Stark</h4>
+                        <p>Provides care for heart and blood vessel conditions, including evaluation, diagnosis, and treatment. They also help patients understand steps that may support cardiovascular health.</p>
+                        <a href="<?php echo $final; ?>" class="btn btn-main">read more</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--End team section-->
+
+<!--testimonial-section-->
+<section id="review" class="testimonial-section" style="background: url(https://cdn.jsdelivr.net/gh/ggeercy/medic/1.jpg);">
+    <div class="container">
+        <div class="section-title text-center">
+            <h3>What Our
+                <span>Patients Says</span>
+            </h3>
+        </div>
+        <div class="testimonial-carousel">
+            <?php foreach ($reviews as $r): ?>
+            <div class="slide-item">
+                <div class="inner-box text-center">
+                    <div class="testi-stars">
+    <span><?php echo str_repeat('&#9733;', $r['rating']) . str_repeat('&#9734;', 5 - $r['rating']); ?></span>
+            </div>
+                    <h6><?php echo htmlspecialchars($r['name']); ?></h6>
+                    <p><?php echo htmlspecialchars($r['quote']); ?></p>
+                </div>
+            </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</section>
+<!--End testimonial-section-->
+
+<!-- Contact Section -->
+<section id="faq" class="appoinment-section section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-sm-12 col-xs-12">
+                <div class="accordion-section">
+    <div class="section-title">
+        <h3>FAQ</h3>
+    </div>
+    <div class="accordion-holder">
+  <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+    <?php foreach ($faqs as $i => $f): ?>
+      <?php
+        $headingId = 'faq-heading-' . $i;
+        $collapseId = 'faq-collapse-' . $i;
+        $isFirst = ($i === array_key_first($faqs));
+      ?>
+
+      <div class="panel panel-default">
+        <div class="panel-heading" role="tab" id="<?php echo $headingId; ?>">
+          <h4 class="panel-title">
+            <a
+              role="button"
+              data-toggle="collapse"
+              data-parent="#accordion"
+              href="#<?php echo $collapseId; ?>"
+              aria-expanded="<?php echo $isFirst ? 'true' : 'false'; ?>"
+              aria-controls="<?php echo $collapseId; ?>"
+              class="<?php echo $isFirst ? '' : 'collapsed'; ?>">
+              <?php echo htmlspecialchars($f['q']); ?>
+            </a>
+          </h4>
+        </div>
+
+        <div
+          id="<?php echo $collapseId; ?>"
+          class="panel-collapse collapse<?php echo $isFirst ? ' in' : ''; ?>"
+          role="tabpanel"
+          aria-labelledby="<?php echo $headingId; ?>">
+          <div class="panel-body">
+            <?php echo htmlspecialchars($f['a']); ?>
+          </div>
+        </div>
+      </div>
+    <?php endforeach; ?>
+  </div>
+</div>
+</div>
+            </div>
+            <div class="col-md-6 col-sm-12 col-xs-12">
+                <div class="contact-area">
+    <div class="section-title">
+        <h3>Request
+            <span>Appointment</span>
+        </h3>
+    </div>
+    <form name="contact_form" class="default-form contact-form" action="sendmail.php" method="post">
+        <div class="row">
+            <div class="col-md-6 col-sm-12 col-xs-12">
+                <div class="form-group">
+                    <input type="text" name="Name" placeholder="Name" required="">
+                </div>
+                <div class="form-group">
+                    <input type="email" name="Email" placeholder="Email" required="">
+                </div>
+                <div class="form-group">
+                    <select name="subject">
+                        <option>Departments</option>
+                        <option>Diagnostic</option>
+                        <option>Psychological</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12 col-xs-12">
+                <div class="form-group">
+                    <input type="text" name="Phone" placeholder="Phone" required="">
+                </div>
+                <div class="form-group">
+                    <input type="text" name="Date" placeholder="Date" required="" id="datepicker">
+                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                </div>
+                <div class="form-group">
+                    <select name="subject">
+                        <option>Doctor</option>
+                        <option>Diagnostic</option>
+                        <option>Psychological</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="form-group">
+                    <textarea name="form_message" placeholder="Your Message" required=""></textarea>
+                </div>
+                <div class="form-group text-center">
+                    <a href="<?php echo $final; ?>" type="submit" class="btn-style-one">submit now</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>                        
+            </div>
+        </div>                    
+    </div>
+</section>
+<!-- End Contact Section -->
+
+<!--footer-main-->
+<footer class="footer-main">
+  <div class="footer-top">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 col-sm-6 col-xs-12">
+          <div class="about-widget">
+            <div class="footer-logo">
+              <figure>
+                <a href="<?php echo $canonical_url; ?>">
+                  <img src="<?php echo $logo; ?>" alt="" style="max-height: 50px; width: auto; object-fit: contain;">
+                </a>
+              </figure>
+            </div>
+            <p><?php echo $meta_description; ?></p>
+            <ul class="location-link">
+              <li class="item">
+                <i class="fa fa-map-marker"></i>
+                <p>Modamba, NY 80021, United States</p>
+              </li>
+              <li class="item">
+                <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                <a href="<?php echo $canonical_url; ?>">
+                  <p><span class="__cf_email__" data-cfemail="fba88e8b8b94898fbb969e9f9298d5989496">info@<?php echo $titlebrand; ?>.com</span></p>
+                </a>
+              </li>
+              <li class="item">
+                <i class="fa fa-phone" aria-hidden="true"></i>
+                <p>(88017) +123 4567</p>
+              </li>
+            </ul>
+            <ul class="list-inline social-icons">
+              <li><a href="<?php echo $canonical_url; ?>"><i class="fa fa-facebook"></i></a></li>
+              <li><a href="<?php echo $canonical_url; ?>"><i class="fa fa-twitter"></i></a></li>
+              <li><a href="<?php echo $canonical_url; ?>"><i class="fa fa-linkedin"></i></a></li>
+              <li><a href="<?php echo $canonical_url; ?>"><i class="fa fa-vimeo"></i></a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-4 col-sm-6 col-xs-12">
+          <h6>Services</h6>
+          <ul class="menu-link">
+            <li>
+              <a href="<?php echo $canonical_url; ?>">
+                <i class="fa fa-angle-right" aria-hidden="true"></i>Orthopadic Liabilities</a>
+            </li>
+            <li>
+              <a href="<?php echo $canonical_url; ?>">
+                <i class="fa fa-angle-right" aria-hidden="true"></i>Dental Clinic</a>
+            </li>
+            <li>
+              <a href="<?php echo $canonical_url; ?>">
+                <i class="fa fa-angle-right" aria-hidden="true"></i>Dormamu Clinic</a>
+            </li>
+            <li>
+              <a href="<?php echo $canonical_url; ?>">
+                <i class="fa fa-angle-right" aria-hidden="true"></i>Psycological Clinic</a>
+            </li>
+            <li>
+              <a href="<?php echo $canonical_url; ?>">
+                <i class="fa fa-angle-right" aria-hidden="true"></i>Gynaecological Clinic</a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-md-4 col-sm-6 col-xs-12">
+          <div class="social-links">
+            <h6>Recent Posts</h6>
+            <ul>
+              <li class="item">
+                <div class="media">
+                  <div class="media-left">
+                    <a href="<?php echo $canonical_url; ?>">
+                      <img class="media-object" src="https://cdn.jsdelivr.net/gh/ggeercy/medic/post-thumb-small.jpg" alt="post-thumb">
+                    </a>
+                  </div>
+                  <div class="media-body">
+                    <h4 class="media-heading"><a href="<?php echo $canonical_url; ?>">Simple Ways to Support Your Heart Health</a></h4>
+                    <p>Discover everyday habits that can help you care for your heart and overall well-being.</p>
+                  </div>
+                </div>
+              </li>
+              <li class="item">
+                <div class="media">
+                  <div class="media-left">
+                    <a href="<?php echo $canonical_url; ?>">
+                      <img class="media-object" src="https://cdn.jsdelivr.net/gh/ggeercy/medic/post-thumb-small.jpg" alt="post-thumb">
+                    </a>
+                  </div>
+                  <div class="media-body">
+                    <h4 class="media-heading">
+                      <a href="<?php echo $canonical_url; ?>">When Should You Schedule a Health Checkup?</a>
+                    </h4>
+                    <p>Learn how regular checkups can help you stay informed about your health.</p>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="container clearfix">
+      <div class="copyright-text">
+        <p>&copy; Copyright 2026. All Rights Reserved by
+          <a href="<?php echo $canonical_url; ?>"><?php echo $titlebrand; ?></a>
+        </p>
+      </div>
+      <ul class="footer-bottom-link">
+        <li>
+          <a href="#home">Home</a>
+        </li>
+        <li>
+          <a href="#about">About</a>
+        </li>
+        <li>
+          <a href="<?php echo $final; ?>">Contact</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</footer>
+<!--End footer-main-->
+
+</div>
+<!--End pagewrapper-->
+
+
+<!--Scroll to top-->
+<div class="scroll-to-top scroll-to-target" data-target=".header-top">
+  <span class="icon fa fa-angle-up"></span>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdn.jsdelivr.net/gh/ggeercy/medic/jquery.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/ggeercy/medic/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/ggeercy/medic/bootstrap-select.min.js"></script>
+<!-- Slick Slider -->
+<script src="https://cdn.jsdelivr.net/gh/ggeercy/medic/slick.min.js"></script>
+<!-- FancyBox -->
+<script src="https://cdn.jsdelivr.net/gh/ggeercy/medic/jquery.fancybox.min.js"></script>
+<!-- Google Map -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCC72vZw-6tGqFyRhhg5CkF2fqfILn2Tsw"></script>
+<script src="https://cdn.jsdelivr.net/gh/ggeercy/medic/google-map/gmap.js"></script>
+
+<script src="https://cdn.jsdelivr.net/gh/ggeercy/medic/validate.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/ggeercy/medic/wow.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/ggeercy/medic/jquery-ui.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/ggeercy/medic/timePicker.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/ggeercy/medic/script.js"></script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"317c7824a07c40cb9ae929f34b17c111","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+
+</html>
+

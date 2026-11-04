@@ -1,0 +1,137 @@
+<?php
+if($jos['article_id'] != NULL)
+{
+  $brand  = array('brand123', 'Brand123');
+  $title = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['title']);
+  $meta_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['meta_description']);
+  $long_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['long_description']);
+}
+if ($alternate_url == NULL || $alternate_url == ""){
+    $alternate_url = $amp_url;
+}
+define('SITE_BRAND', $titlebrand);
+?>
+
+<!doctype html>
+<html ⚡ lang="en">
+<head>
+  <meta charset="utf-8">
+  <title><?php echo ucwords($title); ?></title>
+  <meta name="description" content="<?php echo $meta_description; ?>" />
+  <link rel="canonical" href="<?php echo $canonical_url; ?>">
+  <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+  <link rel="icon" type="image/png" sizes="96x96" href="<?php echo $favicon; ?>" />
+  <link rel="shortcut icon" href="<?php echo $favicon; ?>" />
+  <link rel="apple-touch-icon" sizes="144x144" href="<?php echo $favicon; ?>" />
+  <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Lora:wght@400;500&family=Open+Sans:wght@400;600&display=swap">
+  <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+  <script async src="https://cdn.ampproject.org/v0.js"></script>
+
+  <style amp-custom>
+    *{box-sizing:border-box}
+    body{margin:0;background:#eee;font-family:'Open Sans',Arial,sans-serif}
+    .wrap{max-width:480px;margin:0 auto;background:#eee;padding:0 0}
+    .inner{background:#fff}
+    .pre{display:flex;justify-content:space-between;padding:8px 16px;font-size:9px;color:#444;background:#fff}
+    .pre a{color:#444}
+    .logo{background:#fff;text-align:center;padding:16px 0 20px}
+    .logo span{display:inline-block;background:#6a7380;color:#111;font-weight:700;font-size:20px;padding:6px 10px 6px 18px;border-radius:2px 14px 2px 2px}
+    nav{background:#555;display:flex}
+    nav a{flex:1;text-align:center;color:#fff;font-size:9px;letter-spacing:1px;text-transform:uppercase;text-decoration:none;padding:7px 4px;border-left:1px solid #888}
+    nav a:first-child{border-left:0}
+    .photos{display:flex}
+    .photos amp-img{flex:1 1 50%}
+    .photos>div{flex:1 1 50%}
+    .promo{background:#222;color:#fff;text-align:center;padding:26px 16px 30px}
+    .promo h1{font-family:'Great Vibes',cursive;font-weight:400;font-size:34px;margin:0 0 14px}
+    .promo small{display:block;font-size:8px;letter-spacing:1px;text-transform:uppercase;color:#ccc;margin-bottom:12px}
+    .promo b{display:block;font-family:'Lora',serif;font-weight:400;font-size:40px;margin-bottom:12px}
+    .promo .sub{font-size:7px;letter-spacing:1px;text-transform:uppercase;margin-bottom:20px}
+    .btns{display:flex;gap:16px;justify-content:center}
+    .btn{background:#fff;color:#111;text-decoration:none;font-size:9px;font-weight:600;padding:9px 0;width:100px;border:1px solid #fff}
+    .social{display:flex;gap:10px;justify-content:center;padding:22px 0 12px;background:#fff}
+    .social span{width:16px;height:16px;border-radius:2px;display:block}
+    .foot{background:#fff;text-align:center;font-size:8px;color:#444;line-height:1.7;padding:0 24px 20px}
+    .foot a{color:#222}
+    .logo-img {
+    display: block;
+    width: auto;
+    height: 40px;
+    max-width: 160px;
+    object-fit: contain;
+  }
+  </style>
+  </style>
+
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="inner">
+      <div class="logo">
+  <img src="<?php echo $logo; ?>" alt="Smart Travel" class="logo-img">
+</div>
+      <nav>
+        <a href="<?php echo $final; ?>">Women</a>
+        <a href="<?php echo $final; ?>">Men</a>
+        <a href="<?php echo $final; ?>">Accessories</a>
+      </nav>
+      <div class="photos">
+  <amp-img
+    src="<?php echo $banner; ?>"
+    width="720"
+    height="480"
+    layout="responsive"
+    alt="Woman in sportswear stretching">
+  </amp-img>
+</div>
+      <div class="promo">
+        <h3><?php echo ucwords($title); ?></h3>
+        <small>Spend big, save more</small>
+        <b>30% OFF</b>
+        <div class="sub"><?php echo $meta_description; ?></div>
+        <div class="btns">
+          <a class="btn" href="<?php echo $final; ?>">Daftar</a>
+          <a class="btn" href="<?php echo $final; ?>">Login</a>
+        </div>
+      </div>
+      <div class="photos">
+        <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/medic@main/45321509521284801.jpg" width="240" height="240" layout="responsive" alt="Tennis player on court"></amp-img>
+        <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/medic@main/15481509521489544.jpg" width="240" height="240" layout="responsive" alt="Runner on a mountain road"></amp-img>
+      </div>
+<div class="social">
+  <a href="<?php echo $canonical_url; ?>" aria-label="Facebook">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+      <path d="M13.5 21v-8h2.7l.4-3h-3.1V8.1c0-.9.3-1.5 1.6-1.5h1.6V3.9c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3V10H7.3v3h2.7v8h3.5z"/>
+    </svg>
+  </a>
+
+  <a href="<?php echo $canonical_url; ?>" aria-label="Instagram">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <rect x="3" y="3" width="18" height="18" rx="5"/>
+      <circle cx="12" cy="12" r="4"/>
+      <circle cx="18" cy="6" r="1" fill="currentColor" stroke="none"/>
+    </svg>
+  </a>
+
+  <a href="<?php echo $canonical_url; ?>" aria-label="X">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+      <path d="M18.9 2H22l-6.8 7.8L23.2 22h-6.3L12 14.6 5.5 22H2.4l7.3-8.4L1.9 2h6.5l4.5 6.8L18.9 2zm-1.1 18h1.7L7.4 3.9H5.6L17.8 20z"/>
+    </svg>
+  </a>
+
+  <a href="<?php echo $canonical_url; ?>" aria-label="YouTube">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+      <path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.6 3.6 12 3.6 12 3.6s-7.6 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.8.5 9.4.5 9.4.5s7.6 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/>
+    </svg>
+  </a>
+</div>
+      <div class="foot">
+        You are receiving this email because you have visited our site or asked us about regular newsletters. If you no longer wish to receive them, <a href="<?php echo $canonical_url; ?>">unsubscribe here</a>.<br><br>© 2026 Sport
+      </div>
+    </div>
+  </div>
+</body>
+</html>
