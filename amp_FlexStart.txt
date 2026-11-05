@@ -1,0 +1,81 @@
+<?php
+if($jos['article_id'] != NULL)
+{
+  $brand  = array('brand123', 'Brand123');
+  $title = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['title']);
+  $meta_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['meta_description']);
+  $long_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['long_description']);
+}
+if ($alternate_url == NULL || $alternate_url == ""){
+    $alternate_url = $amp_url;
+}
+define('SITE_BRAND', $titlebrand);
+?>
+
+<!doctype html>
+<html ⚡ lang="en">
+<head>
+  <meta charset="utf-8">
+  <title><?php echo ucwords($title); ?></title>
+  <meta name="description" content="<?php echo $meta_description; ?>" />
+  <link rel="canonical" href="<?php echo $canonical_url; ?>">
+  <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+  <link rel="icon" type="image/png" sizes="96x96" href="<?php echo $favicon; ?>" />
+  <link rel="shortcut icon" href="<?php echo $favicon; ?>" />
+  <link rel="apple-touch-icon" sizes="144x144" href="<?php echo $favicon; ?>" />
+
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap">
+  <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+  <script async src="https://cdn.ampproject.org/v0.js"></script>
+  <style amp-custom>
+    *{box-sizing:border-box}
+    body{margin:0;background:#fff;font-family:'Inter',Arial,sans-serif;color:#111}
+    .wrap{max-width:480px;margin:0 auto;background:#e3d9fb}
+    .logo{display:flex;align-items:center;justify-content:center;gap:8px;padding:20px 0 16px;font-size:22px;font-weight:500}
+    .logo i{display:block;width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#7b3fe4,#2fc4a5)}
+    .card{background:#fff;margin:0 16px;padding:18px 16px 24px;text-align:center;border-radius:4px;box-shadow:0 1px 4px rgba(0,0,0,.1)}
+    .card h1{font-size:15px;line-height:1.35;margin:0 0 8px;font-weight:700}
+    .card p{font-size:9px;margin:0 0 12px;color:#333}
+    .btn{display:inline-block;background:#5b14c4;color:#fff;text-decoration:none;font-size:9px;font-weight:500;padding:10px 24px;margin-top:20px}
+    .info{padding:38px 24px 24px;text-align:center}
+    .info h2{font-size:12px;font-weight:500;margin:0 0 20px}
+    .info p{font-size:8px;line-height:1.7;margin:0;color:#222}
+    .cta{background:#5b14c4;color:#fff;text-align:center;padding:28px 24px 36px;margin-top:16px}
+    .cta h2{font-size:14px;margin:0 0 14px}
+    .cta p{font-size:8px;line-height:1.7;margin:0 0 26px}
+    .cta a{display:inline-block;background:#fff;color:#111;text-decoration:none;font-size:11px;font-weight:700;padding:11px 28px;border-radius:20px}
+    .logo-img {
+    display: block;
+    width: auto;
+    height: 40px;
+    max-width: 160px;
+    object-fit: contain;
+  }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="logo">
+  <img src="<?php echo $logo; ?>" alt="" class="logo-img">
+</div>
+    <div class="card">
+      <h3><?php echo ucwords($title); ?></h3>
+      <p><?php echo $meta_description; ?></p>
+      <amp-img src="<?php echo $banner; ?>" width="720" height="480" layout="responsive" alt="Quiz banner image"></amp-img>
+      <a class="btn" href="<?php echo $final; ?>">Daftar</a>
+      <a class="btn" href="<?php echo $final; ?>">Login</a>
+    </div>
+    <div class="info">
+      <h2>☝️ Yes, it’s a quiz. And yes, it’s inside an email.</h2>
+      <p>Engage your prospects and nurture your leads the fun way with real-time quizzes in the inbox itself.</p>
+    </div>
+    <div class="cta">
+      <h2>Drive your growth with interactive emails!</h2>
+      <p>Interactive emails have shown some mind-blowing results. Try it for yourself to get higher conversions with <?php echo $titlebrand; ?>.</p>
+      <a href="<?php echo $final; ?>">Try <?php echo $titlebrand; ?> for FREE →</a>
+    </div>
+  </div>
+</body>
+</html>

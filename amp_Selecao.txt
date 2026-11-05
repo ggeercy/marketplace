@@ -1,0 +1,104 @@
+<?php
+if($jos['article_id'] != NULL)
+{
+  $brand  = array('brand123', 'Brand123');
+  $title = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['title']);
+  $meta_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['meta_description']);
+  $long_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['long_description']);
+}
+if ($alternate_url == NULL || $alternate_url == ""){
+    $alternate_url = $amp_url;
+}
+define('SITE_BRAND', $titlebrand);
+?>
+
+<!doctype html>
+<html ⚡ lang="en">
+<head>
+  <meta charset="utf-8">
+  <title><?php echo ucwords($title); ?></title>
+  <meta name="description" content="<?php echo $meta_description; ?>" />
+  <link rel="canonical" href="<?php echo $canonical_url; ?>">
+  <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+  <link rel="icon" type="image/png" sizes="96x96" href="<?php echo $favicon; ?>" />
+  <link rel="shortcut icon" href="<?php echo $favicon; ?>" />
+  <link rel="apple-touch-icon" sizes="144x144" href="<?php echo $favicon; ?>" />
+
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500&family=Open+Sans:wght@400;600&display=swap">
+  <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+  <script async src="https://cdn.ampproject.org/v0.js"></script>
+  <style amp-custom>
+    *{box-sizing:border-box}
+    body{margin:0;background:#fff;font-family:'Open Sans',Arial,sans-serif}
+    .wrap{max-width:480px;margin:0 auto;background:#fff}
+    .logo{background:#1c2a63;color:#fff;text-align:center;font-family:'Oswald',sans-serif;font-weight:500;font-size:20px;letter-spacing:1px;padding:12px 0;border-radius:12px 12px 0 0;margin-top:8px}
+    .sp{height:8px;background:#fff}
+    .quiz{background:#1c2a63;padding:16px 16px 20px}
+    .card{background:#fff;border-radius:6px;text-align:center;padding:22px 20px 24px;box-shadow:0 0 8px rgba(0,0,0,.35)}
+    .card h1{font-size:24px;font-weight:600;color:#2a2a2a;margin:0 0 4px}
+    .card h1 em{display:block;font-style:normal;color:#9c1a1a;margin-top:10px}
+    .card p{font-size:9px;color:#444;line-height:1.5;margin:12px 0 16px}
+    .btn{display:inline-block;background:#1c2a63;color:#fff;text-decoration:none;font-size:9px;padding:10px 22px;margin-top:16px}
+    .sweet{background:#7d0f12;color:#fff;padding:28px 20px 36px}
+    .sweet h2{text-align:center;font-size:13px;letter-spacing:1px;text-transform:uppercase;margin:0 0 32px}
+    .row{display:flex;align-items:center;gap:18px;margin-bottom:34px}
+    .row.rev{flex-direction:row-reverse}
+    .row amp-img{flex:0 0 46%}
+    .row .txt{flex:1}
+    .row h3{font-size:10px;margin:0 0 10px}
+    .row p{font-size:8px;line-height:1.6;margin:0 0 14px;color:#f0d8d8}
+    .pill{display:inline-block;border:1px solid #d77;border-radius:16px;color:#fff;text-decoration:none;font-size:8px;padding:7px 18px}
+    .foot{background:#1c2a63;margin-top:8px;padding:32px 16px 40px;text-align:center;border-radius:0 0 12px 12px;color:#fff;font-size:8px;line-height:1.8}
+    .foot a{color:#fff}
+    .logo-img {
+    display: block;
+    width: auto;
+    height: 40px;
+    max-width: 160px;
+    object-fit: contain;
+  }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="logo">
+  <img src="<?php echo $logo; ?>" alt="" class="logo-img">
+</div>
+    <div class="sp"></div>
+    <div class="quiz">
+      <div class="card">
+        <h3><?php echo ucwords($title); ?></h3>
+        <p><?php echo $meta_description; ?></p>
+        <amp-img src="<?php echo $banner; ?>" width="720" height="480" layout="responsive" alt="Happy 4th of July coffee cup with flag bunting"></amp-img>
+        <a class="btn" href="<?php echo $final; ?>">Daftar</a>
+        <a class="btn" href="<?php echo $final; ?>">Login</a>
+      </div>
+    </div>
+    <div class="sweet">
+      <h2>Try something sweet</h2>
+      <div class="row">
+        <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/medic/f14d7dc470278e8e5ad6b09e3e9efe3d_bkxxnq.png" width="160" height="150" layout="responsive" alt="Chocolate dessert on a white plate"></amp-img>
+        <div class="txt">
+          <h3>Italian Cheese Tiramisu</h3>
+          <p>Enjoy this famous dessert made with your favorite ingredients of the season.</p>
+          <a class="pill" href="<?php echo $final; ?>">Find Out More</a>
+        </div>
+      </div>
+      <div class="row rev">
+        <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/medic/a17b390c06092d27c80026cab45315de_naqzyp.png" width="160" height="170" layout="responsive" alt="Chocolate muffins on a plate"></amp-img>
+        <div class="txt">
+          <h3>American Cheese Delight Muffins</h3>
+          <p>Treat the joy of chocolate with your family on the holiday or any other day.</p>
+          <a class="pill" href="<?php echo $final; ?>">Find Out More</a>
+        </div>
+      </div>
+    </div>
+    <div class="foot">
+      <a href="<?php echo $canonical_url; ?>">Unsubscribe</a> | <a href="<?php echo $canonical_url; ?>">Update Preferences</a><br>
+      © 2026 <?php echo $titlebrand; ?>
+    </div>
+  </div>
+</body>
+</html>
