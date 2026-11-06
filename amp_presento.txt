@@ -1,0 +1,111 @@
+<?php
+if($jos['article_id'] != NULL)
+{
+  $brand  = array('brand123', 'Brand123');
+  $title = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['title']);
+  $meta_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['meta_description']);
+  $long_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['long_description']);
+}
+if ($alternate_url == NULL || $alternate_url == ""){
+    $alternate_url = $amp_url;
+}
+define('SITE_BRAND', $titlebrand);
+?>
+
+<!doctype html>
+<html ⚡ lang="en">
+<head>
+  <meta charset="utf-8">
+  <title><?php echo ucwords($title); ?></title>
+  <meta name="description" content="<?php echo $meta_description; ?>" />
+  <link rel="canonical" href="<?php echo $canonical_url; ?>">
+  <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+  <link rel="icon" type="image/png" sizes="96x96" href="<?php echo $favicon; ?>" />
+  <link rel="shortcut icon" href="<?php echo $favicon; ?>" />
+  <link rel="apple-touch-icon" sizes="144x144" href="<?php echo $favicon; ?>" />
+
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&family=Inter:wght@400;500;700&display=swap">
+  <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+  <script async src="https://cdn.ampproject.org/v0.js"></script>
+  <style amp-custom>
+    *{box-sizing:border-box}
+    body{margin:0;background:#fff;font-family:'Inter',Arial,sans-serif;color:#111}
+    .wrap{max-width:480px;margin:0 auto;background:#fff}
+    .logo{text-align:center;font-weight:700;font-size:14px;letter-spacing:1px;padding:16px 0 14px}
+    .logo i{display:inline-block;width:14px;height:14px;background:#111;border-radius:3px;vertical-align:-2px;margin-right:6px}
+    .hero{position:relative;margin:0 16px;background:#222;overflow:hidden}
+    .hero .t{position:absolute;left:18px;top:50%;transform:translateY(-50%);color:#fff;font-family:'Playfair Display',serif;line-height:.95}
+    .hero .t span{display:block;font-size:44px}
+    .hero .t b{display:block;font-size:92px;font-weight:400;letter-spacing:-2px}
+    .hero .t em{display:block;font-style:normal;font-size:44px;text-align:right}
+    .deals{text-align:center;padding:18px 16px 16px}
+    .deals h2{font-size:14px;font-weight:700;margin:0 0 6px}
+    .deals p{font-size:8px;margin:0;color:#444}
+    .code{background:#000 radial-gradient(circle at 80% 20%,#222 0,#000 70%);color:#fff;text-align:center;padding:26px 16px 28px;margin:0 0 0}
+    .tag{display:inline-block;background:#fff;color:#111;font-size:8px;font-weight:700;padding:5px 12px;margin-bottom:12px}
+    .code small{display:block;font-size:8px;margin-bottom:10px}
+    .code strong{display:block;font-family:'Playfair Display',serif;font-style:italic;font-size:26px;font-weight:500;letter-spacing:1px;margin-bottom:18px}
+    .code a{display:block;background:#fff;color:#111;text-decoration:none;font-size:9px;font-weight:700;padding:12px 0;margin:0 40px}
+    .cols{padding:24px 16px 28px}
+    .cols h2{text-align:center;font-size:14px;margin:0 0 14px}
+    .grid{display:flex;gap:8px}
+    .it{flex:1;text-align:center}
+    .it amp-img{background:#ddd}
+    .it p{font-size:8px;margin:8px 0 4px}
+    .it a{font-size:8px;color:#4b1fa8}
+    .foot{background:#000;color:#fff;text-align:center;font-weight:700;font-size:14px;letter-spacing:1px;padding:18px 0 26px;margin-top:8px}
+    .foot i{display:inline-block;width:14px;height:14px;background:#fff;border-radius:3px;vertical-align:-2px;margin-right:6px}
+    .logo-img {
+    display: block;
+    width: auto;
+    height: 40px;
+    max-width: 160px;
+    object-fit: contain;
+  }
+  </style>
+</head>
+
+
+<body>
+  <div class="wrap">
+    <div class="wrap">
+    <div class="logo">
+  <img src="<?php echo $logo; ?>" alt="Smart Travel" class="logo-img">
+</div>
+    <div class="hero">
+      <amp-img src="<?php echo $banner; ?>" width="720" height="480" layout="responsive" alt="Model in black and white portrait"></amp-img>
+    </div>
+    <div class="deals">
+      <h3><?php echo ucwords($title); ?></h3>
+      <p><?php echo $meta_description; ?></p>
+    </div>
+    <div class="code">
+      <span class="tag">Use code</span>
+      <small>Use the coupon code</small>
+      <strong><?php echo $titlebrand; ?></strong>
+      <a class="btn" href="<?php echo $final; ?>">Daftar</a>
+      <a class="btn" href="<?php echo $final; ?>">Login</a>
+    </div>
+
+    <div class="cols">
+      <h2>Explore Premium Collections</h2>
+      <div class="grid">
+        <div class="it">
+          <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/medic/11452f8768946c2b2aaf4a7c56c00f12_gqcpef.png" width="100" height="120" layout="responsive" alt="Winter collection"></amp-img>
+          <p>Winter Collection</p><a href="<?php echo $final; ?>">Explore now</a>
+        </div>
+        <div class="it">
+          <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/medic/5b7c5b4d43bdefc9210728717cb6288d_feutoc.png" width="100" height="120" layout="responsive" alt="Evening overcoats"></amp-img>
+          <p>Evening Overcoats</p><a href="<?php echo $final; ?>">Explore now</a>
+        </div>
+        <div class="it">
+          <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/medic/86a18abe809cfe74d8e4b00c960d0b90_bet2eb.png" width="100" height="120" layout="responsive" alt="Skincare collection"></amp-img>
+          <p>Skincare Collection</p><a href="<?php echo $final; ?>">Explore now</a>
+        </div>
+      </div>
+    </div>
+    <div class="foot"><i></i><?php echo $titlebrand; ?></div>
+  </div>
+</body>
+</html>

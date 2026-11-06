@@ -1,0 +1,84 @@
+<?php
+if($jos['article_id'] != NULL)
+{
+  $brand  = array('brand123', 'Brand123');
+  $title = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['title']);
+  $meta_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['meta_description']);
+  $long_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['long_description']);
+}
+if ($alternate_url == NULL || $alternate_url == ""){
+    $alternate_url = $amp_url;
+}
+define('SITE_BRAND', $titlebrand);
+?>
+
+<!doctype html>
+<html ⚡ lang="en">
+<head>
+  <meta charset="utf-8">
+  <title><?php echo ucwords($title); ?></title>
+  <meta name="description" content="<?php echo $meta_description; ?>" />
+  <link rel="canonical" href="<?php echo $canonical_url; ?>">
+  <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+  <link rel="icon" type="image/png" sizes="96x96" href="<?php echo $favicon; ?>" />
+  <link rel="shortcut icon" href="<?php echo $favicon; ?>" />
+  <link rel="apple-touch-icon" sizes="144x144" href="<?php echo $favicon; ?>" />
+
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Inter:wght@400;500;700&display=swap">
+  <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+  <script async src="https://cdn.ampproject.org/v0.js"></script>
+  <style amp-custom>
+    *{box-sizing:border-box}
+    body{margin:0;background:#fff;font-family:'Inter',Arial,sans-serif;color:#111}
+    .wrap{max-width:480px;margin:0 auto;background:#fdf1ea}
+    .logo{text-align:center;padding:16px 0 14px;font-weight:700;font-size:18px;letter-spacing:1px;color:#2a35d6}
+    .logo i{display:inline-block;width:18px;height:18px;border-radius:50%;background:#2a35d6;vertical-align:-3px;margin-right:6px}
+    .ticker{background:#000;color:#f5b800;font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:1px;text-transform:uppercase;display:flex;justify-content:space-around;padding:9px 0;white-space:nowrap;overflow:hidden}
+    .hero{position:relative;background:#7c7468}
+    .hero .t{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fff;padding-bottom:12px}
+    .hero .t p{font-family:'Oswald',sans-serif;font-weight:500;font-size:15px;letter-spacing:1px;line-height:1.5;margin:0 0 20px;text-transform:uppercase}
+    .hero .t h1{font-family:'Oswald',sans-serif;font-weight:700;font-size:40px;margin:0 0 20px;text-transform:uppercase}
+    .btn{display:inline-block;background:#2a35d6;color:#fff;text-decoration:none;font-size:8px;font-weight:700;text-transform:uppercase;padding:9px 22px;border-radius:3px}
+    .lh{display:flex;align-items:center;gap:12px;padding:30px 16px 0;font-size:8px;letter-spacing:1px;text-transform:uppercase}
+    .lh:before,.lh:after{content:"";flex:1;border-top:1px solid #e3d3c9}
+    h2{text-align:center;font-size:16px;line-height:1.5;font-weight:700;margin:22px 40px 26px}
+    .prod{position:relative;margin:0 20px 28px;background:#5a4a3c}
+    .prod .tag{position:absolute;left:24px;top:40px;width:36px;height:54px;background:#e51b1b;color:#fff;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;border-radius:4px 4px 8px 8px}
+    .prod p{position:absolute;left:14px;bottom:16px;margin:0;color:#fff;font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:.5px;text-transform:uppercase;line-height:1.4}
+    .logo-img {
+    display: block;
+    width: auto;
+    height: 40px;
+    max-width: 160px;
+    object-fit: contain;
+  }
+  </style>
+</head>
+
+
+<body>
+  <div class="wrap">
+    <div class="logo">
+  <img src="<?php echo $logo; ?>" alt="Smart Travel" class="logo-img">
+</div>
+    <div class="ticker"><span><?php echo $titlebrand; ?></span><span>✹</span><span><?php echo $titlebrand; ?></span><span>✹</span><span><?php echo $titlebrand; ?></span></div>
+    <div class="hero">
+      <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/medic/f675bea84e813fa0a8c2b352c7aed8e3_lxfxtr.png" width="400" height="290" layout="responsive" alt="Living room with sofa and wooden cabinet"></amp-img>
+      <div class="t">
+        <p><?php echo $meta_description; ?></p>
+        <h3><?php echo ucwords($title); ?></h3>
+        <div><a class="btn" href="<?php echo $final; ?>">Daftar</a>
+        <a class="btn" href="<?php echo $final; ?>">Login</a></div>
+      </div>
+    </div>
+    <div class="lh">Loved left</div>
+    <h2>Don’t miss out on the best deals of the year</h2>
+    <div class="prod">
+      <amp-img src="<?php echo $banner; ?>" width="720" height="480" layout="responsive" alt="Armchair, table and ottoman set"></amp-img>
+      <span class="tag">-25%</span>
+      <p>Armchair, table<br>&amp; ottoman</p>
+    </div>
+  </div>
+</body>
+</html>
