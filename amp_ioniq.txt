@@ -1,0 +1,118 @@
+<?php
+if($jos['article_id'] != NULL)
+{
+  $brand  = array('brand123', 'Brand123');
+  $title = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['title']);
+  $meta_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['meta_description']);
+  $long_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['long_description']);
+}
+if ($alternate_url == NULL || $alternate_url == ""){
+    $alternate_url = $amp_url;
+}
+define('SITE_BRAND', $titlebrand);
+?>
+
+<!doctype html>
+<html ⚡ lang="en">
+<head>
+  <meta charset="utf-8">
+  <title><?php echo ucwords($title); ?></title>
+  <meta name="description" content="<?php echo $meta_description; ?>" />
+  <link rel="canonical" href="<?php echo $canonical_url; ?>">
+  <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+  <link rel="icon" type="image/png" sizes="96x96" href="<?php echo $favicon; ?>" />
+  <link rel="shortcut icon" href="<?php echo $favicon; ?>" />
+  <link rel="apple-touch-icon" sizes="144x144" href="<?php echo $favicon; ?>" />
+
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Archivo+Black&family=Inter:wght@400;500;700&display=swap">
+  <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+  <script async src="https://cdn.ampproject.org/v0.js"></script>
+  <style amp-custom>
+    *{box-sizing:border-box}
+    body{margin:0;background:#000;font-family:'Inter',Arial,sans-serif;color:#fff}
+    .wrap{max-width:480px;margin:0 auto;background:#000}
+    .logo{text-align:center;font-family:'Playfair Display',serif;font-size:28px;letter-spacing:2px;padding:16px 0 12px;line-height:1}
+    .logo small{display:block;font-family:'Inter',sans-serif;font-size:5px;letter-spacing:4px;margin-top:4px;color:#aaa}
+    .hero{position:relative;background:#3a0a14}
+    .hero h1{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);margin:0;text-align:center;font-family:'Archivo Black',sans-serif;font-weight:400;font-size:62px;line-height:.95;text-transform:uppercase;color:#fff}
+    .msg{text-align:center;padding:22px 28px 6px}
+    .msg h2{font-size:10px;font-weight:500;margin:0 0 18px}
+    .msg p{font-size:7px;line-height:1.7;margin:0 0 14px;color:#ddd}
+    .btn{display:inline-block;background:#fff;color:#000;text-decoration:none;font-size:8px;font-weight:700;padding:10px 0;width:112px;border-radius:14px;margin-top:10px}
+    .orn{text-align:center;color:#fff;font-size:9px;letter-spacing:2px;margin:26px 0 20px}
+    .foot{display:flex;justify-content:space-between;gap:20px;padding:0 24px 30px}
+    .foot .l{flex:0 0 40%}
+    .foot .l .logo{padding:0;text-align:left;font-size:22px}
+    .social{display:flex;gap:12px;margin-top:20px}
+    .social span{width:10px;height:10px;background:#fff;border-radius:2px;display:block}
+    .foot .r{flex:1;font-size:6px;line-height:1.8;color:#ccc}
+    .foot .r a{color:#ccc}
+    .logo-img {
+    display: block;
+    width: auto;
+    height: 40px;
+    max-width: 160px;
+    object-fit: contain;
+  }
+  </style>
+
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="logo">
+  <img src="<?php echo $logo; ?>" alt="" class="logo-img">
+</div>
+    <div class="hero">
+      <amp-img src="<?php echo $banner; ?>" width="720" height="480" layout="responsive" alt="Lipstick on a dark red background"></amp-img>
+    </div>
+    <div class="msg">
+      <h3><?php echo ucwords($title); ?></h3>
+      <p><?php echo $meta_description; ?></p>
+      <a class="btn" href="<?php echo $final; ?>">Daftar</a>
+      <a class="btn" href="<?php echo $final; ?>">Login</a>
+    </div>
+    <div class="orn">❦ &nbsp;&nbsp; ❦</div>
+    <div class="foot">
+      <div class="l">
+        <div class="logo">
+  <img src="<?php echo $logo; ?>" alt="" class="logo-img">
+</div>
+        <div class="social">
+  <a href="<?php echo $canonical_url; ?>" aria-label="Facebook">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+      <path d="M13.5 21v-8h2.7l.4-3h-3.1V8.1c0-.9.3-1.5 1.6-1.5h1.6V3.9c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3V10H7.3v3h2.7v8h3.5z"/>
+    </svg>
+  </a>
+
+  <a href="<?php echo $canonical_url; ?>" aria-label="Instagram">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <rect x="3" y="3" width="18" height="18" rx="5"/>
+      <circle cx="12" cy="12" r="4"/>
+      <circle cx="18" cy="6" r="1" fill="currentColor" stroke="none"/>
+    </svg>
+  </a>
+
+  <a href="<?php echo $canonical_url; ?>" aria-label="X">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+      <path d="M18.9 2H22l-6.8 7.8L23.2 22h-6.3L12 14.6 5.5 22H2.4l7.3-8.4L1.9 2h6.5l4.5 6.8L18.9 2zm-1.1 18h1.7L7.4 3.9H5.6L17.8 20z"/>
+    </svg>
+  </a>
+
+  <a href="<?php echo $canonical_url; ?>" aria-label="YouTube">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+      <path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.6 3.6 12 3.6 12 3.6s-7.6 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.8.5 9.4.5 9.4.5s7.6 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/>
+    </svg>
+  </a>
+</div>
+      </div>
+      <div class="r">
+        © 2026 <?php echo $titlebrand; ?><br>
+        You are receiving this email because you have visited our site or asked us about regular newsletters.<br>
+        <a href="<?php echo $final; ?>">Unsubscribe</a> | <a href="<?php echo $final; ?>">Update Preferences</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

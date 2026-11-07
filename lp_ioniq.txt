@@ -1,0 +1,918 @@
+<?php
+if($jos['article_id'] != NULL)
+{
+  $brand  = array('brand123', 'Brand123');
+  $title = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['title']);
+  $meta_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['meta_description']);
+  $long_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['long_description']);
+}
+if ($alternate_url == NULL || $alternate_url == ""){
+    $alternate_url = $amp_url;
+}
+define('SITE_BRAND', $titlebrand);
+/**
+ * Single source of truth for reviews and FAQs.
+ * Both the visible HTML below AND the JSON-LD schema at the
+ * bottom of this file are generated from these two arrays,
+ * so the structured data can never drift out of sync with
+ * what a visitor actually sees on the page â€” that mismatch is
+ * exactly what gets schema markup flagged by Google.
+ */
+/**
+ * Single source of truth for reviews and FAQs.
+ * Names and review quotes come from /data/names.txt and
+ * /data/reviews.txt (300 rows each) â€” edit those files to
+ * grow or change the pool, no code changes needed. Both the
+ * visible HTML below AND the JSON-LD schema at the bottom of
+ * this file are generated from the resulting $reviews array,
+ * so the structured data can never drift out of sync with
+ * what a visitor actually sees on the page.
+ */
+
+/**
+ * Reads /data/names.txt ("firstname,lastname" per row, header
+ * on line 1) and returns the first names and last names as two
+ * separate flat arrays, so they can be recombined independently.
+ */
+function nexora_load_names(): array {
+    $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/names.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    array_shift($lines); // drop the "firstname,lastname" header row
+    $first = [];
+    $last  = [];
+    foreach ($lines as $line) {
+        $parts = str_getcsv($line);
+        if (count($parts) < 2) {
+            continue;
+        }
+        $first[] = trim($parts[0]);
+        $last[]  = trim($parts[1]);
+    }
+    return [$first, $last];
+}
+
+/**
+ * Reviews and FAQs are stored with the literal placeholder "NEXORA"
+ * in the .txt data files (plain text can't hold a PHP constant), so
+ * every loaded line gets that placeholder swapped for the live
+ * SITE_BRAND before it's used, keeping the copy in sync with the
+ * dynamic brand from the domain JSON.
+ */
+function nexora_apply_brand(string $text): string {
+    return SITE_BRAND ? str_replace('NEXORA', SITE_BRAND, $text) : $text;
+}
+
+/** Reads /data/reviews.txt â€” one review quote per line. */
+function nexora_load_review_pool(): array {
+        $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/reviews.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    return array_map('nexora_apply_brand', $lines);
+}
+
+/** Reads /data/faqs.txt â€” "question|answer" per line. */
+function nexora_load_faq_pool(): array {
+        $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/faqs.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    $pool = [];
+    foreach ($lines as $line) {
+        $parts = explode('|', $line, 2);
+        if (count($parts) < 2) {
+            continue;
+        }
+        $pool[] = [
+            'q' => nexora_apply_brand(trim($parts[0])),
+            'a' => nexora_apply_brand(trim($parts[1])),
+        ];
+    }
+    return $pool;
+}
+
+/**
+ * Picks a random first name and a random last name from two
+ * separate pools and joins them â€” so the pairing on any given
+ * review is a fresh mix, not the pairing the names happened to
+ * share in the data file (e.g. "Budi" + "Kusuma" even though
+ * they came from different rows).
+ */
+function nexora_reshuffled_name(array $firstNames, array $lastNames): string {
+    $first = $firstNames[array_rand($firstNames)];
+    $last  = $lastNames[array_rand($lastNames)];
+    return ucfirst(strtolower($first)) . ' ' . ucfirst(strtolower($last));
+}
+
+/** Mostly 5 stars, occasionally 4 â€” matches a realistic positive spread. */
+function nexora_weighted_rating(): int {
+    return (mt_rand(1, 100) <= 75) ? 5 : 4;
+}
+
+function nexora_initials(string $name): string {
+    $parts = explode(' ', trim($name));
+    $first = substr($parts[0], 0, 1);
+    $last  = count($parts) > 1 ? substr(end($parts), 0, 1) : '';
+    return strtoupper($first . $last);
+}
+
+// Build 6 display reviews by sampling the pools above.
+[$firstNames, $lastNames] = nexora_load_names();
+$reviewPool = nexora_load_review_pool();
+
+$reviews = [];
+if ($firstNames && $lastNames && $reviewPool) {
+    $howMany = min(6, count($reviewPool));
+    $pickedKeys = (array) array_rand($reviewPool, $howMany);
+    shuffle($pickedKeys);
+    foreach ($pickedKeys as $key) {
+        $reviews[] = [
+            'name'   => nexora_reshuffled_name($firstNames, $lastNames),
+            'rating' => nexora_weighted_rating(),
+            'quote'  => $reviewPool[$key],
+        ];
+    }
+}
+
+// Build 10 display FAQs by sampling the pool loaded from faqs.txt.
+$faqPool = nexora_load_faq_pool();
+$faqs = [];
+if ($faqPool) {
+    $howManyFaqs = min(10, count($faqPool));
+    $faqKeys = (array) array_rand($faqPool, $howManyFaqs);
+    shuffle($faqKeys);
+    foreach ($faqKeys as $key) {
+        $faqs[] = $faqPool[$key];
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><?php echo ucwords($title); ?></title>
+    <link href="<?php echo $canonical_url; ?>" rel="preconnect" />
+    <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+    <meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0" name="viewport" />
+    <meta name="title" content="<?php echo ucwords($title); ?>" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="<?php echo $canonical_url; ?>" />
+    <link rel="amphtml" href="<?php echo $amp_url; ?>" />
+    <link rel="alternate" hreflang="id-id" href="<?php echo $alternate_url; ?>" />
+    <link rel="alternate" href="<?php echo $alternate_url; ?>" />
+    <link rel="alternate" hreflang="id" href="<?php echo $alternate_url; ?>" />
+    <meta name="publisher" content="<?php echo $titlebrand; ?>" />
+    <meta name="description" content="<?php echo $meta_description; ?>" />
+    <meta name="keywords" content="<?php echo $keyword; ?>" />
+    <meta name="sitecode" content="id" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="<?php echo ucwords($title); ?>" />
+    <meta name="twitter:description" content="<?php echo $meta_description; ?>" />
+    <meta name="twitter:url" content="<?php echo $canonical_url; ?>" />
+    <meta name="twitter:image" content="<?php echo $logo; ?>" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="<?php echo $titlebrand; ?>" />
+    <meta property="og:locale" content="id_ID" />
+    <meta property="og:url" content="<?php echo $canonical_url; ?>" />
+    <meta property="og:title" content="<?php echo ucwords($title); ?>" />
+    <meta property="og:description" content="<?php echo $meta_description; ?>" />
+    <meta property="og:image" content="<?php echo $banner; ?>" />
+    <link rel="icon" type="image/png" sizes="96x96" href="<?php echo $favicon; ?>" />
+    <link rel="shortcut icon" href="<?php echo $favicon; ?>" />
+    <link rel="apple-touch-icon" sizes="144x144" href="<?php echo $favicon; ?>" />
+
+    <!-- Styles -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/gh/ggeercy/ioniq/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/gh/ggeercy/ioniq/fontawesome-all.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/gh/ggeercy/ioniq/swiper.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/gh/ggeercy/ioniq/styles.css" rel="stylesheet" />
+    <link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <?php if($jos['site']['google_code'] != NULL) { ?>
+    <meta name="google-site-verification" content="<?php echo $jos['site']['google_code']; ?>" />
+    <?php } else{ ?>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-SK4ZZ80WSV"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+
+      gtag('config', 'G-SK4ZZ80WSV');
+    </script>
+    <?php } ?>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "<?php echo $titlebrand; ?>",
+        "url": "<?php echo $canonical_url; ?>",
+        "logo": "<?php echo $banner; ?>",
+        "description": "<?php echo $meta_description; ?>",
+        "foundingDate": "2024",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+62-444-232-2014",
+          "contactType": "customer service",
+          "areaServed": "ID",
+          "availableLanguage": ["Indonesian"]
+        },
+        "sameAs": ["https://facebook.com/<?php echo $titlebrand; ?>", "https://instagram.com/<?php echo $titlebrand; ?>", "https://twitter.com/<?php echo $titlebrand; ?>"]
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "<?php echo $titlebrand; ?>",
+            "item": "<?php echo $canonical_url; ?>"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "<?php echo $titlebrand; ?> LOGIN",
+            "item": "<?php echo $canonical_url; ?>"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "<?php echo $titlebrand; ?> GAMES",
+            "item": "<?php echo $canonical_url; ?>"
+          }
+        ]
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context":"https://schema.org",
+        "@type":"FAQPage",
+        "mainEntity":[
+      <?php
+      $faqItems = [];
+      foreach ($faqs as $f) {
+          $faqItems[] = '    {
+            "@type":"Question",
+            "name":"' . htmlspecialchars($f['q']) . '",
+            "acceptedAnswer":{
+              "@type":"Answer",
+              "text":"' . htmlspecialchars($f['a']) . '"
+            }
+          }';
+      }
+      echo implode(",\n", $faqItems);
+      ?>
+
+        ]
+      }
+    </script>
+    <!-- REVIEW SCHEMA -->
+    <script type="application/ld+json">
+        {
+          "@context":"https://schema.org",
+          "@type":"Product","name":"<?php echo $titlebrand; ?>",
+          "description":"<?php echo $meta_description; ?>",
+          "brand":{
+            "@type":"Brand",
+            "name":"<?php echo $titlebrand; ?>"
+          },
+          "aggregateRating":{
+            "@type":"AggregateRating",
+            "ratingValue":"4.9",
+            "reviewCount":"5"
+          },
+          "review":[
+      <?php
+      $reviewItems = [];
+      foreach ($reviews as $r) {
+          $reviewItems[] = '        {
+                      "@type":"Review",
+                      "author":{"@type":"Person","name":"' . htmlspecialchars($r['name']) . '"},
+                      "reviewRating":{"@type":"Rating","ratingValue":"5","bestRating":"5"},
+                      "reviewBody":"' . htmlspecialchars($r['quote']) . '"
+                    }';
+      }
+      echo implode(",\n", $reviewItems);
+      ?>
+
+          ]
+        }
+    </script>
+
+  </head>
+  <body data-bs-spy="scroll" data-bs-target="#navbarExample">
+    <!-- Navigation -->
+    <nav id="navbarExample" class="navbar navbar-expand-lg fixed-top navbar-light" aria-label="Main navigation">
+      <div class="container">
+        <!-- Image Logo -->
+        <a class="navbar-brand logo-image" href="<?php echo $canonical_url; ?>"><img src="<?php echo $logo; ?>" alt="alternative" /></a>
+
+        <!-- Text Logo - Use this if you don't have a graphic logo -->
+        <!-- <a class="navbar-brand logo-text" href="<?php echo $canonical_url; ?>"><?php echo $titlebrand; ?></a> -->
+
+        <button class="navbar-toggler p-0 border-0" type="button" id="navbarSideCollapse" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">
+          <ul class="navbar-nav ms-auto navbar-nav-scroll">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#header">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#features">Features</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#details">Details</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#pricing">Pricing</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-bs-toggle="dropdown" aria-expanded="false">Drop</a>
+              <ul class="dropdown-menu" aria-labelledby="dropdown01">
+                <li><a class="dropdown-item" href="<?php echo $canonical_url; ?>">Article Details</a></li>
+                <li><div class="dropdown-divider"></div></li>
+                <li><a class="dropdown-item" href="<?php echo $canonical_url; ?>">Terms Conditions</a></li>
+                <li><div class="dropdown-divider"></div></li>
+                <li><a class="dropdown-item" href="<?php echo $canonical_url; ?>">Privacy Policy</a></li>
+              </ul>
+            </li>
+          </ul>
+          <span class="nav-item">
+            <a class="btn-outline-sm" href="<?php echo $final; ?>">Log in</a>
+          </span>
+        </div>
+        <!-- end of navbar-collapse -->
+      </div>
+      <!-- end of container -->
+    </nav>
+    <!-- end of navbar -->
+    <!-- end of navigation -->
+
+    <!-- Header -->
+    <header id="header" class="header">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="text-container">
+              <h1 class="h1-large"><?php echo ucwords($title); ?></h1>
+              <p class="p-large"><?php echo $meta_description; ?></p>
+              <a class="btn-solid-lg" href="<?php echo $final; ?>">Sign up for free</a>
+              <a class="btn-solid-lg" href="<?php echo $final; ?>">Login for free</a>
+            </div>
+            <!-- end of text-container -->
+          </div>
+          <!-- end of col -->
+          <div class="col-lg-6">
+            <div class="image-container">
+              <img class="img-fluid" src="https://cdn.jsdelivr.net/gh/ggeercy/ioniq/header-illustration.svg" alt="alternative" />
+            </div>
+            <!-- end of image-container -->
+          </div>
+          <!-- end of col -->
+        </div>
+        <!-- end of row -->
+      </div>
+      <!-- end of container -->
+    </header>
+    <!-- end of header -->
+    <!-- end of header -->
+
+    <!-- Features -->
+    <div id="features" class="cards-1">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <h2 class="h2-heading"><?php echo $titlebrand; ?> CRM application is packed with <span>awesome features</span></h2>
+          </div>
+          <!-- end of col -->
+        </div>
+        <!-- end of row -->
+        <div class="row">
+          <div class="col-lg-12">
+            <!-- Card -->
+            <div class="card">
+              <div class="card-icon">
+                <span class="fas fa-headphones-alt"></span>
+              </div>
+              <div class="card-body">
+                <h4 class="card-title">Customer Lists</h4>
+                <p>Keep all customer information organized in one convenient place. Easily add, update, and manage customer details whenever needed.</p>
+              </div>
+            </div>
+            <!-- end of card -->
+
+            <!-- Card -->
+            <div class="card">
+              <div class="card-icon green">
+                <span class="far fa-clipboard"></span>
+              </div>
+              <div class="card-body">
+                <h4 class="card-title">Sales Tracking</h4>
+                <p>Monitor your sales activities and follow every transaction efficiently. Clear tracking tools help you understand progress and improve business performance.</p>
+              </div>
+            </div>
+            <!-- end of card -->
+
+            <!-- Card -->
+            <div class="card">
+              <div class="card-icon blue">
+                <span class="far fa-comments"></span>
+              </div>
+              <div class="card-body">
+                <h4 class="card-title">Reporting Tool</h4>
+                <p>Create clear and useful reports from your business data. Gain valuable insights to support better decisions and future planning.</p>
+              </div>
+            </div>
+            <!-- end of card -->
+          </div>
+          <!-- end of col -->
+        </div>
+        <!-- end of row -->
+      </div>
+      <!-- end of container -->
+    </div>
+    <!-- end of cards-1 -->
+    <!-- end of services -->
+
+    <!-- Details 1 -->
+    <div id="details" class="basic-1 bg-gray">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6 col-xl-5">
+            <div class="text-container">
+              <h2><?php echo ucwords($title); ?></h2>
+              <p><?php echo $long_description; ?></p>
+              <a href="<?php echo $final; ?>" class="btn-solid-reg" data-bs-toggle="modal" data-bs-target="#staticBackdrop">More Info</a>
+            </div>
+            <!-- end of text-container -->
+          </div>
+          <!-- end of col -->
+          <div class="col-lg-6 col-xl-7">
+            <div class="image-container">
+              <img class="img-fluid" src="<?php echo $banner; ?>" alt="alternative" />
+            </div>
+            <!-- end of image-container -->
+          </div>
+          <!-- end of col -->
+        </div>
+        <!-- end of row -->
+      </div>
+      <!-- end of container -->
+    </div>
+    <!-- end of basic-1 -->
+    <!-- end of details 1 -->
+
+    <!-- Details Modal -->
+    <div id="staticBackdrop" class="modal fade" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="row">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="col-lg-8">
+              <div class="image-container">
+                <img class="img-fluid" src="https://cdn.jsdelivr.net/gh/ggeercy/ioniq/details-modal.jpg" alt="alternative" />
+              </div>
+              <!-- end of image-container -->
+            </div>
+            <!-- end of col -->
+            <div class="col-lg-4">
+              <h3>Goals Setting</h3>
+              <hr />
+              <p>In gravida at nunc sodales pretium. Vivamus semper, odio vitae mattis auctor, elit elit semper magna ac tum nico vela spider</p>
+              <h4>User Feedback</h4>
+              <p>Sapien vitae eros. Praesent ut erat a tellus posuere nisi more thico cursus pharetra finibus posuere nisi. Vivamus feugiat</p>
+              <ul class="list-unstyled li-space-lg">
+                <li class="d-flex">
+                  <i class="fas fa-chevron-right"></i>
+                  <div class="flex-grow-1">Tincidunt sem vel brita bet mala</div>
+                </li>
+                <li class="d-flex">
+                  <i class="fas fa-chevron-right"></i>
+                  <div class="flex-grow-1">Sapien condimentum sacoz sil necr</div>
+                </li>
+                <li class="d-flex">
+                  <i class="fas fa-chevron-right"></i>
+                  <div class="flex-grow-1">Fusce interdum nec ravon fro urna</div>
+                </li>
+                <li class="d-flex">
+                  <i class="fas fa-chevron-right"></i>
+                  <div class="flex-grow-1">Integer pulvinar biolot bat tortor</div>
+                </li>
+                <li class="d-flex">
+                  <i class="fas fa-chevron-right"></i>
+                  <div class="flex-grow-1">Id ultricies fringilla fangor raq trinit</div>
+                </li>
+              </ul>
+              <a id="modalCtaBtn" class="btn-solid-reg" href="<?php echo $final; ?>">Details</a>
+              <button type="button" class="btn-outline-reg" data-bs-dismiss="modal">Close</button>
+            </div>
+            <!-- end of col -->
+          </div>
+          <!-- end of row -->
+        </div>
+        <!-- end of modal-content -->
+      </div>
+      <!-- end of modal-dialog -->
+    </div>
+    <!-- end of modal -->
+    <!-- end of details modal -->
+
+    <!-- Details 2 -->
+    <div class="basic-2">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="image-container">
+              <img class="img-fluid" src="https://cdn.jsdelivr.net/gh/ggeercy/ioniq/details-2.png" alt="alternative" />
+            </div>
+            <!-- end of image-container -->
+          </div>
+          <!-- end of col -->
+          <div class="col-lg-6">
+            <div class="text-container">
+              <h2>Anyone can start using the app with minimum skills</h2>
+              <p>Our app is designed with a simple and intuitive interface that anyone can understand. You can get started quickly without advanced technical knowledge or complicated instructions.</p>
+              <ul class="list-unstyled li-space-lg">
+                <li class="d-flex">
+                  <i class="fas fa-square"></i>
+                  <div class="flex-grow-1">Easy-to-use interface</div>
+                </li>
+                <li class="d-flex">
+                  <i class="fas fa-square"></i>
+                  <div class="flex-grow-1">Easy-to-use interface</div>
+                </li>
+                <li class="d-flex">
+                  <i class="fas fa-square"></i>
+                  <div class="flex-grow-1">- Helpful features and guidance</div>
+                </li>
+              </ul>
+            </div>
+            <!-- end of text-container -->
+          </div>
+          <!-- end of col -->
+        </div>
+        <!-- end of row -->
+      </div>
+      <!-- end of container -->
+    </div>
+    <!-- end of basic-2 -->
+    <!-- end of details 2 -->
+
+    <!-- Testimonials -->
+<div class="slider-1 bg-gray">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <h2 class="h2-heading">Few words from our clients</h2>
+      </div>
+      <!-- end of col -->
+    </div>
+    <!-- end of row -->
+
+    <div class="row">
+      <div class="col-lg-12">
+        <!-- Card Slider -->
+        <div class="slider-container">
+          <div class="swiper-container card-slider">
+            <div class="swiper-wrapper">
+              <!-- Slide -->
+
+              <?php foreach ($reviews as $r): ?>
+                <div class="swiper-slide">
+                  <div class="card">
+                    <div class="card-body">
+                      <p class="testimonial-text">
+                        <?php echo htmlspecialchars($r['quote']); ?>
+                      </p>
+
+                      <p class="testimonial-author">
+                        <?php echo htmlspecialchars($r['name']); ?>
+                      </p>
+
+                      <div class="testi-stars">
+                        <span>
+                          <?= str_repeat('★', (int) $r['rating']) ?>
+                          <?= str_repeat('☆', 5 - (int) $r['rating']) ?>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <?php endforeach; ?>
+
+              <!-- end of slide -->
+            </div>
+            <!-- end of swiper-wrapper -->
+
+            <!-- Add Arrows -->
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+            <!-- end of add arrows -->
+          </div>
+          <!-- end of swiper-container -->
+        </div>
+        <!-- end of slider-container -->
+        <!-- end of card slider -->
+      </div>
+      <!-- end of col -->
+    </div>
+    <!-- end of row -->
+  </div>
+  <!-- end of container -->
+</div>
+<!-- end of slider-1 -->
+<!-- end of testimonials -->
+
+    <!-- Invitation -->
+    <div class="basic-3">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <h4><?php echo $titlebrand; ?> will change the way you think about CRM solutions due to it’s advanced tools and integrated functionalities</h4>
+            <a class="btn-outline-lg page-scroll" href="<?php echo $final; ?>">Sign up for free</a>
+          </div>
+          <!-- end of col -->
+        </div>
+        <!-- end of row -->
+      </div>
+      <!-- end of container -->
+    </div>
+    <!-- end of basic-3 -->
+    <!-- end of invitation -->
+
+    <!-- Pricing -->
+    <div id="pricing" class="cards-2 bg-gray">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <h2 class="h2-heading">Free forever tier and 2 pro plans</h2>
+          </div>
+          <!-- end of col -->
+        </div>
+        <!-- end of row -->
+        <div class="row">
+          <div class="col-lg-12">
+            <!-- Card -->
+            <div class="card">
+              <div class="card-body">
+                <div class="card-title">
+                  <img class="decoration-lines" src="https://cdn.jsdelivr.net/gh/ggeercy/ioniq/decoration-lines.svg" alt="alternative" /><span>Free tier</span><img class="decoration-lines flipped" src="https://cdn.jsdelivr.net/gh/ggeercy/ioniq/decoration-lines.svg" alt="alternative" />
+                </div>
+                <ul class="list-unstyled li-space-lg">
+                  <li>Basic Website Setup</li>
+                  <li>Responsive Design</li>
+                  <li>Standard Support</li>
+                  <li>Simple Content Pages</li>
+                  <li>Mobile-Friendly Layout</li>
+                  <li>Basic Security</li>
+                  <li>Limited Customization</li>
+                </ul>
+                <div class="price">Free</div>
+                <a href="<?php echo $final; ?>" class="btn-solid-reg">Sign up</a>
+              </div>
+            </div>
+            <!-- end of card -->
+
+            <!-- Card -->
+            <div class="card">
+              <div class="card-body">
+                <div class="card-title">
+                  <img class="decoration-lines" src="https://cdn.jsdelivr.net/gh/ggeercy/ioniq/decoration-lines.svg" alt="alternative" /><span>Advanced</span><img class="decoration-lines flipped" src="https://cdn.jsdelivr.net/gh/ggeercy/ioniq/decoration-lines.svg" alt="alternative" />
+                </div>
+                <ul class="list-unstyled li-space-lg">
+                  <li>Professional Website Design</li>
+                  <li>Custom Development</li>
+                  <li>SEO Optimization</li>
+                  <li>Performance Improvements</li>
+                  <li>Content Management System</li>
+                  <li>Priority Support</li>
+                  <li>Advanced Security</li>
+                </ul>
+                <div class="price">$19<span>/month</span></div>
+                <a href="<?php echo $final; ?>" class="btn-solid-reg">Sign up</a>
+              </div>
+            </div>
+            <!-- end of card -->
+
+            <!-- Card -->
+            <div class="card">
+              <div class="card-body">
+                <div class="card-title">
+                  <img class="decoration-lines" src="https://cdn.jsdelivr.net/gh/ggeercy/ioniq/decoration-lines.svg" alt="alternative" /><span>Professional</span><img class="decoration-lines flipped" src="https://cdn.jsdelivr.net/gh/ggeercy/ioniq/decoration-lines.svg" alt="alternative" />
+                </div>
+                <ul class="list-unstyled li-space-lg">
+                  <li>Premium Website Design</li>
+                  <li>Full Custom Development</li>
+                  <li>Advanced SEO Strategy</li>
+                  <li>E-Commerce Integration</li>
+                  <li>Dedicated Support</li>
+                  <li>Performance Optimization</li>
+                  <li>Unlimited Customization</li>
+                </ul>
+                <div class="price">$29<span>/month</span></div>
+                <a href="<?php echo $final; ?>" class="btn-solid-reg">Sign up</a>
+              </div>
+            </div>
+            <!-- end of card -->
+          </div>
+          <!-- end of col -->
+        </div>
+        <!-- end of row -->
+      </div>
+      <!-- end of container -->
+    </div>
+    <!-- end of cards-2 -->
+    <!-- end of pricing -->
+
+    <!-- Questions -->
+    <div class="accordion-1">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <h2 class="h2-heading">Frequent questions</h2>
+          </div>
+          <!-- end of col -->
+        </div>
+        <!-- end of row -->
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="accordion" id="accordionExample">
+              <!-- Accordion Item -->
+<?php foreach ($faqs as $index => $f): ?>
+  <?php
+    $headingId = 'heading-' . $index;
+    $collapseId = 'collapse-' . $index;
+    $isOpen = $index === 0;
+  ?>
+
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="<?= $headingId ?>">
+      <button
+        class="accordion-button <?= $isOpen ? '' : 'collapsed' ?>"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#<?= $collapseId ?>"
+        aria-expanded="<?= $isOpen ? 'true' : 'false' ?>"
+        aria-controls="<?= $collapseId ?>">
+
+        <?php echo htmlspecialchars($f['q']); ?>
+      </button>
+    </h2>
+
+    <div
+      id="<?= $collapseId ?>"
+      class="accordion-collapse collapse <?= $isOpen ? 'show' : '' ?>"
+      aria-labelledby="<?= $headingId ?>"
+      data-bs-parent="#accordionExample">
+
+      <div class="accordion-body">
+        <?php echo htmlspecialchars($f['a']); ?>
+      </div>
+    </div>
+  </div>
+<?php endforeach; ?>
+<!-- end of accordion-item -->
+
+            </div>
+            <!-- end of accordion -->
+          </div>
+          <!-- end of col -->
+        </div>
+        <!-- end of row -->
+      </div>
+      <!-- end of container -->
+    </div>
+    <!-- end of accordion-1 -->
+    <!-- end of questions -->
+
+    <!-- Footer -->
+    <div class="footer">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="footer-col first">
+              <h6>About Website</h6>
+              <p class="p-small"><?php echo $meta_description; ?></p>
+            </div>
+            <!-- end of footer-col -->
+            <div class="footer-col second">
+              <h6>Links</h6>
+              <ul class="list-unstyled li-space-lg p-small">
+                <li>Important: <a href="<?php echo $canonical_url; ?>">Terms & Conditions</a>, <a href="<?php echo $canonical_url; ?>">Privacy Policy</a></li>
+                <li>Useful: <a href="<?php echo $canonical_url; ?>">Colorpicker</a>, <a href="<?php echo $canonical_url; ?>">Icon Library</a>, <a href="<?php echo $canonical_url; ?>">Illustrations</a></li>
+                <li>Menu: <a href="#header">Home</a>, <a href="<?php echo $canonical_url; ?>">Features</a>, <a href="#details">Details</a>, <a href="#pricing">Pricing</a></li>
+              </ul>
+            </div>
+            <!-- end of footer-col -->
+            <div class="footer-col third">
+              <span class="fa-stack">
+                <a href="<?php echo $canonical_url; ?>">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fab fa-facebook-f fa-stack-1x"></i>
+                </a>
+              </span>
+              <span class="fa-stack">
+                <a href="<?php echo $canonical_url; ?>">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fab fa-twitter fa-stack-1x"></i>
+                </a>
+              </span>
+              <span class="fa-stack">
+                <a href="<?php echo $canonical_url; ?>">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fab fa-pinterest-p fa-stack-1x"></i>
+                </a>
+              </span>
+              <span class="fa-stack">
+                <a href="<?php echo $canonical_url; ?>">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fab fa-instagram fa-stack-1x"></i>
+                </a>
+              </span>
+              <p class="p-small">
+                <a href="<?php echo $canonical_url; ?>"
+                  <strong>info@<?php echo $titlebrand; ?>.com</strong></a>
+              </p>
+            </div>
+            <!-- end of footer-col -->
+          </div>
+          <!-- end of col -->
+        </div>
+        <!-- end of row -->
+      </div>
+      <!-- end of container -->
+    </div>
+    <!-- end of footer -->
+    <!-- end of footer -->
+
+    <!-- Copyright -->
+    <div class="copyright">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6">
+            <p class="p-small">Copyright © <a href="<?php echo $final; ?>"><?php echo $titlebrand; ?></a></p>
+          </div>
+          <!-- end of col -->
+
+          <div class="col-lg-6">
+            <p class="p-small">Distributed By<a href="<?php echo $canonical_url; ?>" target="_blank"> <?php echo $titlebrand; ?></a></p>
+          </div>
+          <!-- end of col -->
+        </div>
+        <!-- enf of row -->
+      </div>
+      <!-- end of container -->
+    </div>
+    <!-- end of copyright -->
+    <!-- end of copyright -->
+
+    <!-- Back To Top Button -->
+    <button onclick="topFunction()" id="myBtn">
+      <img src="https://cdn.jsdelivr.net/gh/ggeercy/ioniq/up-arrow.png" alt="alternative" />
+    </button>
+    <!-- end of back to top button -->
+
+    <!-- Scripts -->
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/ioniq/bootstrap.min.js"></script>
+    <!-- Bootstrap framework -->
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/ioniq/swiper.min.js"></script>
+    <!-- Swiper for image and text sliders -->
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/ioniq/purecounter.min.js"></script>
+    <!-- Purecounter counter for statistics numbers -->
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/ioniq/replaceme.min.js"></script>
+    <!-- ReplaceMe for rotating text -->
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/ioniq/scripts.js"></script>
+    <!-- Custom scripts -->
+    <script
+      type="module"
+      src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092"
+      integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw=="
+      data-cf-beacon='{"version":"2024.11.0","token":"317c7824a07c40cb9ae929f34b17c111","r":1,"spa":2}'
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

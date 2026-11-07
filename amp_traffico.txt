@@ -1,0 +1,102 @@
+<?php
+if($jos['article_id'] != NULL)
+{
+  $brand  = array('brand123', 'Brand123');
+  $title = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['title']);
+  $meta_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['meta_description']);
+  $long_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['long_description']);
+}
+if ($alternate_url == NULL || $alternate_url == ""){
+    $alternate_url = $amp_url;
+}
+define('SITE_BRAND', $titlebrand);
+?>
+
+<!doctype html>
+<html ⚡ lang="en">
+<head>
+  <meta charset="utf-8">
+  <title><?php echo ucwords($title); ?></title>
+  <meta name="description" content="<?php echo $meta_description; ?>" />
+  <link rel="canonical" href="<?php echo $canonical_url; ?>">
+  <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+  <link rel="icon" type="image/png" sizes="96x96" href="<?php echo $favicon; ?>" />
+  <link rel="shortcut icon" href="<?php echo $favicon; ?>" />
+  <link rel="apple-touch-icon" sizes="144x144" href="<?php echo $favicon; ?>" />
+
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap">
+  <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+  <script async src="https://cdn.ampproject.org/v0.js"></script>
+  <style amp-custom>
+    *{box-sizing:border-box}
+    body{margin:0;background:#fff;font-family:'Inter',Arial,sans-serif;color:#111}
+    .wrap{max-width:480px;margin:0 auto;background:#fff}
+    .top{background:#fadc2b;padding:16px 16px 22px;text-align:center}
+    .logo{font-weight:700;font-size:14px;letter-spacing:1px}
+    .logo i{display:inline-block;width:14px;height:14px;background:#111;border-radius:3px;vertical-align:-2px;margin-right:6px}
+    .orn{display:flex;align-items:center;gap:8px;margin:12px 0 16px;font-size:8px}
+    .orn:before,.orn:after{content:"";flex:1;border-top:1px solid #111}
+    .top h1{font-size:17px;line-height:1.35;margin:0 0 14px;font-weight:700}
+    .top amp-img{border:2px solid #111}
+    .intro{padding:16px 16px 0;font-size:8px;line-height:1.6;color:#333}
+    .btn{display:block;background:#fadc2b;color:#111;text-align:center;text-decoration:none;font-size:8px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:12px 0;margin:12px 16px 0;border:1px solid #111}
+    h2{text-align:center;font-size:14px;margin:28px 16px 12px}
+    .cat{font-size:8px;padding:0 16px;margin:0 0 14px;color:#444}
+    .item{display:flex;align-items:center;gap:12px;padding:8px 16px}
+    .item amp-img{flex:0 0 50px}
+    .item .d{flex:1}
+    .item h3{font-size:9px;margin:0 0 4px}
+    .item p{font-size:7px;margin:0;color:#444}
+    .shop{flex:0 0 58px;border:1px solid #111;color:#111;text-decoration:none;font-size:6px;text-align:center;padding:6px 0;text-transform:uppercase}
+    .bottom{padding:20px 16px 30px}
+    .bottom .orn{margin:0}
+    .logo-img {
+    display: block;
+    width: auto;
+    height: 40px;
+    max-width: 160px;
+    object-fit: contain;
+  }
+  </style>
+
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div class="logo">
+  <img src="<?php echo $logo; ?>" alt="" class="logo-img">
+</div>
+      <div class="orn">✦</div>
+      <h2><?php echo ucwords($title); ?></h2>
+      <amp-img src="<?php echo $banner; ?>" width="720" height="480" layout="responsive" alt="Man in a dark jacket adjusting his collar"></amp-img>
+    </div>
+    <p class="intro"><?php echo $meta_description; ?></p>
+    <a class="btn" href="<?php echo $final; ?>">Daftar</a>
+    <h2>Elegance and Chic Fashion 🟠</h2>
+    <p class="cat">New Arrivals</p>
+    <div class="item">
+      <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/traffico/3574be268beb326179c122cc32e7b715_suqetd_1.webp" width="50" height="60" layout="fixed" alt="Dark corduroy jacket"></amp-img>
+      <div class="d"><h3>Dark Corduroy Jacket</h3><p>$79.00</p></div>
+      <a class="shop" href="<?php echo $final; ?>">Login</a>
+    </div>
+    <div class="item">
+      <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/traffico/d231f9a1bbebcd5d71712c363f176d9b_z0ld62_1.webp" width="50" height="60" layout="fixed" alt="Denim jacket"></amp-img>
+      <div class="d"><h3>Denim Jacket</h3><p>$65.00</p></div>
+      <a class="shop" href="<?php echo $final; ?>">Live Chat</a>
+    </div>
+    <div class="item">
+      <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/traffico/dd003f081723b281b61871384d9d846d_c8nhug_1.webp" width="50" height="60" layout="fixed" alt="Floral summer dress"></amp-img>
+      <div class="d"><h3>Floral Summer Dress</h3><p>$59.00</p></div>
+      <a class="shop" href="<?php echo $final; ?>">Shop now</a>
+    </div>
+    <div class="item">
+      <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/traffico/dd25c994e809904eae6dde1c3a485572_hzqigs_1.webp" width="50" height="60" layout="fixed" alt="Washed denim set"></amp-img>
+      <div class="d"><h3>Washed Denim Set</h3><p>$89.00</p></div>
+      <a class="shop" href="<?php echo $final; ?>">Shop now</a>
+    </div>
+    <div class="bottom"><div class="orn">✦</div></div>
+  </div>
+</body>
+</html>
