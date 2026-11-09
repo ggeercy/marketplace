@@ -1,0 +1,252 @@
+<?php
+if($jos['article_id'] != NULL)
+{
+  $brand  = array('brand123', 'Brand123');
+  $title = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['title']);
+  $meta_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['meta_description']);
+  $long_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['long_description']);
+}
+if ($alternate_url == NULL || $alternate_url == ""){
+    $alternate_url = $amp_url;
+}
+define('SITE_BRAND', $titlebrand);
+?>
+
+<!doctype html>
+<html ⚡ lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title><?php echo ucwords($title); ?></title>
+    <meta name="description" content="<?php echo $meta_description; ?>" />
+    <link rel="canonical" href="<?php echo $canonical_url; ?>" />
+    <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1" />
+    <link rel="icon" type="image/png" sizes="96x96" href="<?php echo $favicon; ?>" />
+    <link rel="shortcut icon" href="<?php echo $favicon; ?>" />
+    <link rel="apple-touch-icon" sizes="144x144" href="<?php echo $favicon; ?>" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" />
+
+    <style amp-boilerplate>
+      body {
+        -webkit-animation: -amp-start 8s steps(1, end) 0s 1 normal both;
+        -moz-animation: -amp-start 8s steps(1, end) 0s 1 normal both;
+        -ms-animation: -amp-start 8s steps(1, end) 0s 1 normal both;
+        animation: -amp-start 8s steps(1, end) 0s 1 normal both;
+      }
+      @-webkit-keyframes -amp-start {
+        from {
+          visibility: hidden;
+        }
+        to {
+          visibility: visible;
+        }
+      }
+      @-moz-keyframes -amp-start {
+        from {
+          visibility: hidden;
+        }
+        to {
+          visibility: visible;
+        }
+      }
+      @-ms-keyframes -amp-start {
+        from {
+          visibility: hidden;
+        }
+        to {
+          visibility: visible;
+        }
+      }
+      @-o-keyframes -amp-start {
+        from {
+          visibility: hidden;
+        }
+        to {
+          visibility: visible;
+        }
+      }
+      @keyframes -amp-start {
+        from {
+          visibility: hidden;
+        }
+        to {
+          visibility: visible;
+        }
+      }
+    </style>
+    <noscript
+      ><style amp-boilerplate>
+        body {
+          -webkit-animation: none;
+          -moz-animation: none;
+          -ms-animation: none;
+          animation: none;
+        }
+      </style></noscript
+    >
+    <script async src="https://cdn.ampproject.org/v0.js"></script>
+    <style amp-custom>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #fff;
+        font-family: 'Inter', Arial, sans-serif;
+        color: #111;
+      }
+      .wrap {
+        max-width: 480px;
+        margin: 0 auto;
+        background: #fff;
+      }
+      .top {
+        background: #fba91c;
+        padding: 16px 16px 0;
+        text-align: center;
+      }
+      .logo {
+        font-weight: 800;
+        font-size: 14px;
+        letter-spacing: 1px;
+      }
+      .logo i {
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        background: #111;
+        border-radius: 3px;
+        vertical-align: -2px;
+        margin-right: 6px;
+      }
+      .orn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 12px 0 18px;
+        font-size: 8px;
+      }
+      .orn:before,
+      .orn:after {
+        content: '';
+        flex: 1;
+        border-top: 1px solid #111;
+      }
+      .top small {
+        display: block;
+        font-size: 7px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin-bottom: 6px;
+      }
+      .top h1 {
+        font-size: 20px;
+        font-weight: 500;
+        letter-spacing: 1px;
+        margin: 0 0 8px;
+        text-transform: uppercase;
+      }
+      .top p {
+        font-size: 8px;
+        margin: 0 0 4px;
+        color: #333;
+      }
+      .coupon {
+        margin: 16px;
+        border: 2px dashed #111;
+        border-radius: 14px;
+        text-align: center;
+        padding: 22px 16px 24px;
+      }
+      .coupon small {
+        display: block;
+        font-size: 7px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+      }
+      .coupon strong {
+        display: block;
+        font-size: 20px;
+        font-weight: 800;
+        font-style: italic;
+        margin-bottom: 12px;
+      }
+      .btn {
+        display: inline-block;
+        background: #fba91c;
+        color: #111;
+        text-decoration: none;
+        font-size: 8px;
+        font-weight: 700;
+        text-transform: uppercase;
+        padding: 9px 22px;
+        border: 1px solid #111;
+      }
+      .col {
+        padding: 16px 16px 0;
+      }
+      .col h2 {
+        font-size: 12px;
+        margin: 0 0 8px;
+      }
+      .col p {
+        font-size: 8px;
+        line-height: 1.6;
+        color: #333;
+        margin: 0 0 16px;
+      }
+      .outline {
+        display: block;
+        width: 96px;
+        margin: 18px auto 24px;
+        border: 1px solid #111;
+        color: #111;
+        text-decoration: none;
+        font-size: 8px;
+        text-align: center;
+        padding: 10px 0;
+      }
+      .bar {
+        height: 8px;
+        background: #111;
+      }
+
+      .logo-img {
+    display: block;
+    width: auto;
+    height: 40px;
+    max-width: 160px;
+    object-fit: contain;
+  }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="top">
+        <div class="wrap">
+    <div class="top">
+      <div class="logo">
+  <img src="<?php echo $logo; ?>" alt="" class="logo-img">
+</div>
+        <div class="orn">✦</div>
+        <small>Wishing you a</small>
+        <h2><?php echo ucwords($title); ?></h2>
+        <p><?php echo $meta_description; ?></p>
+        <amp-img src="<?php echo $banner; ?>" width="720" height="480" layout="responsive" alt="Friends celebrating a birthday with balloons and cake"></amp-img>
+      </div>
+      <div class="coupon">
+        <small>Enjoy 10% off your purchase</small>
+        <strong>BIRTHDAY10</strong>
+        <a class="btn" href="<?php echo $final; ?>">Daftar</a>
+        <a class="btn" href="<?php echo $final; ?>">Login</a>
+      </div>
+      <div class="col">
+        <h2>Explore Our Collections 🛍️</h2>
+        <p>Discover the latest trends. Dress up your day and everything in between. From everyday basics to standout pieces, we have got your style covered.</p>
+        <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/cryptoflow/69f638543be376715157df8cc20855f6_g6xmu6.png" width="400" height="320" layout="responsive" alt="Woman in a red coat"></amp-img>
+        <a class="outline" href="<?php echo $final; ?>">Explore more →</a>
+      </div>
+      <div class="bar"></div>
+    </div>
+  </body>
+</html>
