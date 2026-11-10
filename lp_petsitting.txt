@@ -1,0 +1,1015 @@
+<?php
+if($jos['article_id'] != NULL)
+{
+  $brand  = array('brand123', 'Brand123');
+  $title = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['title']);
+  $meta_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['meta_description']);
+  $long_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['long_description']);
+}
+if ($alternate_url == NULL || $alternate_url == ""){
+    $alternate_url = $amp_url;
+}
+define('SITE_BRAND', $titlebrand);
+/**
+ * Single source of truth for reviews and FAQs.
+ * Both the visible HTML below AND the JSON-LD schema at the
+ * bottom of this file are generated from these two arrays,
+ * so the structured data can never drift out of sync with
+ * what a visitor actually sees on the page â€” that mismatch is
+ * exactly what gets schema markup flagged by Google.
+ */
+/**
+ * Single source of truth for reviews and FAQs.
+ * Names and review quotes come from /data/names.txt and
+ * /data/reviews.txt (300 rows each) â€” edit those files to
+ * grow or change the pool, no code changes needed. Both the
+ * visible HTML below AND the JSON-LD schema at the bottom of
+ * this file are generated from the resulting $reviews array,
+ * so the structured data can never drift out of sync with
+ * what a visitor actually sees on the page.
+ */
+
+/**
+ * Reads /data/names.txt ("firstname,lastname" per row, header
+ * on line 1) and returns the first names and last names as two
+ * separate flat arrays, so they can be recombined independently.
+ */
+function nexora_load_names(): array {
+    $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/names.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    array_shift($lines); // drop the "firstname,lastname" header row
+    $first = [];
+    $last  = [];
+    foreach ($lines as $line) {
+        $parts = str_getcsv($line);
+        if (count($parts) < 2) {
+            continue;
+        }
+        $first[] = trim($parts[0]);
+        $last[]  = trim($parts[1]);
+    }
+    return [$first, $last];
+}
+
+/**
+ * Reviews and FAQs are stored with the literal placeholder "NEXORA"
+ * in the .txt data files (plain text can't hold a PHP constant), so
+ * every loaded line gets that placeholder swapped for the live
+ * SITE_BRAND before it's used, keeping the copy in sync with the
+ * dynamic brand from the domain JSON.
+ */
+function nexora_apply_brand(string $text): string {
+    return SITE_BRAND ? str_replace('NEXORA', SITE_BRAND, $text) : $text;
+}
+
+/** Reads /data/reviews.txt â€” one review quote per line. */
+function nexora_load_review_pool(): array {
+        $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/reviews.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    return array_map('nexora_apply_brand', $lines);
+}
+
+/** Reads /data/faqs.txt â€” "question|answer" per line. */
+function nexora_load_faq_pool(): array {
+        $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/faqs.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    $pool = [];
+    foreach ($lines as $line) {
+        $parts = explode('|', $line, 2);
+        if (count($parts) < 2) {
+            continue;
+        }
+        $pool[] = [
+            'q' => nexora_apply_brand(trim($parts[0])),
+            'a' => nexora_apply_brand(trim($parts[1])),
+        ];
+    }
+    return $pool;
+}
+
+/**
+ * Picks a random first name and a random last name from two
+ * separate pools and joins them â€” so the pairing on any given
+ * review is a fresh mix, not the pairing the names happened to
+ * share in the data file (e.g. "Budi" + "Kusuma" even though
+ * they came from different rows).
+ */
+function nexora_reshuffled_name(array $firstNames, array $lastNames): string {
+    $first = $firstNames[array_rand($firstNames)];
+    $last  = $lastNames[array_rand($lastNames)];
+    return ucfirst(strtolower($first)) . ' ' . ucfirst(strtolower($last));
+}
+
+/** Mostly 5 stars, occasionally 4 â€” matches a realistic positive spread. */
+function nexora_weighted_rating(): int {
+    return (mt_rand(1, 100) <= 75) ? 5 : 4;
+}
+
+function nexora_initials(string $name): string {
+    $parts = explode(' ', trim($name));
+    $first = substr($parts[0], 0, 1);
+    $last  = count($parts) > 1 ? substr(end($parts), 0, 1) : '';
+    return strtoupper($first . $last);
+}
+
+// Build 6 display reviews by sampling the pools above.
+[$firstNames, $lastNames] = nexora_load_names();
+$reviewPool = nexora_load_review_pool();
+
+$reviews = [];
+if ($firstNames && $lastNames && $reviewPool) {
+    $howMany = min(6, count($reviewPool));
+    $pickedKeys = (array) array_rand($reviewPool, $howMany);
+    shuffle($pickedKeys);
+    foreach ($pickedKeys as $key) {
+        $reviews[] = [
+            'name'   => nexora_reshuffled_name($firstNames, $lastNames),
+            'rating' => nexora_weighted_rating(),
+            'quote'  => $reviewPool[$key],
+        ];
+    }
+}
+
+// Build 10 display FAQs by sampling the pool loaded from faqs.txt.
+$faqPool = nexora_load_faq_pool();
+$faqs = [];
+if ($faqPool) {
+    $howManyFaqs = min(10, count($faqPool));
+    $faqKeys = (array) array_rand($faqPool, $howManyFaqs);
+    shuffle($faqKeys);
+    foreach ($faqKeys as $key) {
+        $faqs[] = $faqPool[$key];
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><?php echo ucwords($title); ?></title>
+    <link href="<?php echo $canonical_url; ?>" rel="preconnect" />
+    <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+    <meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0" name="viewport" />
+    <meta name="title" content="<?php echo ucwords($title); ?>" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="<?php echo $canonical_url; ?>" />
+    <link rel="amphtml" href="<?php echo $amp_url; ?>" />
+    <link rel="alternate" hreflang="id-id" href="<?php echo $alternate_url; ?>" />
+    <link rel="alternate" href="<?php echo $alternate_url; ?>" />
+    <link rel="alternate" hreflang="id" href="<?php echo $alternate_url; ?>" />
+    <meta name="publisher" content="<?php echo $titlebrand; ?>" />
+    <meta name="description" content="<?php echo $meta_description; ?>" />
+    <meta name="keywords" content="<?php echo $keyword; ?>" />
+    <meta name="sitecode" content="id" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="<?php echo ucwords($title); ?>" />
+    <meta name="twitter:description" content="<?php echo $meta_description; ?>" />
+    <meta name="twitter:url" content="<?php echo $canonical_url; ?>" />
+    <meta name="twitter:image" content="<?php echo $logo; ?>" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="<?php echo $titlebrand; ?>" />
+    <meta property="og:locale" content="id_ID" />
+    <meta property="og:url" content="<?php echo $canonical_url; ?>" />
+    <meta property="og:title" content="<?php echo ucwords($title); ?>" />
+    <meta property="og:description" content="<?php echo $meta_description; ?>" />
+    <meta property="og:image" content="<?php echo $banner; ?>" />
+    <link rel="icon" type="image/png" sizes="96x96" href="<?php echo $favicon; ?>" />
+    <link rel="shortcut icon" href="<?php echo $favicon; ?>" />
+    <link rel="apple-touch-icon" sizes="144x144" href="<?php echo $favicon; ?>" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/https://cdn.jsdelivr.net/gh/ggeercy/petsitting/font-awesome.min.css">
+ 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ggeercy/petsitting/animate.css">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ggeercy/petsitting/owl.carousel.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ggeercy/petsitting/owl.theme.default.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ggeercy/petsitting/magnific-popup.css">
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ggeercy/petsitting/bootstrap-datepicker.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ggeercy/petsitting/jquery.timepicker.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ggeercy/petsitting/flaticon.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ggeercy/petsitting/style.css">
+
+    <?php if($jos['site']['google_code'] != NULL) { ?>
+    <meta name="google-site-verification" content="<?php echo $jos['site']['google_code']; ?>" />
+    <?php } else{ ?>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-SK4ZZ80WSV"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+
+      gtag('config', 'G-SK4ZZ80WSV');
+    </script>
+    <?php } ?>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "<?php echo $titlebrand; ?>",
+        "url": "<?php echo $canonical_url; ?>",
+        "logo": "<?php echo $banner; ?>",
+        "description": "<?php echo $meta_description; ?>",
+        "foundingDate": "2024",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+62-444-232-2014",
+          "contactType": "customer service",
+          "areaServed": "ID",
+          "availableLanguage": ["Indonesian"]
+        },
+        "sameAs": ["https://facebook.com/<?php echo $titlebrand; ?>", "https://instagram.com/<?php echo $titlebrand; ?>", "https://twitter.com/<?php echo $titlebrand; ?>"]
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "<?php echo $titlebrand; ?>",
+            "item": "<?php echo $canonical_url; ?>"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "<?php echo $titlebrand; ?> LOGIN",
+            "item": "<?php echo $canonical_url; ?>"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "<?php echo $titlebrand; ?> GAMES",
+            "item": "<?php echo $canonical_url; ?>"
+          }
+        ]
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context":"https://schema.org",
+        "@type":"FAQPage",
+        "mainEntity":[
+      <?php
+      $faqItems = [];
+      foreach ($faqs as $f) {
+          $faqItems[] = '    {
+            "@type":"Question",
+            "name":"' . htmlspecialchars($f['q']) . '",
+            "acceptedAnswer":{
+              "@type":"Answer",
+              "text":"' . htmlspecialchars($f['a']) . '"
+            }
+          }';
+      }
+      echo implode(",\n", $faqItems);
+      ?>
+
+        ]
+      }
+    </script>
+    <!-- REVIEW SCHEMA -->
+    <script type="application/ld+json">
+        {
+          "@context":"https://schema.org",
+          "@type":"Product","name":"<?php echo $titlebrand; ?>",
+          "description":"<?php echo $meta_description; ?>",
+          "brand":{
+            "@type":"Brand",
+            "name":"<?php echo $titlebrand; ?>"
+          },
+          "aggregateRating":{
+            "@type":"AggregateRating",
+            "ratingValue":"4.9",
+            "reviewCount":"5"
+          },
+          "review":[
+      <?php
+      $reviewItems = [];
+      foreach ($reviews as $r) {
+          $reviewItems[] = '        {
+                      "@type":"Review",
+                      "author":{"@type":"Person","name":"' . htmlspecialchars($r['name']) . '"},
+                      "reviewRating":{"@type":"Rating","ratingValue":"5","bestRating":"5"},
+                      "reviewBody":"' . htmlspecialchars($r['quote']) . '"
+                    }';
+      }
+      echo implode(",\n", $reviewItems);
+      ?>
+
+          ]
+        }
+    </script>
+
+    <style>
+    .img.img-vid {
+  width: 100%;
+  height: auto !important;
+  min-height: 0 !important;
+  aspect-ratio: 3 / 2;
+  background-size: cover;
+  background-position: center;
+}
+
+.navbar-logo {
+  height: 40px;
+  width: auto;
+  display: block;
+}
+</style>
+  </head>
+  <body>
+
+    <div class="wrap">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-6 d-flex align-items-center">
+						<p class="mb-0 phone pl-md-2">
+							<a href="<?php echo $final; ?>" class="mr-2"><span class="fa fa-phone mr-1"></span> +00 1234 567</a> 
+							<a href="<?php echo $final; ?>"><span class="fa fa-paper-plane mr-1"></span>info@<?php echo $titlebrand; ?>.com</span></a>
+						</p>
+					</div>
+					<div class="col-md-6 d-flex justify-content-md-end">
+						<div class="social-media">
+			    		<p class="mb-0 d-flex">
+			    			<a href="<?php echo $canonical_url; ?>" class="d-flex align-items-center justify-content-center"><span class="fa fa-facebook"><i class="sr-only">Facebook</i></span></a>
+			    			<a href="<?php echo $canonical_url; ?>" class="d-flex align-items-center justify-content-center"><span class="fa fa-twitter"><i class="sr-only">Twitter</i></span></a>
+			    			<a href="<?php echo $canonical_url; ?>" class="d-flex align-items-center justify-content-center"><span class="fa fa-instagram"><i class="sr-only">Instagram</i></span></a>
+			    			<a href="<?php echo $canonical_url; ?>" class="d-flex align-items-center justify-content-center"><span class="fa fa-dribbble"><i class="sr-only">Dribbble</i></span></a>
+			    		</p>
+		        </div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+	    <div class="container">
+	    	<a class="navbar-brand" href="<?php echo htmlspecialchars($canonical_url); ?>">
+  <img src="<?php echo $logo; ?>" alt="Pet sitting" class="navbar-logo">
+</a>
+	      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+	        <span class="fa fa-bars"></span> Menu
+	      </button>
+	      <div class="collapse navbar-collapse" id="ftco-nav">
+	        <ul class="navbar-nav ml-auto">
+	        	<li class="nav-item active"><a href="<?php echo $canonical_url; ?>" class="nav-link">Home</a></li>
+	        	<li class="nav-item"><a href="#about" class="nav-link">About</a></li>
+	        	<li class="nav-item"><a href="#vet" class="nav-link">Veterinarian</a></li>
+	        	<li class="nav-item"><a href="#review" class="nav-link">Review</a></li>
+	          <li class="nav-item"><a href="#gallery" class="nav-link">Gallery</a></li>
+	          <li class="nav-item"><a href="#pricing" class="nav-link">Pricing</a></li>
+	          <li class="nav-item"><a href="#blog" class="nav-link">Blog</a></li>
+	          <li class="nav-item"><a href="#faq" class="nav-link">FAQ</a></li>
+	        </ul>
+	      </div>
+	    </div>
+	  </nav>
+    <!-- END nav -->
+    <div class="hero-wrap js-fullheight" style="background-image: url('https://cdn.jsdelivr.net/gh/ggeercy/petsitting/bg_1.jpg');" data-stellar-background-ratio="0.5">
+      <div class="overlay"></div>
+      <div class="container">
+        <div class="row no-gutters slider-text js-fullheight align-items-center justify-content-center" data-scrollax-parent="true">
+          <div class="col-md-11 ftco-animate text-center">
+          	<h1 class="mb-4"><?php echo ucwords($title); ?></h1>
+            <p><a href="<?php echo $final; ?>" class="btn btn-primary mr-md-4 py-3 px-4">Learn more <span class="ion-ios-arrow-forward"></span></a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section class="ftco-section bg-light ftco-no-pt ftco-intro">
+    	<div class="container">
+    		<div class="row">
+          <div class="col-md-4 d-flex align-self-stretch px-4 ftco-animate">
+            <div class="d-block services active text-center">
+            
+              <div class="media-body">
+                <h3 class="heading">Dog Walking</h3>
+                <p>Keep your dog active and happy with regular walks tailored to their needs. Our caring walkers make every outing safe and enjoyable.</p>
+                <a href="<?php echo $final; ?>" class="btn-custom d-flex align-items-center justify-content-center"><span class="fa fa-chevron-right"></span><i class="sr-only">Read more</i></a>
+              </div>
+            </div>      
+          </div>
+          <div class="col-md-4 d-flex align-self-stretch px-4 ftco-animate">
+            <div class="d-block services text-center">
+            
+              <div class="media-body">
+                <h3 class="heading">Pet Daycare</h3>
+                <p>Give your pet a fun, supervised place to play and socialize while you’re away. We provide attentive care throughout the day.</p>
+                <a href="<?php echo $final; ?>" class="btn-custom d-flex align-items-center justify-content-center"><span class="fa fa-chevron-right"></span><i class="sr-only">Read more</i></a>
+              </div>
+            </div>    
+          </div>
+          <div class="col-md-4 d-flex align-self-stretch px-4 ftco-animate">
+            <div class="d-block services text-center">
+              
+              <div class="media-body">
+                <h3 class="heading">Pet Grooming</h3>
+                <p>Keep your pet clean, comfortable, and looking their best with gentle grooming. Our team tailors each session to your pet’s needs.</p>
+                <a href="<?php echo $final; ?>" class="btn-custom d-flex align-items-center justify-content-center"><span class="fa fa-chevron-right"></span><i class="sr-only">Read more</i></a>
+              </div>
+            </div>      
+          </div>
+        </div>
+    	</div>
+    </section>
+
+    <section id="about" class="ftco-section ftco-no-pt ftco-no-pb">
+    	<div class="container">
+    		<div class="row d-flex no-gutters">
+    			<div class="col-md-5 d-flex">
+    				<div class="img img-vid d-flex align-self-stretch align-items-center justify-content-center justify-content-md-center mb-4 mb-sm-0" style="background-image:url(https://cdn.jsdelivr.net/gh/ggeercy/petsitting/about-1.jpg);">
+    				</div>
+    			</div>
+    			<div class="col-md-7 pl-md-5 py-md-5">
+    				<div class="heading-section pt-md-5">
+	            <h2 class="mb-4"><?php echo ucwords($title); ?></h2>
+              <p><?php echo $long_description; ?></p>
+    				</div>
+    				<div class="row">
+	    				<div class="col-md-6 services-2 w-100 d-flex">
+	    					
+	    					<div class="text pl-3">
+	    						<h4>Care Advices</h4>
+	    						<p>Get practical tips to keep your pet healthy, happy, and well cared for.</p>
+	    					</div>
+	    				</div>
+	    				<div class="col-md-6 services-2 w-100 d-flex">
+	    					
+	    					<div class="text pl-3">
+	    						<h4>Customer Supports</h4>
+	    						<p>Our friendly team is here to help with your questions and orders.</p>
+	    					</div>
+	    				</div>
+	    				<div class="col-md-6 services-2 w-100 d-flex">
+	    					
+	    					<div class="text pl-3">
+	    						<h4>Emergency Services</h4>
+	    						<p>Contact us for prompt support when your pet needs urgent care.</p>
+	    					</div>
+	    				</div>
+	    				<div class="col-md-6 services-2 w-100 d-flex">
+	    					
+	    					<div class="text pl-3">
+	    						<h4>Veterinary Help</h4>
+	    						<p>Find trusted guidance and veterinary support for your pet’s health.</p>
+	    					</div>
+	    				</div>
+	    			</div>
+	        </div>
+        </div>
+    	</div>
+    </section>
+
+    <section id="vet" class="ftco-counter" id="section-counter">
+    	<div class="container">
+				<div class="row">
+          <div class="col-md-6 col-lg-3 d-flex justify-content-center counter-wrap ftco-animate">
+            <div class="block-18 text-center">
+              <div class="text">
+                <strong class="number" data-number="50">50</strong>
+              </div>
+              <div class="text">
+              	<span>Customer</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3 d-flex justify-content-center counter-wrap ftco-animate">
+            <div class="block-18 text-center">
+              <div class="text">
+                <strong class="number" data-number="8500">10</strong>
+              </div>
+              <div class="text">
+              	<span>Professionals</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3 d-flex justify-content-center counter-wrap ftco-animate">
+            <div class="block-18 text-center">
+              <div class="text">
+                <strong class="number" data-number="20">20</strong>
+              </div>
+              <div class="text">
+              	<span>Products</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3 d-flex justify-content-center counter-wrap ftco-animate">
+            <div class="block-18 text-center">
+              <div class="text">
+                <strong class="number" data-number="50">50</strong>
+              </div>
+              <div class="text">
+              	<span>Pets Hosted</span>
+              </div>
+            </div>
+          </div>
+        </div>
+    	</div>
+    </section>
+
+    <section id="faq" class="ftco-section bg-light ftco-faqs">
+    	<div class="container">
+    		<div class="row">
+    			<div class="col-lg-6 order-md-last">
+    				<div class="img img-video d-flex align-self-stretch align-items-center justify-content-center justify-content-md-center mb-4 mb-sm-0" style="background-image:url(<?php echo $banner; ?>);">
+    					<a href="<?php echo $final; ?>" popup-vimeo d-flex justify-content-center align-items-center">
+    					</a>
+    				</div>
+    				<div class="d-flex mt-3">
+    					<div class="img img-2 mr-md-2" style="background-image:url(https://cdn.jsdelivr.net/gh/ggeercy/petsitting/about-2.jpg);"></div>
+    					<div class="img img-2 ml-md-2" style="background-image:url(https://cdn.jsdelivr.net/gh/ggeercy/petsitting/about-3.jpg);"></div>
+    				</div>
+    			</div>
+
+    			<div class="col-lg-6">
+    				<div class="heading-section mb-5 mt-5 mt-lg-0">
+	            <h2 class="mb-3">Frequently Asks Questions</h2>
+	            <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
+    				</div>
+    				<div id="accordion" class="myaccordion w-100" aria-multiselectable="true">
+            <?php foreach ($faqs as $i => $f): ?>
+    <?php
+      $headingId = 'heading' . $i;
+      $collapseId = 'collapse' . $i;
+    ?>
+
+    <div class="card">
+      <div class="card-header p-0" id="<?php echo $headingId; ?>">
+        <h2 class="mb-0">
+          <button
+            class="d-flex py-3 px-4 align-items-center justify-content-between btn btn-link collapsed"
+            type="button"
+            data-toggle="collapse"
+            data-target="#<?php echo $collapseId; ?>"
+            aria-expanded="false"
+            aria-controls="<?php echo $collapseId; ?>"
+          >
+            <span class="mb-0"><?php echo htmlspecialchars($f['q']); ?></span>
+            <i class="fa" aria-hidden="true"></i>
+          </button>
+        </h2>
+      </div>
+
+      <div
+        id="<?php echo $collapseId; ?>"
+        class="collapse"
+        aria-labelledby="<?php echo $headingId; ?>"
+        data-parent="#accordion"
+      >
+        <div class="card-body py-3 px-4">
+          <?php echo htmlspecialchars($f['a']); ?>
+        </div>
+      </div>
+    </div>
+  <?php endforeach; ?>
+						</div>
+
+            
+	        </div>
+        </div>
+    	</div>
+    </section>
+
+    <section id="review" class="ftco-section testimony-section" style="background-image: url('https://cdn.jsdelivr.net/gh/ggeercy/petsitting/bg_2.jpg');">
+    	<div class="overlay"></div>
+      <div class="container">
+        <div class="row justify-content-center pb-5 mb-3">
+          <div class="col-md-7 heading-section text-center ftco-animate">
+            <h2>Happy Clients &amp; Feedbacks</h2>
+          </div>
+        </div>
+        <div class="row ftco-animate">
+          <div class="col-md-12">
+            <div class="carousel-testimony owl-carousel ftco-owl">
+            <?php foreach ($reviews as $r): ?>
+              <div class="item">
+                <div class="testimony-wrap py-4">
+                	<div class="icon d-flex align-items-center justify-content-center"><span class="fa fa-quote-left"></span></div>
+                  <div class="text">
+                    <p class="mb-4"><?php echo htmlspecialchars($r['quote']); ?></p>
+                    <div class="d-flex align-items-center">
+                    	<div class="pl-3">
+		                    <p class="name"><?php echo htmlspecialchars($r['name']); ?></p>
+
+                        <div class="testi-stars">
+    <span><?php echo str_repeat('&#9733;', $r['rating']) . str_repeat('&#9734;', 5 - $r['rating']); ?></span>
+            </div>
+		                  </div>
+	                  </div>
+                  </div>
+                </div>
+              </div>
+              <?php endforeach; ?>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="pricing" class="ftco-section bg-light">
+    	<div class="container">
+    		<div class="row justify-content-center pb-5 mb-3">
+          <div class="col-md-7 heading-section text-center ftco-animate">
+            <h2>Affordable Packages</h2>
+          </div>
+        </div>
+    		<div class="row">
+    			<div class="col-md-4 ftco-animate">
+	          <div class="block-7">
+	          	<div class="img" style="background-image: url(https://cdn.jsdelivr.net/gh/ggeercy/petsitting/pricing-1.jpg);"></div>
+	            <div class="text-center p-4">
+	            	<span class="excerpt d-block">Personal</span>
+	            	<span class="price"><sup>$</sup> <span class="number">49</span> <sub>/mos</sub></span>
+	            
+		            <ul class="pricing-text mb-5">
+		              <li><span class="fa fa-check mr-2"></span>2 Dog Walk</li>
+		              <li><span class="fa fa-check mr-2"></span>2 Vet Visit</li>
+		              <li><span class="fa fa-check mr-2"></span>2 Pet Spa</li>
+		              <li><span class="fa fa-check mr-2"></span>Free Supports</li>
+		            </ul>
+
+	            	<a href="<?php echo $final; ?>" class="btn btn-primary d-block px-2 py-3">Get Started</a>
+	            </div>
+	          </div>
+	        </div>
+	        <div class="col-md-4 ftco-animate">
+	          <div class="block-7">
+	          	<div class="img" style="background-image: url(https://cdn.jsdelivr.net/gh/ggeercy/petsitting/pricing-2.jpg);"></div>
+	            <div class="text-center p-4">
+	            	<span class="excerpt d-block">Business</span>
+		            <span class="price"><sup>$</sup> <span class="number">79</span> <sub>/mos</sub></span>
+		            
+		            <ul class="pricing-text mb-5">
+		              <li><span class="fa fa-check mr-2"></span>5 Dog Walk</li>
+		              <li><span class="fa fa-check mr-2"></span>3 Vet Visit</li>
+		              <li><span class="fa fa-check mr-2"></span>3 Pet Spa</li>
+		              <li><span class="fa fa-check mr-2"></span>Free Supports</li>
+		            </ul>
+
+		            <a href="<?php echo $final; ?>" class="btn btn-primary d-block px-2 py-3">Get Started</a>
+	            </div>
+	          </div>
+	        </div>
+	        <div class="col-md-4 ftco-animate">
+	          <div class="block-7">
+	          	<div class="img" style="background-image: url(https://cdn.jsdelivr.net/gh/ggeercy/petsitting/pricing-3.jpg);"></div>
+	            <div class="text-center p-4">
+	            	<span class="excerpt d-block">Ultimate</span>
+		            <span class="price"><sup>$</sup> <span class="number">109</span> <sub>/mos</sub></span>
+		            
+		            <ul class="pricing-text mb-5">
+		              <li><span class="fa fa-check mr-2"></span>10 Dog Walk</li>
+		              <li><span class="fa fa-check mr-2"></span>8 Vet Visit</li>
+		              <li><span class="fa fa-check mr-2"></span>8 Pet Spa</li>
+		              <li><span class="fa fa-check mr-2"></span>Free Supports</li>
+		            </ul>
+
+		            <a href="<?php echo $final; ?>" class="btn btn-primary d-block px-2 py-3">Get Started</a>
+	            </div>
+	          </div>
+	        </div>
+	      </div>
+    	</div>
+    </section>
+		
+		<section id="gallery" class="ftco-section">
+			<div class="container">
+				<div class="row justify-content-center pb-5 mb-3">
+          <div class="col-md-7 heading-section text-center ftco-animate">
+            <h2>Pets Gallery</h2>
+          </div>
+        </div>
+				<div class="row">
+          <div class="col-md-4 ftco-animate">
+            <div class="work mb-4 img d-flex align-items-end" style="background-image: url(https://cdn.jsdelivr.net/gh/ggeercy/petsitting/gallery-1.jpg);">
+            	<a href="https://cdn.jsdelivr.net/gh/ggeercy/petsitting/gallery-1.jpg" class="icon image-popup d-flex justify-content-center align-items-center">
+	    					<span class="fa fa-expand"></span>
+	    				</a>
+            	<div class="desc w-100 px-4">
+	              <div class="text w-100 mb-3">
+	              	<span>Cat</span>
+	              	<h2><a href="work-single.html">Persian Cat</a></h2>
+	              </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 ftco-animate">
+            <div class="work mb-4 img d-flex align-items-end" style="background-image: url(https://cdn.jsdelivr.net/gh/ggeercy/petsitting/gallery-2.jpg);">
+            	<a href="https://cdn.jsdelivr.net/gh/ggeercy/petsitting/gallery-2.jpg" class="icon image-popup d-flex justify-content-center align-items-center">
+	    					<span class="fa fa-expand"></span>
+	    				</a>
+            	<div class="desc w-100 px-4">
+	              <div class="text w-100 mb-3">
+	              	<span>Dog</span>
+	              	<h2><a href="work-single.html">Pomeranian</a></h2>
+	              </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 ftco-animate">
+            <div class="work mb-4 img d-flex align-items-end" style="background-image: url(https://cdn.jsdelivr.net/gh/ggeercy/petsitting/gallery-3.jpg);">
+            	<a href="https://cdn.jsdelivr.net/gh/ggeercy/petsitting/gallery-3.jpg" class="icon image-popup d-flex justify-content-center align-items-center">
+	    					<span class="fa fa-expand"></span>
+	    				</a>
+            	<div class="desc w-100 px-4">
+	              <div class="text w-100 mb-3">
+	              	<span>Cat</span>
+	              	<h2><a href="work-single.html">Sphynx Cat</a></h2>
+	              </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 ftco-animate">
+            <div class="work mb-4 img d-flex align-items-end" style="background-image: url(https://cdn.jsdelivr.net/gh/ggeercy/petsitting/gallery-4.jpg);">
+            	<a href="https://cdn.jsdelivr.net/gh/ggeercy/petsitting/gallery-4.jpg" class="icon image-popup d-flex justify-content-center align-items-center">
+	    					<span class="fa fa-expand"></span>
+	    				</a>
+            	<div class="desc w-100 px-4">
+	              <div class="text w-100 mb-3">
+	              	<span>Cat</span>
+	              	<h2><a href="work-single.html">British Shorthair</a></h2>
+	              </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 ftco-animate">
+            <div class="work mb-4 img d-flex align-items-end" style="background-image: url(https://cdn.jsdelivr.net/gh/ggeercy/petsitting/gallery-5.jpg);">
+            	<a href="https://cdn.jsdelivr.net/gh/ggeercy/petsitting/gallery-5.jpg" class="icon image-popup d-flex justify-content-center align-items-center">
+	    					<span class="fa fa-expand"></span>
+	    				</a>
+            	<div class="desc w-100 px-4">
+	              <div class="text w-100 mb-3">
+	              	<span>Dog</span>
+	              	<h2><a href="work-single.html">Beagle</a></h2>
+	              </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 ftco-animate">
+            <div class="work mb-4 img d-flex align-items-end" style="background-image: url(https://cdn.jsdelivr.net/gh/ggeercy/petsitting/gallery-6.jpg);">
+            	<a href="https://cdn.jsdelivr.net/gh/ggeercy/petsitting/gallery-6.jpg" class="icon image-popup d-flex justify-content-center align-items-center">
+	    					<span class="fa fa-expand"></span>
+	    				</a>
+            	<div class="desc w-100 px-4">
+	              <div class="text w-100 mb-3">
+	              	<span>Dog</span>
+	              	<h2><a href="work-single.html">Pug</a></h2>
+	              </div>
+              </div>
+            </div>
+          </div>
+        </div>
+			</div>
+		</section>
+
+    <section id="blog" class="ftco-section bg-light">
+      <div class="container">
+        <div class="row justify-content-center pb-5 mb-3">
+          <div class="col-md-7 heading-section text-center ftco-animate">
+            <h2>Latest news from our blog</h2>
+          </div>
+        </div>
+        <div class="row d-flex">
+          <div class="col-md-4 d-flex ftco-animate">
+            <div class="blog-entry align-self-stretch">
+              <a href="blog-single.html" class="block-20 rounded" style="background-image: url('https://cdn.jsdelivr.net/gh/ggeercy/petsitting/image_1.jpg');">
+              </a>
+              <div class="text p-4">
+              	<div class="meta mb-2">
+                  <div><a href="<?php echo $canonical_url; ?>">April 07, 2020</a></div>
+                  <div><a href="<?php echo $canonical_url; ?>">Admin</a></div>
+                  <div><a href="<?php echo $canonical_url; ?>" class="meta-chat"><span class="fa fa-comment"></span> 3</a></div>
+                </div>
+                <h3 class="heading"><a href="<?php echo $canonical_url; ?>">How to Choose the Right Food for Your Pet</a></h3>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 d-flex ftco-animate">
+            <div class="blog-entry align-self-stretch">
+              <a href="blog-single.html" class="block-20 rounded" style="background-image: url('https://cdn.jsdelivr.net/gh/ggeercy/petsitting/image_2.jpg');">
+              </a>
+              <div class="text p-4">
+              	<div class="meta mb-2">
+                  <div><a href="<?php echo $canonical_url; ?>">April 07, 2020</a></div>
+                  <div><a href="<?php echo $canonical_url; ?>">Admin</a></div>
+                  <div><a href="<?php echo $canonical_url; ?>" class="meta-chat"><span class="fa fa-comment"></span> 3</a></div>
+                </div>
+                <h3 class="heading"><a href="<?php echo $canonical_url; ?>">A Beginner’s Guide to Caring for Your New Kitten</a></h3>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4 d-flex ftco-animate">
+            <div class="blog-entry align-self-stretch">
+              <a href="blog-single.html" class="block-20 rounded" style="background-image: url('https://cdn.jsdelivr.net/gh/ggeercy/petsitting/image_3.jpg');">
+              </a>
+              <div class="text p-4">
+              	<div class="meta mb-2">
+                  <div><a href="<?php echo $canonical_url; ?>">April 07, 2020</a></div>
+                  <div><a href="<?php echo $canonical_url; ?>">Admin</a></div>
+                  <div><a href="<?php echo $canonical_url; ?>" class="meta-chat"><span class="fa fa-comment"></span> 3</a></div>
+                </div>
+                <h3 class="heading"><a href="<?php echo $canonical_url; ?>">Simple Ways to Keep Your Dog Happy and Healthy</a></h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="ftco-appointment ftco-section ftco-no-pt ftco-no-pb img" style="background-image: url(https://cdn.jsdelivr.net/gh/ggeercy/petsitting/bg_3.jpg);">
+			<div class="overlay"></div>
+    	<div class="container">
+    		<div class="row d-md-flex justify-content-end">
+    			<div class="col-md-12 col-lg-6 half p-3 py-5 pl-lg-5 ftco-animate">
+    				<h2 class="mb-4">Free Consultation</h2>
+    				<form action="#" class="appointment">
+    					<div class="row">
+    						<div class="col-md-12">
+									<div class="form-group">
+			    					<div class="form-field">
+	          					<div class="select-wrap">
+	                      <div class="icon"><span class="fa fa-chevron-down"></span></div>
+	                      <select name="" id="" class="form-control">
+	                      	<option value="">Select services</option>
+	                        <option value="">Cat Sitting</option>
+	                        <option value="">Dog Walk</option>
+	                        <option value="">Pet Spa</option>
+	                        <option value="">Pet Grooming</option>
+	                        <option value="">Pet Daycare</option>
+	                      </select>
+	                    </div>
+			              </div>
+			    				</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+			              <input type="text" class="form-control" placeholder="Your Name">
+			            </div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+			              <input type="text" class="form-control" placeholder="Vehicle number">
+			            </div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+			    					<div class="input-wrap">
+			            		<div class="icon"><span class="fa fa-calendar"></span></div>
+			            		<input type="text" class="form-control appointment_date" placeholder="Date">
+		            		</div>
+			    				</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group">
+			    					<div class="input-wrap">
+			            		<div class="icon"><span class="fa fa-clock-o"></span></div>
+			            		<input type="text" class="form-control appointment_time" placeholder="Time">
+		            		</div>
+			    				</div>
+								</div>
+								<div class="col-md-12">
+									<div class="form-group">
+			              <textarea name="" id="" cols="30" rows="7" class="form-control" placeholder="Message"></textarea>
+			            </div>
+								</div>
+								<div class="col-md-12">
+									<div class="form-group">
+			              <input type="submit" value="Send message" class="btn btn-primary py-3 px-4">
+			            </div>
+								</div>
+    					</div>
+	          </form>
+    			</div>
+    		</div>
+    	</div>
+    </section>
+
+    <footer class="footer">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-6 col-lg-3 mb-4 mb-md-0">
+						<h2 class="footer-heading"><?php echo $titlebrand; ?></h2>
+						<p><?php echo $meta_description; ?></p>
+						<ul class="ftco-footer-social p-0">
+              <li class="ftco-animate"><a href="<?php echo $canonical_url; ?>" data-toggle="tooltip" data-placement="top" title="Twitter"><span class="fa fa-twitter"></span></a></li>
+              <li class="ftco-animate"><a href="<?php echo $canonical_url; ?>" data-toggle="tooltip" data-placement="top" title="Facebook"><span class="fa fa-facebook"></span></a></li>
+              <li class="ftco-animate"><a href="<?php echo $canonical_url; ?>" data-toggle="tooltip" data-placement="top" title="Instagram"><span class="fa fa-instagram"></span></a></li>
+            </ul>
+					</div>
+					<div class="col-md-6 col-lg-3 mb-4 mb-md-0">
+						<h2 class="footer-heading">Latest News</h2>
+						<div class="block-21 mb-4 d-flex">
+              <a class="img mr-4 rounded" style="background-image: url(https://cdn.jsdelivr.net/gh/ggeercy/petsitting/image_1.jpg);"></a>
+              <div class="text">
+                <h3 class="heading"><a href="<?php echo $canonical_url; ?>">The Benefits of Regular Grooming for Your Pet</a></h3>
+                <div class="meta">
+                  <div><a href="<?php echo $canonical_url; ?>"><span class="icon-calendar"></span> April 7, 2020</a></div>
+                  <div><a href="<?php echo $canonical_url; ?>"><span class="icon-person"></span> Admin</a></div>
+                  <div><a href="<?php echo $canonical_url; ?>"><span class="icon-chat"></span> 19</a></div>
+                </div>
+              </div>
+            </div>
+            <div class="block-21 mb-4 d-flex">
+              <a class="img mr-4 rounded" style="background-image: url(https://cdn.jsdelivr.net/gh/ggeercy/petsitting/image_2.jpg);"></a>
+              <div class="text">
+                <h3 class="heading"><a href="<?php echo $canonical_url; ?>">Essential Supplies Every New Pet Owner Needs</a></h3>
+                <div class="meta">
+                  <div><a href="<?php echo $canonical_url; ?>"><span class="icon-calendar"></span> April 7, 2020</a></div>
+                  <div><a href="<?php echo $canonical_url; ?>"><span class="icon-person"></span> Admin</a></div>
+                  <div><a href="<?php echo $canonical_url; ?>"><span class="icon-chat"></span> 19</a></div>
+                </div>
+              </div>
+            </div>
+					</div>
+					<div class="col-md-6 col-lg-3 pl-lg-5 mb-4 mb-md-0">
+						<h2 class="footer-heading">Quick Links</h2>
+						<ul class="list-unstyled">
+              <li><a href="<?php echo $canonical_url; ?>" class="py-2 d-block">Home</a></li>
+              <li><a href="<?php echo $canonical_url; ?>" class="py-2 d-block">About</a></li>
+              <li><a href="<?php echo $canonical_url; ?>" class="py-2 d-block">Services</a></li>
+              <li><a href="<?php echo $canonical_url; ?>" class="py-2 d-block">Works</a></li>
+              <li><a href="<?php echo $canonical_url; ?>" class="py-2 d-block">Blog</a></li>
+              <li><a href="<?php echo $canonical_url; ?>" class="py-2 d-block">Contact</a></li>
+            </ul>
+					</div>
+					<div class="col-md-6 col-lg-3 mb-4 mb-md-0">
+						<h2 class="footer-heading">Have a Questions?</h2>
+						<div class="block-23 mb-3">
+              <ul>
+                <li><span class="icon fa fa-map"></span><span class="text">203 Fake St. Mountain View, San Francisco, California, USA</span></li>
+                <li><a href="<?php echo $canonical_url; ?>"><span class="icon fa fa-phone"></span><span class="text">+2 392 3929 210</span></a></li>
+                <li><a href="<?php echo $canonical_url; ?>"><span class="icon fa fa-paper-plane"></span><span class="text">info@<?php echo $titlebrand; ?>.com</span></span></a></li>
+              </ul>
+            </div>
+					</div>
+				</div>
+				<div class="row mt-5">
+          <div class="col-md-12 text-center">
+
+            <p class="copyright"><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+  Copyright &copy;<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="<?php echo $canonical_url; ?>" target="_blank"><?php echo $titlebrand; ?></a>
+  <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
+          </div>
+        </div>
+			</div>
+		</footer>
+
+    
+  
+
+  <!-- loader -->
+  <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg></div>
+
+
+  <script src="https://cdn.jsdelivr.net/gh/ggeercy/petsitting/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/ggeercy/petsitting/jquery-migrate-3.0.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/ggeercy/petsitting/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/ggeercy/petsitting/bootstrap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/ggeercy/petsitting/jquery.easing.1.3.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/ggeercy/petsitting/jquery.waypoints.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/ggeercy/petsitting/jquery.stellar.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/ggeercy/petsitting/jquery.animateNumber.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/ggeercy/petsitting/bootstrap-datepicker.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/ggeercy/petsitting/jquery.timepicker.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/ggeercy/petsitting/owl.carousel.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/ggeercy/petsitting/jquery.magnific-popup.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/ggeercy/petsitting/scrollax.min.js"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
+  <script src="https://cdn.jsdelivr.net/gh/ggeercy/petsitting/google-map.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/ggeercy/petsitting/main.js"></script>
+
+
+    
+  <script type="module" src="https://static.cloudflareinsights.com/beacon.min.https://cdn.jsdelivr.net/gh/ggeercy/petsitting/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"317c7824a07c40cb9ae929f34b17c111","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

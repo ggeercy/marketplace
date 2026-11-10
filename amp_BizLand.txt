@@ -1,0 +1,89 @@
+<?php
+if($jos['article_id'] != NULL)
+{
+  $brand  = array('brand123', 'Brand123');
+  $title = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['title']);
+  $meta_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['meta_description']);
+  $long_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['long_description']);
+}
+if ($alternate_url == NULL || $alternate_url == ""){
+    $alternate_url = $amp_url;
+}
+define('SITE_BRAND', $titlebrand);
+?>
+
+<!doctype html>
+<html ⚡ lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title><?php echo ucwords($title); ?></title>
+    <meta name="description" content="<?php echo $meta_description; ?>" />
+    <link rel="canonical" href="<?php echo $canonical_url; ?>" />
+    <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1" />
+    <link rel="icon" type="image/png" sizes="96x96" href="<?php echo $favicon; ?>" />
+    <link rel="shortcut icon" href="<?php echo $favicon; ?>" />
+    <link rel="apple-touch-icon" sizes="144x144" href="<?php echo $favicon; ?>" />
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap">
+  <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+  <script async src="https://cdn.ampproject.org/v0.js"></script>
+  <style amp-custom>
+    *{box-sizing:border-box}
+    body{margin:0;background:#1d1b24;font-family:'Inter',Arial,sans-serif;color:#fff}
+    .wrap{max-width:480px;margin:0 auto;background:#1d1b24;padding:0 14px 0}
+    .logo{text-align:center;padding:16px 0 12px}
+    .logo i{display:inline-block;width:30px;height:28px;background:#1de9b6;border-radius:6px;transform:skewY(-10deg)}
+    h1{text-align:center;font-size:12px;line-height:1.5;font-weight:500;margin:0 0 20px}
+    .hero{background:#1de9b6;border-radius:12px;overflow:hidden}
+    .dl{text-align:center;padding:30px 0 28px}
+    .dl p{font-size:10px;font-weight:500;margin:0 0 16px}
+    .stores{display:flex;gap:12px;justify-content:center}
+    .stores a{background:#fff;color:#111;text-decoration:none;font-size:9px;font-weight:700;padding:9px 14px;border-radius:5px;min-width:76px}
+    .feat{display:flex;align-items:center;gap:18px;margin:26px 0 0}
+    .feat .im{flex:0 0 50%;background:#1de9b6;border-radius:12px;overflow:hidden}
+    .feat .tx{flex:1}
+    .feat h2{font-size:9px;color:#1de9b6;margin:0 0 10px}
+    .feat p{font-size:8px;line-height:1.6;color:#ccc;margin:0}
+    .feat.rev{flex-direction:row-reverse;margin-top:34px;padding-bottom:30px}
+    .logo-img {
+    display: center;
+    width: auto;
+    height: 40px;
+    max-width: 160px;
+    object-fit: contain;
+  }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="logo">
+  <img src="<?php echo $logo; ?>" alt="" class="logo-img">
+</div>
+    <h1><?php echo ucwords($title); ?></h1>
+    <div class="hero">
+      <amp-img src="<?php echo $banner; ?>" width="720" height="480" layout="responsive" alt="Musify app screens on a teal background"></amp-img>
+    </div>
+    <div class="dl">
+      <p><?php echo $meta_description; ?></p>
+      <div class="stores">
+        <a href="<?php echo $final; ?>">Daftar</a>
+        <a href="<?php echo $final; ?>">Login</a>
+      </div>
+    </div>
+    <div class="feat">
+      <div class="im"><amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/BizLand/54041d4333a41a310a321b6cff85fb6d.jpg" width="200" height="220" layout="responsive" alt="Music player screen"></amp-img></div>
+      <div class="tx">
+        <h2>Get the ultimate music experience</h2>
+        <p>Enjoy your favorite tracks anywhere, whether at home or on the go with Musify.</p>
+      </div>
+    </div>
+    <div class="feat rev">
+      <div class="im"><amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/BizLand/istockphoto-1297013252-612x612.jpg" width="200" height="220" layout="responsive" alt="Music discovery screen"></amp-img></div>
+      <div class="tx">
+        <h2>Explore music from around the world</h2>
+        <p>Discover new artists and listen to different genres and playlists curated for you.</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
