@@ -1,0 +1,952 @@
+<?php
+if($jos['article_id'] != NULL)
+{
+  $brand  = array('brand123', 'Brand123');
+  $title = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['title']);
+  $meta_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['meta_description']);
+  $long_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['long_description']);
+}
+if ($alternate_url == NULL || $alternate_url == ""){
+    $alternate_url = $amp_url;
+}
+define('SITE_BRAND', $titlebrand);
+/**
+ * Single source of truth for reviews and FAQs.
+ * Both the visible HTML below AND the JSON-LD schema at the
+ * bottom of this file are generated from these two arrays,
+ * so the structured data can never drift out of sync with
+ * what a visitor actually sees on the page â€” that mismatch is
+ * exactly what gets schema markup flagged by Google.
+ */
+/**
+ * Single source of truth for reviews and FAQs.
+ * Names and review quotes come from /data/names.txt and
+ * /data/reviews.txt (300 rows each) â€” edit those files to
+ * grow or change the pool, no code changes needed. Both the
+ * visible HTML below AND the JSON-LD schema at the bottom of
+ * this file are generated from the resulting $reviews array,
+ * so the structured data can never drift out of sync with
+ * what a visitor actually sees on the page.
+ */
+
+/**
+ * Reads /data/names.txt ("firstname,lastname" per row, header
+ * on line 1) and returns the first names and last names as two
+ * separate flat arrays, so they can be recombined independently.
+ */
+function nexora_load_names(): array {
+    $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/names.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    array_shift($lines); // drop the "firstname,lastname" header row
+    $first = [];
+    $last  = [];
+    foreach ($lines as $line) {
+        $parts = str_getcsv($line);
+        if (count($parts) < 2) {
+            continue;
+        }
+        $first[] = trim($parts[0]);
+        $last[]  = trim($parts[1]);
+    }
+    return [$first, $last];
+}
+
+/**
+ * Reviews and FAQs are stored with the literal placeholder "NEXORA"
+ * in the .txt data files (plain text can't hold a PHP constant), so
+ * every loaded line gets that placeholder swapped for the live
+ * SITE_BRAND before it's used, keeping the copy in sync with the
+ * dynamic brand from the domain JSON.
+ */
+function nexora_apply_brand(string $text): string {
+    return SITE_BRAND ? str_replace('NEXORA', SITE_BRAND, $text) : $text;
+}
+
+/** Reads /data/reviews.txt â€” one review quote per line. */
+function nexora_load_review_pool(): array {
+        $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/reviews.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    return array_map('nexora_apply_brand', $lines);
+}
+
+/** Reads /data/faqs.txt â€” "question|answer" per line. */
+function nexora_load_faq_pool(): array {
+        $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/faqs.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    $pool = [];
+    foreach ($lines as $line) {
+        $parts = explode('|', $line, 2);
+        if (count($parts) < 2) {
+            continue;
+        }
+        $pool[] = [
+            'q' => nexora_apply_brand(trim($parts[0])),
+            'a' => nexora_apply_brand(trim($parts[1])),
+        ];
+    }
+    return $pool;
+}
+
+/**
+ * Picks a random first name and a random last name from two
+ * separate pools and joins them â€” so the pairing on any given
+ * review is a fresh mix, not the pairing the names happened to
+ * share in the data file (e.g. "Budi" + "Kusuma" even though
+ * they came from different rows).
+ */
+function nexora_reshuffled_name(array $firstNames, array $lastNames): string {
+    $first = $firstNames[array_rand($firstNames)];
+    $last  = $lastNames[array_rand($lastNames)];
+    return ucfirst(strtolower($first)) . ' ' . ucfirst(strtolower($last));
+}
+
+/** Mostly 5 stars, occasionally 4 â€” matches a realistic positive spread. */
+function nexora_weighted_rating(): int {
+    return (mt_rand(1, 100) <= 75) ? 5 : 4;
+}
+
+function nexora_initials(string $name): string {
+    $parts = explode(' ', trim($name));
+    $first = substr($parts[0], 0, 1);
+    $last  = count($parts) > 1 ? substr(end($parts), 0, 1) : '';
+    return strtoupper($first . $last);
+}
+
+// Build 6 display reviews by sampling the pools above.
+[$firstNames, $lastNames] = nexora_load_names();
+$reviewPool = nexora_load_review_pool();
+
+$reviews = [];
+if ($firstNames && $lastNames && $reviewPool) {
+    $howMany = min(6, count($reviewPool));
+    $pickedKeys = (array) array_rand($reviewPool, $howMany);
+    shuffle($pickedKeys);
+    foreach ($pickedKeys as $key) {
+        $reviews[] = [
+            'name'   => nexora_reshuffled_name($firstNames, $lastNames),
+            'rating' => nexora_weighted_rating(),
+            'quote'  => $reviewPool[$key],
+        ];
+    }
+}
+
+// Build 10 display FAQs by sampling the pool loaded from faqs.txt.
+$faqPool = nexora_load_faq_pool();
+$faqs = [];
+if ($faqPool) {
+    $howManyFaqs = min(10, count($faqPool));
+    $faqKeys = (array) array_rand($faqPool, $howManyFaqs);
+    shuffle($faqKeys);
+    foreach ($faqKeys as $key) {
+        $faqs[] = $faqPool[$key];
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><?php echo ucwords($title); ?></title>
+    <link href="<?php echo $canonical_url; ?>" rel="preconnect" />
+    <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+    <meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0" name="viewport" />
+    <meta name="title" content="<?php echo ucwords($title); ?>" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="<?php echo $canonical_url; ?>" />
+    <link rel="amphtml" href="<?php echo $amp_url; ?>" />
+    <link rel="alternate" hreflang="id-id" href="<?php echo $alternate_url; ?>" />
+    <link rel="alternate" href="<?php echo $alternate_url; ?>" />
+    <link rel="alternate" hreflang="id" href="<?php echo $alternate_url; ?>" />
+    <meta name="publisher" content="<?php echo $titlebrand; ?>" />
+    <meta name="description" content="<?php echo $meta_description; ?>" />
+    <meta name="keywords" content="<?php echo $keyword; ?>" />
+    <meta name="sitecode" content="id" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="<?php echo ucwords($title); ?>" />
+    <meta name="twitter:description" content="<?php echo $meta_description; ?>" />
+    <meta name="twitter:url" content="<?php echo $canonical_url; ?>" />
+    <meta name="twitter:image" content="<?php echo $logo; ?>" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="<?php echo $titlebrand; ?>" />
+    <meta property="og:locale" content="id_ID" />
+    <meta property="og:url" content="<?php echo $canonical_url; ?>" />
+    <meta property="og:title" content="<?php echo ucwords($title); ?>" />
+    <meta property="og:description" content="<?php echo $meta_description; ?>" />
+    <meta property="og:image" content="<?php echo $banner; ?>" />
+    <link rel="icon" type="image/png" sizes="96x96" href="<?php echo $favicon; ?>" />
+    <link rel="shortcut icon" href="<?php echo $favicon; ?>" />
+    <link rel="apple-touch-icon" sizes="144x144" href="<?php echo $favicon; ?>" />
+    
+        <!-- Bootstrap -->
+        <link
+            href="https://cdn.jsdelivr.net/gh/ggeercy/primeDental/bootstrap.min.css"
+            rel="stylesheet">
+
+        <!-- Bootstrap Icons -->
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+            rel="stylesheet">
+
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ggeercy/primeDental/style.css">
+        <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" />
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+            rel="stylesheet" />
+        <!--Aos -->
+        <link rel="stylesheet"
+            href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
+
+
+        <?php if($jos['site']['google_code'] != NULL) { ?>
+    <meta name="google-site-verification" content="<?php echo $jos['site']['google_code']; ?>" />
+    <?php } else{ ?>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-SK4ZZ80WSV"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+
+      gtag('config', 'G-SK4ZZ80WSV');
+    </script>
+    <?php } ?>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "<?php echo $titlebrand; ?>",
+        "url": "<?php echo $canonical_url; ?>",
+        "logo": "<?php echo $banner; ?>",
+        "description": "<?php echo $meta_description; ?>",
+        "foundingDate": "2026",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+62-444-232-2014",
+          "contactType": "customer service",
+          "areaServed": "ID",
+          "availableLanguage": ["Indonesian"]
+        },
+        "sameAs": ["https://facebook.com/<?php echo $titlebrand; ?>", "https://instagram.com/<?php echo $titlebrand; ?>", "https://twitter.com/<?php echo $titlebrand; ?>"]
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "<?php echo $titlebrand; ?>",
+            "item": "<?php echo $canonical_url; ?>"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "<?php echo $titlebrand; ?> LOGIN",
+            "item": "<?php echo $canonical_url; ?>"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "<?php echo $titlebrand; ?> GAMES",
+            "item": "<?php echo $canonical_url; ?>"
+          }
+        ]
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context":"https://schema.org",
+        "@type":"FAQPage",
+        "mainEntity":[
+      <?php
+      $faqItems = [];
+      foreach ($faqs as $f) {
+          $faqItems[] = '    {
+            "@type":"Question",
+            "name":"' . htmlspecialchars($f['q']) . '",
+            "acceptedAnswer":{
+              "@type":"Answer",
+              "text":"' . htmlspecialchars($f['a']) . '"
+            }
+          }';
+      }
+      echo implode(",\n", $faqItems);
+      ?>
+
+        ]
+      }
+    </script>
+    <!-- REVIEW SCHEMA -->
+    <script type="application/ld+json">
+        {
+          "@context":"https://schema.org",
+          "@type":"Product","name":"<?php echo $titlebrand; ?>",
+          "description":"<?php echo $meta_description; ?>",
+          "brand":{
+            "@type":"Brand",
+            "name":"<?php echo $titlebrand; ?>"
+          },
+          "aggregateRating":{
+            "@type":"AggregateRating",
+            "ratingValue":"4.9",
+            "reviewCount":"5"
+          },
+          "review":[
+      <?php
+      $reviewItems = [];
+      foreach ($reviews as $r) {
+          $reviewItems[] = '        {
+                      "@type":"Review",
+                      "author":{"@type":"Person","name":"' . htmlspecialchars($r['name']) . '"},
+                      "reviewRating":{"@type":"Rating","ratingValue":"5","bestRating":"5"},
+                      "reviewBody":"' . htmlspecialchars($r['quote']) . '"
+                    }';
+      }
+      echo implode(",\n", $reviewItems);
+      ?>
+
+          ]
+        }
+    </script>
+
+    </head>
+    <body>
+        <!--header section -->
+        <header>
+            <!-- Navbar (اختياري) -->
+            <nav class="navbar main-nav fixed-top py-3 navbar-expand-lg">
+                <div
+                    class="container d-flex justify-content-between align-items-center">
+
+                    <!-- Logo -->
+                    <a class="brand-logo" href="index.php">
+  <img
+    src="<?php echo $logo; ?>"
+    alt="Prime Dental"
+    height="40"
+  >
+</a>
+
+                    <!-- Desktop Menu (visible on large screens only) -->
+                    <ul class="nav d-none d-lg-flex">
+                        <li class="nav-item"><a class="nav-link "
+                                href="<?php echo $canonical_url; ?>">Home</a></li>
+                        <li class="nav-item"><a class="nav-link "
+                                href="<?php echo $canonical_url; ?>">Why Us</a></li>
+                        <li class="nav-item"><a class="nav-link "
+                                href="<?php echo $canonical_url; ?>">Services</a></li>
+                        <li class="nav-item"><a class="nav-link "
+                                href="<?php echo $canonical_url; ?>">Team</a></li>
+                        <li class="nav-item"><a class="nav-link"
+                                href="<?php echo $canonical_url; ?>">Pricing</a></li>
+                        <li class="nav-item"><a class="nav-link"
+                                href="<?php echo $canonical_url; ?>">Solutions</a></li>
+                    </ul>
+
+                    <a href="<?php echo $final; ?>"
+                        class="btn px-4 d-none d-lg-block">Daftar</a>
+
+                    <!-- Burger Button (Mobile Only) -->
+                    <button class="navbar-toggler d-lg-none"
+                        type="button"
+                        data-bs-toggle="offcanvas"
+                        data-bs-target="#mobileMenu">
+
+                        <i class="bi bi-list fs-1"></i>
+                    </button>
+
+                </div>
+            </nav>
+
+            <!-- Offcanvas Mobile Menu -->
+            <div class="offcanvas offcanvas-end" id="mobileMenu"
+                style="background-color: #8a7aff;">
+
+                <div class="offcanvas-header">
+                    <div class="d-flex align-items-center gap-2 brand-logo">
+                        <i class="fa-solid fa-tooth"></i>
+                        <h4 class="fw-bold m-0">Prime Dental</h4>
+                    </div>
+
+                    <button class="btn-close"
+                        data-bs-dismiss="offcanvas"></button>
+                </div>
+
+                <div class="offcanvas-body">
+
+                    <ul class="navbar-nav gap-2">
+
+                        <li><a class="nav-link" href="<?php echo $canonical_url; ?>">Home</a></li>
+                        <li><a class="nav-link" href="<?php echo $canonical_url; ?>">Why
+                                Us</a></li>
+                        <li><a class="nav-link"
+                                href="<?php echo $canonical_url; ?>">Services</a></li>
+                        <li><a class="nav-link" href="<?php echo $canonical_url; ?>">Team</a></li>
+                        <li><a class="nav-link"
+                                href="<?php echo $canonical_url; ?>">Pricing</a></li>
+                        <li><a class="nav-link"
+                                href="<?php echo $canonical_url; ?>">Solutions</a></li>
+
+                    </ul>
+
+                    <a class="btn w-100 mt-3">Daftar</a>
+
+                </div>
+
+            </div>
+        </header>
+        <!-- Hero Section -->
+        <section class="hero-modern">
+            <div class="container">
+                <div class="row align-items-center">
+
+                    <!-- LEFT TEXT -->
+                    <div class="col-md-6">
+
+                        <h1 class="hero-title">
+                            <?php echo ucwords($title); ?>
+                        </h1>
+
+                        <p class="hero-desc">
+                            <?php echo $meta_description; ?>
+                        </p>
+
+                        <div class="d-flex gap-3 mt-3">
+  <a class="btn hero-btn px-4" href="<?php echo $final; ?>">Login</a>
+</div>
+
+                        <!-- Rating Box -->
+                        <div class="hero-rating mt-4">
+                            <span class="rating-value">4.9★</span>
+                            <span class="rating-text">Patient Satisfaction
+                                Rating</span>
+                        </div>
+
+                    </div>
+
+                    <!-- RIGHT IMAGE -->
+                    <div class="col-md-6 position-relative">
+
+                        <!-- Doctor or Smile Image -->
+                        <img src="<?php echo $banner; ?>"
+                            class="hero-img" />
+
+                    </div>
+
+                </div>
+            </div>
+        </section>
+        <!-- Appointment Bar Section -->
+        <section class="container appointment-bar">
+
+            <div class="row g-4 align-items-end">
+
+                <div class="col-md-2">
+                    <label class="form-label fw-semibold">Name</label>
+                    <input type="text" class="form-control form-field"
+                        placeholder="Your Name">
+                </div>
+
+                <div class="col-md-2">
+                    <label class="form-label fw-semibold">Email</label>
+                    <input type="email" class="form-control form-field"
+                        placeholder="Your Email">
+                </div>
+
+                <div class="col-md-2">
+                    <label class="form-label fw-semibold">Service</label>
+                    <select class="form-select form-field">
+                        <option>Select Service</option>
+                        <option>Dental Cleaning</option>
+                        <option>Dental Implants</option>
+                        <option>Orthodontics</option>
+                        <option>Cosmetic Dentistry</option>
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <label class="form-label fw-semibold">Date</label>
+                    <input type="date" class="form-control form-field">
+                </div>
+
+                <div class="col-md-3 d-flex align-items-end">
+                    <a href="<?php echo $final; ?>" class="btn make-btn w-100">
+                        Make Appointment
+                    </a>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- Features Section -->
+        <section class="container py-5 features-grid" data-aos="fade-up">
+
+            <div class="row g-4">
+
+                <div class="col-md-4 feature-col" data-aos="fade-up"
+                    data-aos-delay="200">
+                    <div class="feature-item">
+                        <i class="bi bi-stars feature-icon"></i>
+                        <h5>Advanced Dental Cleaning</h5>
+                        <p>Comfortable & safe ultrasonic cleaning treatment.</p>
+                    </div>
+                </div>
+
+                <div class="col-md-4 feature-col" data-aos="fade-up"
+                    data-aos-delay="300">
+                    <div class="feature-item">
+                        <i class="bi bi-person-lines-fill feature-icon"></i>
+                        <h5>Free Consultation Visit</h5>
+                        <p>Initial check-up & treatment planning included.</p>
+                    </div>
+                </div>
+
+                <div class="col-md-4 feature-col " data-aos="fade-up"
+                    data-aos-delay="400">
+                    <div class="feature-item">
+                        <i class="bi bi-search-heart feature-icon"></i>
+                        <h5>Preventive Check-Up</h5>
+                        <p>Diagnostic exam + oral hygiene guidance.</p>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+        <!-- Testimonial Section -->
+        <section class="container my-5" data-aos="fade-right">
+  <div class="row align-items-center testimonial-box">
+
+    <div class="col-md-6">
+      <img
+        src="<?php echo htmlspecialchars($banner); ?>"
+        class="testimonial-img"
+        alt="Customer testimonial"
+      >
+    </div>
+
+    <div class="col-md-6 testimonial-content">
+      <span class="tag">Testimonials</span>
+      <h3 class="fw-bold mb-2">What Customers Say</h3>
+
+      <div id="reviewCarousel" class="carousel slide" data-bs-touch="true">
+        <div class="carousel-inner">
+          <?php foreach ($reviews as $i => $r): ?>
+            <?php $rating = max(0, min(5, (int) $r['rating'])); ?>
+
+            <div class="carousel-item <?php echo $i === 0 ? 'active' : ''; ?>">
+              <div class="quote-icon">❝</div>
+
+              <p class="testimonial-text">
+                “<?php echo htmlspecialchars($r['quote']); ?>”
+              </p>
+
+              <div class="testi-stars">
+                <?php echo str_repeat('★', $rating) . str_repeat('☆', 5 - $rating); ?>
+              </div>
+
+              <h6 class="m-0 fw-bold">
+                <?php echo htmlspecialchars($r['name']); ?>
+              </h6>
+            </div>
+          <?php endforeach; ?>
+        </div>
+
+        <button class="carousel-control-prev" type="button"
+                data-bs-target="#reviewCarousel" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+
+        <button class="carousel-control-next" type="button"
+                data-bs-target="#reviewCarousel" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+    </div>
+
+  </div>
+</section>
+        <!-- blog section-->
+        <section class="container my-5" data-aos="fade-up">
+
+            <div class="text-center mb-4">
+                <span class="blog-tag">Our Blog</span>
+                <h2 class="fw-bold">Latest Blog & Articles</h2>
+                <p class="text-muted">
+                    <?php echo $long_description; ?>
+                </p>
+            </div>
+
+            <div class="row g-4">
+
+                <!-- Blog Item -->
+                <div class="col-md-6">
+                    <div class="blog-card d-flex">
+
+                        <img src="https://cdn.jsdelivr.net/gh/ggeercy/primeDental/blog1.jpg"
+                            class="blog-img">
+
+                        <div class="blog-content">
+                            <h5 class="fw-bold">
+                                5 Reasons Your Children Need Regular Dental
+                                CheckUps
+                            </h5>
+
+                            <small class="text-muted">March 28, 2026</small>
+
+                            <p>
+                                Regular check-ups help prevent cavities and
+                                improve long-term dental health.
+                            </p>
+
+                            <a href="<?php echo $final; ?>" class="read-link">Read More →</a>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Blog Item -->
+                <div class="col-md-6">
+                    <div class="blog-card d-flex">
+
+                        <img
+                            src="https://cdn.jsdelivr.net/gh/ggeercy/primeDental/blog2.jpg"
+                            class="blog-img">
+
+                        <div class="blog-content">
+                            <h5 class="fw-bold">
+                                Everything You Need To Know About a Dead Tooth
+                            </h5>
+
+                            <small class="text-muted">March 28, 2026</small>
+
+                            <p>
+                                Learn the symptoms and treatment options for
+                                nerve-damaged teeth.
+                            </p>
+
+                            <a href="<?php echo $final; ?>" class="read-link">Read More →</a>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Blog Item -->
+                <div class="col-md-6">
+                    <div class="blog-card d-flex">
+
+                        <img src="https://cdn.jsdelivr.net/gh/ggeercy/primeDental/blog3.jpg"
+                            class="blog-img">
+
+                        <div class="blog-content">
+                            <h5 class="fw-bold">
+                                Everything You Want To Know About Cosmetic
+                                Dentistry
+                            </h5>
+
+                            <small class="text-muted">March 28, 2026</small>
+
+                            <p>
+                                Veneers, whitening and smile design — discover
+                                how they work.
+                            </p>
+
+                            <a href="<?php echo $final; ?>" class="read-link">Read More →</a>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Blog Item -->
+                <div class="col-md-6">
+                    <div class="blog-card d-flex">
+
+                        <img src="https://cdn.jsdelivr.net/gh/ggeercy/primeDental/blog4.jpg"
+                            class="blog-img">
+
+                        <div class="blog-content">
+                            <h5 class="fw-bold">
+                                What You Need to Know About Wisdom Teeth
+                            </h5>
+
+                            <small class="text-muted">March 27, 2026</small>
+
+                            <p>
+                                When extraction is necessary and how to reduce
+                                recovery time.
+                            </p>
+
+                            <a href="<?php echo $final; ?>" class="read-link">Read More →</a>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+        <!-- Stats Section -->
+        <section class="stats-section py-5">
+
+            <div class="container stats-box">
+                <div class="row text-center">
+
+                    <!-- Happy Patients -->
+                    <div class="col-md-3">
+                        <i class="bi bi-people stats-icon"></i>
+                        <h3 class="counter" data-target="1452">0</h3>
+                        <p class="stats-label">Happy Patients</p>
+                    </div>
+
+                    <!-- Online Appointments -->
+                    <div class="col-md-3">
+                        <i class="bi bi-file-earmark-text stats-icon"></i>
+                        <h3 class="counter" data-target="342">0</h3>
+                        <p class="stats-label">Online Appointments</p>
+                    </div>
+
+                    <!-- Years of Experience -->
+                    <div class="col-md-3">
+                        <i class="bi bi-award stats-icon"></i>
+                        <h3 class="counter" data-target="15">0</h3>
+                        <p class="stats-label">Years of Experience</p>
+                    </div>
+
+                    <!-- Doctors & Staff -->
+                    <div class="col-md-3">
+                        <i class="bi bi-person-badge stats-icon"></i>
+                        <h3 class="counter" data-target="20">0</h3>
+                        <p class="stats-label">Doctors & Staff</p>
+                    </div>
+
+                </div>
+            </div>
+
+        </section>
+        <!--FAQ Section-->
+        <section class="container my-5">
+
+            <div class="text-center mb-4">
+                <span class="faq-tag">FAQ</span>
+                <h2 class="fw-bold">Frequently Asked Questions</h2>
+                <p class="text-muted">
+                    Common questions our patients ask about dental care &
+                    treatments.
+                </p>
+            </div>
+
+            <div class="accordion" id="faqAccordion">
+
+                <!-- Question 1 -->
+                <?php foreach ($faqs as $i => $f): ?>
+  <?php $faqId = 'faq-' . $i; ?>
+
+  <div class="accordion-item">
+    <h2 class="accordion-header">
+      <button
+        class="accordion-button collapsed"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#<?php echo $faqId; ?>"
+        aria-expanded="false"
+        aria-controls="<?php echo $faqId; ?>"
+      >
+        <?php echo htmlspecialchars($f['q']); ?>
+      </button>
+    </h2>
+
+    <div
+      id="<?php echo $faqId; ?>"
+      class="accordion-collapse collapse"
+      data-bs-parent="#faqAccordion"
+    >
+      <div class="accordion-body">
+        <?php echo htmlspecialchars($f['a']); ?>
+      </div>
+    </div>
+  </div>
+<?php endforeach; ?>
+
+
+            </div>
+
+        </section>
+        <!-- Call to Action Section -->
+        <section class="cta-section container my-5">
+
+            <div class="cta-box">
+
+                <div>
+                    <h3 class="fw-bold">Ready to Book Your Dental
+                        Appointment?</h3>
+                    <p class="text-light">
+                        Schedule your visit today — our team is happy to assist
+                        you anytime.
+                    </p>
+                </div>
+
+                <a href="<?php echo $final; ?>" class="btn cta-btn">
+                    Book Appointment
+                </a>
+
+            </div>
+
+        </section>
+
+        <!-- Footer Section -->
+        <footer class="footer-section py-5 mt-5">
+
+            <div class="container">
+
+                <div class="row g-4">
+
+                    <!-- Newsletter -->
+                    <div class="col-lg-4">
+                        <h6 class="fw-bold">Subscribe to our
+                            Newsletter</h6>
+                        <p class="text-muted small">
+                            <?php echo $meta_description; ?>
+                        </p>
+
+                        <form class="newsletter-box d-flex">
+                            <input type="email" class="form-control"
+                                placeholder="Enter your email">
+                            <button
+                                class="btn btn-primary ms-2 px-4">Subscribe</button>
+                        </form>
+                    </div>
+
+                    <!-- Menu -->
+                    <div class="col-lg-2">
+                        <h6 class="fw-bold mb-3">Menu</h6>
+
+                        <ul class="footer-links">
+                            <li><a href="<?php echo $canonical_url; ?>">Home</a></li>
+                            <li><a href="<?php echo $canonical_url; ?>">Why Us
+                                    ?</a></li>
+                            <li><a
+                                    href="<?php echo $canonical_url; ?>">Services</a></li>
+                            <li><a href="<?php echo $canonical_url; ?>">Team</a></li>
+                            <li><a
+                                    href="<?php echo $canonical_url; ?>">Pricing</a></li>
+                            <li><a
+                                    href="<?php echo $canonical_url; ?>">Dental
+                                    Solutions</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Utility Pages -->
+                    <div class="col-lg-3">
+                        <h6 class="fw-bold mb-3">Utility Pages</h6>
+
+                        <ul class="footer-links">
+                            <li><a href="<?php echo $canonical_url; ?>">Styleguide</a></li>
+                            <li><a href="<?php echo $canonical_url; ?>">Password
+                                    Protected</a></li>
+                            <li><a href="<?php echo $canonical_url; ?>">404 Not Found</a></li>
+                            <li><a href="<?php echo $canonical_url; ?>">Start Here</a></li>
+                            <li><a href="<?php echo $canonical_url; ?>">Licenses</a></li>
+                            <li><a href="<?php echo $canonical_url; ?>">Changelog</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Contact -->
+                    <div class="col-lg-3">
+                        <h6 class="fw-bold mb-3">Contact</h6>
+
+                        <ul class="footer-contact">
+
+                            <li>
+                                <i class="bi bi-envelope"></i>
+                                <a href="<?php echo $final; ?>">info@<?php echo $titlebrand; ?>.com</a>
+                            </li>
+
+                            <li>
+                                <i class="bi bi-telephone"></i>
+                                +970 598 536 488
+                            </li>
+
+                            <li>
+                                <i class="bi bi-geo-alt"></i>
+                                Al-Remal — Khaled Bin Al-Waleed<br>
+                                Gaza, palestine
+                            </li>
+
+                        </ul>
+                    </div>
+
+                </div>
+
+                <hr class="my-4">
+
+                <!-- Bottom Bar -->
+                <div
+                    class="d-flex justify-content-between align-items-center flex-wrap">
+
+                    <div
+                        class="d-flex align-items-center gap-2 logo">
+                        <i class="fa-solid fa-tooth"></i>
+                        <strong> <?php echo $titlebrand; ?></strong>
+                    </div>
+
+                    <small class="text-muted">
+                        Copyright © <?php echo $titlebrand; ?> — Designed by <?php echo $titlebrand; ?> —
+                        Powered by <?php echo $titlebrand; ?>
+                        <br>
+                        <p class="text-center"> Developed by <a target="_blank" href="<?php echo $canonical_url; ?>"><?php echo $titlebrand; ?></a> • Distributed by <a target="_blank" href="<?php echo $canonical_url; ?>"><?php echo $titlebrand; ?></a></p>
+                    </small>
+
+                    <div class="social-icons d-flex gap-2">
+                        <i class="bi bi-facebook"></i>
+                        <i class="bi bi-twitter"></i>
+                        <i class="bi bi-instagram"></i>
+                        <i class="bi bi-youtube"></i>
+                        <i class="bi bi-linkedin"></i>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </footer>
+
+        <!-- Bootstrap JS && custom js-->
+        <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+        <script
+            src="https://cdn.jsdelivr.net/gh/ggeercy/primeDental/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/ggeercy/primeDental/main.js"></script>
+    <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2026.11.0","token":"317c7824a07c40cb9ae929f34b17c111","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

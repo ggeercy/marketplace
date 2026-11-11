@@ -1,0 +1,323 @@
+<?php
+if($jos['article_id'] != NULL)
+{
+  $brand  = array('brand123', 'Brand123');
+  $title = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['title']);
+  $meta_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['meta_description']);
+  $long_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['long_description']);
+}
+if ($alternate_url == NULL || $alternate_url == ""){
+    $alternate_url = $amp_url;
+}
+define('SITE_BRAND', $titlebrand);
+?>
+
+<!doctype html>
+<html ⚡ lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title><?php echo ucwords($title); ?></title>
+    <meta name="description" content="<?php echo $meta_description; ?>" />
+    <link rel="canonical" href="<?php echo $canonical_url; ?>" />
+    <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1" />
+    <link rel="icon" type="image/png" sizes="96x96" href="<?php echo $favicon; ?>" />
+    <link rel="shortcut icon" href="<?php echo $favicon; ?>" />
+    <link rel="apple-touch-icon" sizes="144x144" href="<?php echo $favicon; ?>" />
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&family=Lora:wght@400;500&display=swap" />
+    <style amp-boilerplate>
+      body {
+        -webkit-animation: -amp-start 8s steps(1, end) 0s 1 normal both;
+        -moz-animation: -amp-start 8s steps(1, end) 0s 1 normal both;
+        -ms-animation: -amp-start 8s steps(1, end) 0s 1 normal both;
+        animation: -amp-start 8s steps(1, end) 0s 1 normal both;
+      }
+      @-webkit-keyframes -amp-start {
+        from {
+          visibility: hidden;
+        }
+        to {
+          visibility: visible;
+        }
+      }
+      @-moz-keyframes -amp-start {
+        from {
+          visibility: hidden;
+        }
+        to {
+          visibility: visible;
+        }
+      }
+      @-ms-keyframes -amp-start {
+        from {
+          visibility: hidden;
+        }
+        to {
+          visibility: visible;
+        }
+      }
+      @-o-keyframes -amp-start {
+        from {
+          visibility: hidden;
+        }
+        to {
+          visibility: visible;
+        }
+      }
+      @keyframes -amp-start {
+        from {
+          visibility: hidden;
+        }
+        to {
+          visibility: visible;
+        }
+      }
+    </style>
+    <noscript
+      ><style amp-boilerplate>
+        body {
+          -webkit-animation: none;
+          -moz-animation: none;
+          -ms-animation: none;
+          animation: none;
+        }
+      </style></noscript
+    >
+    <script async src="https://cdn.ampproject.org/v0.js"></script>
+    <style amp-custom>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #fff;
+        font-family: 'Lora', Georgia, serif;
+        color: #222;
+      }
+      .wrap {
+        max-width: 480px;
+        margin: 0 auto;
+        background: #f8f4ee;
+        border: 1px solid #d9c8a8;
+      }
+      .head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 16px;
+        background: #fffdf9;
+      }
+      .logo {
+        font-family: 'Playfair Display', serif;
+        font-size: 24px;
+        color: #b4772c;
+        letter-spacing: 1px;
+      }
+      .head nav {
+        display: flex;
+        font-size: 7px;
+        color: #555;
+      }
+      .head nav a {
+        color: #555;
+        text-decoration: none;
+        padding: 0 8px;
+        border-left: 1px solid #bbb;
+      }
+      .head nav a:first-child {
+        border-left: 0;
+      }
+      .hero {
+        background: #fff;
+      }
+      .hl {
+        background: #fffdf9;
+        text-align: center;
+        padding: 22px 20px 20px;
+      }
+      .hl h1 {
+        font-family: 'Playfair Display', serif;
+        font-weight: 400;
+        font-size: 30px;
+        color: #a2651b;
+        margin: 0 0 14px;
+      }
+      .hl p {
+        font-size: 8px;
+        color: #333;
+        margin: 0 0 20px;
+      }
+      .btn {
+        display: inline-block;
+        border: 1px solid #b4772c;
+        color: #8a5a1a;
+        text-decoration: none;
+        font-size: 7px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        padding: 9px 26px;
+        background: #fffdf9;
+      }
+      .sec {
+        padding: 26px 14px 10px;
+      }
+      .lh {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 16px;
+        font-size: 7px;
+        color: #b4772c;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        justify-content: center;
+      }
+      .lh:before,
+      .lh:after {
+        content: '';
+        flex: 1;
+        border-top: 1px solid #d9c8a8;
+      }
+      .two {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+      }
+      .two .tx {
+        flex: 1 1 45%;
+      }
+      .two h3 {
+        font-size: 10px;
+        color: #b4772c;
+        margin: 0 0 8px;
+      }
+      .two p {
+        font-size: 7px;
+        line-height: 1.7;
+        color: #333;
+        margin: 0 0 14px;
+      }
+      .two .g {
+        flex: 1 1 55%;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .two .g amp-img {
+        flex: 1 1 calc(50% - 4px);
+        background: #fff;
+      }
+      .three {
+        display: flex;
+        gap: 10px;
+        margin-top: 22px;
+        text-align: center;
+      }
+      .three div {
+        flex: 1;
+        font-size: 7px;
+        color: #b4772c;
+      }
+      .three amp-img {
+        background: #fff;
+        margin-top: 6px;
+      }
+      .more {
+        text-align: center;
+        padding: 22px 0 24px;
+      }
+      .nav2 {
+        display: flex;
+        justify-content: center;
+        font-size: 7px;
+        padding: 12px 0;
+        border-top: 1px solid #d9c8a8;
+        margin: 0 14px;
+      }
+      .nav2 a {
+        color: #444;
+        text-decoration: none;
+        padding: 0 12px;
+        border-left: 1px solid #bbb;
+      }
+      .nav2 a:first-child {
+        border-left: 0;
+      }
+      .soc {
+        display: flex;
+        gap: 18px;
+        justify-content: center;
+        padding: 8px 0 12px;
+      }
+      .soc span {
+        width: 8px;
+        height: 12px;
+        background: #222;
+        display: block;
+        border-radius: 2px;
+      }
+      .foot {
+        text-align: center;
+        font-size: 6px;
+        line-height: 1.7;
+        color: #555;
+        padding: 0 28px 18px;
+      }
+      .foot a {
+        color: #b4772c;
+      }
+
+      .logo-img {
+        display: center;
+        width: auto;
+        height: 40px;
+        max-width: 160px;
+        object-fit: contain;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="head">
+        <div class="logo">
+          <img src="<?php echo $logo; ?>" alt="" class="logo-img" />
+        </div>
+        <nav><a href="<?php echo $final; ?>">Rings</a><a href="<?php echo $final; ?>">Earrings</a><a href="<?php echo $final; ?>">Blog</a><a href="<?php echo $final; ?>">Sale</a></nav>
+      </div>
+      <div class="hero"><amp-img src="<?php echo $banner; ?>" width="480" height="230" layout="responsive" alt="Happy Birthday card with gift cone and confetti"></amp-img></div>
+      <div class="hl">
+        <h1><?php echo ucwords($title); ?></h1>
+        <p><?php echo $meta_description; ?></p>
+        <a class="btn" href="<?php echo $final; ?>">Daftar</a>
+      </div>
+      <div class="sec">
+        <div class="lh">Your Birthday Gift</div>
+        <div class="two">
+          <div class="tx">
+            <h3>Diamond</h3>
+            <p>Each diamond ring is handcrafted from fine materials. Choose the perfect piece for you or someone special, and enjoy your birthday discount.</p>
+            <a class="btn" href="<?php echo $final; ?>">Login</a>
+          </div>
+          <div class="g">
+            <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/Nova-Bootstrap/90231516894175279.jpg" width="80" height="80" layout="responsive" alt="Diamond ring"></amp-img>
+            <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/Nova-Bootstrap/20431516894162407.jpg" width="80" height="80" layout="responsive" alt="Diamond earrings"></amp-img>
+            <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/Nova-Bootstrap/12491516894162476.jpg" width="80" height="80" layout="responsive" alt="Bracelet"></amp-img>
+            <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/Nova-Bootstrap/20011516894251397.jpg" width="80" height="80" layout="responsive" alt="Ring"></amp-img>
+          </div>
+        </div>
+        <div class="three">
+          <div>Opal<amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/Nova-Bootstrap/58721516893231294.jpg" width="120" height="100" layout="responsive" alt="Opal ring"></amp-img></div>
+          <div>Emerald<amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/Nova-Bootstrap/58721516893231294.jpg" width="120" height="100" layout="responsive" alt="Emerald earrings"></amp-img></div>
+          <div>Sapphire<amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/Nova-Bootstrap/58721516893231294.jpg" width="120" height="100" layout="responsive" alt="Sapphire pendant"></amp-img></div>
+        </div>
+        <div class="more"><a class="btn" href="<?php echo $final; ?>">Explore the collection</a></div>
+      </div>
+      <div class="nav2"><a href="<?php echo $final; ?>">Rings</a><a href="<?php echo $final; ?>">Earrings</a><a href="<?php echo $final; ?>">Blog</a><a href="<?php echo $final; ?>">Sale</a></div>
+
+      <div class="foot">
+        You are receiving this email because you have visited our site or asked us about regular newsletters. If you no longer wish to receive them, please unsubscribe.<br />
+        <a href="<?php echo $canonical_url; ?>">Unsubscribe</a>
+      </div>
+    </div>
+  </body>
+</html>

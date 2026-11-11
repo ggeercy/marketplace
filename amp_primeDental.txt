@@ -1,0 +1,283 @@
+<?php
+if($jos['article_id'] != NULL)
+{
+  $brand  = array('brand123', 'Brand123');
+  $title = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['title']);
+  $meta_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['meta_description']);
+  $long_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['long_description']);
+}
+if ($alternate_url == NULL || $alternate_url == ""){
+    $alternate_url = $amp_url;
+}
+define('SITE_BRAND', $titlebrand);
+?>
+
+<!doctype html>
+<html ⚡ lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title><?php echo ucwords($title); ?></title>
+    <meta name="description" content="<?php echo $meta_description; ?>" />
+    <link rel="canonical" href="<?php echo $canonical_url; ?>" />
+    <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1" />
+    <link rel="icon" type="image/png" sizes="96x96" href="<?php echo $favicon; ?>" />
+    <link rel="shortcut icon" href="<?php echo $favicon; ?>" />
+    <link rel="apple-touch-icon" sizes="144x144" href="<?php echo $favicon; ?>" />
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&display=swap" />
+    <style amp-boilerplate>
+      body {
+        -webkit-animation: -amp-start 8s steps(1, end) 0s 1 normal both;
+        -moz-animation: -amp-start 8s steps(1, end) 0s 1 normal both;
+        -ms-animation: -amp-start 8s steps(1, end) 0s 1 normal both;
+        animation: -amp-start 8s steps(1, end) 0s 1 normal both;
+      }
+      @-webkit-keyframes -amp-start {
+        from {
+          visibility: hidden;
+        }
+        to {
+          visibility: visible;
+        }
+      }
+      @-moz-keyframes -amp-start {
+        from {
+          visibility: hidden;
+        }
+        to {
+          visibility: visible;
+        }
+      }
+      @-ms-keyframes -amp-start {
+        from {
+          visibility: hidden;
+        }
+        to {
+          visibility: visible;
+        }
+      }
+      @-o-keyframes -amp-start {
+        from {
+          visibility: hidden;
+        }
+        to {
+          visibility: visible;
+        }
+      }
+      @keyframes -amp-start {
+        from {
+          visibility: hidden;
+        }
+        to {
+          visibility: visible;
+        }
+      }
+    </style>
+    <noscript
+      ><style amp-boilerplate>
+        body {
+          -webkit-animation: none;
+          -moz-animation: none;
+          -ms-animation: none;
+          animation: none;
+        }
+      </style></noscript
+    >
+    <script async src="https://cdn.ampproject.org/v0.js"></script>
+    <script async custom-element="amp-date-countdown" src="https://cdn.ampproject.org/v0/amp-date-countdown-0.1.js"></script>
+    <script async custom-template="amp-mustache" src="https://cdn.ampproject.org/v0/amp-mustache-0.2.js"></script>
+    <style amp-custom>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #fff;
+        font-family: 'Fredoka', Arial, sans-serif;
+        color: #2b2b3a;
+      }
+      .wrap {
+        max-width: 480px;
+        margin: 0 auto;
+        background: #f4f0fb;
+      }
+      .head {
+        background: #fff8de;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 16px;
+      }
+
+      .head nav {
+        display: flex;
+        gap: 30px;
+      }
+      .head nav a {
+        width: 26px;
+        border-top: 1px solid #777;
+        display: block;
+      }
+      .top {
+        text-align: center;
+        padding: 22px 16px 0;
+      }
+      .top h1 {
+        font-size: 28px;
+        font-weight: 600;
+        color: #ff3d9a;
+        margin: 0 0 6px;
+      }
+      .top h2 {
+        font-size: 18px;
+        font-weight: 500;
+        letter-spacing: 1px;
+        margin: 0 0 6px;
+        text-transform: uppercase;
+      }
+      .offer {
+        background: #fff8de;
+        text-align: center;
+        padding: 20px 20px 24px;
+      }
+      .offer p {
+        font-size: 8px;
+        line-height: 1.7;
+        color: #555;
+        margin: 0 0 14px;
+      }
+      .offer h3 {
+        font-size: 22px;
+        font-weight: 400;
+        letter-spacing: 1px;
+        margin: 0 0 4px;
+      }
+      .offer small {
+        display: block;
+        font-size: 8px;
+        color: #777;
+        margin-bottom: 10px;
+      }
+      .cd {
+        border: 1px solid #bbb;
+        background: #fff;
+        margin: 0 4px 18px;
+        padding: 10px 0;
+      }
+      .cd .row {
+        display: flex;
+        justify-content: space-around;
+        font-size: 24px;
+      }
+      .cd .row b {
+        font-weight: 400;
+        border-bottom: 1px solid #2b2b3a;
+        padding: 0 4px 2px;
+      }
+      .btn {
+        display: inline-block;
+        background: #ff6bb6;
+        color: #fff;
+        text-decoration: none;
+        font-size: 8px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        padding: 9px 28px;
+        border-radius: 14px;
+      }
+      .cat {
+        padding: 26px 16px 30px;
+        text-align: center;
+        background: #f4f0fb;
+      }
+      .cat h4 {
+        font-size: 16px;
+        font-weight: 400;
+        margin: 0 0 16px;
+      }
+      .grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 22px;
+      }
+      .tile {
+        flex: 1 1 calc(50% - 6px);
+        position: relative;
+        border-radius: 2px;
+        overflow: hidden;
+      }
+      .tile span {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 10px;
+        font-size: 8px;
+        text-align: center;
+        color: #222;
+        z-index: 1;
+      }
+
+      .logo-img {
+        display: center;
+        width: auto;
+        height: 40px;
+        max-width: 160px;
+        object-fit: contain;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="head">
+        <div class="logo">
+          <img src="<?php echo $logo; ?>" alt="" class="logo-img" />
+        </div>
+        <nav><a href="<?php echo $final; ?>">Birds</a><a href="<?php echo $final; ?>">Dogs</a><a href="<?php echo $final; ?>">Cats</a></nav>
+      </div>
+      <div class="top">
+        <h1>WOW!</h1>
+        <h2><?php echo ucwords($title); ?></h2>
+        <amp-img src="<?php echo $banner; ?>" width="480" height="230" layout="responsive" alt="Dog peeking over the bottom edge of the frame"></amp-img>
+      </div>
+      <div class="offer">
+        <p><?php echo $meta_description; ?></p>
+        <h3>50% OFF</h3>
+        <small>Sale ends in:</small>
+        <div class="cd">
+          <amp-date-countdown timestamp-seconds="1796083200" layout="fixed-height" height="40">
+            <template type="amp-mustache">
+              <div class="row">
+                <b>{{ d }}</b
+                ><b>{{ h }}</b
+                ><b>{{ m }}</b
+                ><b>{{ s }}</b>
+              </div>
+            </template>
+          </amp-date-countdown>
+        </div>
+        <a class="btn" href="<?php echo $final; ?>">Daftar</a>
+        <a class="btn" href="<?php echo $final; ?>">Login</a>
+      </div>
+      <div class="cat">
+        <h4>Our top category</h4>
+        <div class="grid">
+          <a class="tile" href="<?php echo $final; ?>"
+            ><span>Birds →</span
+            ><amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/Nova-Bootstrap/madibadeafricaninspirationaxe4ufe3iv4unsplash_1_sJE.png" width="150" height="190" layout="responsive" alt="Colorful bird on a branch"></amp-img
+          ></a>
+          <a class="tile" href="<?php echo $final; ?>"
+            ><span>Cats →</span><amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/Nova-Bootstrap/pexelsannashvets4588069.png" width="150" height="190" layout="responsive" alt="Cat lying on a pink background"></amp-img
+          ></a>
+          <a class="tile" href="<?php echo $final; ?>"
+            ><span>Dogs →</span><amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/Nova-Bootstrap/pexelsannashvets4588015.png" width="150" height="190" layout="responsive" alt="Shiba Inu on a purple background"></amp-img
+          ></a>
+          <a class="tile" href="<?php echo $final; ?>"
+            ><span>Rabbits →</span><amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/Nova-Bootstrap/pexelsannashvets4588065.png" width="150" height="190" layout="responsive" alt="White rabbit on a yellow background"></amp-img
+          ></a>
+        </div>
+        <a class="btn" href="<?php echo $final; ?>">Live Chat</a>
+      </div>
+    </div>
+  </body>
+</html>
