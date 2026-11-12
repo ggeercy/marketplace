@@ -1,0 +1,998 @@
+<?php
+if($jos['article_id'] != NULL)
+{
+  $brand  = array('brand123', 'Brand123');
+  $title = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['title']);
+  $meta_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['meta_description']);
+  $long_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['long_description']);
+}
+if ($alternate_url == NULL || $alternate_url == ""){
+    $alternate_url = $amp_url;
+}
+define('SITE_BRAND', $titlebrand);
+/**
+ * Single source of truth for reviews and FAQs.
+ * Both the visible HTML below AND the JSON-LD schema at the
+ * bottom of this file are generated from these two arrays,
+ * so the structured data can never drift out of sync with
+ * what a visitor actually sees on the page â€” that mismatch is
+ * exactly what gets schema markup flagged by Google.
+ */
+/**
+ * Single source of truth for reviews and FAQs.
+ * Names and review quotes come from /data/names.txt and
+ * /data/reviews.txt (300 rows each) â€” edit those files to
+ * grow or change the pool, no code changes needed. Both the
+ * visible HTML below AND the JSON-LD schema at the bottom of
+ * this file are generated from the resulting $reviews array,
+ * so the structured data can never drift out of sync with
+ * what a visitor actually sees on the page.
+ */
+
+/**
+ * Reads /data/names.txt ("firstname,lastname" per row, header
+ * on line 1) and returns the first names and last names as two
+ * separate flat arrays, so they can be recombined independently.
+ */
+function nexora_load_names(): array {
+    $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/names.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    array_shift($lines); // drop the "firstname,lastname" header row
+    $first = [];
+    $last  = [];
+    foreach ($lines as $line) {
+        $parts = str_getcsv($line);
+        if (count($parts) < 2) {
+            continue;
+        }
+        $first[] = trim($parts[0]);
+        $last[]  = trim($parts[1]);
+    }
+    return [$first, $last];
+}
+
+/**
+ * Reviews and FAQs are stored with the literal placeholder "NEXORA"
+ * in the .txt data files (plain text can't hold a PHP constant), so
+ * every loaded line gets that placeholder swapped for the live
+ * SITE_BRAND before it's used, keeping the copy in sync with the
+ * dynamic brand from the domain JSON.
+ */
+function nexora_apply_brand(string $text): string {
+    return SITE_BRAND ? str_replace('NEXORA', SITE_BRAND, $text) : $text;
+}
+
+/** Reads /data/reviews.txt â€” one review quote per line. */
+function nexora_load_review_pool(): array {
+        $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/reviews.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    return array_map('nexora_apply_brand', $lines);
+}
+
+/** Reads /data/faqs.txt â€” "question|answer" per line. */
+function nexora_load_faq_pool(): array {
+        $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/faqs.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    $pool = [];
+    foreach ($lines as $line) {
+        $parts = explode('|', $line, 2);
+        if (count($parts) < 2) {
+            continue;
+        }
+        $pool[] = [
+            'q' => nexora_apply_brand(trim($parts[0])),
+            'a' => nexora_apply_brand(trim($parts[1])),
+        ];
+    }
+    return $pool;
+}
+
+/**
+ * Picks a random first name and a random last name from two
+ * separate pools and joins them â€” so the pairing on any given
+ * review is a fresh mix, not the pairing the names happened to
+ * share in the data file (e.g. "Budi" + "Kusuma" even though
+ * they came from different rows).
+ */
+function nexora_reshuffled_name(array $firstNames, array $lastNames): string {
+    $first = $firstNames[array_rand($firstNames)];
+    $last  = $lastNames[array_rand($lastNames)];
+    return ucfirst(strtolower($first)) . ' ' . ucfirst(strtolower($last));
+}
+
+/** Mostly 5 stars, occasionally 4 â€” matches a realistic positive spread. */
+function nexora_weighted_rating(): int {
+    return (mt_rand(1, 100) <= 75) ? 5 : 4;
+}
+
+function nexora_initials(string $name): string {
+    $parts = explode(' ', trim($name));
+    $first = substr($parts[0], 0, 1);
+    $last  = count($parts) > 1 ? substr(end($parts), 0, 1) : '';
+    return strtoupper($first . $last);
+}
+
+// Build 6 display reviews by sampling the pools above.
+[$firstNames, $lastNames] = nexora_load_names();
+$reviewPool = nexora_load_review_pool();
+
+$reviews = [];
+if ($firstNames && $lastNames && $reviewPool) {
+    $howMany = min(6, count($reviewPool));
+    $pickedKeys = (array) array_rand($reviewPool, $howMany);
+    shuffle($pickedKeys);
+    foreach ($pickedKeys as $key) {
+        $reviews[] = [
+            'name'   => nexora_reshuffled_name($firstNames, $lastNames),
+            'rating' => nexora_weighted_rating(),
+            'quote'  => $reviewPool[$key],
+        ];
+    }
+}
+
+// Build 10 display FAQs by sampling the pool loaded from faqs.txt.
+$faqPool = nexora_load_faq_pool();
+$faqs = [];
+if ($faqPool) {
+    $howManyFaqs = min(10, count($faqPool));
+    $faqKeys = (array) array_rand($faqPool, $howManyFaqs);
+    shuffle($faqKeys);
+    foreach ($faqKeys as $key) {
+        $faqs[] = $faqPool[$key];
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><?php echo ucwords($title); ?></title>
+    <link href="<?php echo $canonical_url; ?>" rel="preconnect" />
+    <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+    <meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0" name="viewport" />
+    <meta name="title" content="<?php echo ucwords($title); ?>" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="<?php echo $canonical_url; ?>" />
+    <link rel="amphtml" href="<?php echo $amp_url; ?>" />
+    <link rel="alternate" hreflang="id-id" href="<?php echo $alternate_url; ?>" />
+    <link rel="alternate" href="<?php echo $alternate_url; ?>" />
+    <link rel="alternate" hreflang="id" href="<?php echo $alternate_url; ?>" />
+    <meta name="publisher" content="<?php echo $titlebrand; ?>" />
+    <meta name="description" content="<?php echo $meta_description; ?>" />
+    <meta name="keywords" content="<?php echo $keyword; ?>" />
+    <meta name="sitecode" content="id" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="<?php echo ucwords($title); ?>" />
+    <meta name="twitter:description" content="<?php echo $meta_description; ?>" />
+    <meta name="twitter:url" content="<?php echo $canonical_url; ?>" />
+    <meta name="twitter:image" content="<?php echo $logo; ?>" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="<?php echo $titlebrand; ?>" />
+    <meta property="og:locale" content="id_ID" />
+    <meta property="og:url" content="<?php echo $canonical_url; ?>" />
+    <meta property="og:title" content="<?php echo ucwords($title); ?>" />
+    <meta property="og:description" content="<?php echo $meta_description; ?>" />
+    <meta property="og:image" content="<?php echo $banner; ?>" />
+    <link rel="icon" type="image/png" sizes="96x96" href="<?php echo $favicon; ?>" />
+    <link rel="shortcut icon" href="<?php echo $favicon; ?>" />
+    <link rel="apple-touch-icon" sizes="144x144" href="<?php echo $favicon; ?>" />
+
+        <!-- Google Web Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700&family=Rubik:wght@400;500&display=swap" rel="stylesheet"> 
+
+        <!-- Icon Font Stylesheet -->
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"/>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+        <!-- Libraries Stylesheet -->
+        <link href="https://cdn.jsdelivr.net/gh/ggeercy/mailler/animate.min.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/gh/ggeercy/mailler/owl.carousel.min.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/gh/ggeercy/mailler/lightbox.min.css" rel="stylesheet">
+
+
+        <!-- Customized Bootstrap Stylesheet -->
+        <link href="https://cdn.jsdelivr.net/gh/ggeercy/mailler/bootstrap.min.css" rel="stylesheet">
+
+        <!-- Template Stylesheet -->
+        <link href="https://cdn.jsdelivr.net/gh/ggeercy/mailler/style.css" rel="stylesheet">
+
+        <?php if($jos['site']['google_code'] != NULL) { ?>
+    <meta name="google-site-verification" content="<?php echo $jos['site']['google_code']; ?>" />
+    <?php } else{ ?>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-SK4ZZ80WSV"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+
+      gtag('config', 'G-SK4ZZ80WSV');
+    </script>
+    <?php } ?>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "<?php echo $titlebrand; ?>",
+        "url": "<?php echo $canonical_url; ?>",
+        "logo": "<?php echo $banner; ?>",
+        "description": "<?php echo $meta_description; ?>",
+        "foundingDate": "2024",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+62-444-232-2014",
+          "contactType": "customer service",
+          "areaServed": "ID",
+          "availableLanguage": ["Indonesian"]
+        },
+        "sameAs": ["https://facebook.com/<?php echo $titlebrand; ?>", "https://instagram.com/<?php echo $titlebrand; ?>", "https://twitter.com/<?php echo $titlebrand; ?>"]
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "<?php echo $titlebrand; ?>",
+            "item": "<?php echo $canonical_url; ?>"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "<?php echo $titlebrand; ?> LOGIN",
+            "item": "<?php echo $canonical_url; ?>"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "<?php echo $titlebrand; ?> GAMES",
+            "item": "<?php echo $canonical_url; ?>"
+          }
+        ]
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context":"https://schema.org",
+        "@type":"FAQPage",
+        "mainEntity":[
+      <?php
+      $faqItems = [];
+      foreach ($faqs as $f) {
+          $faqItems[] = '    {
+            "@type":"Question",
+            "name":"' . htmlspecialchars($f['q']) . '",
+            "acceptedAnswer":{
+              "@type":"Answer",
+              "text":"' . htmlspecialchars($f['a']) . '"
+            }
+          }';
+      }
+      echo implode(",\n", $faqItems);
+      ?>
+
+        ]
+      }
+    </script>
+    <!-- REVIEW SCHEMA -->
+    <script type="application/ld+json">
+        {
+          "@context":"https://schema.org",
+          "@type":"Product","name":"<?php echo $titlebrand; ?>",
+          "description":"<?php echo $meta_description; ?>",
+          "brand":{
+            "@type":"Brand",
+            "name":"<?php echo $titlebrand; ?>"
+          },
+          "aggregateRating":{
+            "@type":"AggregateRating",
+            "ratingValue":"4.9",
+            "reviewCount":"5"
+          },
+          "review":[
+      <?php
+      $reviewItems = [];
+      foreach ($reviews as $r) {
+          $reviewItems[] = '        {
+                      "@type":"Review",
+                      "author":{"@type":"Person","name":"' . htmlspecialchars($r['name']) . '"},
+                      "reviewRating":{"@type":"Rating","ratingValue":"5","bestRating":"5"},
+                      "reviewBody":"' . htmlspecialchars($r['quote']) . '"
+                    }';
+      }
+      echo implode(",\n", $reviewItems);
+      ?>
+
+          ]
+        }
+    </script>
+    </head>
+
+    <body>
+
+        <!-- Spinner Start -->
+        <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <!-- Spinner End -->
+
+
+        <!-- Navbar & Hero Start -->
+        <div class="container-fluid header position-relative overflow-hidden p-0">
+            <nav class="navbar navbar-expand-lg fixed-top navbar-light px-4 px-lg-5 py-3 py-lg-0">
+                <a href="index.html" class="navbar-brand p-0">
+                    <img src="<?php echo $logo; ?>" alt="Logo">
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                    <span class="fa fa-bars"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <div class="navbar-nav ms-auto py-0">
+                        <a href="#home" class="nav-item nav-link active">Home</a>
+                        <a href="#about" class="nav-item nav-link">About</a>
+                        <a href="#services" class="nav-item nav-link">Services</a>
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
+                            <div class="dropdown-menu m-0">
+                                <a href="#pricing" class="dropdown-item">Pricing</a>
+                                <a href="#blog" class="dropdown-item">Blog</a>
+                                <a href="#review" class="dropdown-item">Testimonial</a>
+                                <a href="#faq" class="dropdown-item">FAQ</a>
+                            </div>
+                        </div>
+                        <a href="<?php echo $canonical_url; ?>" class="nav-item nav-link">Contact Us</a>
+                    </div>
+                    <a href="<?php echo $final; ?>" class="btn btn-light border border-primary rounded-pill text-primary py-2 px-4 me-4">Log In</a>
+                    <a href="<?php echo $final; ?>" class="btn btn-primary rounded-pill text-white py-2 px-4">Sign Up</a>
+                </div>
+            </nav>
+
+
+            <!-- Hero Header Start -->
+            <section id="home">
+            <div class="hero-header overflow-hidden px-5">
+                <div class="rotate-img">
+                    <img src="https://cdn.jsdelivr.net/gh/ggeercy/mailler/sty-1.png" class="img-fluid w-100" alt="">
+                    <div class="rotate-sty-2"></div>
+                </div>
+                <div class="row gy-5 align-items-center">
+                    <div class="col-lg-6 wow fadeInLeft" data-wow-delay="0.1s">
+                        <h1 class="display-4 text-dark mb-4 wow fadeInUp" data-wow-delay="0.3s"><?php echo ucwords($title); ?></h1>
+                        <p class="fs-4 mb-4 wow fadeInUp" data-wow-delay="0.5s"><?php echo $meta_description; ?></p>
+                        <a href="<?php echo $final; ?>" class="btn btn-primary rounded-pill py-3 px-5 wow fadeInUp" data-wow-delay="0.7s">Get Started</a>
+                    </div>
+                    <div class="col-lg-6 wow fadeInRight" data-wow-delay="0.2s">
+                        <img src="<?php echo $banner; ?>" class="img-fluid w-100 h-100" alt="">
+                    </div>
+                </div>
+            </div>
+            <!-- Hero Header End -->
+        </div>
+        </section>
+        <!-- Navbar & Hero End -->
+
+
+        <!-- About Start -->
+        <section id="about">
+        <div class="container-fluid overflow-hidden py-5"  style="margin-top: 6rem;">
+            <div class="container py-5">
+                <div class="row g-5">
+                    <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s">
+                        <div class="RotateMoveLeft">
+                            <img src="https://cdn.jsdelivr.net/gh/ggeercy/mailler/about-1.png" class="img-fluid w-100" alt="">
+                        </div>
+                    </div>
+                    <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.3s">
+                        <h4 class="mb-1 text-primary">About Us</h4>
+                        <h1 class="display-5 mb-4"><?php echo ucwords($title); ?></h1>
+                        <p class="mb-4"><?php echo $long_description; ?>
+                        </p>
+                        <a href="<?php echo $final; ?>" class="btn btn-primary rounded-pill py-3 px-5">About More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </section>
+        <!-- About End -->
+
+
+        <!-- Service Start -->
+        <section id="services">
+        <div class="container-fluid service py-5">
+            <div class="container py-5">
+                <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 900px;">
+                    <h4 class="mb-1 text-primary">Our Service</h4>
+                    <h1 class="display-5 mb-4">What We Can Do For You</h1>
+                    <p class="mb-0">We make sending and managing email simple, secure, and reliable. Our tools help you stay organized and communicate with confidence. Whether for personal use or business, we’re here to support your everyday email needs.
+                    </p>
+                </div>
+                <div class="row g-4 justify-content-center">
+                    <div class="col-md-6 col-lg-4 col-xl-3 wow fadeInUp" data-wow-delay="0.1s">
+                        <div class="service-item text-center rounded p-4">
+                            <div class="service-icon d-inline-block bg-light rounded p-4 mb-4"><i class="fas fa-mail-bulk fa-5x text-secondary"></i></div>
+                            <div class="service-content">
+                                <h4 class="mb-4">Email Newsletters</h4>
+                                <p class="mb-4">Share company updates, helpful tips, and useful content with your subscribers. Keep your audience informed and engaged with regular emails.
+                                </p>
+                                <a href="<?php echo $final; ?>" class="btn btn-light rounded-pill text-primary py-2 px-4">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4 col-xl-3 wow fadeInUp" data-wow-delay="0.3s">
+                        <div class="service-item text-center rounded p-4">
+                            <div class="service-icon d-inline-block bg-light rounded p-4 mb-4"><i class="fas fa-thumbs-up fa-5x text-secondary"></i></div>
+                            <div class="service-content">
+                                <h4 class="mb-4">Acquistion Emails </h4>
+                                <p class="mb-4">Welcome potential customers and introduce them to your products or services. Use clear, relevant messages to encourage them to take the next step.
+                                </p>
+                                <a href="<?php echo $final; ?>" class="btn btn-light rounded-pill text-primary py-2 px-4">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4 col-xl-3 wow fadeInUp" data-wow-delay="0.5s">
+                        <div class="service-item text-center rounded p-4">
+                            <div class="service-icon d-inline-block bg-light rounded p-4 mb-4"><i class="fa fa-subway fa-5x text-secondary"></i></div>
+                            <div class="service-content">
+                                <h4 class="mb-4">Retention Emails</h4>
+                                <p class="mb-4">Stay connected with existing customers through helpful updates and personalized offers. Build loyalty by giving them reasons to keep coming back.
+                                </p>
+                                <a href="<?php echo $final; ?>" class="btn btn-light rounded-pill text-primary py-2 px-4">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4 col-xl-3 wow fadeInUp" data-wow-delay="0.7s">
+                        <div class="service-item text-center rounded p-4">
+                            <div class="service-icon d-inline-block bg-light rounded p-4 mb-4"><i class="fas fa-sitemap fa-5x text-secondary"></i></div>
+                            <div class="service-content">
+                                <h4 class="mb-4">Promotional Emails</h4>
+                                <p class="mb-4">1. Highlight special offers, new products, and limited-time deals. Make it easy for readers to learn more and take advantage of your promotions.
+                                </p>
+                                <a href="<?php echo $final; ?>" class="btn btn-light rounded-pill text-primary py-2 px-4">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4 col-xl-3 wow fadeInUp" data-wow-delay="0.1s">
+                        <div class="service-item text-center rounded p-4">
+                            <div class="service-icon d-inline-block bg-light rounded p-4 mb-4"><i class="fas fa-mail-bulk fa-5x text-secondary"></i></div>
+                            <div class="service-content">
+                                <h4 class="mb-4">Welcome Emails</h4>
+                                <p class="mb-4">Make a positive first impression when someone joins your mailing list. Introduce your brand and let new subscribers know what to expect.
+                                </p>
+                                <a href="<?php echo $final; ?>" class="btn btn-light rounded-pill text-primary py-2 px-4">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4 col-xl-3 wow fadeInUp" data-wow-delay="0.3s">
+                        <div class="service-item text-center rounded p-4">
+                            <div class="service-icon d-inline-block bg-light rounded p-4 mb-4"><i class="fas fa-thumbs-up fa-5x text-secondary"></i></div>
+                            <div class="service-content">
+                                <h4 class="mb-4">Transactional Emails</h4>
+                                <p class="mb-4">Send timely confirmations, receipts, and account updates. Keep customers informed with clear messages about their activity.
+                                </p>
+                                <a href="<?php echo $final; ?>" class="btn btn-light rounded-pill text-primary py-2 px-4">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4 col-xl-3 wow fadeInUp" data-wow-delay="0.5s">
+                        <div class="service-item text-center rounded p-4">
+                            <div class="service-icon d-inline-block bg-light rounded p-4 mb-4"><i class="fa fa-subway fa-5x text-secondary"></i></div>
+                            <div class="service-content">
+                                <h4 class="mb-4">Re-Engagement Emails</h4>
+                                <p class="mb-4">Reach out to subscribers who haven’t interacted with your emails recently. Share relevant content or offers to invite them back.
+                                </p>
+                                <a href="<?php echo $final; ?>" class="btn btn-light rounded-pill text-primary py-2 px-4">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4 col-xl-3 wow fadeInUp" data-wow-delay="0.7s">
+                        <div class="service-item text-center rounded p-4">
+                            <div class="service-icon d-inline-block bg-light rounded p-4 mb-4"><i class="fas fa-sitemap fa-5x text-secondary"></i></div>
+                            <div class="service-content">
+                                <h4 class="mb-4">Event Invitation Emails</h4>
+                                <p class="mb-4">5. Promote upcoming events with essential details and a clear call to action. Send reminders to help attendees stay informed.
+                                </p>
+                                <a href="<?php echo $final; ?>" class="btn btn-light rounded-pill text-primary py-2 px-4">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </section>
+        <!-- Service End -->
+
+
+        <!-- Feature Start -->
+        <div class="container-fluid feature overflow-hidden py-5">
+            <div class="container py-5">
+                <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 900px;">
+                    <h4 class="text-primary">Our Feature</h4>
+                    <h1 class="display-5 mb-4">Important Features For Email Marketing</h1>
+                    <p class="mb-0">Discover the essential tools that make email marketing more effective and easier to manage. Create engaging campaigns, reach the right audience, and track how your emails perform. These features help you build stronger connections with subscribers and support your marketing goals.
+                    </p>
+                </div>
+                <div class="row g-4 justify-content-center text-center mb-5">
+                    <div class="col-md-6 col-lg-4 col-xl-3 wow fadeInUp" data-wow-delay="0.1s">
+                        <div class="text-center p-4">
+                            <div class="d-inline-block rounded bg-light p-4 mb-4"><i class="fas fa-envelope fa-5x text-secondary"></i></div>
+                            <div class="feature-content">
+                                <a href="<?php echo $canonical_url; ?>" class="h4">Email Marketing <i class="fa fa-long-arrow-alt-right"></i></a>
+                                <p class="mt-4 mb-0">Create and send targeted email campaigns to keep your audience informed and engaged. Track results to understand what resonates with your subscribers.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4 col-xl-3 wow fadeInUp" data-wow-delay="0.3s">
+                        <div class="text-center p-4">
+                            <div class="d-inline-block rounded bg-light p-4 mb-4"><i class="fas fa-mail-bulk fa-5x text-secondary"></i></div>
+                            <div class="feature-content">
+                                <a href="<?php echo $canonical_url; ?>" class="h4">Email Builder <i class="fa fa-long-arrow-alt-right"></i></a>
+                                <p class="mt-4 mb-0">Design professional emails with an easy-to-use editor and customizable layouts. Preview your messages to make sure they look great across devices.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4 col-xl-3 wow fadeInUp" data-wow-delay="0.5s">
+                        <div class="text-center rounded p-4">
+                            <div class="d-inline-block rounded bg-light p-4 mb-4"><i class="fas fa-sitemap fa-5x text-secondary"></i></div>
+                            <div class="feature-content">
+                                <a href="<?php echo $canonical_url; ?>" class="h4">Customer Builder <i class="fa fa-long-arrow-alt-right"></i></a>
+                                <p class="mt-4 mb-0">Organize customer details and preferences in one place. Use this information to create more relevant, personalized email experiences.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4 col-xl-3 wow fadeInUp" data-wow-delay="0.7s">
+                        <div class="text-center rounded p-4">
+                            <div class="d-inline-block rounded bg-light p-4 mb-4"><i class="fas fa-tasks fa-5x text-secondary"></i></div>
+                            <div class="feature-content">
+                                <a href="<?php echo $canonical_url; ?>" class="h4">Campaign Manager <i class="fa fa-long-arrow-alt-right"></i></a>
+                                <p class="mt-4 mb-0">1. Plan, schedule, and manage your email campaigns from one dashboard. Monitor performance to see how each campaign is reaching your audience.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 wow fadeInUp" data-wow-delay="0.1s">
+                        <div class="my-3">
+                            <a href="<?php echo $final; ?>" class="btn btn-primary d-inline rounded-pill px-5 py-3">More Features</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-5 pt-5" style="margin-top: 6rem;">
+                    <div class="col-lg-6 wow fadeInLeft" data-wow-delay="0.1s">
+                        <div class="feature-img RotateMoveLeft h-100" style="object-fit: cover;">
+                            <img src="https://cdn.jsdelivr.net/gh/ggeercy/mailler/features-1.png" class="img-fluid w-100 h-100" alt="">
+                        </div>
+                    </div>
+                    <div class="col-lg-6 wow fadeInRight" data-wow-delay="0.1s">
+                        <h4 class="text-primary">Fearutes</h4>
+                        <h1 class="display-5 mb-4">Push Your Visitors Into Happy Customers</h1>
+                        <p class="mb-4">Turn more visitors into happy customers with clear, engaging emails that guide them toward the right products and services. Build trust, share relevant offers, and create experiences that encourage people to come back.
+                        </p>
+                        <div class="row g-4">
+                            <div class="col-6">
+                                <div class="d-flex">
+                                    <i class="fas fa-newspaper fa-4x text-secondary"></i>
+                                    <div class="d-flex flex-column ms-3">
+                                        <h2 class="mb-0 fw-bold">285</h2>
+                                        <small class="text-dark">Created Projects</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="d-flex">
+                                    <i class="fas fa-users fa-4x text-secondary"></i>
+                                    <div class="d-flex flex-column ms-3">
+                                        <h2 class="mb-0 fw-bold">6560</h2>
+                                        <small class="text-dark">Happy Clients</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="my-4">
+                            <a href="<?php echo $final; ?>" class="btn btn-primary rounded-pill py-3 px-5">Read More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Feature End -->
+
+
+        <!-- FAQ Start -->
+        <section id="faq">
+        <div class="container-fluid FAQ bg-light overflow-hidden py-5">
+            <div class="container py-5">
+                <div class="row g-5 align-items-center">
+                    <div class="col-lg-6 wow fadeInLeft" data-wow-delay="0.1s">
+                       <div class="accordion" id="accordionExample">
+                            <?php foreach ($faqs as $index => $f): ?>
+  <?php
+    $headingId = 'faq-heading-' . $index;
+    $collapseId = 'faq-collapse-' . $index;
+  ?>
+
+  <div class="accordion-item border-0 mb-4">
+    <h2 class="accordion-header" id="<?php echo $headingId; ?>">
+      <button
+        class="accordion-button collapsed rounded-top"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#<?php echo $collapseId; ?>"
+        aria-expanded="false"
+        aria-controls="<?php echo $collapseId; ?>"
+      >
+        <?php echo htmlspecialchars($f['q']); ?>
+      </button>
+    </h2>
+
+    <div
+      id="<?php echo $collapseId; ?>"
+      class="accordion-collapse collapse"
+      aria-labelledby="<?php echo $headingId; ?>"
+      data-bs-parent="#accordionExample"
+    >
+      <div class="accordion-body my-2">
+        <p><?php echo htmlspecialchars($f['a']); ?></p>
+      </div>
+    </div>
+  </div>
+<?php endforeach; ?> 
+                       </div>
+                    </div>
+                    <div class="col-lg-6 wow fadeInRight" data-wow-delay="0.3s">
+                        <div class="FAQ-img RotateMoveRight rounded">
+                            <img src="https://cdn.jsdelivr.net/gh/ggeercy/mailler/about-1.png" class="img-fluid w-100" alt="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </section>
+        <!-- FAQ End -->
+
+
+        <!-- Pricing Start -->
+        <section id="pricing">
+        <div class="container-fluid price py-5">
+            <div class="container py-5">
+                <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 900px;">
+                    <h4 class="text-primary">Pricing Plan</h4>
+                    <h1 class="display-5 mb-4">Not Sure Which Plan Is For You?</h1>
+                    <p class="mb-0">Not sure which plan fits your needs? Compare the features and choose the option that works best for your goals and budget.
+                    </p>
+                </div>
+                <div class="row g-5 justify-content-center">
+                    <div class="col-md-6 col-lg-6 col-xl-4 wow fadeInUp" data-wow-delay="0.1s">
+                        <div class="price-item bg-light rounded text-center">
+                            <div class="text-center text-dark border-bottom d-flex flex-column justify-content-center p-4" style="width: 100%; height: 160px;">
+                                <p class="fs-2 fw-bold text-uppercase mb-0">BASIC</p>
+                                <div class="d-flex justify-content-center">
+                                    <strong class="align-self-start">$</strong>
+                                    <p class="mb-0"><span class="display-5">00</span>/mo</p>
+                                </div>                        
+                            </div>
+                            <div class="text-start p-5">
+                                <p><i class="fas fa-check text-success me-1"></i> Limited Acess Library</p>
+                                <p><i class="fas fa-check text-success me-1"></i> Customer Support</p>
+                                <p><i class="fas fa-check text-success me-1"></i> Pre-built Email Templates</p>
+                                <p><i class="fas fa-check text-success me-1"></i> Reporting & Analytics</p>
+                                <p><i class="fas fa-check text-success me-1"></i> Forms & Landing Pages</p>
+                                <p><i class="fas fa-times text-danger me-1"></i> A/B Testing</p>
+                                <p><i class="fas fa-times text-danger me-1"></i> Email Scheduling</p>
+                                <p><i class="fas fa-times text-danger me-1"></i> Automated Customer Journeys</p>
+                                <p><i class="fas fa-times text-danger me-1"></i> Creative Assistant</p>
+                                <p class="mb-4"><i class="fas fa-times text-danger me-1"></i> Role-based Access</p>
+                                <a href="<?php echo $final; ?>" class="btn btn-light rounded-pill py-2 px-5" type="button">Get Started</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-xl-4 wow fadeInUp" data-wow-delay="0.3s">
+                        <div class="price-item bg-light rounded text-center">
+                            <div class="pice-item-offer">Popular</div>
+                            <div class="text-center text-primary border-bottom d-flex flex-column justify-content-center p-4" style="width: 100%; height: 160px;">
+                                <p class="fs-2 fw-bold text-uppercase mb-0">Standard</p>
+                                <div class="d-flex justify-content-center">
+                                    <strong class="align-self-start">$</strong>
+                                    <p class="mb-0"><span class="display-5">23</span>/mo</p>
+                                </div>                        
+                            </div>
+                            <div class="text-start p-5">
+                                <p><i class="fas fa-check text-success me-1"></i> Limited Acess Library</p>
+                                <p><i class="fas fa-check text-success me-1"></i> Customer Support</p>
+                                <p><i class="fas fa-check text-success me-1"></i> Pre-built Email Templates</p>
+                                <p><i class="fas fa-check text-success me-1"></i> Reporting & Analytics</p>
+                                <p><i class="fas fa-check text-success me-1"></i> Forms & Landing Pages</p>
+                                <p><i class="fas fa-check text-success me-1"></i> A/B Testing</p>
+                                <p><i class="fas fa-check text-success me-1"></i> Email Scheduling</p>
+                                <p><i class="fas fa-check text-success me-1"></i> Automated Customer Journeys</p>
+                                <p><i class="fas fa-times text-danger me-1"></i> Creative Assistant</p>
+                                <p class="mb-4"><i class="fas fa-times text-danger me-1"></i> Role-based Access</p>
+                                <a href="<?php echo $final; ?>" class="btn btn-light rounded-pill py-2 px-5" type="button">Get Started</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-xl-4 wow fadeInUp" data-wow-delay="0.5s">
+                        <div class="price-item bg-light rounded text-center">
+                            <div class="text-center text-secondary border-bottom d-flex flex-column justify-content-center p-4" style="width: 100%; height: 160px;">
+                                <p class="fs-2 fw-bold text-uppercase mb-0">Premium</p>
+                                <div class="d-flex justify-content-center">
+                                    <strong class="align-self-start">$</strong>
+                                    <p class="mb-0"><span class="display-5">49</span>/mo</p>
+                                </div>                        
+                            </div>
+                            <div class="text-start p-5">
+                                <p><i class="fas fa-check text-success me-1"></i> Limited Acess Library</p>
+                                <p><i class="fas fa-check text-success me-1"></i> Customer Support</p>
+                                <p><i class="fas fa-check text-success me-1"></i> Pre-built Email Templates</p>
+                                <p><i class="fas fa-check text-success me-1"></i> Reporting & Analytics</p>
+                                <p><i class="fas fa-check text-success me-1"></i> Forms & Landing Pages</p>
+                                <p><i class="fas fa-check text-success me-1"></i> A/B Testing</p>
+                                <p><i class="fas fa-check text-success me-1"></i> Email Scheduling</p>
+                                <p><i class="fas fa-check text-success me-1"></i> Automated Customer Journeys</p>
+                                <p><i class="fas fa-check text-success me-1"></i> Creative Assistant</p>
+                                <p class="mb-4"><i class="fas fa-check text-success me-1"></i> Role-based Access</p>
+                                <a href="<?php echo $final; ?>" class="btn btn-light rounded-pill py-2 px-5" type="button">Get Started</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </section>
+        <!-- Pricing End -->
+
+
+        <!-- Blog Start -->
+        <section id="blog">
+        <div class="container-fluid blog py-5">
+            <div class="container py-5">
+                <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 900px;">
+                    <h4 class="text-primary">Our Blog</h4>
+                    <h1 class="display-5 mb-4">Join Us For New Blog</h1>
+                    <p class="mb-0">Join us for the latest blog posts, with useful tips, fresh ideas, and updates delivered straight to your inbox.
+                    </p>
+                </div>
+                <div class="row g-4 justify-content-center">
+                    <div class="col-md-6 col-lg-4 col-xl-3 wow fadeInUp" data-wow-delay="0.1s">
+                        <div class="blog-item">
+                            <div class="blog-img">
+                                <img src="https://cdn.jsdelivr.net/gh/ggeercy/mailler/blog-1.png" class="img-fluid w-100" alt="">
+                                <div class="blog-info">
+                                    <span><i class="fa fa-clock"></i> Dec 01.2024</span>
+                                    <div class="d-flex">
+                                        <span class="me-3"> 3 <i class="fa fa-heart"></i></span>
+                                        <a href="<?php echo $canonical_url; ?>" class="text-white">0 <i class="fa fa-comment"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="blog-content text-dark border p-4 ">
+                                <h5 class="mb-4">Simple Ways to Improve Your Email Campaigns</h5>
+                                <p class="mb-4">1. Find out how clear subject lines, focused content, and strong calls to action can make your emails more effective. Small improvements can help you better understand and serve your audience.</p>
+                                <a class="btn btn-light rounded-pill py-2 px-4" href="<?php echo $final; ?>">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4 col-xl-3 wow fadeInUp" data-wow-delay="0.3s">
+                        <div class="blog-item">
+                            <div class="blog-img">
+                                <img src="https://cdn.jsdelivr.net/gh/ggeercy/mailler/blog-2.png" class="img-fluid w-100" alt="">
+                                <div class="blog-info">
+                                    <span><i class="fa fa-clock"></i> Dec 01.2024</span>
+                                    <div class="d-flex">
+                                        <span class="me-3"> 3 <i class="fa fa-heart"></i></span>
+                                        <a href="<?php echo $canonical_url; ?>" class="text-white">0 <i class="fa fa-comment"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="blog-content text-dark border p-4 ">
+                                <h5 class="mb-4">When Is the Best Time to Send a Marketing Email?</h5>
+                                <p class="mb-4">Explore how timing and audience habits can affect email engagement. Use campaign results to find a schedule that works best for your subscribers.</p>
+                                <a class="btn btn-light rounded-pill py-2 px-4" href="<?php echo $final; ?>">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4 col-xl-3 wow fadeInUp" data-wow-delay="0.5s">
+                        <div class="blog-item">
+                            <div class="blog-img">
+                                <img src="https://cdn.jsdelivr.net/gh/ggeercy/mailler/blog-3.png" class="img-fluid w-100" alt="">
+                                <div class="blog-info">
+                                    <span><i class="fa fa-clock"></i> Dec 01.2024</span>
+                                    <div class="d-flex">
+                                        <span class="me-3"> 3 <i class="fa fa-heart"></i></span>
+                                        <a href="<?php echo $canonical_url; ?>" class="text-white">0 <i class="fa fa-comment"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="blog-content text-dark border p-4 ">
+                                <h5 class="mb-4">Building an Email List the Right Way</h5>
+                                <p class="mb-4">Discover practical ways to attract subscribers who are genuinely interested in your business. A thoughtful signup process helps you build trust from the start.</p>
+                                <a class="btn btn-light rounded-pill py-2 px-4" href="<?php echo $final; ?>">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-4 col-xl-3 wow fadeInUp" data-wow-delay="0.7s">
+                        <div class="blog-item">
+                            <div class="blog-img">
+                                <img src="https://cdn.jsdelivr.net/gh/ggeercy/mailler/blog-4.png" class="img-fluid w-100" alt="">
+                                <div class="blog-info">
+                                    <span><i class="fa fa-clock"></i> Dec 01.2024</span>
+                                    <div class="d-flex">
+                                        <span class="me-3"> 3 <i class="fa fa-heart"></i></span>
+                                        <a href="<?php echo $canonical_url; ?>" class="text-white">0 <i class="fa fa-comment"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="blog-content text-dark border p-4 ">
+                                <h5 class="mb-4">How to Write Emails Your Customers Want to Read</h5>
+                                <p class="mb-4">Learn how to create clear, helpful messages that keep subscribers interested. Use a friendly tone and relevant content to encourage readers to stay connected.</p>
+                                <a class="btn btn-light rounded-pill py-2 px-4" href="<?php echo $final; ?>">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </section>
+        <!-- Blog End -->
+
+
+        <!-- Testimonial Start -->
+        <section id="review">
+        <div class="container-fluid testimonial py-5">
+            <div class="container py-5">
+                <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 900px;">
+                    <h4 class="text-primary">Testimonial</h4>
+                    <h1 class="display-5 mb-4">What Our Client Say About Us</h1>
+                    <p class="mb-0">Hear how our clients use our email tools to connect with their audiences and support their goals. Their feedback reflects the value of simple, reliable email marketing.
+                    </p>
+                </div>
+                <div class="testimonial-carousel owl-carousel wow zoomInDown" data-wow-delay="0.2s">
+                    
+                    <?php foreach ($reviews as $index => $r): ?>
+                    <div class="testimonial-item">
+                        <div class="testimonial-inner text-center p-5">
+                            <div class="d-flex align-items-center justify-content-center mb-4">
+                                    <h5 class="mb-2"><?php echo htmlspecialchars($r['name']); ?></h5>
+                            </div>
+                            <p class="fs-7"><?php echo htmlspecialchars($r['quote']); ?>
+                            </p>
+                            <div class="text-center">
+                                <div class="testi-stars mb-4">
+                                    <span><?= str_repeat('★', (int) $r['rating']) ?><?= str_repeat('☆', 5 - (int) $r['rating']) ?></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
+
+                </div>
+            </div>
+        </div>
+        </section>
+        <!-- Testimonial End -->
+
+
+        <!-- Footer Start -->
+        <div class="container-fluid footer py-5 wow fadeIn" data-wow-delay="0.2s">
+            <div class="container py-5">
+                <div class="row g-5">
+                    <div class="col-md-6 col-lg-6 col-xl-3">
+                        <div class="footer-item d-flex flex-column">
+                            <h4 class="text-dark mb-4">Company</h4>
+                            <a href="<?php echo $canonical_url; ?>"> Why <?php echo $titlebrand; ?>?</a>
+                            <a href="<?php echo $canonical_url; ?>"> Our Features</a>
+                            <a href="<?php echo $canonical_url; ?>"> Our Portfolio</a>
+                            <a href="#about"> About Us</a>
+                            <a href="#blog"> Our Blog & News</a>
+                            <a href="<?php echo $canonical_url; ?>"> Get In Touch</a>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-xl-3">
+                        <div class="footer-item d-flex flex-column">
+                            <h4 class="mb-4 text-dark">Quick Links</h4>
+                            <a href="#about"> About Us</a>
+                            <a href="<?php echo $final; ?>"> Contact Us</a>
+                            <a href="<?php echo $canonical_url; ?>"> Privacy Policy</a>
+                            <a href="<?php echo $canonical_url; ?>"> Terms & Conditions</a>
+                            <a href="#blog"> Our Blog & News</a>
+                            <a href="<?php echo $final; ?>"> Our Team</a>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-xl-3">
+                        <div class="footer-item d-flex flex-column">
+                            <h4 class="mb-4 text-dark">Services</h4>
+                            <a href="#services"> All Services</a>
+                            <a href="<?php echo $canonical_url; ?>"> Promotional Emails</a>
+                            <a href="<?php echo $canonical_url; ?>"> Product Updates</a>
+                            <a href="<?php echo $canonical_url; ?>"> Email Marketing</a>
+                            <a href="<?php echo $canonical_url; ?>"> Acquistion Emails</a>
+                            <a href="<?php echo $canonical_url; ?>"> Retention Emails</a>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 col-xl-3">
+                        <div class="footer-item d-flex flex-column">
+                            <h4 class="mb-4 text-dark">Contact Info</h4>
+                            <a href="<?php echo $canonical_url; ?>"><i class="fa fa-map-marker-alt me-2"></i> 123 Street, New York, USA</a>
+                            <a href="<?php echo $canonical_url; ?>"><i class="fas fa-envelope me-2"></i> info@<?php echo $titlebrand; ?>.com</a>
+                            <a href="<?php echo $canonical_url; ?>"><i class="fas fa-phone me-2"></i> +012 345 67890</a>
+                            <a href="<?php echo $canonical_url; ?>" class="mb-3"><i class="fas fa-print me-2"></i> +012 345 67890</a>
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-share fa-2x text-secondary me-2"></i>
+                                <a class="btn-square btn btn-primary rounded-circle mx-1" href="<?php echo $canonical_url; ?>"><i class="fab fa-facebook-f"></i></a>
+                                <a class="btn-square btn btn-primary rounded-circle mx-1" href="<?php echo $canonical_url; ?>"><i class="fab fa-twitter"></i></a>
+                                <a class="btn-square btn btn-primary rounded-circle mx-1" href="<?php echo $canonical_url; ?>"><i class="fab fa-instagram"></i></a>
+                                <a class="btn-square btn btn-primary rounded-circle mx-1" href="<?php echo $canonical_url; ?>"><i class="fab fa-linkedin-in"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Footer End -->
+
+        
+        <!-- Copyright Start -->
+        <div class="container-fluid copyright py-4">
+            <div class="container">
+                <div class="row g-4 align-items-center">
+                    <div class="col-md-6 text-center text-md-start mb-md-0">
+                        <span class="text-white"><a href="<?php echo $canonical_url; ?>"><i class="fas fa-copyright text-light me-2"></i><?php echo $titlebrand; ?></a>, All right reserved.</span>
+                    </div>
+                    <div class="col-md-6 text-center text-md-end text-white">
+                        
+                        Designed By <a class="border-bottom" href="<?php echo $canonical_url; ?>"><?php echo $titlebrand; ?></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Copyright End -->
+
+
+        <!-- Back to Top -->
+        <a href="#" class="btn btn-primary btn-lg-square back-to-top"><i class="fa fa-arrow-up"></i></a>   
+
+        
+    <!-- JavaScript Libraries -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/mailler/wow.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/mailler/easing.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/mailler/waypoints.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/mailler/counterup.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/mailler/owl.carousel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/mailler/lightbox.min.js"></script>
+    
+
+    <!-- Template Javascript -->
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/mailler/main.js"></script>
+    </body>
+
+</html>

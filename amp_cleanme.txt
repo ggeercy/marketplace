@@ -1,0 +1,840 @@
+<?php
+if($jos['article_id'] != NULL)
+{
+  $brand  = array('brand123', 'Brand123');
+  $title = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['title']);
+  $meta_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['meta_description']);
+  $long_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['long_description']);
+}
+if ($alternate_url == NULL || $alternate_url == ""){
+    $alternate_url = $amp_url;
+}
+define('SITE_BRAND', $titlebrand);
+?>
+
+<!doctype html>
+<html ⚡ lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+  <title><?php echo ucwords($title); ?></title>
+  <meta name="description" content="<?php echo $meta_description; ?>"/>
+  <link rel="canonical" href="<?php echo $canonical_url; ?>"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:locale" content="id_ID"/>
+  <meta property="og:title" content="<?php echo ucwords($title); ?>"/>
+  <meta property="og:description" content="<?php echo $meta_description; ?>"/>
+  <meta property="og:url" content="<?php echo $canonical_url; ?>"/>
+  <meta property="og:site_name" content="Platform Game"/>
+  <meta property="og:image" content="<?php echo $banner; ?>"/>
+  <meta property="og:image:alt" content="Platform Game Hari Ini"/>
+  <meta name="theme-color" content="#3a1018"/>
+  <meta name="robots" content="index, follow">
+  <meta name="googlebot" content="index, follow">
+  <meta name="language" content="id"/>
+  <meta name="geo.placename" content="Indonesia"/>
+  <meta name="geo.country" content="ID"/>
+  <meta name="tgn.nation" content="Indonesia"/>
+  <meta name="author" content="<?php echo $titlebrand; ?>">
+  <link rel="apple-touch-icon" href="<?php echo $favicon; ?>">
+  <link rel="shortcut icon" type="image/webp" href="<?php echo $favicon; ?>">
+  <script async src="https://cdn.ampproject.org/v0.js"></script>
+  <style amp-boilerplate>
+    body {
+      -webkit-animation: -amp-start 8s steps(1,end) 0s 1 normal both;
+      -moz-animation: -amp-start 8s steps(1,end) 0s 1 normal both;
+      -ms-animation: -amp-start 8s steps(1,end) 0s 1 normal both;
+      animation: -amp-start 8s steps(1,end) 0s 1 normal both;
+    }
+    @-webkit-keyframes -amp-start {
+      from { visibility: hidden; }
+      to { visibility: visible; }
+    }
+    @-moz-keyframes -amp-start {
+      from { visibility: hidden; }
+      to { visibility: visible; }
+    }
+    @-ms-keyframes -amp-start {
+      from { visibility: hidden; }
+      to { visibility: visible; }
+    }
+    @-o-keyframes -amp-start {
+      from { visibility: hidden; }
+      to { visibility: visible; }
+    }
+    @keyframes -amp-start {
+      from { visibility: hidden; }
+      to { visibility: visible; }
+    }
+  </style>
+
+  <noscript>
+    <style amp-boilerplate>
+      body {
+        -webkit-animation: none;
+        -moz-animation: none;
+        -ms-animation: none;
+        animation: none;
+      }
+    </style>
+  </noscript>
+
+  <style amp-custom>
+    :root {
+      --bg: #120508;
+      --bg-soft: #1c0a0e;
+      --card: #2e1218;
+      --card-dark: #18080c;
+      --red: #8b1e30;
+      --red-bright: #c45c6a;
+      --red-dark: #4a121c;
+      --red-deep: #2a0c12;
+      --gold: #d4af6a;
+      --gold-soft: #f6e7c1;
+      --gold-deep: #8a6424;
+      --text: #ffffff;
+      --muted: #e8d7c4;
+      --line: rgba(139,30,48,.50);
+      --line-gold: rgba(212,175,106,.42);
+      --shadow-red: rgba(90,16,28,.45);
+      --shadow-gold: rgba(212,175,106,.10);
+      --sheen: linear-gradient(180deg, rgba(255,255,255,.28), transparent 46%);
+      --radius: 24px;
+      --max: 1120px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0 0 96px;
+      font-family: Verdana, Arial, sans-serif;
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.7;
+      background-color: #120508;
+      background-image:
+        linear-gradient(rgba(18,5,8,.58), rgba(18,5,8,.82)),
+        url("<?php echo $banner; ?>");
+      background-repeat: no-repeat;
+      background-position: center top;
+      background-size: cover;
+      background-attachment: fixed;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page-wrap {
+      width: min(100% - 28px, var(--max));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 80;
+      background:
+        linear-gradient(180deg, rgba(42,12,18,.98), rgba(14,5,8,.98));
+      border-bottom: 1px solid rgb(212 175 106 / 22%);
+      box-shadow: 0 8px 26px rgba(139,30,48,.18), 0 1px 0 rgba(212,175,106,.12);
+    }
+
+    .nav {
+      min-height: 96px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .logo {
+      width: 268px;
+      display: block;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-btn {
+      min-width: 96px;
+      min-height: 42px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      border: 1px solid rgb(212 175 106 / 22%);
+    }
+
+    .nav-btn.login {
+      background: linear-gradient(135deg, #1c0a0e, #0c0406);
+      color: #fff;
+      border-color: rgb(212 175 106 / 22%);
+    }
+
+    .nav-btn.daftar {
+      background: linear-gradient(135deg, #9b2a3d, #4a121c);
+      color: #fff;
+      border-color: rgb(212 175 106 / 28%);
+      box-shadow: 0 6px 16px rgba(90,16,28,.35);
+    }
+
+    .hero {
+      padding: 32px 0 0;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: center;
+      padding: 26px;
+      border-radius: 30px;
+      background: linear-gradient(180deg, #0a0305, #060102);
+      border: 1px solid rgb(212 175 106 / 22%);
+      box-shadow: 0 24px 70px rgba(0,0,0,.72);
+    }
+
+    .hero-copy {
+      padding: 16px;
+    }
+
+    .label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 16px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(18,5,8,.72);
+      border: 1px solid rgb(212 175 106 / 28%);
+      color: var(--gold-soft);
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .label::before {
+      content: "";
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 10px rgba(34,197,94,.95);
+    }
+
+    h1 {
+      margin: 0 0 14px;
+      font-family: Verdana, Arial, sans-serif;
+      font-size: clamp(22px, 3.4vw, 34px);
+      font-weight: 800;
+      line-height: 1.28;
+      letter-spacing: -.2px;
+      color: #f3e6c8;
+      text-shadow: 0 1px 0 rgba(0,0,0,.35);
+    }
+
+    .hero-copy p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .hero-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin: 0 0 22px;
+    }
+
+    .main-btn {
+      min-height: 64px;
+      padding: 16px 22px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .3px;
+    }
+
+    .main-btn.primary {
+      background:
+        var(--sheen),
+        linear-gradient(180deg, #ffe3a8 0%, #f0b04a 42%, #e07a18 100%);
+      color: #120800;
+      border: 1px solid #ff9a3c;
+      box-shadow: 0 12px 28px rgba(224,122,24,.28), inset 0 1px 0 rgba(255,255,255,.45);
+      text-shadow: 0 1px 0 rgba(255,255,255,.35);
+    }
+
+    .main-btn.secondary {
+      background: linear-gradient(180deg, #c43b4e, #7a1f32 55%, #4a121c);
+      color: #fff;
+      border: 1px solid #e07a18;
+      box-shadow: 0 10px 24px rgba(122,31,50,.4), inset 0 1px 0 rgba(255,255,255,.2);
+    }
+
+    .hero-img {
+      overflow: hidden;
+      border-radius: 24px;
+      background: #000;
+      border: 1px solid rgb(212 175 106 / 22%);
+    }
+
+    .section {
+      padding: 40px 0 0;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .section-head small {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--gold);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 1.3px;
+      text-transform: uppercase;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-family: Verdana, Arial, sans-serif;
+      color: #f3e6c8;
+      font-size: clamp(20px, 2.8vw, 26px);
+      font-weight: 800;
+      line-height: 1.3;
+      letter-spacing: -.2px;
+    }
+
+    .section-head a {
+      flex-shrink: 0;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #1c0a0e, #0c0406);
+      border: 1px solid rgb(212 175 106 / 22%);
+      color: var(--gold-soft);
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: .6px;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .game-shell {
+      padding: 16px;
+      border-radius: 26px;
+      background: linear-gradient(180deg, rgba(139,30,48,.12), rgba(18,5,8,.78));
+      border: 1px solid rgb(212 175 106 / 22%);
+    }
+
+    .game-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 14px;
+    }
+
+    .game-card {
+      display: block;
+      padding: 8px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, var(--card), var(--card-dark));
+      border: 1px solid rgb(212 175 106 / 22%);
+    }
+
+    .game-img {
+      display: block;
+      overflow: hidden;
+      border-radius: 14px;
+      background: #000;
+    }
+
+    .game-card b {
+      display: block;
+      margin-top: 8px;
+      color: #fff;
+      font-size: 11px;
+      text-align: center;
+      line-height: 1.3;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .game-card span:last-child {
+      display: block;
+      margin-top: 7px;
+      padding: 6px;
+      border-radius: 10px;
+      background: rgb(139 30 48 / 28%);
+      color: var(--gold-soft);
+      border: 1px solid rgb(212 175 106 / 22%);
+      text-align: center;
+      font-size: 10px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .support-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .support-grid a {
+      min-height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, var(--card), var(--card-dark));
+      border: 1px solid rgb(212 175 106 / 22%);
+      box-shadow: none;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .support-grid i {
+      width: 32px;
+      height: 32px;
+      padding: 7px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #9b2a3d, #4a121c);
+      border: 1px solid rgb(212 175 106 / 22%);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .support-grid i amp-img {
+      display: block;
+    }
+
+    details {
+      padding: 16px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, var(--card), var(--card-dark));
+      border: 1px solid rgb(212 175 106 / 22%);
+      box-shadow: 0 0 18px rgba(139,30,48,.10);
+    }
+
+    summary {
+      cursor: pointer;
+      list-style: none;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 900;
+      line-height: 1.45;
+    }
+
+    summary::-webkit-details-marker {
+      display: none;
+    }
+
+    details p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .footer {
+      margin-top: 30px;
+      padding: 36px 0 28px;
+      border-top: 1px solid rgb(212 175 106 / 22%);
+      background: linear-gradient(180deg, rgba(18,5,8,.58), rgba(14,5,8,.94));
+    }
+
+    .footer p {
+      margin: 8px auto 0;
+      max-width: 760px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      left: 10px;
+      right: 10px;
+      bottom: 10px;
+      z-index: 90;
+      max-width: 520px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      padding: 10px;
+      border-radius: 24px;
+      background: linear-gradient(180deg, rgba(42,12,18,.98), rgba(14,5,8,.98));
+      border: 1px solid rgb(212 175 106 / 22%);
+      box-shadow: 0 -12px 36px rgba(0,0,0,.50);
+    }
+
+    .bottom-nav a {
+      min-height: 52px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #1c0a0e, #0c0406);
+      border: 1px solid rgb(212 175 106 / 22%);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .bottom-nav a.main {
+      background: linear-gradient(135deg, #9b2a3d, #4a121c);
+      color: #fff;
+      border-color: rgb(212 175 106 / 28%);
+      box-shadow: 0 0 14px rgba(90,16,28,.4);
+    }
+
+    .bottom-nav amp-img {
+      width: 22px;
+      height: 22px;
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-copy {
+        order: 2;
+      }
+
+      .hero-img {
+        order: 1;
+      }
+
+      .game-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding-bottom: 100px;
+        font-size: 13px;
+        background-attachment: scroll;
+        background-position: center top;
+        background-size: auto 100vh;
+      }
+
+      .page-wrap {
+        width: min(100% - 18px, var(--max));
+      }
+
+      .nav {
+        min-height: 86px;
+      }
+
+      .logo {
+        width: 228px;
+      }
+
+      .nav-btn.login {
+        display: none;
+      }
+
+      .nav-btn {
+        min-width: 86px;
+        min-height: 38px;
+        padding: 8px 14px;
+        font-size: 11px;
+      }
+
+      .hero {
+        padding-top: 22px;
+      }
+
+      .hero-grid {
+        padding: 14px;
+        border-radius: 24px;
+        gap: 16px;
+      }
+
+      .hero-copy {
+        padding: 10px;
+      }
+
+      h1 {
+        font-size: 22px;
+        letter-spacing: -.2px;
+      }
+
+      .hero-copy p {
+        font-size: 13px;
+      }
+
+      .hero-actions {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        margin-bottom: 18px;
+      }
+
+      .hero-img {
+        border-radius: 18px;
+      }
+
+      .running-text {
+        border-radius: 14px;
+        margin-top: 16px;
+      }
+
+      .section {
+        padding-top: 28px;
+      }
+
+      .section-head {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 16px;
+      }
+
+      .section-head h2 {
+        font-size: 20px;
+      }
+
+      .section-head a {
+        padding: 4px 9px;
+        font-size: 9px;
+        align-self: flex-start;
+      }
+
+      .game-shell {
+        padding: 10px;
+        border-radius: 20px;
+      }
+
+      .game-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+      }
+
+      .game-card {
+        padding: 6px;
+        border-radius: 15px;
+      }
+
+      .game-img {
+        border-radius: 11px;
+      }
+
+      .game-card b {
+        font-size: 10px;
+      }
+
+      .game-card span:last-child {
+        font-size: 9px;
+        padding: 5px;
+      }
+
+      .support-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .footer {
+        margin-top: 32px;
+        padding: 28px 0 24px;
+      }
+
+      .footer-logo {
+        width: 200px;
+      }
+
+      .bottom-nav {
+        left: 8px;
+        right: 8px;
+        bottom: 8px;
+        gap: 8px;
+        padding: 8px;
+      }
+
+      .bottom-nav a {
+        min-height: 48px;
+        font-size: 10px;
+        gap: 6px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="page-wrap">
+      <nav class="nav" aria-label="Navigasi <?php echo $titlebrand; ?>">
+        <a href="<?php echo $canonical_url; ?>" class="logo" aria-label="<?php echo $titlebrand; ?>">
+          <amp-img layout="responsive" width="500" height="100" src="<?php echo $logo; ?>" alt="<?php echo $titlebrand; ?>"></amp-img>
+        </a>
+
+        <div class="nav-actions">
+          <a class="nav-btn login" href="<?php echo $final; ?>" target="_blank" rel="nofollow noopener">Login</a>
+          <a class="nav-btn daftar" href="<?php echo $final; ?>" target="_blank" rel="nofollow noopener">Daftar</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <section class="hero">
+      <div class="page-wrap">
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <span class="label">Server Online</span>
+
+            <div class="hero-actions">
+              <a href="<?php echo $final; ?>" target="_blank" rel="nofollow noopener" class="main-btn secondary">Login VIP</a>
+              <a href="<?php echo $final; ?>" target="_blank" rel="nofollow noopener" class="main-btn primary">Daftar Sekarang</a>
+            </div>
+
+            <h1><?php echo ucwords($title); ?></h1>
+            <p style="text-align: justify;"><?php echo $meta_description; ?></p>
+
+          </div>
+          <div class="hero-img">
+            <amp-img layout="responsive" width="720" height="480" src="<?php echo $banner; ?>" title="Platform Game" alt="Platform Game"></amp-img>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="page-wrap">
+        <div class="section-head">
+          <div>
+            <small>Popular Games</small>
+            <h2>Platform Game Gacor Viral 🔥</h2>
+          </div>
+          <a href="<?php echo $final; ?>" target="_blank" rel="nofollow noopener">Lihat Semua</a>
+        </div>
+        <div class="game-shell">
+          <div class="game-grid">
+            <a class="game-card" href="<?php echo $final; ?>" target="_blank" rel="nofollow noopener">
+              <span class="game-img">
+                <amp-img layout="responsive" width="205" height="205" src="https://cdn.jsdelivr.net/gh/ggeercy/mailler/holyhall.webp" alt="Slot88"></amp-img>
+              </span>
+              <b>Slot88</b>
+              <span>Main</span>
+            </a>
+            <a class="game-card" href="<?php echo $final; ?>" target="_blank" rel="nofollow noopener">
+              <span class="game-img">
+                <amp-img layout="responsive" width="205" height="205" src="https://cdn.jsdelivr.net/gh/ggeercy/mailler/zeus.webp" alt="Pragmatic Play"></amp-img>
+              </span>
+              <b>Pragmatic Play</b>
+              <span>Main</span>
+            </a>
+            <a class="game-card" href="<?php echo $final; ?>" target="_blank" rel="nofollow noopener">
+              <span class="game-img">
+                <amp-img layout="responsive" width="205" height="205" src="https://cdn.jsdelivr.net/gh/ggeercy/mailler/mahjong-ways2.webp" alt="PGSOFT"></amp-img>
+              </span>
+              <b>PGSOFT</b>
+              <span>Main</span>
+            </a>
+            <a class="game-card" href="<?php echo $final; ?>" target="_blank" rel="nofollow noopener">
+              <span class="game-img">
+                <amp-img layout="responsive" width="205" height="205" src="https://cdn.jsdelivr.net/gh/ggeercy/mailler/KOIGATE.webp" alt="Habanero"></amp-img>
+              </span>
+              <b>Habanero</b>
+              <span>Main</span>
+            </a>
+            <a class="game-card" href="<?php echo $final; ?>" target="_blank" rel="nofollow noopener">
+              <span class="game-img">
+                <amp-img layout="responsive" width="205" height="205" src="https://cdn.jsdelivr.net/gh/ggeercy/mailler/bloodandshadow00.webp" alt="Nolimit City"></amp-img>
+              </span>
+              <b>Nolimit City</b>
+              <span>Main</span>
+            </a>
+            <a class="game-card" href="<?php echo $final; ?>" target="_blank" rel="nofollow noopener">
+              <span class="game-img">
+                <amp-img layout="responsive" width="205" height="205" src="https://cdn.jsdelivr.net/gh/ggeercy/mailler/Superwin.webp" alt="Playstar"></amp-img>
+              </span>
+              <b>Playstar</b>
+              <span>Main</span>
+            </a>
+            
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="page-wrap">
+        <div class="support-grid">
+  <a href="<?php echo $final; ?>" target="_blank" rel="noopener nofollow">
+    <i>
+      <amp-img
+        layout="fixed"
+        width="18"
+        height="18"
+        src="https://cdn.jsdelivr.net/gh/ggeercy/mailler/whatsapp.svg"
+        alt="WhatsApp">
+      </amp-img>
+    </i>
+    Chat WhatsApp
+  </a>
+  <a href="<?php echo $final; ?>" target="_blank" rel="noopener nofollow">
+    <i>
+      <amp-img
+        layout="fixed"
+        width="18"
+        height="18"
+        src="https://cdn.jsdelivr.net/gh/ggeercy/mailler/telegram.svg"
+        alt="Telegram">
+      </amp-img>
+    </i>
+    @<?php echo $titlebrand; ?>Jp
+  </a>
+</div>
+      </div>
+    </section>
+  </main>
+  <footer class="footer">
+    <div class="page-wrap">
+      <p>©2026 <?php echo $titlebrand; ?> - SITUS GACOR TERPERCAYA</p>
+    </div>
+  </footer>
+  <nav class="bottom-nav" aria-label="Menu Cepat <?php echo $titlebrand; ?>">
+    <a href="<?php echo $final; ?>" target="_blank" rel="nofollow noopener">
+      <amp-img layout="intrinsic" width="24" height="24" src="https://cdn.jsdelivr.net/gh/ggeercy/mailler/login.svg" alt="Login"></amp-img>
+      Login
+    </a>
+    <a href="<?php echo $final; ?>" target="_blank" rel="nofollow noopener" class="main">
+      <amp-img layout="intrinsic" width="24" height="24" src="https://cdn.jsdelivr.net/gh/ggeercy/mailler/daftar.svg" alt="Daftar"></amp-img>
+      Daftar
+    </a>
+
+    <a href="<?php echo $final; ?>" target="_blank" rel="nofollow noopener">
+      <amp-img layout="intrinsic" width="24" height="24" src="https://cdn.jsdelivr.net/gh/ggeercy/mailler/apk.svg" alt="APK"></amp-img>
+      APK
+    </a>
+  </nav>
+</body>
+</html>
