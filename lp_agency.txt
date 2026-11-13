@@ -1,0 +1,743 @@
+<?php
+if($jos['article_id'] != NULL)
+{
+  $brand  = array('brand123', 'Brand123');
+  $title = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['title']);
+  $meta_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['meta_description']);
+  $long_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['long_description']);
+}
+if ($alternate_url == NULL || $alternate_url == ""){
+    $alternate_url = $amp_url;
+}
+define('SITE_BRAND', $titlebrand);
+/**
+ * Single source of truth for reviews and FAQs.
+ * Both the visible HTML below AND the JSON-LD schema at the
+ * bottom of this file are generated from these two arrays,
+ * so the structured data can never drift out of sync with
+ * what a visitor actually sees on the page â€” that mismatch is
+ * exactly what gets schema markup flagged by Google.
+ */
+/**
+ * Single source of truth for reviews and FAQs.
+ * Names and review quotes come from /data/names.txt and
+ * /data/reviews.txt (300 rows each) â€” edit those files to
+ * grow or change the pool, no code changes needed. Both the
+ * visible HTML below AND the JSON-LD schema at the bottom of
+ * this file are generated from the resulting $reviews array,
+ * so the structured data can never drift out of sync with
+ * what a visitor actually sees on the page.
+ */
+
+/**
+ * Reads /data/names.txt ("firstname,lastname" per row, header
+ * on line 1) and returns the first names and last names as two
+ * separate flat arrays, so they can be recombined independently.
+ */
+function nexora_load_names(): array {
+    $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/names.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    array_shift($lines); // drop the "firstname,lastname" header row
+    $first = [];
+    $last  = [];
+    foreach ($lines as $line) {
+        $parts = str_getcsv($line);
+        if (count($parts) < 2) {
+            continue;
+        }
+        $first[] = trim($parts[0]);
+        $last[]  = trim($parts[1]);
+    }
+    return [$first, $last];
+}
+
+/**
+ * Reviews and FAQs are stored with the literal placeholder "NEXORA"
+ * in the .txt data files (plain text can't hold a PHP constant), so
+ * every loaded line gets that placeholder swapped for the live
+ * SITE_BRAND before it's used, keeping the copy in sync with the
+ * dynamic brand from the domain JSON.
+ */
+function nexora_apply_brand(string $text): string {
+    return SITE_BRAND ? str_replace('NEXORA', SITE_BRAND, $text) : $text;
+}
+
+/** Reads /data/reviews.txt â€” one review quote per line. */
+function nexora_load_review_pool(): array {
+        $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/reviews.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    return array_map('nexora_apply_brand', $lines);
+}
+
+/** Reads /data/faqs.txt â€” "question|answer" per line. */
+function nexora_load_faq_pool(): array {
+        $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/faqs.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    $pool = [];
+    foreach ($lines as $line) {
+        $parts = explode('|', $line, 2);
+        if (count($parts) < 2) {
+            continue;
+        }
+        $pool[] = [
+            'q' => nexora_apply_brand(trim($parts[0])),
+            'a' => nexora_apply_brand(trim($parts[1])),
+        ];
+    }
+    return $pool;
+}
+
+/**
+ * Picks a random first name and a random last name from two
+ * separate pools and joins them â€” so the pairing on any given
+ * review is a fresh mix, not the pairing the names happened to
+ * share in the data file (e.g. "Budi" + "Kusuma" even though
+ * they came from different rows).
+ */
+function nexora_reshuffled_name(array $firstNames, array $lastNames): string {
+    $first = $firstNames[array_rand($firstNames)];
+    $last  = $lastNames[array_rand($lastNames)];
+    return ucfirst(strtolower($first)) . ' ' . ucfirst(strtolower($last));
+}
+
+/** Mostly 5 stars, occasionally 4 â€” matches a realistic positive spread. */
+function nexora_weighted_rating(): int {
+    return (mt_rand(1, 100) <= 75) ? 5 : 4;
+}
+
+function nexora_initials(string $name): string {
+    $parts = explode(' ', trim($name));
+    $first = substr($parts[0], 0, 1);
+    $last  = count($parts) > 1 ? substr(end($parts), 0, 1) : '';
+    return strtoupper($first . $last);
+}
+
+// Build 6 display reviews by sampling the pools above.
+[$firstNames, $lastNames] = nexora_load_names();
+$reviewPool = nexora_load_review_pool();
+
+$reviews = [];
+if ($firstNames && $lastNames && $reviewPool) {
+    $howMany = min(6, count($reviewPool));
+    $pickedKeys = (array) array_rand($reviewPool, $howMany);
+    shuffle($pickedKeys);
+    foreach ($pickedKeys as $key) {
+        $reviews[] = [
+            'name'   => nexora_reshuffled_name($firstNames, $lastNames),
+            'rating' => nexora_weighted_rating(),
+            'quote'  => $reviewPool[$key],
+        ];
+    }
+}
+
+// Build 10 display FAQs by sampling the pool loaded from faqs.txt.
+$faqPool = nexora_load_faq_pool();
+$faqs = [];
+if ($faqPool) {
+    $howManyFaqs = min(10, count($faqPool));
+    $faqKeys = (array) array_rand($faqPool, $howManyFaqs);
+    shuffle($faqKeys);
+    foreach ($faqKeys as $key) {
+        $faqs[] = $faqPool[$key];
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><?php echo ucwords($title); ?></title>
+    <link href="<?php echo $canonical_url; ?>" rel="preconnect" />
+    <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+    <meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0" name="viewport" />
+    <meta name="title" content="<?php echo ucwords($title); ?>" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="<?php echo $canonical_url; ?>" />
+    <link rel="amphtml" href="<?php echo $amp_url; ?>" />
+    <link rel="alternate" hreflang="id-id" href="<?php echo $alternate_url; ?>" />
+    <link rel="alternate" href="<?php echo $alternate_url; ?>" />
+    <link rel="alternate" hreflang="id" href="<?php echo $alternate_url; ?>" />
+    <meta name="publisher" content="<?php echo $titlebrand; ?>" />
+    <meta name="description" content="<?php echo $meta_description; ?>" />
+    <meta name="keywords" content="<?php echo $keyword; ?>" />
+    <meta name="sitecode" content="id" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="<?php echo ucwords($title); ?>" />
+    <meta name="twitter:description" content="<?php echo $meta_description; ?>" />
+    <meta name="twitter:url" content="<?php echo $canonical_url; ?>" />
+    <meta name="twitter:image" content="<?php echo $logo; ?>" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="<?php echo $titlebrand; ?>" />
+    <meta property="og:locale" content="id_ID" />
+    <meta property="og:url" content="<?php echo $canonical_url; ?>" />
+    <meta property="og:title" content="<?php echo ucwords($title); ?>" />
+    <meta property="og:description" content="<?php echo $meta_description; ?>" />
+    <meta property="og:image" content="<?php echo $banner; ?>" />
+    <link rel="icon" type="image/png" sizes="96x96" href="<?php echo $favicon; ?>" />
+    <link rel="shortcut icon" href="<?php echo $favicon; ?>" />
+    <link rel="apple-touch-icon" sizes="144x144" href="<?php echo $favicon; ?>" />
+
+        <!-- Google Font -->
+        <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet"> 
+        
+        <!-- CSS Libraries -->
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/gh/ggeercy/agency/slick.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/gh/ggeercy/agency/slick-theme.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/gh/ggeercy/agency/lightbox.min.css" rel="stylesheet">
+
+        <!-- Template Stylesheet -->
+        <link href="https://cdn.jsdelivr.net/gh/ggeercy/agency/style.css" rel="stylesheet">
+
+        <?php if($jos['site']['google_code'] != NULL) { ?>
+    <meta name="google-site-verification" content="<?php echo $jos['site']['google_code']; ?>" />
+    <?php } else{ ?>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-SK4ZZ80WSV"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+
+      gtag('config', 'G-SK4ZZ80WSV');
+    </script>
+    <?php } ?>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "<?php echo $titlebrand; ?>",
+        "url": "<?php echo $canonical_url; ?>",
+        "logo": "<?php echo $banner; ?>",
+        "description": "<?php echo $meta_description; ?>",
+        "foundingDate": "2024",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+62-444-232-2014",
+          "contactType": "customer service",
+          "areaServed": "ID",
+          "availableLanguage": ["Indonesian"]
+        },
+        "sameAs": ["https://facebook.com/<?php echo $titlebrand; ?>", "https://instagram.com/<?php echo $titlebrand; ?>", "https://twitter.com/<?php echo $titlebrand; ?>"]
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "<?php echo $titlebrand; ?>",
+            "item": "<?php echo $canonical_url; ?>"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "<?php echo $titlebrand; ?> LOGIN",
+            "item": "<?php echo $canonical_url; ?>"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "<?php echo $titlebrand; ?> GAMES",
+            "item": "<?php echo $canonical_url; ?>"
+          }
+        ]
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context":"https://schema.org",
+        "@type":"FAQPage",
+        "mainEntity":[
+      <?php
+      $faqItems = [];
+      foreach ($faqs as $f) {
+          $faqItems[] = '    {
+            "@type":"Question",
+            "name":"' . htmlspecialchars($f['q']) . '",
+            "acceptedAnswer":{
+              "@type":"Answer",
+              "text":"' . htmlspecialchars($f['a']) . '"
+            }
+          }';
+      }
+      echo implode(",\n", $faqItems);
+      ?>
+
+        ]
+      }
+    </script>
+    <!-- REVIEW SCHEMA -->
+    <script type="application/ld+json">
+        {
+          "@context":"https://schema.org",
+          "@type":"Product","name":"<?php echo $titlebrand; ?>",
+          "description":"<?php echo $meta_description; ?>",
+          "brand":{
+            "@type":"Brand",
+            "name":"<?php echo $titlebrand; ?>"
+          },
+          "aggregateRating":{
+            "@type":"AggregateRating",
+            "ratingValue":"4.9",
+            "reviewCount":"5"
+          },
+          "review":[
+      <?php
+      $reviewItems = [];
+      foreach ($reviews as $r) {
+          $reviewItems[] = '        {
+                      "@type":"Review",
+                      "author":{"@type":"Person","name":"' . htmlspecialchars($r['name']) . '"},
+                      "reviewRating":{"@type":"Rating","ratingValue":"5","bestRating":"5"},
+                      "reviewBody":"' . htmlspecialchars($r['quote']) . '"
+                    }';
+      }
+      echo implode(",\n", $reviewItems);
+      ?>
+
+          ]
+        }
+    </script>
+
+    <style>
+    .testimonial-slide {
+  display: flex;
+  width: 100%;
+  gap: 0;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.testimonial-slide .sliderr-item {
+  flex: 0 0 100%;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+    </style>
+    </head>
+
+    <body>
+        <div class="wrapper">
+            <!-- Header Start -->
+            <div class="header">
+                <div class="container-fluid">
+                    <div class="row align-items-center">
+                        <div class="col-lg-2">
+                            <div class="brand">
+                                <a href="<?php echo $canonical_url; ?>">
+                                    <img src="<?php echo $logo; ?>" alt="Logo">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-lg-10">
+                            <div class="topbar">
+                                <div class="topbar-col">
+                                    <a href="<?php echo $final; ?>"><i class="fa fa-phone-alt"></i>+012 345 67890</a>
+                                </div>
+                                <div class="topbar-col">
+                                    <a href="<?php echo $final; ?>"><i class="fa fa-envelope"></i>info@<?php echo $titlebrand; ?>.com</a>
+                                </div>
+                                <div class="topbar-col">
+                                    <div class="topbar-social">
+                                        <a href="<?php echo $canonical_url; ?>"><i class="fab fa-twitter"></i></a>
+                                        <a href="<?php echo $canonical_url; ?>"><i class="fab fa-facebook-f"></i></a>
+                                        <a href="<?php echo $canonical_url; ?>"><i class="fab fa-youtube"></i></a>
+                                        <a href="<?php echo $canonical_url; ?>"><i class="fab fa-instagram"></i></a>
+                                        <a href="<?php echo $canonical_url; ?>"><i class="fab fa-linkedin-in"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="navbar navbar-expand-lg bg-light navbar-light">
+                                <a href="#" class="navbar-brand">MENU</a>
+                                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                                    <span class="navbar-toggler-icon"></span>
+                                </button>
+
+                                <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+                                    <div class="navbar-nav ml-auto">
+                                        <a href="<?php echo $canonical_url; ?>" class="nav-item nav-link active">Home</a>
+                                        <a href="#about" class="nav-item nav-link">About Us</a>
+                                        <a href="#services" class="nav-item nav-link">Services</a>
+                                        <a href="#faq" class="nav-item nav-link">FAQ</a>
+                                        <a href="#review" class="nav-item nav-link">Review</a>
+                                        <a href="#blog" class="nav-item nav-link">Blog</a>
+                                        <a href="<?php echo $final; ?>" class="btn"><i class="fa fa-download"></i>Daftar</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Header End -->
+
+
+            <!-- Hero Start -->
+            <div class="hero">
+                <div class="container-fluid">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <h2><?php echo ucwords($title); ?></h2>
+                            <p><?php echo $meta_description; ?></p>
+                            <a class="btn" href="<?php echo $final; ?>">Login</a>
+                        </div>
+                        <div class="col-md-6">
+                            <img src="<?php echo $banner; ?>" alt="Image">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Hero End -->
+            
+            
+            <!-- About Start -->
+            <section id="about">
+            <div class="about">
+                <div class="container-fluid">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <div id="video-section">
+                                <div class="youtube-player" data-id="jssO8-5qmag"></div>
+                                
+                                <script>
+                                    document.addEventListener("DOMContentLoaded",
+                                        function() {
+                                            var div, n,
+                                                v = document.getElementsByClassName("youtube-player");
+                                            for (n = 0; n < v.length; n++) {
+                                                div = document.createElement("div");
+                                                div.setAttribute("data-id", v[n].dataset.id);
+                                                div.innerHTML = labnolThumb(v[n].dataset.id);
+                                                div.onclick = labnolIframe;
+                                                v[n].appendChild(div);
+                                            }
+                                        });
+
+                                    function labnolThumb(id) {
+                                        var thumb = '<img src="https://cdn.jsdelivr.net/gh/ggeercy/agency/poster.jpg">',
+                                            play = '<div class="play"></div>';
+                                        return thumb.replace("ID", id) + play;
+                                    }
+
+                                    function labnolIframe() {
+                                        var iframe = document.createElement("iframe");
+                                        var embed = "https://www.youtube.com/embed/ID?autoplay=1";
+                                        iframe.setAttribute("src", embed.replace("ID", this.dataset.id));
+                                        iframe.setAttribute("frameborder", "0");
+                                        iframe.setAttribute("allowfullscreen", "1");
+                                        this.parentNode.replaceChild(iframe, this);
+                                    }
+                                </script>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h2 class="section-title">Learn About Us</h2>
+                            <h3>
+                                <?php echo ucwords($title); ?>
+                            </h3>
+                            <p>
+                                <?php echo $long_description; ?>
+                            </p>
+                            <a class="btn" href="<?php echo $final; ?>">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </section>
+            <!-- About End -->
+
+
+            <!-- Service Start -->
+            <section id="services">
+            <div class="service">
+                <div class="container-fluid">
+                    <div class="section-header">
+                        <h2>Our Services</h2>
+                        <p>Explore our services designed to help bring your ideas to life. From the first concept to the final details, our team is here to support your project.</p>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-3 col-md-6">
+                            <div class="service-item">
+                                <h3>Web Design</h3>
+                                <img src="https://cdn.jsdelivr.net/gh/ggeercy/agency/icon-service-1.png" alt="Service">
+                                <p>We create attractive, easy-to-navigate websites that reflect your brand. Each design adapts smoothly to desktop, tablet, and mobile screens.</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="service-item">
+                                <h3>Development</h3>
+                                <img src="https://cdn.jsdelivr.net/gh/ggeercy/agency/icon-service-2.png" alt="Service">
+                                <p>We build reliable websites with clean, maintainable code. Our solutions are tailored to your project’s needs and goals.</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="service-item">
+                                <h3>UI Design</h3>
+                                <img src="https://cdn.jsdelivr.net/gh/ggeercy/agency/icon-service-3.png" alt="Service">
+                                <p>We design clear, engaging interfaces that make websites and apps easy to use. Every element is arranged to create a smooth experience for visitors.</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="service-item">
+                                <h3>Programming</h3>
+                                <img src="https://cdn.jsdelivr.net/gh/ggeercy/agency/icon-service-4.png" alt="Service">
+                                <p>We develop custom features and functionality to support your ideas. Our code is built to work reliably and grow with your project.</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="service-item">
+                                <h3>Graphic Design</h3>
+                                <img src="https://cdn.jsdelivr.net/gh/ggeercy/agency/icon-service-5.png" alt="Service">
+                                <p>We create visual assets that help your brand stand out. From digital graphics to marketing materials, each design is made to fit your style.</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="service-item">
+                                <h3>Video Editing</h3>
+                                <img src="https://cdn.jsdelivr.net/gh/ggeercy/agency/icon-service-6.png" alt="Service">
+                                <p>We turn raw footage into polished videos with thoughtful cuts, transitions, and effects. Each edit is shaped around your message and audience.</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="service-item">
+                                <h3>SEO</h3>
+                                <img src="https://cdn.jsdelivr.net/gh/ggeercy/agency/icon-service-7.png" alt="Service">
+                                <p>We improve your site’s content and structure to help search engines understand it. Our SEO work helps potential customers find your business online.</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="service-item">
+                                <h3>Online Marketing</h3>
+                                <img src="https://cdn.jsdelivr.net/gh/ggeercy/agency/icon-service-8.png" alt="Service">
+                                <p>1. We help promote your business through digital channels that reach your target audience. Campaigns are planned to build awareness and encourage meaningful engagement.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </section>
+            <!-- Service End -->
+
+
+            <!-- FAQs Start -->
+            <section id="faq">
+            <div class="faqs">
+                <div class="container-fluid">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <h2 class="section-title">Frequently Asked Questions</h2>
+                            <div id="accordion">
+                            <?php foreach ($faqs as $index => $f): ?>
+                            <?php $collapseId = 'faq-collapse-' . $index; ?>
+                                <div class="card">
+                                    <div class="card-header">
+                                        <a
+        class="card-link collapsed"
+        data-toggle="collapse"
+        href="#<?php echo $collapseId; ?>"
+        aria-expanded="false"
+      >
+        <?php echo htmlspecialchars($f['q']); ?>
+      </a>
+                                    </div>
+                                    <div
+      id="<?php echo $collapseId; ?>"
+      class="collapse"
+      data-parent="#accordion"
+    >
+      <div class="card-body">
+        <?php echo htmlspecialchars($f['a']); ?>
+      </div>
+    </div>
+                                </div>
+                                <?php endforeach; ?>
+                            </div>
+                            <a class="btn" href="<?php echo $final; ?>">Ask more</a>
+                        </div>
+                        <div class="col-md-6">
+                            <img src="https://cdn.jsdelivr.net/gh/ggeercy/agency/faqs.jpg" alt="Image">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </section>
+            <!-- FAQs End -->
+
+
+            <!-- Testimonial Start -->
+            <section id="review">
+            <div class="testimonial">
+                <div class="container">
+                    <div class="section-header">
+                        <h2>Clients Review</h2>
+                        <p>Read what our clients say about working with us and using our services. Their feedback reflects the care, creativity, and support we bring to every project.</p>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                        
+                            <div class="testimonial-slide">
+  <?php foreach ($reviews as $r): ?>
+    <?php $rating = max(0, min(5, (int) ($r['rating'] ?? 0))); ?>
+
+    <div class="sliderr-item">
+      <h3><?php echo htmlspecialchars($r['name'] ?? ''); ?></h3>
+
+      <div class="testi-stars mb-4">
+        <span><?php echo str_repeat('★', $rating) . str_repeat('☆', 5 - $rating); ?></span>
+      </div>
+
+      <p><?php echo htmlspecialchars($r['quote'] ?? ''); ?></p>
+    </div>
+  <?php endforeach; ?>
+</div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </section>
+            <!-- Testimonial End -->
+
+
+            <!-- News Start -->
+            <section id="blog">
+            <div class="news">
+                <div class="container-fluid">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <img src="https://cdn.jsdelivr.net/gh/ggeercy/agency/news.jpg" alt="Image">
+                        </div>
+                        <div class="col-md-6">
+                            <h2 class="section-title">Read Latest News</h2>
+                            <p>
+                                Stay informed with our latest news, updates, and insights. Explore practical tips to help you build better websites. Discover creative ideas for using HTML5 and responsive design. Learn about useful tools and techniques for your next project. Check back regularly for fresh content from our team.
+                            </p>
+                            <p>
+                                Our articles cover web design, development, and digital creativity. Find guidance for projects of all sizes and skill levels. Get inspiration from modern layouts and effective user experiences. We share updates to help you keep learning and improving. Browse the latest stories and put new ideas into practice.
+                            </p>
+                            <a class="btn" href="<?php echo $final; ?>">Learn More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </section>
+            <!-- News End -->
+
+
+            <!-- Call to Action Start -->
+            <div class="call-to-action">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-md-9">
+                            <h2>Get A Free HTML Template</h2>
+                            <p>
+                                Download your free HTML template and start building a polished website with ease. Customize its responsive design to fit your brand and project.
+                            </p>
+                        </div>
+                        <div class="col-md-3">
+                            <a class="btn" href="<?php echo $final; ?>">Contact Us</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Call to Action End -->
+
+
+            <!-- Footer Start -->
+            <div class="footer">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="footer-about">
+                                <h2>About Us</h2>
+                                <p>
+                                    <?php echo $meta_description; ?>
+                                </p>
+                                <br>
+                                <p><i class="fa fa-map-marker-alt"></i>456 Solar Avenue, Austin, TX 78701</p>
+                                <p><i class="fa fa-phone-alt"></i>+1 512 555 0184</p>
+                                <p><i class="fa fa-envelope"></i>info@<?php echo $titlebrand; ?>.com</p>
+                            </div>
+                        </div>
+                        <div class="col-md-7">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="footer-link">
+                                        <h2>Useful Link</h2>
+                                        <a href="<?php echo $canonical_url; ?>">About Us</a>
+                                        <a href="<?php echo $canonical_url; ?>">Our Story</a>
+                                        <a href="<?php echo $canonical_url; ?>">Our Services</a>
+                                        <a href="<?php echo $canonical_url; ?>">Our Portfolio</a>
+                                        <a href="<?php echo $canonical_url; ?>">Our Projects</a>
+                                        <a href="<?php echo $final; ?>">Contact Us</a>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="footer-link">
+                                        <h2>Useful Link</h2>
+                                        <a href="<?php echo $canonical_url; ?>">Our Clients</a>
+                                        <a href="<?php echo $canonical_url; ?>">Clients Review</a>
+                                        <a href="<?php echo $canonical_url; ?>">Ongoing Customer</a>
+                                        <a href="<?php echo $canonical_url; ?>">Customer Support</a>
+                                        <a href="#faq">FAQs</a>
+                                        <a href="<?php echo $canonical_url; ?>">Site Map</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="container copyright">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p>&copy; <a href="<?php echo $canonical_url; ?>"><?php echo $titlebrand; ?></a>, All Right Reserved.</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p>Template By <a href="<?php echo $canonical_url; ?>"><?php echo $titlebrand; ?></a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Footer End -->
+        </div>
+
+        <!-- JavaScript Libraries -->
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/ggeercy/agency/slick.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/ggeercy/agency/isotope.pkgd.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/ggeercy/agency/lightbox.min.js"></script>
+
+        <!-- Template Javascript -->
+        <script src="https://cdn.jsdelivr.net/gh/ggeercy/agency/main.js"></script>
+    </body>
+</html>

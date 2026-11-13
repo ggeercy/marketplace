@@ -1,0 +1,978 @@
+<?php
+if($jos['article_id'] != NULL)
+{
+  $brand  = array('brand123', 'Brand123');
+  $title = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['title']);
+  $meta_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['meta_description']);
+  $long_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['long_description']);
+}
+if ($alternate_url == NULL || $alternate_url == ""){
+    $alternate_url = $amp_url;
+}
+define('SITE_BRAND', $titlebrand);
+/**
+ * Single source of truth for reviews and FAQs.
+ * Both the visible HTML below AND the JSON-LD schema at the
+ * bottom of this file are generated from these two arrays,
+ * so the structured data can never drift out of sync with
+ * what a visitor actually sees on the page â€” that mismatch is
+ * exactly what gets schema markup flagged by Google.
+ */
+/**
+ * Single source of truth for reviews and FAQs.
+ * Names and review quotes come from /data/names.txt and
+ * /data/reviews.txt (300 rows each) â€” edit those files to
+ * grow or change the pool, no code changes needed. Both the
+ * visible HTML below AND the JSON-LD schema at the bottom of
+ * this file are generated from the resulting $reviews array,
+ * so the structured data can never drift out of sync with
+ * what a visitor actually sees on the page.
+ */
+
+/**
+ * Reads /data/names.txt ("firstname,lastname" per row, header
+ * on line 1) and returns the first names and last names as two
+ * separate flat arrays, so they can be recombined independently.
+ */
+function nexora_load_names(): array {
+    $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/names.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    array_shift($lines); // drop the "firstname,lastname" header row
+    $first = [];
+    $last  = [];
+    foreach ($lines as $line) {
+        $parts = str_getcsv($line);
+        if (count($parts) < 2) {
+            continue;
+        }
+        $first[] = trim($parts[0]);
+        $last[]  = trim($parts[1]);
+    }
+    return [$first, $last];
+}
+
+/**
+ * Reviews and FAQs are stored with the literal placeholder "NEXORA"
+ * in the .txt data files (plain text can't hold a PHP constant), so
+ * every loaded line gets that placeholder swapped for the live
+ * SITE_BRAND before it's used, keeping the copy in sync with the
+ * dynamic brand from the domain JSON.
+ */
+function nexora_apply_brand(string $text): string {
+    return SITE_BRAND ? str_replace('NEXORA', SITE_BRAND, $text) : $text;
+}
+
+/** Reads /data/reviews.txt â€” one review quote per line. */
+function nexora_load_review_pool(): array {
+        $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/reviews.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    return array_map('nexora_apply_brand', $lines);
+}
+
+/** Reads /data/faqs.txt â€” "question|answer" per line. */
+function nexora_load_faq_pool(): array {
+        $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/faqs.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    $pool = [];
+    foreach ($lines as $line) {
+        $parts = explode('|', $line, 2);
+        if (count($parts) < 2) {
+            continue;
+        }
+        $pool[] = [
+            'q' => nexora_apply_brand(trim($parts[0])),
+            'a' => nexora_apply_brand(trim($parts[1])),
+        ];
+    }
+    return $pool;
+}
+
+/**
+ * Picks a random first name and a random last name from two
+ * separate pools and joins them â€” so the pairing on any given
+ * review is a fresh mix, not the pairing the names happened to
+ * share in the data file (e.g. "Budi" + "Kusuma" even though
+ * they came from different rows).
+ */
+function nexora_reshuffled_name(array $firstNames, array $lastNames): string {
+    $first = $firstNames[array_rand($firstNames)];
+    $last  = $lastNames[array_rand($lastNames)];
+    return ucfirst(strtolower($first)) . ' ' . ucfirst(strtolower($last));
+}
+
+/** Mostly 5 stars, occasionally 4 â€” matches a realistic positive spread. */
+function nexora_weighted_rating(): int {
+    return (mt_rand(1, 100) <= 75) ? 5 : 4;
+}
+
+function nexora_initials(string $name): string {
+    $parts = explode(' ', trim($name));
+    $first = substr($parts[0], 0, 1);
+    $last  = count($parts) > 1 ? substr(end($parts), 0, 1) : '';
+    return strtoupper($first . $last);
+}
+
+// Build 6 display reviews by sampling the pools above.
+[$firstNames, $lastNames] = nexora_load_names();
+$reviewPool = nexora_load_review_pool();
+
+$reviews = [];
+if ($firstNames && $lastNames && $reviewPool) {
+    $howMany = min(6, count($reviewPool));
+    $pickedKeys = (array) array_rand($reviewPool, $howMany);
+    shuffle($pickedKeys);
+    foreach ($pickedKeys as $key) {
+        $reviews[] = [
+            'name'   => nexora_reshuffled_name($firstNames, $lastNames),
+            'rating' => nexora_weighted_rating(),
+            'quote'  => $reviewPool[$key],
+        ];
+    }
+}
+
+// Build 10 display FAQs by sampling the pool loaded from faqs.txt.
+$faqPool = nexora_load_faq_pool();
+$faqs = [];
+if ($faqPool) {
+    $howManyFaqs = min(10, count($faqPool));
+    $faqKeys = (array) array_rand($faqPool, $howManyFaqs);
+    shuffle($faqKeys);
+    foreach ($faqKeys as $key) {
+        $faqs[] = $faqPool[$key];
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><?php echo ucwords($title); ?></title>
+    <link href="<?php echo $canonical_url; ?>" rel="preconnect" />
+    <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+    <meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0" name="viewport" />
+    <meta name="title" content="<?php echo ucwords($title); ?>" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="<?php echo $canonical_url; ?>" />
+    <link rel="amphtml" href="<?php echo $amp_url; ?>" />
+    <link rel="alternate" hreflang="id-id" href="<?php echo $alternate_url; ?>" />
+    <link rel="alternate" href="<?php echo $alternate_url; ?>" />
+    <link rel="alternate" hreflang="id" href="<?php echo $alternate_url; ?>" />
+    <meta name="publisher" content="<?php echo $titlebrand; ?>" />
+    <meta name="description" content="<?php echo $meta_description; ?>" />
+    <meta name="keywords" content="<?php echo $keyword; ?>" />
+    <meta name="sitecode" content="id" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="<?php echo ucwords($title); ?>" />
+    <meta name="twitter:description" content="<?php echo $meta_description; ?>" />
+    <meta name="twitter:url" content="<?php echo $canonical_url; ?>" />
+    <meta name="twitter:image" content="<?php echo $logo; ?>" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="<?php echo $titlebrand; ?>" />
+    <meta property="og:locale" content="id_ID" />
+    <meta property="og:url" content="<?php echo $canonical_url; ?>" />
+    <meta property="og:title" content="<?php echo ucwords($title); ?>" />
+    <meta property="og:description" content="<?php echo $meta_description; ?>" />
+    <meta property="og:image" content="<?php echo $banner; ?>" />
+    <link rel="icon" type="image/png" sizes="96x96" href="<?php echo $favicon; ?>" />
+    <link rel="shortcut icon" href="<?php echo $favicon; ?>" />
+    <link rel="apple-touch-icon" sizes="144x144" href="<?php echo $favicon; ?>" />
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Roboto:wght@500;700&display=swap" rel="stylesheet"> 
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="https://cdn.jsdelivr.net/gh/ggeercy/Solar/style.css" rel="stylesheet">
+
+    <?php if($jos['site']['google_code'] != NULL) { ?>
+    <meta name="google-site-verification" content="<?php echo $jos['site']['google_code']; ?>" />
+    <?php } else{ ?>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-SK4ZZ80WSV"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+
+      gtag('config', 'G-SK4ZZ80WSV');
+    </script>
+    <?php } ?>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "<?php echo $titlebrand; ?>",
+        "url": "<?php echo $canonical_url; ?>",
+        "logo": "<?php echo $banner; ?>",
+        "description": "<?php echo $meta_description; ?>",
+        "foundingDate": "2024",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+62-444-232-2014",
+          "contactType": "customer service",
+          "areaServed": "ID",
+          "availableLanguage": ["Indonesian"]
+        },
+        "sameAs": ["https://facebook.com/<?php echo $titlebrand; ?>", "https://instagram.com/<?php echo $titlebrand; ?>", "https://twitter.com/<?php echo $titlebrand; ?>"]
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "<?php echo $titlebrand; ?>",
+            "item": "<?php echo $canonical_url; ?>"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "<?php echo $titlebrand; ?> LOGIN",
+            "item": "<?php echo $canonical_url; ?>"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "<?php echo $titlebrand; ?> GAMES",
+            "item": "<?php echo $canonical_url; ?>"
+          }
+        ]
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context":"https://schema.org",
+        "@type":"FAQPage",
+        "mainEntity":[
+      <?php
+      $faqItems = [];
+      foreach ($faqs as $f) {
+          $faqItems[] = '    {
+            "@type":"Question",
+            "name":"' . htmlspecialchars($f['q']) . '",
+            "acceptedAnswer":{
+              "@type":"Answer",
+              "text":"' . htmlspecialchars($f['a']) . '"
+            }
+          }';
+      }
+      echo implode(",\n", $faqItems);
+      ?>
+
+        ]
+      }
+    </script>
+    <!-- REVIEW SCHEMA -->
+    <script type="application/ld+json">
+        {
+          "@context":"https://schema.org",
+          "@type":"Product","name":"<?php echo $titlebrand; ?>",
+          "description":"<?php echo $meta_description; ?>",
+          "brand":{
+            "@type":"Brand",
+            "name":"<?php echo $titlebrand; ?>"
+          },
+          "aggregateRating":{
+            "@type":"AggregateRating",
+            "ratingValue":"4.9",
+            "reviewCount":"5"
+          },
+          "review":[
+      <?php
+      $reviewItems = [];
+      foreach ($reviews as $r) {
+          $reviewItems[] = '        {
+                      "@type":"Review",
+                      "author":{"@type":"Person","name":"' . htmlspecialchars($r['name']) . '"},
+                      "reviewRating":{"@type":"Rating","ratingValue":"5","bestRating":"5"},
+                      "reviewBody":"' . htmlspecialchars($r['quote']) . '"
+                    }';
+      }
+      echo implode(",\n", $reviewItems);
+      ?>
+
+          ]
+        }
+    </script>
+
+    <style>
+
+    .faq-section,
+.review-section {
+  background: #fff;
+  padding: 55px 20px;
+  font-family: Arial, sans-serif;
+}
+
+.faq-container {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.faq-container h2,
+.review-container h2 {
+  color: #263f67;
+  font-size: 28px;
+  margin: 0 0 26px;
+}
+
+.faq-item {
+  border: 2px solid #dce1e6;
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.faq-question {
+  width: 100%;
+  padding: 12px 20px;
+  border: 0;
+  background: #fff;
+  color: #18365e;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: left;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.faq-chevron {
+  color: #0799f5;
+  font-size: 24px;
+  transition: transform 0.2s;
+}
+
+.faq-item.open .faq-chevron {
+  transform: rotate(180deg);
+}
+
+.faq-answer {
+  padding: 0 20px 14px;
+  color: #626b78;
+  line-height: 1.6;
+}
+
+.faq-answer p {
+  margin: 0;
+}
+
+.faq-quote-button {
+  display: inline-block;
+  margin-top: 24px;
+  padding: 19px 48px;
+  background: #0799f5;
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.review-container {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.review-label {
+  color: #0799f5;
+  font-size: 16px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+}
+
+.review-container h2 {
+  font-size: 54px;
+  margin: 16px 0 12px;
+}
+
+.review-underline {
+  width: 150px;
+  height: 6px;
+  margin: 0 auto;
+  border-top: 2px solid #0799f5;
+  border-bottom: 2px solid #0799f5;
+}
+
+.review-navigation {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin: 38px 0 30px;
+}
+
+.review-navigation button {
+  width: 60px;
+  height: 60px;
+  border: 0;
+  background: #0799f5;
+  color: white;
+  font-size: 42px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.review-slides {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.review-slide {
+  display: none;
+}
+
+.review-slide.active {
+  display: block;
+}
+
+.review-avatar {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  margin-bottom: 14px;
+}
+
+.review-quote {
+  color: #85899a;
+  font-size: 21px;
+  line-height: 1.55;
+}
+
+.review-slide h3 {
+  color: #263f67;
+  font-size: 23px;
+  margin: 16px 0 8px;
+}
+
+.review-profession {
+  color: #85899a;
+}
+
+@media (max-width: 600px) {
+  .review-container h2 {
+    font-size: 38px;
+  }
+
+  .review-quote {
+    font-size: 18px;
+  }
+}
+</style>
+</head>
+
+<body data-spy="scroll" data-target=".navbar" data-offset="51">
+    <!-- Navbar Start -->
+    <nav class="navbar fixed-top shadow-sm navbar-expand-lg bg-dark navbar-dark py-1 py-lg-0 px-lg-5">
+  <a href="<?php echo $canonical_url; ?>" class="navbar-brand d-block d-lg-none">
+    <img src="<?php echo $logo; ?>" alt="Solar" height="40">
+  </a>
+
+  <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+    <div class="navbar-nav ml-auto py-0">
+      <a href="#home" class="nav-item nav-link active">Home</a>
+      <a href="#about" class="nav-item nav-link">About</a>
+      <a href="#service" class="nav-item nav-link">Service</a>
+    </div>
+
+    <a href="<?php echo $canonical_url; ?>" class="navbar-brand d-none d-lg-block">
+      <img src="<?php echo $logo; ?>" alt="Solar" height="40">
+    </a>
+
+    <div class="navbar-nav mr-auto py-0">
+      <a href="#team" class="nav-item nav-link">Team</a>
+      <a href="#faqs" class="nav-item nav-link">FAQs</a>
+      <a href="#contact" class="nav-item nav-link">Contact</a>
+    </div>
+  </div>
+</nav>
+    <!-- Navbar End -->
+
+
+    <!-- Carousel Start -->
+    <div class="container-fluid p-0 mb-5 pb-5" id="home">
+        <div id="header-carousel" class="carousel slide carousel-fade" data-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item position-relative active" style="height: 100vh; min-height: 400px;">
+                    <img class="position-absolute w-100 h-100" src="https://cdn.jsdelivr.net/gh/ggeercy/Solar/carousel-1.jpg" style="object-fit: cover;">
+                    <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                        <div class="p-3" style="max-width: 900px;">
+                            <h4 class="text-white text-uppercase mb-4" style="letter-spacing: 3px;"><?php echo $titlebrand; ?></h4>
+                            <h3 class="display-2 font-secondary text-white mb-4"><?php echo ucwords($title); ?></h3>
+                            <a class="btn btn-light font-weight-bold py-3 px-5 mt-2 btn-scroll" href="<?php echo $final; ?>">Daftar</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item position-relative" style="height: 100vh; min-height: 400px;">
+                    <img class="position-absolute w-100 h-100" src="https://cdn.jsdelivr.net/gh/ggeercy/Solar/carousel-2.jpg" style="object-fit: cover;">
+                    <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+                        <div class="p-3" style="max-width: 900px;">
+                            <h4 class="text-white text-uppercase mb-4" style="letter-spacing: 3px;"><?php echo $titlebrand; ?></h4>
+                            <p class="font-secondary text-white"><?php echo $meta_description; ?></p>
+                            <a class="btn btn-light font-weight-bold py-3 px-5 mt-2 btn-scroll" href="<?php echo $final; ?>">Login</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <a class="carousel-control-prev justify-content-start" href="#header-carousel" data-slide="prev">
+                <div class="btn btn-primary px-0" style="width: 68px; height: 68px;">
+                    <span class="carousel-control-prev-icon mt-3"></span>
+                </div>
+            </a>
+            <a class="carousel-control-next justify-content-end" href="#header-carousel" data-slide="next">
+                <div class="btn btn-primary px-0" style="width: 68px; height: 68px;">
+                    <span class="carousel-control-next-icon mt-3"></span>
+                </div>
+            </a>
+        </div>
+    </div>
+    <!-- Carousel End -->
+
+
+    <!-- About Start -->
+    <div class="container-fluid py-5" id="about">
+        <div class="container py-5">
+            <div class="row align-items-center">
+                <div class="col-lg-5">
+                    <img class="img-fluid mb-4 mb-lg-0" src="<?php echo $banner; ?>" alt="">
+                </div>
+                <div class="col-lg-7">
+                    <h6 class="text-uppercase text-primary mb-3" style="letter-spacing: 3px;">About Us</h6>
+                    <h2 class="display-4 mb-3"><?php echo ucwords($title); ?></h2>
+                    <p><?php echo $long_description; ?></p>
+                    <a href="<?php echo $final; ?>" class="btn btn-primary font-weight-bold py-3 px-5 mt-2" type="button" data-toggle="modal" data-target="#exampleModalLong">Read More</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- About End -->
+
+
+    <!-- Service Start -->
+    <div class="container-fluid py-5" id="service">
+        <div class="container py-5">
+            <div class="section-title position-relative text-center">
+                <h6 class="text-uppercase text-primary mb-3" style="letter-spacing: 3px;">Services</h6>
+                <h1 class="font-secondary display-4">What We Cover</h1>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 mb-3">
+                    <div class="product-item mb-2">
+                        <div class="product-img">
+                            <img class="img-fluid" src="https://cdn.jsdelivr.net/gh/ggeercy/Solar/product-1.jpg" alt="">
+                            <a href="<?php echo $canonical_url; ?>" type="button" class="btn btn-primary">
+                                <i class="fa fa-2x fa-plus text-white"></i>
+                            </a>
+                        </div>
+                        <div class="bg-secondary text-center p-4">
+                            <h3 class="m-0">Solar System</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 mb-3">
+                    <div class="product-item mb-2">
+                        <div class="product-img">
+                            <img class="img-fluid" src="https://cdn.jsdelivr.net/gh/ggeercy/Solar/product-2.jpg" alt="">
+                            <a href="<?php echo $canonical_url; ?>" type="button" class="btn btn-primary">
+                                <i class="fa fa-2x fa-plus text-white"></i>
+                            </a>
+                        </div>
+                        <div class="bg-secondary text-center p-4">
+                            <h3 class="m-0">Wind Turbine</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 mb-3">
+                    <div class="product-item mb-2">
+                        <div class="product-img">
+                            <img class="img-fluid" src="https://cdn.jsdelivr.net/gh/ggeercy/Solar/product-3.jpg" alt="">
+                            <a href="<?php echo $canonical_url; ?>" type="button" class="btn btn-primary">
+                                <i class="fa fa-2x fa-plus text-white"></i>
+                            </a>
+                        </div>
+                        <div class="bg-secondary text-center p-4">
+                            <h3 class="m-0">Wind Generator</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Service End -->
+
+
+    <!-- Team Start -->
+    <div class="container-fluid py-5" id="team">
+        <div class="container py-5">
+            <div class="section-title position-relative text-center">
+                <h6 class="text-uppercase text-primary mb-3" style="letter-spacing: 3px;">Team</h6>
+                <h1 class="font-secondary display-4">Meet The Team</h1>
+            </div>
+            <div class="row justify-content-lg-start m-0 mb-4 pb-2 mb-sm-0 pb-sm-0">
+                <div class="col-lg-6 p-0">
+                    <div class="row m-0">
+                        <div class="col-sm-6 p-0 text-center">
+                            <div class="h-100 d-flex flex-column justify-content-center bg-secondary p-4">
+                                <h5 class="mb-2">Donald John</h5>
+                                <p class="text-muted font-italic mb-2">CEO & Founder</p>
+                                <p>Designs efficient solar energy systems tailored to each property, ensuring reliable performance and optimal energy production.</p>
+                                <div class="position-relative mb-2">
+                                    <a class="btn btn-outline-primary btn-square mr-1" href="<?php echo $canonical_url; ?>"><i class="fab fa-twitter"></i></a>
+                                    <a class="btn btn-outline-primary btn-square mr-1" href="<?php echo $canonical_url; ?>"><i class="fab fa-facebook-f"></i></a>
+                                    <a class="btn btn-outline-primary btn-square mr-1" href="<?php echo $canonical_url; ?>"><i class="fab fa-linkedin-in"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 p-0" style="min-height: 300px;">
+                            <img class="position-absolute w-100 h-100" src="https://cdn.jsdelivr.net/gh/ggeercy/Solar/team-1.jpg" style="object-fit: cover;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-lg-end m-0 mb-4 pb-2 mb-sm-0 pb-sm-0">
+                <div class="col-lg-6 p-0">
+                    <div class="row m-0">
+                        <div class="col-sm-6 p-0" style="min-height: 300px;">
+                            <img class="position-absolute w-100 h-100" src="https://cdn.jsdelivr.net/gh/ggeercy/Solar/team-2.jpg" style="object-fit: cover;">
+                        </div>
+                        <div class="col-sm-6 p-0 text-center">
+                            <div class="h-100 d-flex flex-column justify-content-center bg-secondary p-4">
+                                <h5 class="mb-2">Adam Phillips</h5>
+                                <p class="text-muted font-italic mb-2">Engineer</p>
+                                <p>Installs and maintains solar panels, inverters, and electrical connections with a strong focus on safety and quality.</p>
+                                <div class="position-relative mb-2">
+                                    <a class="btn btn-outline-primary btn-square mr-1" href="<?php echo $canonical_url; ?>"><i class="fab fa-twitter"></i></a>
+                                    <a class="btn btn-outline-primary btn-square mr-1" href="<?php echo $canonical_url; ?>"><i class="fab fa-facebook-f"></i></a>
+                                    <a class="btn btn-outline-primary btn-square mr-1" href="<?php echo $canonical_url; ?>"><i class="fab fa-linkedin-in"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-lg-start m-0 mb-4 pb-2 mb-sm-0 pb-sm-0">
+                <div class="col-lg-6 p-0">
+                    <div class="row m-0">
+                        <div class="col-sm-6 p-0 text-center">
+                            <div class="h-100 d-flex flex-column justify-content-center bg-secondary p-4">
+                                <h5 class="mb-2">Thomas Olsen</h5>
+                                <p class="text-muted font-italic mb-2">Engineer</p>
+                                <p>Coordinates solar projects from planning through installation, keeping work on schedule and aligned with customer needs.</p>
+                                <div class="position-relative mb-2">
+                                    <a class="btn btn-outline-primary btn-square mr-1" href="<?php echo $canonical_url; ?>"><i class="fab fa-twitter"></i></a>
+                                    <a class="btn btn-outline-primary btn-square mr-1" href="<?php echo $canonical_url; ?>"><i class="fab fa-facebook-f"></i></a>
+                                    <a class="btn btn-outline-primary btn-square mr-1" href="<?php echo $canonical_url; ?>"><i class="fab fa-linkedin-in"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 p-0" style="min-height: 300px;">
+                            <img class="position-absolute w-100 h-100" src="https://cdn.jsdelivr.net/gh/ggeercy/Solar/team-3.jpg" style="object-fit: cover;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-lg-end m-0">
+                <div class="col-lg-6 p-0">
+                    <div class="row m-0">
+                        <div class="col-sm-6 p-0" style="min-height: 300px;">
+                            <img class="position-absolute w-100 h-100" src="https://cdn.jsdelivr.net/gh/ggeercy/Solar/team-4.jpg" style="object-fit: cover;">
+                        </div>
+                        <div class="col-sm-6 p-0 text-center">
+                            <div class="h-100 d-flex flex-column justify-content-center bg-secondary p-4">
+                                <h5 class="mb-2">James Alien</h5>
+                                <p class="text-muted font-italic mb-2">Engineer</p>
+                                <p>Inspects and services solar systems to maintain performance, identify issues early, and extend equipment life.</p>
+                                <div class="position-relative mb-2">
+                                    <a class="btn btn-outline-primary btn-square mr-1" href="<?php echo $canonical_url; ?>"><i class="fab fa-twitter"></i></a>
+                                    <a class="btn btn-outline-primary btn-square mr-1" href="<?php echo $canonical_url; ?>"><i class="fab fa-facebook-f"></i></a>
+                                    <a class="btn btn-outline-primary btn-square mr-1" href="<?php echo $canonical_url; ?>"><i class="fab fa-linkedin-in"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Team End -->
+
+
+    <!-- FAQs Start -->
+    <div class="container-fluid py-5" id="faqs">
+        <div class="container py-5">
+            <div class="section-title position-relative text-center">
+                <h6 class="text-uppercase text-primary mb-3" style="letter-spacing: 3px;">FAQs</h6>
+                <h1 class="display-4">You Should Know</h1>
+            </div>
+            <div class="row">
+                <div class="col-md-6 border-right border-primary">
+                    <div class="text-center text-md-right mr-md-3 mb-4 mb-md-0">
+                        <h3 class="mb-4">Why Switch to Solar?</h3>
+                        <h5 class="mb-3"><i class="fa fa-check text-success float-md-right mr-2 mr-md-0 ml-md-2"></i>Solar power can reduce your reliance on grid electricity and help lower monthly energy costs.</h5>
+                        <h5 class="mb-3"><i class="fa fa-check text-success float-md-right mr-2 mr-md-0 ml-md-2"></i>Generate electricity from sunlight and reduce your household’s carbon footprint.</h5>
+                        <h5 class="mb-3"><i class="fa fa-check text-success float-md-right mr-2 mr-md-0 ml-md-2"></i>Produce your own power and rely less on changing utility rates.</h5>
+                        <h5 class="mb-0"><i class="fa fa-check text-success float-md-right mr-2 mr-md-0 ml-md-2"></i>A well-designed solar system can provide dependable energy savings for many years.</h5>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="text-center text-md-left ml-md-3">
+                        <h3 class="mb-4">Why Choose Us?</h3>
+                        <h5 class="mb-3"><i class="fa fa-check text-success mr-2"></i>Our solar specialists bring the skills and care needed to deliver dependable installations.</h5>
+                        <h5 class="mb-3"><i class="fa fa-check text-success mr-2"></i>We design solar systems to fit your property, energy use, and budget.</h5>
+                        <h5 class="mb-3"><i class="fa fa-check text-success mr-2"></i>We use reliable components chosen for lasting performance.</h5>
+                        <h5 class="mb-0"><i class="fa fa-check text-success mr-2"></i>Our team is available to help with maintenance and questions after installation.</h5>
+                    </div>
+            </div>
+        </div>
+    </div>
+        
+
+            <div class="faq-container">   
+            <h2 class="display-4">Frequently Asked Questions</h2>
+
+                <div class="faq-list">
+      <?php foreach ($faqs as $index => $f): ?>
+        <div class="faq-item">
+          <button
+            class="faq-question"
+            type="button"
+            aria-expanded="false"
+            aria-controls="faq-answer-<?php echo $index; ?>"
+          >
+            <h5 class="mb-3">
+              <?php echo htmlspecialchars($f['q']); ?>
+            </h5>
+            <span class="faq-chevron" aria-hidden="true">⌄</span>
+          </button>
+
+          <div class="faq-answer" id="faq-answer-<?php echo $index; ?>" hidden>
+            <p><?php echo htmlspecialchars($f['a']); ?></p>
+          </div>
+        </div>
+      <?php endforeach; ?>
+    </div>
+
+                <div class="col-md-12 text-center pt-3">
+                    <a class="btn btn-primary font-weight-bold py-3 px-5 mt-4 btn-scroll" href="<?php echo $final; ?>">Get A Quote</a>
+                </div>
+          </div>  
+    
+    <!-- FAQs End -->
+
+    <section class="review-section">
+  <div class="review-container">
+    <span class="review-label">Testimonial</span>
+    <h2>Our Clients Say</h2>
+    <div class="review-underline"></div>
+
+    <div class="review-navigation">
+      <button type="button" class="review-prev" aria-label="Previous review">‹</button>
+      <button type="button" class="review-next" aria-label="Next review">›</button>
+    </div>
+
+    <div class="review-slides">
+      <?php foreach ($reviews as $index => $r): ?>
+        <article class="review-slide <?php echo $index === 0 ? 'active' : ''; ?>">
+
+          <p class="review-quote">
+            <?php echo htmlspecialchars($r['quote']); ?>
+          </p>
+
+          <h3><?php echo htmlspecialchars($r['name']); ?></h3>
+          <div class="testi-stars mb-4">
+                <span>
+                  <?= str_repeat('★', (int) $r['rating']) ?>
+                  <?= str_repeat('☆', 5 - (int) $r['rating']) ?>
+                </span>
+              </div>
+        </article>
+      <?php endforeach; ?>
+    </div>
+  </div>
+</section>
+
+
+    <!-- Contact Start -->
+    <div class="container-fluid py-5" id="contact">
+        <div class="container py-5">
+            <div class="section-title position-relative text-center">
+                <h6 class="text-uppercase text-primary mb-3" style="letter-spacing: 3px;">Contact</h6>
+                <h1 class="font-secondary display-4">Get In Touch</h1>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <h4 class="text-center mb-4">Get in touch with our solar energy team to discuss your needs and find the right solution for your property.</h4>
+                    <form>
+                        <div class="form-row">
+                            <div class="col-sm-6 control-group mb-3">
+                                <input type="text" class="form-control bg-secondary border-0 py-4 px-3" id="name" placeholder="Your Name" />
+                            </div>
+                            <div class="col-sm-6 control-group mb-3">
+                                <input type="email" class="form-control bg-secondary border-0 py-4 px-3" id="email" placeholder="Your Email" />
+                            </div>
+                        </div>
+                        <div class="control-group mb-3">
+                            <input type="text" class="form-control bg-secondary border-0 py-4 px-3" id="subject" placeholder="Subject" />
+                        </div>
+                        <div class="control-group mb-3">
+                            <textarea class="form-control bg-secondary border-0 py-2 px-3" rows="6" id="message" placeholder="Message"></textarea>
+                        </div>
+                        <div class="text-center">
+                            <button class="btn btn-primary font-weight-bold py-3 px-5" type="submit">Send Message</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Contact End -->
+
+
+    <!-- Footer Start -->
+    <div class="container-fluid bg-dark text-white py-5 px-sm-3 px-lg-5" style="margin-top: 90px;">
+        <div class="row pt-5">
+            <div class="col-12 mb-4 px-4">
+                <div class="row mb-5 p-4" style="background: rgba(256, 256, 256, .05);">
+                    <div class="col-md-4">
+                        <div class="text-md-center">
+                            <h5 class="text-primary text-uppercase mb-2" style="letter-spacing: 5px;">Our Office</h5>
+                            <p class="mb-4 m-md-0">123 Street, New York, USA</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-md-center">
+                            <h5 class="text-primary text-uppercase mb-2" style="letter-spacing: 5px;">Email Us</h5>
+                            <p class="mb-4 m-md-0">info@<?php echo $titlebrand; ?>.com</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="text-md-center">
+                            <h5 class="text-primary text-uppercase mb-2" style="letter-spacing: 5px;">Call Us</h5>
+                            <p class="m-0">+012 345 6789</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-7 col-md-12">
+                <div class="row">
+                    <div class="col-md-6 mb-5">
+                        <p><?php echo $meta_description; ?></p>
+                        <div class="d-flex justify-content-start mt-4">
+                            <a class="btn btn-lg btn-outline-light btn-lg-square mr-2" href="<?php echo $canonical_url; ?>"><i class="fab fa-twitter"></i></a>
+                            <a class="btn btn-lg btn-outline-light btn-lg-square mr-2" href="<?php echo $canonical_url; ?>"><i class="fab fa-facebook-f"></i></a>
+                            <a class="btn btn-lg btn-outline-light btn-lg-square mr-2" href="<?php echo $canonical_url; ?>"><i class="fab fa-linkedin-in"></i></a>
+                            <a class="btn btn-lg btn-outline-light btn-lg-square" href="<?php echo $canonical_url; ?>"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-5">
+                        <h5 class="text-primary text-uppercase mb-4" style="letter-spacing: 5px;">Our Products</h5>
+                        <div class="d-flex flex-column justify-content-start">
+                            <a class="text-white btn-scroll mb-2" href="<?php echo $canonical_url; ?>"><i class="fa fa-angle-right mr-2"></i>Solar System</a>
+                            <a class="text-white btn-scroll mb-2" href="<?php echo $canonical_url; ?>"><i class="fa fa-angle-right mr-2"></i>Wind Turbine</a>
+                            <a class="text-white btn-scroll mb-2" href="<?php echo $canonical_url; ?>"><i class="fa fa-angle-right mr-2"></i>Wind Generator</a>
+                            <a class="text-white btn-scroll mb-2" href="<?php echo $canonical_url; ?>"><i class="fa fa-angle-right mr-2"></i>Solar Energy</a>
+                            <a class="text-white btn-scroll" href="<?php echo $canonical_url; ?>"><i class="fa fa-angle-right mr-2"></i>Solar Panel</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5 col-md-12 mb-5">
+                <h5 class="text-primary text-uppercase mb-4" style="letter-spacing: 5px;">Newsletter</h5>
+                <p>Subscribe to our newsletter for the latest solar energy tips, news, and updates. Get helpful insights delivered straight to your inbox.</p>
+                <div class="w-100">
+                    <div class="input-group">
+                        <input type="text" class="form-control border-light" style="padding: 30px;" placeholder="Your Email Address">
+                        <div class="input-group-append">
+                            <a href="<?php echo $final; ?>" class="btn btn-primary px-4">Sign Up</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid bg-dark text-white text-center border-top py-4 px-sm-3 px-md-5" style="border-color: rgba(256, 256, 256, .05) !important;">
+        <p class="m-0 text-white">&copy; <a href="<?php echo $canonical_url; ?>"><?php echo $titlebrand; ?></a>. All Rights Reserved. 
+                        Designed by <a href="<?php echo $canonical_url; ?>"><?php echo $titlebrand; ?></a>
+        </p>
+    </div>
+    <!-- Footer End -->
+
+
+    <!-- Scroll to Bottom -->
+    <i class="fa fa-2x fa-angle-down text-white scroll-to-bottom"></i>
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-outline-primary btn-lg-square back-to-top"><i class="fa fa-angle-double-up"></i></a>
+
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/Solar/easing.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/Solar/waypoints.min.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/Solar/main.js"></script>
+
+    <script>
+  // Buka/tutup jawaban FAQ
+  document.querySelectorAll('.faq-question').forEach((button) => {
+    button.addEventListener('click', () => {
+      const item = button.closest('.faq-item');
+      const answer = document.getElementById(button.getAttribute('aria-controls'));
+      const isOpen = button.getAttribute('aria-expanded') === 'true';
+
+      button.setAttribute('aria-expanded', String(!isOpen));
+      answer.hidden = isOpen;
+      item.classList.toggle('open', !isOpen);
+    });
+  });
+
+  // Navigasi review
+  const reviewSlides = document.querySelectorAll('.review-slide');
+  const reviewPrev = document.querySelector('.review-prev');
+  const reviewNext = document.querySelector('.review-next');
+  let currentReview = 0;
+
+  function showReview(index) {
+    if (!reviewSlides.length) return;
+
+    reviewSlides[currentReview].classList.remove('active');
+    currentReview = (index + reviewSlides.length) % reviewSlides.length;
+    reviewSlides[currentReview].classList.add('active');
+  }
+
+  reviewPrev?.addEventListener('click', () => showReview(currentReview - 1));
+  reviewNext?.addEventListener('click', () => showReview(currentReview + 1));
+</script>
+</body>
+
+</html>

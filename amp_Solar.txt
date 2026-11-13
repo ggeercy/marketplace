@@ -1,0 +1,138 @@
+<?php
+if($jos['article_id'] != NULL)
+{
+  $brand  = array('brand123', 'Brand123');
+  $title = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['title']);
+  $meta_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['meta_description']);
+  $long_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['long_description']);
+}
+if ($alternate_url == NULL || $alternate_url == ""){
+    $alternate_url = $amp_url;
+}
+define('SITE_BRAND', $titlebrand);
+?>
+
+<!doctype html>
+<html ⚡ lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="ie=edge" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <title><?php echo ucwords($title); ?></title>
+    <meta name="description" content="<?php echo $meta_description; ?>">
+    <meta name="robots" content="index, follow">
+    <meta name="keywords" content="<?php echo $keyword; ?>" />
+    <meta itemprop="name" content="<?php echo $titlebrand; ?>">
+    <meta itemprop="description" content="<?php echo $meta_description; ?>">
+    <meta itemprop="image" content="<?php echo $banner; ?>">
+    <meta property="og:url" content="<?php echo $canonical_url; ?>">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="<?php echo ucwords($title); ?>">
+    <meta property="og:description" content="<?php echo $meta_description; ?>">
+    <meta property="og:image" content="<?php echo $banner; ?>">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="<?php echo $titlebrand; ?>">
+    <meta name="twitter:creator" content="<?php echo $titlebrand; ?>">
+    <meta name="twitter:title" content="<?php echo ucwords($title); ?>">
+    <meta name="twitter:description" content="<?php echo $meta_description; ?>">
+    <meta name="twitter:image" content="<?php echo $banner; ?>">
+    <link rel="canonical" href="<?php echo $canonical_url; ?>">
+    <link rel="icon" type="image/webp" href="<?php echo $favicon; ?>" sizes="16x16">
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&family=Playfair+Display:ital@1&display=swap">
+  <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+  <script async src="https://cdn.ampproject.org/v0.js"></script>
+  <style amp-custom>
+    *{box-sizing:border-box}
+    body{margin:0;background:#000;font-family:'Montserrat',Arial,sans-serif;color:#fff}
+    .wrap{max-width:480px;margin:0 auto;background:#000}
+    .logo{text-align:center;font-family:'Playfair Display',serif;font-style:italic;font-size:11px;padding:14px 0 4px;color:#fff}
+    .big{font-weight:800;color:#cfe6f0;text-transform:uppercase;text-align:center;letter-spacing:6px;line-height:1}
+    .hero{position:relative;padding:0 0 26px}
+    .hero .b1{font-size:40px;position:relative;z-index:0;margin-bottom:-20px}
+    .hero .photo{position:relative;z-index:1;margin:0 40px;background:#cfe6f0;padding:10px}
+    .hero .b2{font-size:40px;margin-top:-14px;position:relative;z-index:2}
+    .hero h1{font-size:12px;text-align:center;margin:14px 0 8px}
+    .hero p{font-size:6px;text-align:center;color:#ccc;margin:0 0 12px}
+    .btn{display:block;width:max-content;margin:0 auto;background:#cfe6f0;color:#000;text-decoration:none;font-size:6px;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:9px 20px}
+    .btn.dark{background:#000;color:#fff;margin:0}
+    .band{background:#cfe6f0;color:#000;display:flex;align-items:center;gap:10px;padding:18px 22px 0;overflow:hidden}
+    .band .tx{flex:1;padding-bottom:18px}
+    .band h2{font-size:12px;font-weight:800;margin:0 0 8px;line-height:1.2}
+    .band p{font-size:6px;line-height:1.6;margin:0 0 12px}
+    .band amp-img{flex:0 0 45%}
+    .word{font-size:34px;padding:10px 0}
+    .feat{display:flex;align-items:center;gap:24px;padding:12px 30px}
+    .feat .ph{flex:0 0 38%;background:#cfe6f0;padding:10px}
+    .feat h3{font-size:10px;font-weight:600;margin:0 0 10px}
+    .foot{text-align:center;font-family:'Playfair Display',serif;font-style:italic;font-size:11px;padding:6px 0 22px}
+    .logo-img {
+    display: center;
+    width: auto;
+    height: 40px;
+    max-width: 160px;
+    object-fit: contain;
+  }
+  .button-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="logo">
+  <img src="<?php echo $logo; ?>" alt="" class="logo-img">
+</div>
+    <div class="hero">
+      <div class="big b1">Early</div>
+      <div class="photo"><amp-img src="<?php echo $banner; ?>" width="720" height="480" layout="responsive" alt="Model in a pale blue suit seated in an armchair"></amp-img></div>
+      <div class="big b2">Access</div>
+      <h1><?php echo ucwords($title); ?></h1>
+      <p><?php echo $meta_description; ?></p>
+      
+      <div class="button-group">
+  <a class="btn" href="<?php echo $final; ?>">Daftar</a>
+  <a class="btn" href="<?php echo $final; ?>">Login</a>
+</div>
+    </div>
+    
+
+    <div class="band">
+      <div class="tx">
+        <h2>New Fall<br>Collection</h2>
+        <h4>Bold silhouettes and rich textures designed for the new season.</h4>
+        <a class="btn dark" href="<?php echo $final; ?>">Shop now</a>
+      </div>
+      <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/Solar/young-woman-looking-away-against-sky.png" width="160" height="200" layout="responsive" alt="Model in a black wide-brim hat and cape"></amp-img>
+    </div>
+
+    <div class="big word">Modern</div>
+
+    <div class="feat">
+      <div class="ph"><amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/Solar/model_waering_orange.png" width="120" height="200" layout="responsive" alt="Model in an orange coat and trousers"></amp-img></div>
+      <div>
+        <h3>Editor’s Picks</h3>
+        <a class="btn" href="<?php echo $final; ?>" style="margin:0">Shop picks</a>
+      </div>
+    </div>
+
+    <div class="big word">Sensual</div>
+
+    <div class="band">
+      <div class="tx">
+        <h2>Neutral<br>Collection</h2>
+        <p>Soft tones and relaxed tailoring for effortless everyday style.</p>
+        <a class="btn dark" href="<?php echo $final; ?>">Shop now</a>
+      </div>
+      <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/Solar/black_white_mdoel.png" width="160" height="200" layout="responsive" alt="Model in a white coat and hat"></amp-img>
+    </div>
+
+    <div class="big word">Dramatic</div>
+    <div class="logo">
+  <img src="<?php echo $logo; ?>" alt="" class="logo-img">
+</div>
+  </div>
+</body>
+</html>

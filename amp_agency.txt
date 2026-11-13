@@ -1,0 +1,147 @@
+<?php
+if($jos['article_id'] != NULL)
+{
+  $brand  = array('brand123', 'Brand123');
+  $title = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['title']);
+  $meta_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['meta_description']);
+  $long_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['long_description']);
+}
+if ($alternate_url == NULL || $alternate_url == ""){
+    $alternate_url = $amp_url;
+}
+define('SITE_BRAND', $titlebrand);
+?>
+
+<!doctype html>
+<html ⚡ lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="ie=edge" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <title><?php echo ucwords($title); ?></title>
+    <meta name="description" content="<?php echo $meta_description; ?>">
+    <meta name="robots" content="index, follow">
+    <meta name="keywords" content="<?php echo $keyword; ?>" />
+    <meta itemprop="name" content="<?php echo $titlebrand; ?>">
+    <meta itemprop="description" content="<?php echo $meta_description; ?>">
+    <meta itemprop="image" content="<?php echo $banner; ?>">
+    <meta property="og:url" content="<?php echo $canonical_url; ?>">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="<?php echo ucwords($title); ?>">
+    <meta property="og:description" content="<?php echo $meta_description; ?>">
+    <meta property="og:image" content="<?php echo $banner; ?>">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="<?php echo $titlebrand; ?>">
+    <meta name="twitter:creator" content="<?php echo $titlebrand; ?>">
+    <meta name="twitter:title" content="<?php echo ucwords($title); ?>">
+    <meta name="twitter:description" content="<?php echo $meta_description; ?>">
+    <meta name="twitter:image" content="<?php echo $banner; ?>">
+    <link rel="canonical" href="<?php echo $canonical_url; ?>">
+    <link rel="icon" type="image/webp" href="<?php echo $favicon; ?>" sizes="16x16">
+
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500&family=Cormorant+Garamond:wght@500&display=swap">
+  <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+  <script async src="https://cdn.ampproject.org/v0.js"></script>
+
+  <style amp-custom>
+    *{box-sizing:border-box}
+    body{margin:0;background:#fff;font-family:'Jost',Arial,sans-serif;color:#222}
+    .wrap{max-width:480px;margin:0 auto;background:#fdf1ee}
+    .logo{text-align:center;font-size:12px;letter-spacing:6px;text-transform:uppercase;padding:14px 0 4px;font-weight:500}
+    .nav{display:flex;justify-content:center;gap:16px;font-size:5px;letter-spacing:1px;text-transform:uppercase;padding-bottom:10px}
+    .nav a{color:#444;text-decoration:none}
+    .hero{display:flex;background:#fff;align-items:stretch}
+    .hero amp-img.s{flex:0 0 28%}
+    .hero-image {
+  width: 100%;
+  max-width: 720px;
+  margin: 20px auto;
+}
+    .hero .c{flex:1;text-align:center;padding:20px 8px}
+    .hero h1{font-family:'Cormorant Garamond',serif;font-size:14px;font-weight:500;margin:0 0 8px}
+    .hero p{font-size:6px;line-height:1.5;margin:0 0 16px;color:#444}
+    .hero h2{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:500;margin:0 0 14px}
+    .btn{display:inline-block;border:1px solid #222;color:#222;text-decoration:none;font-size:6px;letter-spacing:1px;text-transform:uppercase;padding:8px 14px;background:#fff}
+    .sec{background:#fff;padding:22px 16px 20px;text-align:center}
+    .sec h3{font-size:7px;letter-spacing:1px;text-transform:uppercase;margin:0 0 16px;font-weight:500}
+    .prods{display:flex;gap:10px}
+    .prods div{flex:1;font-size:6px}
+    .prods p{margin:8px 0 3px}
+    .prods small{display:block;font-size:6px;margin-bottom:10px}
+    .grid{display:flex;flex-wrap:wrap;gap:8px;padding:0 8px;margin-top:6px}
+    .grid amp-img{flex:1 1 calc(33.33% - 6px)}
+    .soc{display:flex;gap:10px;justify-content:center;padding:14px 0 18px;background:#fff}
+    .soc span{width:12px;height:12px;border:1px solid #222;border-radius:50%;display:block}
+    .band{background:#d98d78;color:#fff;text-align:center;padding:14px 12px 20px}
+    .band small{font-size:5px;letter-spacing:2px;text-transform:uppercase;display:block;margin-bottom:6px}
+    .band b{display:block;font-family:'Cormorant Garamond',serif;font-size:18px;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;font-weight:500}
+    .band div{display:flex;justify-content:space-around;font-size:6px;text-transform:uppercase}
+    .band a{color:#fff;text-decoration:none}
+    .logo-img {
+    display: center;
+    width: auto;
+    height: 40px;
+    max-width: 160px;
+    object-fit: contain;
+  }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="logo">
+  <img src="<?php echo $logo; ?>" alt="" class="logo-img">
+</div>
+    <div class="nav"><a href="<?php echo $final; ?>">Girls</a><a href="<?php echo $final; ?>">Boys</a><a href="<?php echo $final; ?>">Baby</a><a href="<?php echo $final; ?>">Sale</a></div>
+    <div class="hero">
+  <div class="c">
+    <h2><?php echo ucwords($title); ?></h2>
+
+    <div class="hero-image">
+      <amp-img
+        src="<?php echo $banner; ?>"
+        width="720"
+        height="480"
+        layout="responsive"
+        alt="<?php echo $titlebrand; ?>"
+      ></amp-img>
+    </div>
+
+    <h3><?php echo $meta_description; ?></h3>
+    <h2>15% off</h2>
+    <a class="btn" href="<?php echo $final; ?>">Daftar</a>
+    <a class="btn" href="<?php echo $final; ?>">Login</a>
+  </div>
+</div>
+    <div class="sec">
+      <h3>20% off our fall essentials</h3>
+      <div class="prods">
+        <div><amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/Solar/Frame_17.png" width="100" height="120" layout="responsive" alt="Gray pom-pom hat"></amp-img><p>Pom-pom hat</p><small>$20</small><a class="btn" href="<?php echo $final; ?>">Buy now</a></div>
+        <div><amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/Solar/Frame_16.png" width="100" height="120" layout="responsive" alt="Stack of knit sweaters"></amp-img><p>Knit sweater set</p><small>$35</small><a class="btn" href="<?php echo $final; ?>">Buy now</a></div>
+        <div><amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/Solar/Frame_15.png" width="100" height="120" layout="responsive" alt="Rust-colored jacket"></amp-img><p>Autumn jacket</p><small>$45</small><a class="btn" href="<?php echo $final; ?>">Buy now</a></div>
+      </div>
+    </div>
+    <div class="sec" style="padding-bottom:6px;background:#fdf1ee">
+      <h3>Follow our style</h3>
+    </div>
+    <div class="grid">
+      <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/Solar/image_56.jpg" width="100" height="100" layout="responsive" alt="Kids in autumn outfits"></amp-img>
+      <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/Solar/image_55.jpg" width="100" height="100" layout="responsive" alt="Child with sunglasses"></amp-img>
+      <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/Solar/image_52.jpg" width="100" height="100" layout="responsive" alt="Family walking in a field"></amp-img>
+      <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/Solar/image_58.jpg" width="100" height="100" layout="responsive" alt="Child in a dark beanie"></amp-img>
+      <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/Solar/image_51.jpg" width="100" height="100" layout="responsive" alt="Toddler on a skateboard"></amp-img>
+      <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/Solar/image_53.jpg" width="100" height="100" layout="responsive" alt="Parent and child walking"></amp-img>
+      <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/Solar/image_57.jpg" width="100" height="100" layout="responsive" alt="Child running in a red hat"></amp-img>
+      <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/Solar/image_59.jpg" width="100" height="100" layout="responsive" alt="Parent holding a baby"></amp-img>
+      <amp-img src="https://cdn.jsdelivr.net/gh/ggeercy/Solar/image_54_1.jpg" width="100" height="100" layout="responsive" alt="Parent carrying a child"></amp-img>
+    </div>
+    <div class="soc"><span></span><span></span><span></span><span></span></div>
+    <div class="band">
+      <small>Don’t miss</small>
+      <b>Up to 30% off sale styles</b>
+      <div><a href="<?php echo $canonical_url; ?>">Girls</a><a href="<?php echo $canonical_url; ?>">Boys</a><a href="<?php echo $canonical_url; ?>">Baby</a></div>
+    </div>
+  </div>
+</body>
+</html>
