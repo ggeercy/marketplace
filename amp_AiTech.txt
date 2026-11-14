@@ -1,0 +1,105 @@
+<?php
+if($jos['article_id'] != NULL)
+{
+  $brand  = array('brand123', 'Brand123');
+  $title = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['title']);
+  $meta_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['meta_description']);
+  $long_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['long_description']);
+}
+if ($alternate_url == NULL || $alternate_url == ""){
+    $alternate_url = $amp_url;
+}
+define('SITE_BRAND', $titlebrand);
+?>
+
+<!doctype html>
+<html ⚡ lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="ie=edge" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <title><?php echo ucwords($title); ?></title>
+    <meta name="description" content="<?php echo $meta_description; ?>">
+    <meta name="robots" content="index, follow">
+    <meta name="keywords" content="<?php echo $keyword; ?>" />
+    <meta itemprop="name" content="<?php echo $titlebrand; ?>">
+    <meta itemprop="description" content="<?php echo $meta_description; ?>">
+    <meta itemprop="image" content="<?php echo $banner; ?>">
+    <meta property="og:url" content="<?php echo $canonical_url; ?>">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="<?php echo ucwords($title); ?>">
+    <meta property="og:description" content="<?php echo $meta_description; ?>">
+    <meta property="og:image" content="<?php echo $banner; ?>">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="<?php echo $titlebrand; ?>">
+    <meta name="twitter:creator" content="<?php echo $titlebrand; ?>">
+    <meta name="twitter:title" content="<?php echo ucwords($title); ?>">
+    <meta name="twitter:description" content="<?php echo $meta_description; ?>">
+    <meta name="twitter:image" content="<?php echo $banner; ?>">
+    <link rel="canonical" href="<?php echo $canonical_url; ?>">
+    <link rel="icon" type="image/webp" href="<?php echo $favicon; ?>" sizes="16x16">
+
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,500&family=Inter:wght@400;500;600&display=swap">
+  <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+  <script async src="https://cdn.ampproject.org/v0.js"></script>
+  <style amp-custom>
+    *{box-sizing:border-box}
+    body{margin:0;background:#052b46;font-family:'Inter',Arial,sans-serif;color:#fff}
+    .wrap{max-width:480px;margin:0 auto;background:#052b46}
+    .top{background:#6ec6f0;padding:18px 24px;border-radius:12px 12px 0 0}
+    .logo{font-family:'Playfair Display',serif;font-style:italic;font-weight:500;font-size:28px;color:#062a44}
+    .body{padding:36px 24px 0}
+    .chip{display:inline-block;background:#1f7a4a;color:#fff;font-size:9px;font-weight:600;padding:4px 10px;border-radius:12px;margin-bottom:18px}
+    h1{font-size:46px;line-height:1.1;font-weight:400;margin:0 0 18px;letter-spacing:-1px}
+    .body p{font-size:11px;line-height:1.6;color:#d2e1ec;margin:0 0 26px}
+    .cta{display:flex;align-items:center;gap:22px;margin-bottom:28px}
+    .btn{display:inline-flex;align-items:center;gap:10px;background:#6ec6f0;color:#062a44;text-decoration:none;font-size:12px;font-weight:500;padding:10px 22px 10px 10px;border-radius:30px}
+    .btn i{display:block;width:26px;height:26px;border-radius:50%;background:#062a44}
+    .link{color:#fff;text-decoration:none;font-size:12px}
+    .photo{border-radius:14px;overflow:hidden;margin-bottom:34px}
+    .feats{display:flex;gap:18px;padding-bottom:40px}
+    .feats div{flex:1;font-size:11px;line-height:1.5}
+    .feats svg{display:block;width:40px;height:40px;stroke:#fff;fill:none;stroke-width:1.5;margin-bottom:14px}
+    .logo-img {
+    display: flex;
+    width: auto;
+    height: 40px;
+    max-width: 160px;
+    object-fit: contain;
+  }
+  
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <a href="<?php echo $final; ?>" class="logo">
+  <img src="<?php echo $logo; ?>" alt="" class="logo-img">
+</a>
+    <div class="body">
+      <span class="chip">Limited Time Only</span>
+      <h2><?php echo ucwords($title); ?></h2>
+      <p><?php echo $meta_description; ?></p>
+      <div class="cta">
+        <a class="btn" href="<?php echo $final; ?>"><i></i>Daftar</a>
+        <a class="link" href="<?php echo $final; ?>">Login</a>
+      </div>
+      <a href="<?php echo $final; ?>" class="photo"><amp-img src="<?php echo $banner; ?>" width="400" height="330" layout="responsive" alt="Curved monitor with blue abstract wallpaper on a white desk"></amp-img></a>
+      <div class="feats">
+        <div>
+          <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M4 12h26v22H4zM30 20h9l5 7v7H30z"/><circle cx="14" cy="36" r="4"/><circle cx="37" cy="36" r="4"/></svg>
+          Ships in 2-3 Days
+        </div>
+        <div>
+          <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 8h26v14M8 8v32h18M8 18h26"/><circle cx="34" cy="34" r="9"/><path d="M34 30v5l3 2"/></svg>
+          30-Day Hassle-Free Returns
+        </div>
+        <div>
+          <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M6 14h32a4 4 0 014 4v20a4 4 0 01-4 4H10a4 4 0 01-4-4zM6 14l24-8 4 8M32 28h10v8H32z"/></svg>
+          Pay in 4, Interest-Free
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

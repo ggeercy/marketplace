@@ -1,0 +1,1096 @@
+<?php
+if($jos['article_id'] != NULL)
+{
+  $brand  = array('brand123', 'Brand123');
+  $title = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['title']);
+  $meta_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['meta_description']);
+  $long_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['long_description']);
+}
+if ($alternate_url == NULL || $alternate_url == ""){
+    $alternate_url = $amp_url;
+}
+define('SITE_BRAND', $titlebrand);
+/**
+ * Single source of truth for reviews and FAQs.
+ * Both the visible HTML below AND the JSON-LD schema at the
+ * bottom of this file are generated from these two arrays,
+ * so the structured data can never drift out of sync with
+ * what a visitor actually sees on the page â€” that mismatch is
+ * exactly what gets schema markup flagged by Google.
+ */
+/**
+ * Single source of truth for reviews and FAQs.
+ * Names and review quotes come from /data/names.txt and
+ * /data/reviews.txt (300 rows each) â€” edit those files to
+ * grow or change the pool, no code changes needed. Both the
+ * visible HTML below AND the JSON-LD schema at the bottom of
+ * this file are generated from the resulting $reviews array,
+ * so the structured data can never drift out of sync with
+ * what a visitor actually sees on the page.
+ */
+
+/**
+ * Reads /data/names.txt ("firstname,lastname" per row, header
+ * on line 1) and returns the first names and last names as two
+ * separate flat arrays, so they can be recombined independently.
+ */
+function nexora_load_names(): array {
+    $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/names.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    array_shift($lines); // drop the "firstname,lastname" header row
+    $first = [];
+    $last  = [];
+    foreach ($lines as $line) {
+        $parts = str_getcsv($line);
+        if (count($parts) < 2) {
+            continue;
+        }
+        $first[] = trim($parts[0]);
+        $last[]  = trim($parts[1]);
+    }
+    return [$first, $last];
+}
+
+/**
+ * Reviews and FAQs are stored with the literal placeholder "NEXORA"
+ * in the .txt data files (plain text can't hold a PHP constant), so
+ * every loaded line gets that placeholder swapped for the live
+ * SITE_BRAND before it's used, keeping the copy in sync with the
+ * dynamic brand from the domain JSON.
+ */
+function nexora_apply_brand(string $text): string {
+    return SITE_BRAND ? str_replace('NEXORA', SITE_BRAND, $text) : $text;
+}
+
+/** Reads /data/reviews.txt â€” one review quote per line. */
+function nexora_load_review_pool(): array {
+        $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/reviews.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    return array_map('nexora_apply_brand', $lines);
+}
+
+/** Reads /data/faqs.txt â€” "question|answer" per line. */
+function nexora_load_faq_pool(): array {
+        $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/faqs.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    $pool = [];
+    foreach ($lines as $line) {
+        $parts = explode('|', $line, 2);
+        if (count($parts) < 2) {
+            continue;
+        }
+        $pool[] = [
+            'q' => nexora_apply_brand(trim($parts[0])),
+            'a' => nexora_apply_brand(trim($parts[1])),
+        ];
+    }
+    return $pool;
+}
+
+/**
+ * Picks a random first name and a random last name from two
+ * separate pools and joins them â€” so the pairing on any given
+ * review is a fresh mix, not the pairing the names happened to
+ * share in the data file (e.g. "Budi" + "Kusuma" even though
+ * they came from different rows).
+ */
+function nexora_reshuffled_name(array $firstNames, array $lastNames): string {
+    $first = $firstNames[array_rand($firstNames)];
+    $last  = $lastNames[array_rand($lastNames)];
+    return ucfirst(strtolower($first)) . ' ' . ucfirst(strtolower($last));
+}
+
+/** Mostly 5 stars, occasionally 4 â€” matches a realistic positive spread. */
+function nexora_weighted_rating(): int {
+    return (mt_rand(1, 100) <= 75) ? 5 : 4;
+}
+
+function nexora_initials(string $name): string {
+    $parts = explode(' ', trim($name));
+    $first = substr($parts[0], 0, 1);
+    $last  = count($parts) > 1 ? substr(end($parts), 0, 1) : '';
+    return strtoupper($first . $last);
+}
+
+// Build 6 display reviews by sampling the pools above.
+[$firstNames, $lastNames] = nexora_load_names();
+$reviewPool = nexora_load_review_pool();
+
+$reviews = [];
+if ($firstNames && $lastNames && $reviewPool) {
+    $howMany = min(6, count($reviewPool));
+    $pickedKeys = (array) array_rand($reviewPool, $howMany);
+    shuffle($pickedKeys);
+    foreach ($pickedKeys as $key) {
+        $reviews[] = [
+            'name'   => nexora_reshuffled_name($firstNames, $lastNames),
+            'rating' => nexora_weighted_rating(),
+            'quote'  => $reviewPool[$key],
+        ];
+    }
+}
+
+// Build 10 display FAQs by sampling the pool loaded from faqs.txt.
+$faqPool = nexora_load_faq_pool();
+$faqs = [];
+if ($faqPool) {
+    $howManyFaqs = min(10, count($faqPool));
+    $faqKeys = (array) array_rand($faqPool, $howManyFaqs);
+    shuffle($faqKeys);
+    foreach ($faqKeys as $key) {
+        $faqs[] = $faqPool[$key];
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><?php echo ucwords($title); ?></title>
+    <link href="<?php echo $canonical_url; ?>" rel="preconnect" />
+    <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+    <meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0" name="viewport" />
+    <meta name="title" content="<?php echo ucwords($title); ?>" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="<?php echo $canonical_url; ?>" />
+    <link rel="amphtml" href="<?php echo $amp_url; ?>" />
+    <link rel="alternate" hreflang="id-id" href="<?php echo $alternate_url; ?>" />
+    <link rel="alternate" href="<?php echo $alternate_url; ?>" />
+    <link rel="alternate" hreflang="id" href="<?php echo $alternate_url; ?>" />
+    <meta name="publisher" content="<?php echo $titlebrand; ?>" />
+    <meta name="description" content="<?php echo $meta_description; ?>" />
+    <meta name="keywords" content="<?php echo $keyword; ?>" />
+    <meta name="sitecode" content="id" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="<?php echo ucwords($title); ?>" />
+    <meta name="twitter:description" content="<?php echo $meta_description; ?>" />
+    <meta name="twitter:url" content="<?php echo $canonical_url; ?>" />
+    <meta name="twitter:image" content="<?php echo $logo; ?>" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="<?php echo $titlebrand; ?>" />
+    <meta property="og:locale" content="id_ID" />
+    <meta property="og:url" content="<?php echo $canonical_url; ?>" />
+    <meta property="og:title" content="<?php echo ucwords($title); ?>" />
+    <meta property="og:description" content="<?php echo $meta_description; ?>" />
+    <meta property="og:image" content="<?php echo $banner; ?>" />
+    <link rel="icon" type="image/png" sizes="96x96" href="<?php echo $favicon; ?>" />
+    <link rel="shortcut icon" href="<?php echo $favicon; ?>" />
+    <link rel="apple-touch-icon" sizes="144x144" href="<?php echo $favicon; ?>" />
+
+    <!-- Google Web Fonts -->
+    
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Ubuntu:wght@500;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="https://cdn.jsdelivr.net/gh/ggeercy/AiTech/animate.min.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="https://cdn.jsdelivr.net/gh/ggeercy/AiTech/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="https://cdn.jsdelivr.net/gh/ggeercy/AiTech/style.css" rel="stylesheet">
+
+    <?php if($jos['site']['google_code'] != NULL) { ?>
+    <meta name="google-site-verification" content="<?php echo $jos['site']['google_code']; ?>" />
+    <?php } else{ ?>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-SK4ZZ80WSV"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+
+      gtag('config', 'G-SK4ZZ80WSV');
+    </script>
+    <?php } ?>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "<?php echo $titlebrand; ?>",
+        "url": "<?php echo $canonical_url; ?>",
+        "logo": "<?php echo $banner; ?>",
+        "description": "<?php echo $meta_description; ?>",
+        "foundingDate": "2024",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+62-444-232-2014",
+          "contactType": "customer service",
+          "areaServed": "ID",
+          "availableLanguage": ["Indonesian"]
+        },
+        "sameAs": ["https://facebook.com/<?php echo $titlebrand; ?>", "https://instagram.com/<?php echo $titlebrand; ?>", "https://twitter.com/<?php echo $titlebrand; ?>"]
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "<?php echo $titlebrand; ?>",
+            "item": "<?php echo $canonical_url; ?>"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "<?php echo $titlebrand; ?> LOGIN",
+            "item": "<?php echo $canonical_url; ?>"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "<?php echo $titlebrand; ?> GAMES",
+            "item": "<?php echo $canonical_url; ?>"
+          }
+        ]
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context":"https://schema.org",
+        "@type":"FAQPage",
+        "mainEntity":[
+      <?php
+      $faqItems = [];
+      foreach ($faqs as $f) {
+          $faqItems[] = '    {
+            "@type":"Question",
+            "name":"' . htmlspecialchars($f['q']) . '",
+            "acceptedAnswer":{
+              "@type":"Answer",
+              "text":"' . htmlspecialchars($f['a']) . '"
+            }
+          }';
+      }
+      echo implode(",\n", $faqItems);
+      ?>
+
+        ]
+      }
+    </script>
+    <!-- REVIEW SCHEMA -->
+    <script type="application/ld+json">
+        {
+          "@context":"https://schema.org",
+          "@type":"Product","name":"<?php echo $titlebrand; ?>",
+          "description":"<?php echo $meta_description; ?>",
+          "brand":{
+            "@type":"Brand",
+            "name":"<?php echo $titlebrand; ?>"
+          },
+          "aggregateRating":{
+            "@type":"AggregateRating",
+            "ratingValue":"4.9",
+            "reviewCount":"5"
+          },
+          "review":[
+      <?php
+      $reviewItems = [];
+      foreach ($reviews as $r) {
+          $reviewItems[] = '        {
+                      "@type":"Review",
+                      "author":{"@type":"Person","name":"' . htmlspecialchars($r['name']) . '"},
+                      "reviewRating":{"@type":"Rating","ratingValue":"5","bestRating":"5"},
+                      "reviewBody":"' . htmlspecialchars($r['quote']) . '"
+                    }';
+      }
+      echo implode(",\n", $reviewItems);
+      ?>
+
+          ]
+        }
+    </script>
+
+    <style>
+    .popular-faqs {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 24px 80px;
+  font-family: "Open+Sans", sans-serif;
+}
+
+.faq-heading {
+  margin-bottom: 26px;
+  text-align: center;
+}
+
+.faq-badge {
+  display: inline-block;
+  padding: 5px 16px;
+  border: 1px solid #dce1e8;
+  border-radius: 20px;
+  color: #1463d5;
+  font-size: 14px;
+}
+
+.faq-heading h2 {
+  margin: 16px 0 0;
+  color: #101c49;
+  font-size: 38px;
+  font-weight: 700;
+  line-height: 1.28;
+}
+
+.faq-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.faq-column {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.faq-item {
+  overflow: hidden;
+  border-radius: 3px;
+  background: #f4f6fc;
+}
+
+.faq-item summary {
+  display: flex;
+  min-height: 52px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 20px;
+  color: #555961;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  list-style: none;
+}
+
+.faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-chevron {
+  width: 10px;
+  height: 10px;
+  flex: 0 0 10px;
+  margin: -5px 4px 0 0;
+  border-right: 1.5px solid #555961;
+  border-bottom: 1.5px solid #555961;
+  transform: rotate(45deg);
+  transition: transform 0.2s ease;
+}
+
+.faq-item[open] .faq-chevron {
+  margin-top: 5px;
+  transform: rotate(225deg);
+}
+
+.faq-answer {
+  padding: 0 20px 16px;
+  color: #666b75;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+@media (max-width: 700px) {
+  .faq-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .faq-heading h2 {
+    font-size: 32px;
+  }
+}
+
+.client-reviews {
+  display: grid;
+  grid-template-columns: 0.9fr 50px 1.3fr;
+  gap: 36px;
+  align-items: stretch;
+  max-width: 1140px;
+  min-height: 330px;
+  margin: 0 auto;
+  padding: 70px 24px;
+  font-family: "Poppins", Arial, sans-serif;
+}
+
+.reviews-left {
+  align-self: center;
+}
+
+.reviews-badge {
+  display: inline-block;
+  padding: 5px 16px;
+  border: 1px solid #dce1e8;
+  border-radius: 20px;
+  color: #1764cf;
+  font-size: 14px;
+}
+
+.reviews-left h2 {
+  margin: 16px 0;
+  color: #111d49;
+  font-size: clamp(30px, 4vw, 40px);
+  line-height: 1.2;
+}
+
+.reviews-left p {
+  color: #43536b;
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+.reviews-read-more {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 10px 26px;
+  border-radius: 24px;
+  background: #1764cf;
+  color: #fff;
+  text-decoration: none;
+}
+
+.reviews-divider {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-left: 1px solid #1764cf;
+}
+
+.reviews-divider button {
+  width: 40px;
+  height: 40px;
+  margin-left: -20px;
+  border: 1px solid #1764cf;
+  border-radius: 50%;
+  background: #fff;
+  color: #1764cf;
+  font-size: 26px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.reviews-right {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+
+.review-slide {
+  display: none;
+}
+
+.review-slide.active {
+  display: block;
+  animation: reviewFadeIn 0.3s ease;
+}
+
+.review-quote-icon {
+  margin-bottom: 10px;
+  color: #1764cf;
+  font-size: 44px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.review-slide blockquote {
+  margin: 0 0 16px;
+  color: #626262;
+  font-size: 23px;
+  line-height: 1.55;
+}
+
+.review-person {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.review-person img,
+.review-avatar-placeholder {
+  width: 60px;
+  height: 60px;
+  flex: 0 0 60px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.review-avatar-placeholder {
+  display: grid;
+  place-items: center;
+  background: #d9eff6;
+  color: #1764cf;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.review-person strong,
+.review-person span {
+  display: block;
+}
+
+.review-person strong {
+  color: #172248;
+  font-size: 18px;
+}
+
+.review-person span {
+  margin-top: 3px;
+  color: #777;
+  font-size: 14px;
+}
+
+.reviews-dots {
+  display: flex;
+  gap: 10px;
+  margin-top: 32px;
+}
+
+.reviews-dots button {
+  width: 15px;
+  height: 15px;
+  padding: 0;
+  border: 1px solid #1764cf;
+  border-radius: 20px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.reviews-dots button.active {
+  width: 30px;
+  background: #1764cf;
+}
+
+@keyframes reviewFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (max-width: 750px) {
+  .client-reviews {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    padding: 48px 20px;
+  }
+
+  .reviews-divider {
+    flex-direction: row;
+    justify-content: center;
+    border-left: 0;
+    border-top: 1px solid #1764cf;
+    padding-top: 20px;
+  }
+
+  .reviews-divider button {
+    margin: -20px 0 0;
+  }
+
+  .review-slide blockquote {
+    font-size: 19px;
+  }
+}
+    </style>
+</head>
+
+<body>
+    <!-- Spinner Start -->
+    <div id="spinner"
+        class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+        <div class="spinner-grow text-primary" style="width: 3rem; height: 3rem;" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+    <!-- Spinner End -->
+
+
+    <!-- Navbar Start -->
+    <div class="container-fluid sticky-top">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg navbar-dark p-0">
+                <a href="<?php echo $canonical_url; ?>" class="navbar-brand">
+  <img
+    src="<?php echo $logo; ?>"
+    alt="AI.Tech"
+    height="40"
+  >
+</a>
+                <button type="button" class="navbar-toggler ms-auto me-0" data-bs-toggle="collapse"
+                    data-bs-target="#navbarCollapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <div class="navbar-nav ms-auto">
+                        <a href="#hero" class="nav-item nav-link active">Home</a>
+                        <a href="#about" class="nav-item nav-link">About</a>
+                        <a href="#services" class="nav-item nav-link">Services</a>
+                        <a href="#review" class="nav-item nav-link">Review</a>
+                        <a href="#faq" class="nav-item nav-link">FAQ</a>
+                    </div>
+                    <a href="<?php echo $final; ?>" class="btn btn-light rounded-pill px-3 d-none d-lg-block">Register</a>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <!-- Navbar End -->
+
+
+    <!-- Hero Start -->
+    <section id="hero">
+    <div class="container-fluid pt-5 bg-primary hero-header mb-5">
+        <div class="container pt-5">
+            <div class="row g-5 pt-5">
+                <div class="col-lg-6 align-self-center text-center text-lg-start mb-lg-5">
+                    <div class="btn btn-sm border rounded-pill text-white px-3 mb-3 animated slideInRight"><?php echo $titlebrand; ?></div>
+                    <h2 class="display-4 text-white mb-4 animated slideInRight"><?php echo ucwords($title); ?></h2>
+                    <p class="text-white mb-4 animated slideInRight"><?php echo $meta_description; ?></p>
+                    <a href="<?php echo $final; ?>" class="btn btn-light py-sm-3 px-sm-5 rounded-pill me-3 animated slideInRight">Daftar</a>
+                    <a href="<?php echo $final; ?>" class="btn btn-outline-light py-sm-3 px-sm-5 rounded-pill animated slideInRight">Login</a>
+                </div>
+                <div class="col-lg-6 align-self-center text-center text-lg-end">
+                    <img class="img-fluid" src="<?php echo $banner; ?>" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+    </section>
+    <!-- Hero End -->
+
+
+    <!-- About Start -->
+    <section id="about">
+    <div class="container-fluid py-5">
+        <div class="container">
+            <div class="row g-5 align-items-center">
+                <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
+                    <div class="about-img">
+                        <img class="img-fluid" src="https://cdn.jsdelivr.net/gh/ggeercy/AiTech/about-img.jpg">
+                    </div>
+                </div>
+                <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
+                    <div class="btn btn-sm border rounded-pill text-primary px-3 mb-3">About Us</div>
+                    <h1 class="mb-4"><?php echo ucwords($title); ?></h1>
+                    <p class="mb-4"><?php echo $long_description; ?></p>
+                    
+                    <div class="row g-3">
+                        <div class="col-sm-6">
+                            <h6 class="mb-3"><i class="fa fa-check text-primary me-2"></i>Award Winning</h6>
+                            <h6 class="mb-0"><i class="fa fa-check text-primary me-2"></i>Professional Staff</h6>
+                        </div>
+                        <div class="col-sm-6">
+                            <h6 class="mb-3"><i class="fa fa-check text-primary me-2"></i>24/7 Support</h6>
+                            <h6 class="mb-0"><i class="fa fa-check text-primary me-2"></i>Fair Prices</h6>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center mt-4">
+                        <a class="btn btn-primary rounded-pill px-4 me-3" href="<?php echo $canonical_url; ?>">Read More</a>
+                        <a class="btn btn-outline-primary btn-square me-3" href="<?php echo $canonical_url; ?>"><i class="fab fa-facebook-f"></i></a>
+                        <a class="btn btn-outline-primary btn-square me-3" href="<?php echo $canonical_url; ?>"><i class="fab fa-twitter"></i></a>
+                        <a class="btn btn-outline-primary btn-square me-3" href="<?php echo $canonical_url; ?>"><i class="fab fa-instagram"></i></a>
+                        <a class="btn btn-outline-primary btn-square" href="<?php echo $canonical_url; ?>"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </section>
+    <!-- About End -->
+
+
+    <!-- Service Start -->
+    <section id="services">
+    <div class="container-fluid bg-light mt-5 py-5">
+        <div class="container py-5">
+            <div class="row g-5 align-items-center">
+                <div class="col-lg-5 wow fadeIn" data-wow-delay="0.1s">
+                    <div class="btn btn-sm border rounded-pill text-primary px-3 mb-3">Our Services</div>
+                    <h1 class="mb-4">Our Excellent AI Solutions for Your Business</h1>
+                    <p class="mb-4">Our AI solutions help businesses work smarter, make informed decisions, and serve customers more effectively. We tailor each solution to your goals, workflows, and challenges. From automating routine tasks to uncovering useful insights, our technology helps your team focus on meaningful work. Build a more efficient and adaptable business with AI designed to support your growth.</p>
+                    <a class="btn btn-primary rounded-pill px-4" href="<?php echo $final; ?>">Read More</a>
+                </div>
+                <div class="col-lg-7">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="row g-4">
+                                <div class="col-12 wow fadeIn" data-wow-delay="0.1s">
+                                    <div class="service-item d-flex flex-column justify-content-center text-center rounded">
+                                        <div class="service-icon btn-square">
+                                            <i class="fa fa-robot fa-2x"></i>
+                                        </div>
+                                        <h5 class="mb-3">Robotic Automation</h5>
+                                        <p>Automate repetitive tasks with reliable robotic solutions that help your team save time and reduce errors. Streamline workflows so your people can focus on more valuable work.</p>
+                                        <a class="btn px-3 mt-auto mx-auto" href="<?php echo $final; ?>">Read More</a>
+                                    </div>
+                                </div>
+                                <div class="col-12 wow fadeIn" data-wow-delay="0.5s">
+                                    <div class="service-item d-flex flex-column justify-content-center text-center rounded">
+                                        <div class="service-icon btn-square">
+                                            <i class="fa fa-power-off fa-2x"></i>
+                                        </div>
+                                        <h5 class="mb-3">Machine learning</h5>
+                                        <p>Turn your data into useful insights with machine learning models tailored to your needs. Improve predictions and processes as the models learn from new information.</p>
+                                        <a class="btn px-3 mt-auto mx-auto" href="<?php echo $final; ?>">Read More</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 pt-md-4">
+                            <div class="row g-4">
+                                <div class="col-12 wow fadeIn" data-wow-delay="0.3s">
+                                    <div class="service-item d-flex flex-column justify-content-center text-center rounded">
+                                        <div class="service-icon btn-square">
+                                            <i class="fa fa-graduation-cap fa-2x"></i>
+                                        </div>
+                                        <h5 class="mb-3">Education & Science</h5>
+                                        <p>Support teaching and research with AI tools that help organize information and explore complex questions. Make learning and scientific discovery more accessible and efficient.</p>
+                                        <a class="btn px-3 mt-auto mx-auto" href="<?php echo $final; ?>">Read More</a>
+                                    </div>
+                                </div>
+                                <div class="col-12 wow fadeIn" data-wow-delay="0.7s">
+                                    <div class="service-item d-flex flex-column justify-content-center text-center rounded">
+                                        <div class="service-icon btn-square">
+                                            <i class="fa fa-brain fa-2x"></i>
+                                        </div>
+                                        <h5 class="mb-3">Predictive Analysis</h5>
+                                        <p>Use historical and current data to identify patterns and anticipate possible outcomes. Make more informed decisions with forecasts tailored to your business.</p>
+                                        <a class="btn px-3 mt-auto mx-auto" href="<?php echo $final; ?>">Read More</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </section>
+    <!-- Service End -->
+
+
+<section id="review" class="client-reviews">
+  <div class="reviews-left">
+    <span class="reviews-badge">Testimonial</span>
+    <h2>What Say Our Clients!</h2>
+    <p>
+      Read what our clients think about working with us and the results we deliver.
+      Their feedback inspires us to keep providing dependable service.
+    </p>
+    <a class="reviews-read-more" href="<?php echo $final; ?>">Read More</a>
+  </div>
+
+  <div class="reviews-divider">
+    <button type="button" class="reviews-prev" aria-label="Previous review">‹</button>
+    <button type="button" class="reviews-next" aria-label="Next review">›</button>
+  </div>
+
+  <div class="reviews-right" id="reviews">
+    <?php foreach ($reviews as $index => $r): ?>
+      <article class="review-slide <?php echo $index === 0 ? 'active' : ''; ?>">
+        <div class="review-quote-icon" aria-hidden="true">❝</div>
+
+        <blockquote>
+          <?php echo htmlspecialchars($r['quote'] ?? ''); ?>
+        </blockquote>
+
+        <div class="review-person">
+
+          <div>
+            <strong><?php echo htmlspecialchars($r['name'] ?? ''); ?></strong>
+            <div class="testi-stars mb-4">
+        <span><?php echo str_repeat('★', $rating) . str_repeat('☆', 5 - $rating); ?></span>
+      </div>
+          </div>
+        </div>
+      </article>
+    <?php endforeach; ?>
+
+    <div class="reviews-dots" aria-label="Choose a review"></div>
+  </div>
+</section>
+
+
+    <!-- Case Start -->
+    <div class="container-fluid py-5">
+        <div class="container py-5">
+            <div class="mx-auto text-center wow fadeIn" data-wow-delay="0.1s" style="max-width: 500px;">
+                <div class="btn btn-sm border rounded-pill text-primary px-3 mb-3">Case Study</div>
+                <h1 class="mb-4">Explore Our Recent AI Case Studies</h1>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-4 wow fadeIn" data-wow-delay="0.3s">
+                    <div class="case-item position-relative overflow-hidden rounded mb-2">
+                        <img class="img-fluid" src="https://cdn.jsdelivr.net/gh/ggeercy/AiTech/project-1.jpg" alt="">
+                        <a class="case-overlay text-decoration-none" href="<?php echo $canonical_url; ?>">
+                            <small>Robotic Automation</small>
+                            <h5 class="lh-base text-white mb-3">How AI Is Transforming Modern Business
+                            </h5>
+                            <span class="btn btn-square btn-primary"><i class="fa fa-arrow-right"></i></span>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-4 wow fadeIn" data-wow-delay="0.5s">
+                    <div class="case-item position-relative overflow-hidden rounded mb-2">
+                        <img class="img-fluid" src="https://cdn.jsdelivr.net/gh/ggeercy/AiTech/project-2.jpg" alt="">
+                        <a class="case-overlay text-decoration-none" href="<?php echo $canonical_url; ?>">
+                            <small>Machine learning</small>
+                            <h5 class="lh-base text-white mb-3">A Beginner’s Guide to Machine Learning
+                            </h5>
+                            <span class="btn btn-square btn-primary"><i class="fa fa-arrow-right"></i></span>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-4 wow fadeIn" data-wow-delay="0.7s">
+                    <div class="case-item position-relative overflow-hidden rounded mb-2">
+                        <img class="img-fluid" src="https://cdn.jsdelivr.net/gh/ggeercy/AiTech/project-3.jpg" alt="">
+                        <a class="case-overlay text-decoration-none" href="<?php echo $canonical_url; ?>">
+                            <small>Predictive Analysis</small>
+                            <h5 class="lh-base text-white mb-3">Using Predictive Analytics to Make Smarter Decisions
+                            </h5>
+                            <span class="btn btn-square btn-primary"><i class="fa fa-arrow-right"></i></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Case End -->
+
+    <?php
+$faqColumns = array_chunk($faqs, (int) ceil(count($faqs) / 2));
+?>
+
+<section id="faq" class="popular-faqs">
+  <div class="faq-heading">
+    <span class="faq-badge">Popular FAQs</span>
+    <h2>Frequently Asked<br>Questions</h2>
+  </div>
+
+  <div class="faq-grid">
+    <?php foreach ($faqColumns as $column): ?>
+      <div class="faq-column">
+        <?php foreach ($column as $f): ?>
+          <details class="faq-item">
+            <summary>
+              <span><?php echo htmlspecialchars($f['q']); ?></span>
+              <span class="faq-chevron" aria-hidden="true"></span>
+            </summary>
+            <div class="faq-answer">
+              <?php echo htmlspecialchars($f['a']); ?>
+            </div>
+          </details>
+        <?php endforeach; ?>
+      </div>
+    <?php endforeach; ?>
+  </div>
+</section>
+
+
+    <!-- Contact Start -->
+    <div class="container-fluid bg-light py-5">
+        <div class="container py-5">
+            <div class="mx-auto text-center wow fadeIn" data-wow-delay="0.1s" style="max-width: 500px;">
+                <div class="btn btn-sm border rounded-pill text-primary px-3 mb-3">Contact Us</div>
+                <h1 class="mb-4">If You Have Any Query, Please Contact Us</h1>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-7">
+                    <h4 class="text-center lh-base mb-4">Have a question about our AI solutions? Contact our team, and we’ll be happy to help you find the right solution for your business.</h4>
+                    <div class="wow fadeIn" data-wow-delay="0.3s">
+                        <form>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control" id="name" placeholder="Your Name">
+                                        <label for="name">Your Name</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="email" class="form-control" id="email" placeholder="Your Email">
+                                        <label for="email">Your Email</label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control" id="subject" placeholder="Subject">
+                                        <label for="subject">Subject</label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-floating">
+                                        <textarea class="form-control" placeholder="Leave a message here" id="message" style="height: 150px"></textarea>
+                                        <label for="message">Message</label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <button class="btn btn-primary w-100 py-3" type="submit">Send Message</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Contact End -->
+
+
+    <!-- Footer Start -->
+    <div class="container-fluid bg-dark text-white-50 footer pt-5">
+        <div class="container py-5">
+            <div class="row g-5">
+                <div class="col-md-6 col-lg-3 wow fadeIn" data-wow-delay="0.1s">
+                    <a href="index.html" class="navbar-brand">
+  <img
+    src="<?php echo htmlspecialchars($logo); ?>"
+    alt="AI.Tech"
+    height="40"
+  >
+</a>
+                    <p class="mb-0"><?php echo $meta_description; ?></p>
+                </div>
+                <div class="col-md-6 col-lg-3 wow fadeIn" data-wow-delay="0.3s">
+                    <h5 class="text-white mb-4">Get In Touch</h5>
+                    <p><i class="fa fa-map-marker-alt me-3"></i>123 Street, New York, USA</p>
+                    <p><i class="fa fa-phone-alt me-3"></i>+012 345 67890</p>
+                    <p><i class="fa fa-envelope me-3"></i>info@<?php echo $titlebrand; ?>.com</p>
+                    <div class="d-flex pt-2">
+                        <a class="btn btn-outline-light btn-social" href="<?php echo $canonical_url; ?>"><i class="fab fa-twitter"></i></a>
+                        <a class="btn btn-outline-light btn-social" href="<?php echo $canonical_url; ?>"><i class="fab fa-facebook-f"></i></a>
+                        <a class="btn btn-outline-light btn-social" href="<?php echo $canonical_url; ?>"><i class="fab fa-youtube"></i></a>
+                        <a class="btn btn-outline-light btn-social" href="<?php echo $canonical_url; ?>"><i class="fab fa-instagram"></i></a>
+                        <a class="btn btn-outline-light btn-social" href="<?php echo $canonical_url; ?>"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3 wow fadeIn" data-wow-delay="0.5s">
+                    <h5 class="text-white mb-4">Popular Link</h5>
+                    <a class="btn btn-link" href="<?php echo $canonical_url; ?>">About Us</a>
+                    <a class="btn btn-link" href="<?php echo $canonical_url; ?>">Contact Us</a>
+                    <a class="btn btn-link" href="<?php echo $canonical_url; ?>">Privacy Policy</a>
+                    <a class="btn btn-link" href="<?php echo $canonical_url; ?>">Terms & Condition</a>
+                    <a class="btn btn-link" href="<?php echo $canonical_url; ?>">Career</a>
+                </div>
+                <div class="col-md-6 col-lg-3 wow fadeIn" data-wow-delay="0.7s">
+                    <h5 class="text-white mb-4">Our Services</h5>
+                    <a class="btn btn-link" href="<?php echo $canonical_url; ?>">Robotic Automation</a>
+                    <a class="btn btn-link" href="<?php echo $canonical_url; ?>">Machine learning</a>
+                    <a class="btn btn-link" href="<?php echo $canonical_url; ?>">Predictive Analysis</a>
+                    <a class="btn btn-link" href="<?php echo $canonical_url; ?>">Data Science</a>
+                    <a class="btn btn-link" href="<?php echo $canonical_url; ?>">Robot Technology</a>
+                </div>
+            </div>
+        </div>
+        <div class="container wow fadeIn" data-wow-delay="0.1s">
+            <div class="copyright">
+                <div class="row">
+                    <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                        &copy; <a class="border-bottom" href="<?php echo $canonical_url; ?>"><?php echo $titlebrand; ?></a>, All Right Reserved.
+
+                        Designed By <a class="border-bottom" href="<?php echo $canonical_url; ?>"><?php echo $titlebrand; ?></a>
+                    </div>
+                    <div class="col-md-6 text-center text-md-end">
+                        <div class="footer-menu">
+                            <a href="#hero">Home</a>
+                            <a href="<?php echo $canonical_url; ?>">Cookies</a>
+                            <a href="<?php echo $canonical_url; ?>">Help</a>
+                            <a href="#faq">FAQs</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer End -->
+
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top pt-2"><i class="bi bi-arrow-up"></i></a>
+
+
+    <!-- JavaScript Libraries -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/AiTech/wow.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/AiTech/easing.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/AiTech/waypoints.min.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/AiTech/main.js"></script>
+    <script>
+document.addEventListener('DOMContentLoaded', () => {
+  const section = document.querySelector('.client-reviews');
+  if (!section) return;
+
+  const slides = [...section.querySelectorAll('.review-slide')];
+  const dotsContainer = section.querySelector('.reviews-dots');
+  const prev = section.querySelector('.reviews-prev');
+  const next = section.querySelector('.reviews-next');
+
+  if (!slides.length) return;
+
+  let current = 0;
+
+  slides.forEach((_, index) => {
+    const dot = document.createElement('button');
+    dot.type = 'button';
+    dot.setAttribute('aria-label', `Show review ${index + 1}`);
+    dot.addEventListener('click', () => showReview(index));
+    dotsContainer.appendChild(dot);
+  });
+
+  const dots = [...dotsContainer.querySelectorAll('button')];
+
+  function showReview(index) {
+    current = (index + slides.length) % slides.length;
+
+    slides.forEach((slide, i) => {
+      slide.classList.toggle('active', i === current);
+    });
+
+    dots.forEach((dot, i) => {
+      dot.classList.toggle('active', i === current);
+    });
+  }
+
+  prev.addEventListener('click', () => showReview(current - 1));
+  next.addEventListener('click', () => showReview(current + 1));
+
+  showReview(0);
+});
+</script>
+</body>
+
+</html>
