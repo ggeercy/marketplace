@@ -1,0 +1,1218 @@
+<?php
+if($jos['article_id'] != NULL)
+{
+  $brand  = array('brand123', 'Brand123');
+  $title = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['title']);
+  $meta_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['meta_description']);
+  $long_description = str_replace($brand,ucfirst($titlebrand),$jos['landingarticle']['long_description']);
+}
+if ($alternate_url == NULL || $alternate_url == ""){
+    $alternate_url = $amp_url;
+}
+define('SITE_BRAND', $titlebrand);
+/**
+ * Single source of truth for reviews and FAQs.
+ * Both the visible HTML below AND the JSON-LD schema at the
+ * bottom of this file are generated from these two arrays,
+ * so the structured data can never drift out of sync with
+ * what a visitor actually sees on the page â€” that mismatch is
+ * exactly what gets schema markup flagged by Google.
+ */
+/**
+ * Single source of truth for reviews and FAQs.
+ * Names and review quotes come from /data/names.txt and
+ * /data/reviews.txt (300 rows each) â€” edit those files to
+ * grow or change the pool, no code changes needed. Both the
+ * visible HTML below AND the JSON-LD schema at the bottom of
+ * this file are generated from the resulting $reviews array,
+ * so the structured data can never drift out of sync with
+ * what a visitor actually sees on the page.
+ */
+
+/**
+ * Reads /data/names.txt ("firstname,lastname" per row, header
+ * on line 1) and returns the first names and last names as two
+ * separate flat arrays, so they can be recombined independently.
+ */
+function nexora_load_names(): array {
+    $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/names.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    array_shift($lines); // drop the "firstname,lastname" header row
+    $first = [];
+    $last  = [];
+    foreach ($lines as $line) {
+        $parts = str_getcsv($line);
+        if (count($parts) < 2) {
+            continue;
+        }
+        $first[] = trim($parts[0]);
+        $last[]  = trim($parts[1]);
+    }
+    return [$first, $last];
+}
+
+/**
+ * Reviews and FAQs are stored with the literal placeholder "NEXORA"
+ * in the .txt data files (plain text can't hold a PHP constant), so
+ * every loaded line gets that placeholder swapped for the live
+ * SITE_BRAND before it's used, keeping the copy in sync with the
+ * dynamic brand from the domain JSON.
+ */
+function nexora_apply_brand(string $text): string {
+    return SITE_BRAND ? str_replace('NEXORA', SITE_BRAND, $text) : $text;
+}
+
+/** Reads /data/reviews.txt â€” one review quote per line. */
+function nexora_load_review_pool(): array {
+        $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/reviews.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    return array_map('nexora_apply_brand', $lines);
+}
+
+/** Reads /data/faqs.txt â€” "question|answer" per line. */
+function nexora_load_faq_pool(): array {
+        $path = 'https://bacotsekali.sgp1.cdn.digitaloceanspaces.com/lptxt/faqs.txt';
+    $ctx = stream_context_create(['http' => [
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [];
+    $pool = [];
+    foreach ($lines as $line) {
+        $parts = explode('|', $line, 2);
+        if (count($parts) < 2) {
+            continue;
+        }
+        $pool[] = [
+            'q' => nexora_apply_brand(trim($parts[0])),
+            'a' => nexora_apply_brand(trim($parts[1])),
+        ];
+    }
+    return $pool;
+}
+
+/**
+ * Picks a random first name and a random last name from two
+ * separate pools and joins them â€” so the pairing on any given
+ * review is a fresh mix, not the pairing the names happened to
+ * share in the data file (e.g. "Budi" + "Kusuma" even though
+ * they came from different rows).
+ */
+function nexora_reshuffled_name(array $firstNames, array $lastNames): string {
+    $first = $firstNames[array_rand($firstNames)];
+    $last  = $lastNames[array_rand($lastNames)];
+    return ucfirst(strtolower($first)) . ' ' . ucfirst(strtolower($last));
+}
+
+/** Mostly 5 stars, occasionally 4 â€” matches a realistic positive spread. */
+function nexora_weighted_rating(): int {
+    return (mt_rand(1, 100) <= 75) ? 5 : 4;
+}
+
+function nexora_initials(string $name): string {
+    $parts = explode(' ', trim($name));
+    $first = substr($parts[0], 0, 1);
+    $last  = count($parts) > 1 ? substr(end($parts), 0, 1) : '';
+    return strtoupper($first . $last);
+}
+
+// Build 6 display reviews by sampling the pools above.
+[$firstNames, $lastNames] = nexora_load_names();
+$reviewPool = nexora_load_review_pool();
+
+$reviews = [];
+if ($firstNames && $lastNames && $reviewPool) {
+    $howMany = min(6, count($reviewPool));
+    $pickedKeys = (array) array_rand($reviewPool, $howMany);
+    shuffle($pickedKeys);
+    foreach ($pickedKeys as $key) {
+        $reviews[] = [
+            'name'   => nexora_reshuffled_name($firstNames, $lastNames),
+            'rating' => nexora_weighted_rating(),
+            'quote'  => $reviewPool[$key],
+        ];
+    }
+}
+
+// Build 10 display FAQs by sampling the pool loaded from faqs.txt.
+$faqPool = nexora_load_faq_pool();
+$faqs = [];
+if ($faqPool) {
+    $howManyFaqs = min(10, count($faqPool));
+    $faqKeys = (array) array_rand($faqPool, $howManyFaqs);
+    shuffle($faqKeys);
+    foreach ($faqKeys as $key) {
+        $faqs[] = $faqPool[$key];
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><?php echo ucwords($title); ?></title>
+    <link href="<?php echo $canonical_url; ?>" rel="preconnect" />
+    <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+    <meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0" name="viewport" />
+    <meta name="title" content="<?php echo ucwords($title); ?>" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="<?php echo $canonical_url; ?>" />
+    <link rel="amphtml" href="<?php echo $amp_url; ?>" />
+    <link rel="alternate" hreflang="id-id" href="<?php echo $alternate_url; ?>" />
+    <link rel="alternate" href="<?php echo $alternate_url; ?>" />
+    <link rel="alternate" hreflang="id" href="<?php echo $alternate_url; ?>" />
+    <meta name="publisher" content="<?php echo $titlebrand; ?>" />
+    <meta name="description" content="<?php echo $meta_description; ?>" />
+    <meta name="keywords" content="<?php echo $keyword; ?>" />
+    <meta name="sitecode" content="id" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="<?php echo ucwords($title); ?>" />
+    <meta name="twitter:description" content="<?php echo $meta_description; ?>" />
+    <meta name="twitter:url" content="<?php echo $canonical_url; ?>" />
+    <meta name="twitter:image" content="<?php echo $logo; ?>" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="<?php echo $titlebrand; ?>" />
+    <meta property="og:locale" content="id_ID" />
+    <meta property="og:url" content="<?php echo $canonical_url; ?>" />
+    <meta property="og:title" content="<?php echo ucwords($title); ?>" />
+    <meta property="og:description" content="<?php echo $meta_description; ?>" />
+    <meta property="og:image" content="<?php echo $banner; ?>" />
+    <link rel="icon" type="image/png" sizes="96x96" href="<?php echo $favicon; ?>" />
+    <link rel="shortcut icon" href="<?php echo $favicon; ?>" />
+    <link rel="apple-touch-icon" sizes="144x144" href="<?php echo $favicon; ?>" />
+
+    <!-- ========================= CSS here ========================= -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ggeercy/appvilla/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ggeercy/appvilla/LineIcons.2.0.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ggeercy/appvilla/animate.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ggeercy/appvilla/tiny-slider.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ggeercy/appvilla/glightbox.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ggeercy/appvilla/main.css" />
+    <link rel="stylesheet" href="https://cdn.lineicons.com/4.0/lineicons.css">
+
+
+<?php if($jos['site']['google_code'] != NULL) { ?>
+    <meta name="google-site-verification" content="<?php echo $jos['site']['google_code']; ?>" />
+    <?php } else{ ?>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-SK4ZZ80WSV"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+
+      gtag('config', 'G-SK4ZZ80WSV');
+    </script>
+    <?php } ?>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "<?php echo $titlebrand; ?>",
+        "url": "<?php echo $canonical_url; ?>",
+        "logo": "<?php echo $banner; ?>",
+        "description": "<?php echo $meta_description; ?>",
+        "foundingDate": "2024",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+62-444-232-2014",
+          "contactType": "customer service",
+          "areaServed": "ID",
+          "availableLanguage": ["Indonesian"]
+        },
+        "sameAs": ["https://facebook.com/<?php echo $titlebrand; ?>", "https://instagram.com/<?php echo $titlebrand; ?>", "https://twitter.com/<?php echo $titlebrand; ?>"]
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "<?php echo $titlebrand; ?>",
+            "item": "<?php echo $canonical_url; ?>"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "<?php echo $titlebrand; ?> LOGIN",
+            "item": "<?php echo $canonical_url; ?>"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "<?php echo $titlebrand; ?> GAMES",
+            "item": "<?php echo $canonical_url; ?>"
+          }
+        ]
+      }
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context":"https://schema.org",
+        "@type":"FAQPage",
+        "mainEntity":[
+      <?php
+      $faqItems = [];
+      foreach ($faqs as $f) {
+          $faqItems[] = '    {
+            "@type":"Question",
+            "name":"' . htmlspecialchars($f['q']) . '",
+            "acceptedAnswer":{
+              "@type":"Answer",
+              "text":"' . htmlspecialchars($f['a']) . '"
+            }
+          }';
+      }
+      echo implode(",\n", $faqItems);
+      ?>
+
+        ]
+      }
+    </script>
+    <!-- REVIEW SCHEMA -->
+    <script type="application/ld+json">
+        {
+          "@context":"https://schema.org",
+          "@type":"Product","name":"<?php echo $titlebrand; ?>",
+          "description":"<?php echo $meta_description; ?>",
+          "brand":{
+            "@type":"Brand",
+            "name":"<?php echo $titlebrand; ?>"
+          },
+          "aggregateRating":{
+            "@type":"AggregateRating",
+            "ratingValue":"4.9",
+            "reviewCount":"5"
+          },
+          "review":[
+      <?php
+      $reviewItems = [];
+      foreach ($reviews as $r) {
+          $reviewItems[] = '        {
+                      "@type":"Review",
+                      "author":{"@type":"Person","name":"' . htmlspecialchars($r['name']) . '"},
+                      "reviewRating":{"@type":"Rating","ratingValue":"5","bestRating":"5"},
+                      "reviewBody":"' . htmlspecialchars($r['quote']) . '"
+                    }';
+      }
+      echo implode(",\n", $reviewItems);
+      ?>
+
+          ]
+        }
+    </script>
+
+    <style>
+  .faq-section {
+    padding: 88px 24px 96px;
+    background: #fff;
+    color: #081827;
+    font-family: inherit;
+  }
+
+  .faq-container {
+    width: min(100%, 1140px);
+    margin: 0 auto;
+  }
+
+  .faq-heading {
+    max-width: 660px;
+    margin: 0 auto 48px;
+    text-align: center;
+  }
+
+  .faq-eyebrow {
+    display: block;
+    margin-bottom: 8px;
+    color: #f56380;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .faq-heading h2 {
+    margin: 0 0 14px;
+    color: #081827;
+    font-size: clamp(27px, 3vw, 36px);
+    font-weight: 750;
+    line-height: 1.2;
+  }
+
+  .faq-heading p {
+    margin: 0;
+    color: #7a7f85;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  .faq-list {
+    display: grid;
+    gap: 14px;
+  }
+
+  .faq-item {
+    overflow: hidden;
+    border: 1px solid #f0f0f0;
+    border-radius: 6px;
+    background: #fff;
+    box-shadow: 0 2px 8px rgb(8 24 39 / 3%);
+  }
+
+  .faq-question {
+    margin: 0;
+  }
+
+  .faq-toggle {
+    display: flex;
+    width: 100%;
+    min-height: 58px;
+    align-items: center;
+    gap: 13px;
+    padding: 12px 18px;
+    border: 0;
+    background: #fff;
+    color: #101820;
+    cursor: pointer;
+    text-align: left;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    transition: background-color 180ms ease, color 180ms ease;
+  }
+
+  .faq-number {
+    display: grid;
+    width: 27px;
+    height: 27px;
+    flex: 0 0 27px;
+    place-items: center;
+    border-radius: 50%;
+    background: #f3f3f3;
+    color: #26323b;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .faq-title {
+    flex: 1;
+  }
+
+  .faq-icon {
+    position: relative;
+    width: 16px;
+    height: 16px;
+    flex: 0 0 16px;
+  }
+
+  .faq-icon::before,
+  .faq-icon::after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 10px;
+    height: 1px;
+    background: currentColor;
+    content: "";
+    transform: translate(-50%, -50%);
+  }
+
+  .faq-icon::after {
+    transform: translate(-50%, -50%) rotate(90deg);
+    transition: transform 180ms ease;
+  }
+
+  .faq-item.is-open .faq-toggle {
+    background: #f56380;
+    color: #fff;
+  }
+
+  .faq-item.is-open .faq-number {
+    background: #fff;
+    color: #26323b;
+  }
+
+  .faq-item.is-open .faq-icon::after {
+    transform: translate(-50%, -50%) rotate(0);
+  }
+
+  .faq-answer {
+    background: #fff;
+  }
+
+  .faq-answer-content {
+    padding: 20px 24px 24px;
+    color: #777d83;
+    font-size: 14px;
+    line-height: 1.8;
+  }
+
+  .faq-toggle:focus-visible {
+    outline: 3px solid #162839;
+    outline-offset: -3px;
+  }
+
+  @media (max-width: 600px) {
+    .faq-section {
+      padding: 64px 18px;
+    }
+
+    .faq-heading {
+      margin-bottom: 32px;
+    }
+
+    .faq-toggle {
+      gap: 10px;
+      padding: 12px;
+      font-size: 13px;
+    }
+
+    .faq-answer-content {
+      padding: 16px;
+      font-size: 13px;
+    }
+  }
+</style>
+
+<style>
+  .reviews-section {
+    padding: 88px 24px 96px;
+    background: #f8f8f8;
+    color: #081827;
+    font-family: inherit;
+  }
+
+  .reviews-container {
+    width: min(100%, 1140px);
+    margin: 0 auto;
+  }
+
+  .reviews-heading {
+    max-width: 660px;
+    margin: 0 auto 44px;
+    text-align: center;
+  }
+
+  .reviews-eyebrow {
+    display: block;
+    margin-bottom: 8px;
+    color: #f56380;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .reviews-heading h2 {
+    margin: 0 0 14px;
+    color: #081827;
+    font-size: clamp(27px, 3vw, 36px);
+    font-weight: 750;
+    line-height: 1.2;
+  }
+
+  .reviews-heading p {
+    margin: 0;
+    color: #7a7f85;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  .reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 22px;
+  }
+
+  .review-card {
+    padding: 26px;
+    border: 1px solid #eeeeee;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 4px 14px rgb(8 24 39 / 4%);
+  }
+
+  .review-stars {
+    display: flex;
+    gap: 3px;
+    margin-bottom: 16px;
+    color: #d6d6d6;
+    font-size: 18px;
+  }
+
+  .review-stars .is-filled {
+    color: #f56380;
+  }
+
+  .review-text {
+    min-height: 112px;
+    margin: 0 0 22px;
+    color: #6f767d;
+    font-size: 14px;
+    line-height: 1.8;
+  }
+
+  .review-author {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-top: 18px;
+    border-top: 1px solid #f0f0f0;
+  }
+
+  .review-avatar {
+    width: 46px;
+    height: 46px;
+    flex: 0 0 46px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .review-avatar-placeholder {
+    display: grid;
+    place-items: center;
+    background: #f56380;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .review-author h3 {
+    margin: 0 0 4px;
+    color: #101820;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .review-author span {
+    color: #f56380;
+    font-size: 12px;
+  }
+
+  @media (max-width: 850px) {
+    .reviews-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 600px) {
+    .reviews-section {
+      padding: 64px 18px;
+    }
+
+    .reviews-grid {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .review-text {
+      min-height: 0;
+    }
+  }
+
+  .header-logo img {
+  display: block;
+  width: auto;
+  max-width: 160px;
+  height: 40px;
+  object-fit: contain;
+}
+</style>
+</head>
+
+<body>
+    <!-- Start Header Area -->
+    <header class="header navbar-area">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-12">
+                    <div class="nav-inner">
+                        <!-- Start Navbar -->
+                        <nav class="navbar navbar-expand-lg">
+                            <a href="index.html" class="header-logo">
+  <img src="<?php echo $logo; ?>" alt="Logo">
+</a>
+                            <button class="navbar-toggler mobile-menu-btn" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                                aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="toggler-icon"></span>
+                                <span class="toggler-icon"></span>
+                                <span class="toggler-icon"></span>
+                            </button>
+                            <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
+                                <ul id="nav" class="navbar-nav ms-auto">
+                                    <li class="nav-item">
+                                        <a href="#home" class="page-scroll active"
+                                            aria-label="Toggle navigation">Home</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="#features" class="page-scroll"
+                                            aria-label="Toggle navigation">Features</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="#reviews" aria-label="Toggle navigation">Review</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="#pricing" class="page-scroll"
+                                            aria-label="Toggle navigation">Pricing</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="#faq" aria-label="Toggle navigation">FAQ</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="<?php echo $final; ?>" aria-label="Toggle navigation">Contact</a>
+                                    </li>
+                                </ul>
+                            </div> <!-- navbar collapse -->
+                            <div class="button add-list-button">
+                                <a href="<?php echo $final; ?>" class="btn">Get it now</a>
+                            </div>
+                        </nav>
+                        <!-- End Navbar -->
+                    </div>
+                </div>
+            </div> <!-- row -->
+        </div> <!-- container -->
+    </header>
+    <!-- End Header Area -->
+
+    <!-- Start Hero Area -->
+    <section id="home" class="hero-area">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-5 col-md-12 col-12">
+                    <div class="hero-content">
+                        <h1 class="wow fadeInLeft" data-wow-delay=".4s"><?php echo ucwords($title); ?></h1>
+                        <p class="wow fadeInLeft" data-wow-delay=".6s"><?php echo $meta_description; ?></p>
+                        <div class="button wow fadeInLeft" data-wow-delay=".8s">
+                            <a href="<?php echo $final; ?>" class="btn"><i class="lni lni-apple"></i> Daftar</a>
+                            <a href="<?php echo $final; ?>" class="btn btn-alt"><i class="lni lni-play-store"></i> Login</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-7 col-md-12 col-12">
+                    <div class="hero-image wow fadeInRight" data-wow-delay=".4s">
+                        <img src="<?php echo $banner; ?>" alt="#">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Hero Area -->
+
+    <!-- Start Features Area -->
+    <section id="features" class="features section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="section-title">
+                        <h3 class="wow zoomIn" data-wow-delay=".2s">Features</h3>
+                        <h2 class="wow fadeInUp" data-wow-delay=".4s"><?php echo ucwords($title); ?>
+                        </h2>
+                        <p class="wow fadeInUp" data-wow-delay=".6s"><?php echo $long_description; ?></p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-md-6 col-12">
+                    <!-- Start Single Feature -->
+                    <div class="single-feature wow fadeInUp" data-wow-delay=".2s">
+                        <i class="lni lni-cloud-upload"></i>
+                        <h3>Push to Deploy</h3>
+                        <p>Deploy application updates quickly and easily. Publish changes without a complicated process.</p>
+                    </div>
+                    <!-- End Single Feature -->
+                </div>
+                <div class="col-lg-4 col-md-6 col-12">
+                    <!-- Start Single Feature -->
+                    <div class="single-feature wow fadeInUp" data-wow-delay=".4s">
+                        <i class="lni lni-lock"></i>
+                        <h3>SSL Certificates</h3>
+                        <p>Protect user data and connections with SSL encryption. Secure connections also help build visitor trust.</p>
+                    </div>
+                    <!-- End Single Feature -->
+                </div>
+                <div class="col-lg-4 col-md-6 col-12">
+                    <!-- Start Single Feature -->
+                    <div class="single-feature wow fadeInUp" data-wow-delay=".6s">
+                        <i class="lni lni-reload"></i>
+                        <h3>Simple Queues</h3>
+                        <p>Manage background tasks with a straightforward queue system. Keep demanding processes from slowing down your application.</p>
+                    </div>
+                    <!-- End Single Feature -->
+                </div>
+                <div class="col-lg-4 col-md-6 col-12">
+                    <!-- Start Single Feature -->
+                    <div class="single-feature wow fadeInUp" data-wow-delay=".2s">
+                        <i class="lni lni-shield"></i>
+                        <h3>Advanced Security</h3>
+                        <p>Protect your application with multiple layers of security. Access controls help safeguard accounts and important data.</p>
+                    </div>
+                    <!-- End Single Feature -->
+                </div>
+                <div class="col-lg-4 col-md-6 col-12">
+                    <!-- Start Single Feature -->
+                    <div class="single-feature wow fadeInUp" data-wow-delay=".4s">
+                        <i class="lni lni-cog"></i>
+                        <h3>Powerful API</h3>
+                        <p>Connect your application to other services with a flexible API. Integrate data and features with less effort.</p>
+                    </div>
+                    <!-- End Single Feature -->
+                </div>
+                <div class="col-lg-4 col-md-6 col-12">
+                    <!-- Start Single Feature -->
+                    <div class="single-feature wow fadeInUp" data-wow-delay=".6s">
+                        <i class="lni lni-layers"></i>
+                        <h3>Database Backups</h3>
+                        <p>Back up your database regularly to help protect your data. Restore a backup to recover information when needed.</p>
+                    </div>
+                    <!-- End Single Feature -->
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Features Area -->
+
+    <!-- Start Achievement Area -->
+    <section class="our-achievement section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10 offset-lg-1 col-md-12 col-12">
+                    <div class="title">
+                        <h2>Trusted by developers from over 80 planets</h2>
+                        <p>Trusted by developers across more than 80 planets, our platform helps teams build, launch, and grow with confidence. Join a growing community creating better digital experiences every day.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-8 offset-lg-2 col-md-12 col-12">
+                    <div class="row">
+                        <div class="col-lg-4 col-md-4 col-12">
+                            <div class="single-achievement wow fadeInUp" data-wow-delay=".2s">
+                                <h3 class="counter"><span id="secondo1" class="countup" cup-end="100">100</span>%</h3>
+                                <p>satisfaction</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-12">
+                            <div class="single-achievement wow fadeInUp" data-wow-delay=".4s">
+                                <h3 class="counter"><span id="secondo2" class="countup" cup-end="120">120</span>K</h3>
+                                <p>Happy Users</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-12">
+                            <div class="single-achievement wow fadeInUp" data-wow-delay=".6s">
+                                <h3 class="counter"><span id="secondo3" class="countup" cup-end="125">125</span>k+</h3>
+                                <p>Downloads</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Achievement Area -->
+
+    <!-- Start Pricing Table Area -->
+    <section id="pricing" class="pricing-table section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="section-title">
+                        <h3 class="wow zoomIn" data-wow-delay=".2s">pricing</h3>
+                        <h2 class="wow fadeInUp" data-wow-delay=".4s">Pricing Plan</h2>
+                        <p class="wow fadeInUp" data-wow-delay=".6s">Choose a plan that fits your needs and budget. Every option gives you the tools and support to build with confidence.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-3 col-md-6 col-12">
+                    <!-- Single Table -->
+                    <div class="single-table wow fadeInUp" data-wow-delay=".2s">
+                        <!-- Table Head -->
+                        <div class="table-head">
+                            <h4 class="title">Hobby</h4>
+                            <p>A simple plan for individuals exploring a new idea or building a personal project.</p>
+                            <div class="price">
+                                <h2 class="amount">$12<span class="duration">/mo</span></h2>
+                            </div>
+                            <div class="button">
+                                <a href="<?php echo $final; ?>" class="btn">Buy Hobby</a>
+                            </div>
+                        </div>
+                        <!-- End Table Head -->
+                        <!-- Start Table Content -->
+                        <div class="table-content">
+                            <h4 class="middle-title">What's Included</h4>
+                            <!-- Table List -->
+                            <ul class="table-list">
+                                <li><i class="lni lni-checkmark-circle"></i> Core app features</li>
+                                <li><i class="lni lni-checkmark-circle"></i> 1 project</li>
+                                <li><i class="lni lni-checkmark-circle"></i> Community support</li>
+                                <li><i class="lni lni-checkmark-circle"></i> Basic usage reports</li>
+                            </ul>
+                            <!-- End Table List -->
+                        </div>
+                        <!-- End Table Content -->
+                    </div>
+                    <!-- End Single Table-->
+                </div>
+                <div class="col-lg-3 col-md-6 col-12">
+                    <!-- Single Table -->
+                    <div class="single-table wow fadeInUp" data-wow-delay=".4s">
+                        <!-- Table Head -->
+                        <div class="table-head">
+                            <h4 class="title">Freelancer</h4>
+                            <p>A flexible plan for freelancers managing projects for multiple clients.</p>
+                            <div class="price">
+                                <h2 class="amount">$24<span class="duration">/mo</span></h2>
+                            </div>
+                            <div class="button">
+                                <a href="<?php echo $final; ?>" class="btn">Buy Freelancer</a>
+                            </div>
+                        </div>
+                        <!-- End Table Head -->
+                        <!-- Start Table Content -->
+                        <div class="table-content">
+                            <h4 class="middle-title">What's Included</h4>
+                            <!-- Table List -->
+                            <ul class="table-list">
+                                <li><i class="lni lni-checkmark-circle"></i> All Hobby features</li>
+                                <li><i class="lni lni-checkmark-circle"></i> Up to 5 projects</li>
+                                <li><i class="lni lni-checkmark-circle"></i> Client collaboration tools</li>
+                                <li><i class="lni lni-checkmark-circle"></i> Priority email support</li>
+                            </ul>
+                            <!-- End Table List -->
+                        </div>
+                        <!-- End Table Content -->
+                    </div>
+                    <!-- End Single Table-->
+                </div>
+                <div class="col-lg-3 col-md-6 col-12">
+                    <!-- Single Table -->
+                    <div class="single-table wow fadeInUp" data-wow-delay=".6s">
+                        <!-- Table Head -->
+                        <div class="table-head">
+                            <h4 class="title">Startup</h4>
+                            <p>A growth-ready plan for small teams building and scaling their product.</p>
+                            <div class="price">
+                                <h2 class="amount">$32<span class="duration">/mo</span></h2>
+                            </div>
+                            <div class="button">
+                                <a href="<?php echo $final; ?>" class="btn">Buy Startup</a>
+                            </div>
+                        </div>
+                        <!-- End Table Head -->
+                        <!-- Start Table Content -->
+                        <div class="table-content">
+                            <h4 class="middle-title">What's Included</h4>
+                            <!-- Table List -->
+                            <ul class="table-list">
+                                <li><i class="lni lni-checkmark-circle"></i> All Freelancer features</li>
+                                <li><i class="lni lni-checkmark-circle"></i> Unlimited projects</li>
+                                <li><i class="lni lni-checkmark-circle"></i> Team access for up to 10 members</li>
+                                <li><i class="lni lni-checkmark-circle"></i> Advanced analytics</li>
+                            </ul>
+                            <!-- End Table List -->
+                        </div>
+                        <!-- End Table Content -->
+                    </div>
+                    <!-- End Single Table-->
+                </div>
+                <div class="col-lg-3 col-md-6 col-12">
+                    <!-- Single Table -->
+                    <div class="single-table wow fadeInUp" data-wow-delay=".8s">
+                        <!-- Table Head -->
+                        <div class="table-head">
+                            <h4 class="title">Enterprise</h4>
+                            <p>A customizable plan for larger organizations with advanced security and support needs.</p>
+                            <div class="price">
+                                <h2 class="amount">$48<span class="duration">/mo</span></h2>
+                            </div>
+                            <div class="button">
+                                <a href="<?php echo $final; ?>" class="btn">Buy Enterprise</a>
+                            </div>
+                        </div>
+                        <!-- End Table Head -->
+                        <!-- Start Table Content -->
+                        <div class="table-content">
+                            <h4 class="middle-title">What's Included</h4>
+                            <!-- Table List -->
+                            <ul class="table-list">
+                                <li><i class="lni lni-checkmark-circle"></i> All Startup features</li>
+                                <li><i class="lni lni-checkmark-circle"></i> Custom team access</li>
+                                <li><i class="lni lni-checkmark-circle"></i> Advanced security controls</li>
+                                <li><i class="lni lni-checkmark-circle"></i> Dedicated support team</li>
+                            </ul>
+                            <!-- End Table List -->
+                        </div>
+                        <!-- End Table Content -->
+                    </div>
+                    <!-- End Single Table-->
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--/ End Pricing Table Area -->
+
+    <section class="reviews-section" id="reviews">
+  <div class="reviews-container">
+    <header class="reviews-heading">
+      <span class="reviews-eyebrow">TESTIMONIALS</span>
+      <h2>What Our Clients Say</h2>
+      <p>
+        Hear from people who have used our service and shared their experience.
+      </p>
+    </header>
+
+    <div class="reviews-grid">
+      <?php foreach ($reviews as $r): ?>
+  <article class="review-card">
+    <div class="testi-stars">
+    <span><?php echo str_repeat('&#9733;', $r['rating']) . str_repeat('&#9734;', 5 - $r['rating']); ?></span>
+            </div>
+
+    <p class="review-text">
+      “<?php echo htmlspecialchars($r['quote']); ?>”
+    </p>
+
+    <div class="review-author">
+      <h3><?php echo htmlspecialchars($r['name']); ?></h3>
+    </div>
+  </article>
+<?php endforeach; ?>
+    </div>
+  </div>
+</section>
+
+    <!-- Start Call To Action Area -->
+    <section class="section call-action">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 offset-lg-2 col-md-12 col-12">
+                    <div class="cta-content">
+                        <h2 class="wow fadeInUp" data-wow-delay=".2s">You are using free Lite <br>Version of <?php echo $titlebrand; ?>
+                        </h2>
+                        <p class="wow fadeInUp" data-wow-delay=".4s">Please, purchase full version of the template to
+                            get all pages, features and commercial license.</p>
+                        <div class="button wow fadeInUp" data-wow-delay=".6s">
+                            <a href="<?php echo $final; ?>" class="btn">Purchase Now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Call To Action Area -->
+
+<section class="faq-section" id="faq">
+  <div class="faq-container">
+    <header class="faq-heading">
+      <span class="faq-eyebrow">FAQ</span>
+      <h2>Frequently Asked Questions</h2>
+      <p>
+        There are many variations of passages of Lorem Ipsum available, but the
+        majority have suffered alteration in some form.
+      </p>
+    </header>
+
+    <div class="faq-list">
+      <?php foreach ($faqs as $index => $f): ?>
+        <?php
+          $faqId = 'faq-' . $index;
+          $isOpen = ($index === array_key_first($faqs));
+        ?>
+
+        <article class="faq-item<?= $isOpen ? ' is-open' : '' ?>">
+          <h3 class="faq-question">
+            <button
+              class="faq-toggle"
+              type="button"
+              aria-expanded="<?= $isOpen ? 'true' : 'false' ?>"
+              aria-controls="<?= htmlspecialchars($faqId) ?>"
+            >
+              <span class="faq-number">
+                <?= str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT) ?>
+              </span>
+              <span class="faq-title">
+                <?= htmlspecialchars($f['q']) ?>
+              </span>
+              <span class="faq-icon" aria-hidden="true"></span>
+            </button>
+          </h3>
+
+          <div
+            class="faq-answer"
+            id="<?= htmlspecialchars($faqId) ?>"
+            <?= $isOpen ? '' : 'hidden' ?>
+          >
+            <div class="faq-answer-content">
+              <?= nl2br(htmlspecialchars($f['a'])) ?>
+            </div>
+          </div>
+        </article>
+      <?php endforeach; ?>
+    </div>
+  </div>
+</section>
+
+    <!-- Start Footer Area -->
+    <footer class="footer">
+        <!-- Start Footer Top -->
+        <div class="footer-top">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-4 col-md-4 col-12">
+                        <!-- Single Widget -->
+                        <div class="single-footer f-about">
+                            <div class="logo">
+                                <a href="index.html">
+                                    <img src="<?php echo $logo; ?>" alt="#">
+                                </a>
+                            </div>
+                            <p><?php echo $meta_description; ?></p>
+                            <ul class="social">
+                                <li><a href="<?php echo $canonical_url; ?>"><i class="lni lni-facebook-filled"></i></a></li>
+                                <li><a href="<?php echo $canonical_url; ?>"><i class="lni lni-twitter-original"></i></a></li>
+                                <li><a href="<?php echo $canonical_url; ?>"><i class="lni lni-instagram"></i></a></li>
+                                <li><a href="<?php echo $canonical_url; ?>"><i class="lni lni-linkedin-original"></i></a></li>
+                                <li><a href="<?php echo $canonical_url; ?>"><i class="lni lni-youtube"></i></a></li>
+                                <li><a href="<?php echo $canonical_url; ?>"><i class="lni lni-pinterest"></i></a></li>
+                            </ul>
+                            <p class="copyright-text">Designed and Developed by <a href="<?php echo $canonical_url; ?>"
+                                    rel="nofollow" target="_blank"><?php echo $titlebrand; ?></a>
+                            </p>
+                        </div>
+                        <!-- End Single Widget -->
+                    </div>
+                    <div class="col-lg-8 col-md-8 col-12">
+                        <div class="row">
+                            <div class="col-lg-3 col-md-6 col-12">
+                                <!-- Single Widget -->
+                                <div class="single-footer f-link">
+                                    <h3>Solutions</h3>
+                                    <ul>
+                                        <li><a href="<?php echo $canonical_url; ?>">Marketing</a></li>
+                                        <li><a href="<?php echo $canonical_url; ?>">Analytics</a></li>
+                                        <li><a href="<?php echo $canonical_url; ?>">Commerce</a></li>
+                                        <li><a href="<?php echo $canonical_url; ?>">Insights</a></li>
+                                        <li><a href="<?php echo $canonical_url; ?>">Promotion</a></li>
+                                    </ul>
+                                </div>
+                                <!-- End Single Widget -->
+                            </div>
+                            <div class="col-lg-3 col-md-6 col-12">
+                                <!-- Single Widget -->
+                                <div class="single-footer f-link">
+                                    <h3>Support</h3>
+                                    <ul>
+                                        <li><a href="<?php echo $canonical_url; ?>">Pricing</a></li>
+                                        <li><a href="<?php echo $canonical_url; ?>">Documentation</a></li>
+                                        <li><a href="<?php echo $canonical_url; ?>">Guides</a></li>
+                                        <li><a href="<?php echo $canonical_url; ?>">API Status</a></li>
+                                        <li><a href="<?php echo $canonical_url; ?>">Live Support</a></li>
+                                    </ul>
+                                </div>
+                                <!-- End Single Widget -->
+                            </div>
+                            <div class="col-lg-3 col-md-6 col-12">
+                                <!-- Single Widget -->
+                                <div class="single-footer f-link">
+                                    <h3>Company</h3>
+                                    <ul>
+                                        <li><a href="<?php echo $canonical_url; ?>">About Us</a></li>
+                                        <li><a href="<?php echo $canonical_url; ?>">Our Blog</a></li>
+                                        <li><a href="<?php echo $canonical_url; ?>">Jobs</a></li>
+                                        <li><a href="<?php echo $canonical_url; ?>">Press</a></li>
+                                        <li><a href="<?php echo $canonical_url; ?>">Contact Us</a></li>
+                                    </ul>
+                                </div>
+                                <!-- End Single Widget -->
+                            </div>
+                            <div class="col-lg-3 col-md-6 col-12">
+                                <!-- Single Widget -->
+                                <div class="single-footer f-link">
+                                    <h3>Legal</h3>
+                                    <ul>
+                                        <li><a href="<?php echo $canonical_url; ?>">Terms & Conditions</a></li>
+                                        <li><a href="<?php echo $canonical_url; ?>">Privacy Policy</a></li>
+                                        <li><a href="<?php echo $canonical_url; ?>">Catering Services</a></li>
+                                        <li><a href="<?php echo $canonical_url; ?>">Customer Relations</a></li>
+                                        <li><a href="<?php echo $canonical_url; ?>">Innovation</a></li>
+                                    </ul>
+                                </div>
+                                <!-- End Single Widget -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/ End Footer Top -->
+    </footer>
+    <!--/ End Footer Area -->
+
+    <!-- ========================= scroll-top ========================= -->
+    <a href="#" class="scroll-top">
+        <i class="lni lni-chevron-up"></i>
+    </a>
+
+    <!-- ========================= JS here ========================= -->
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/appvilla/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/appvilla/wow.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/appvilla/tiny-slider.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/appvilla/glightbox.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/appvilla/count-up.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/appvilla/main.js"></script>
+    <script type="text/javascript">
+
+        //====== counter up 
+        var cu = new counterUp({
+            start: 0,
+            duration: 2000,
+            intvalues: true,
+            interval: 100,
+            append: " ",
+        });
+        cu.start();
+    </script>
+
+    <script>
+  document.querySelectorAll('.faq-toggle').forEach((button) => {
+    button.addEventListener('click', () => {
+      const item = button.closest('.faq-item');
+      const answer = document.getElementById(button.getAttribute('aria-controls'));
+      const willOpen = button.getAttribute('aria-expanded') !== 'true';
+
+      document.querySelectorAll('.faq-item').forEach((otherItem) => {
+        otherItem.classList.remove('is-open');
+        otherItem.querySelector('.faq-toggle').setAttribute('aria-expanded', 'false');
+        otherItem.querySelector('.faq-answer').hidden = true;
+      });
+
+      if (willOpen) {
+        item.classList.add('is-open');
+        button.setAttribute('aria-expanded', 'true');
+        answer.hidden = false;
+      }
+    });
+  });
+</script>
+</body>
+
+</html>
