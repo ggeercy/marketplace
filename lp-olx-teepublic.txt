@@ -156,7 +156,7 @@ if ($faqPool) {
 ?>
 
 <!DOCTYPE html>
-<html data-theme='default'>
+<html lang="id">
 <head>
 <meta charset='utf-8'>
     <title><?php echo ucwords($title); ?></title>

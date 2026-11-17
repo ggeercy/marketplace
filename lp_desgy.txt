@@ -156,7 +156,7 @@ if ($faqPool) {
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="id">
 
 <head>
   <meta charSet="utf-8" />
@@ -169,10 +169,12 @@ if ($faqPool) {
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="<?php echo $canonical_url; ?>" />
     <link rel="amphtml" href="<?php echo $amp_url; ?>" />
-    <link rel="alternate" hreflang="id-id" href="<?php echo $alternate_url; ?>" />
-    <link rel="alternate" href="<?php echo $alternate_url; ?>" />
-    <link rel="alternate" hreflang="id" href="<?php echo $alternate_url; ?>" />
-    <meta name="publisher" content="<?php echo $titlebrand; ?>" />
+    <link rel="alternate" href="<?php echo $alternate_url; ?>"/>
+    <link rel="alternate" hreflang="id" href="<?php echo $alternate_url; ?>"/>
+    <link rel="alternate" hreflang="id-id" href="<?php echo $alternate_url; ?>"/>
+    <link rel="alternate" hreflang="en" href="<?php echo $alternate_url; ?>"/>
+    <link rel="alternate" hreflang="es-co" href="<?php echo $alternate_url; ?>" />
+    <link rel="alternate" hreflang="x-default" href="<?php echo $alternate_url; ?>" />
     <meta name="description" content="<?php echo $meta_description; ?>" />
     <meta name="keywords" content="<?php echo $keyword; ?>" />
     <meta name="sitecode" content="id" />

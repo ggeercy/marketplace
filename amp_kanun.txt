@@ -13,7 +13,7 @@ define('SITE_BRAND', $titlebrand);
 ?>
 
 <!doctype html>
-<html ⚡ lang="en">
+<html ⚡ lang="id">
 <head>
   <meta charset="utf-8">
   <title><?php echo ucwords($title); ?></title>
@@ -24,8 +24,6 @@ define('SITE_BRAND', $titlebrand);
   <link rel="shortcut icon" href="<?php echo $favicon; ?>" />
   <link rel="apple-touch-icon" sizes="144x144" href="<?php echo $favicon; ?>" />
 
-
-  <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital@1&family=Montserrat:wght@400;500&display=swap">
   <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
   <script async src="https://cdn.ampproject.org/v0.js"></script>

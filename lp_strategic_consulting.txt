@@ -156,7 +156,7 @@ if ($faqPool) {
 ?>
 
 <!doctype html>
-<html lang="en">
+<html lang="id">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -168,10 +168,12 @@ if ($faqPool) {
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="<?php echo $canonical_url; ?>" />
     <link rel="amphtml" href="<?php echo $amp_url; ?>" />
-    <link rel="alternate" hreflang="id-id" href="<?php echo $alternate_url; ?>" />
-    <link rel="alternate" href="<?php echo $alternate_url; ?>" />
-    <link rel="alternate" hreflang="id" href="<?php echo $alternate_url; ?>" />
-    <meta name="publisher" content="<?php echo $titlebrand; ?>" />
+    <link rel="alternate" href="<?php echo $alternate_url; ?>"/>
+    <link rel="alternate" hreflang="id" href="<?php echo $alternate_url; ?>"/>
+    <link rel="alternate" hreflang="id-id" href="<?php echo $alternate_url; ?>"/>
+    <link rel="alternate" hreflang="en" href="<?php echo $alternate_url; ?>"/>
+    <link rel="alternate" hreflang="es-co" href="<?php echo $alternate_url; ?>" />
+    <link rel="alternate" hreflang="x-default" href="<?php echo $alternate_url; ?>" />
     <meta name="description" content="<?php echo $meta_description; ?>" />
     <meta name="keywords" content="<?php echo $keyword; ?>" />
     <meta name="sitecode" content="id" />
@@ -190,7 +192,7 @@ if ($faqPool) {
     <link rel="icon" type="image/png" sizes="96x96" href="<?php echo $favicon; ?>" />
     <link rel="shortcut icon" href="<?php echo $favicon; ?>" />
     <link rel="apple-touch-icon" sizes="144x144" href="<?php echo $favicon; ?>" />
-    <link rel="stylesheet" href="http://cdn.jsdelivr.net/gh/ggeercy/clearewave/tooplate-strategic-style.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ggeercy/clearewave/tooplate-strategic-style.css" />
 
     <?php if($jos['site']['google_code'] != NULL) { ?>
     <meta name="google-site-verification" content="<?php echo $jos['site']['google_code']; ?>" />
@@ -891,7 +893,7 @@ if ($faqPool) {
       </div>
     </footer>
 
-    <script src="http://cdn.jsdelivr.net/gh/ggeercy/clearewave/tooplate-strategic-scripts.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/ggeercy/clearewave/tooplate-strategic-scripts.js"></script>
     <script>
       document.addEventListener('DOMContentLoaded', function () {
         const toggleButton = document.getElementById('shopFaqToggle');
