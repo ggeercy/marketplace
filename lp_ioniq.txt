@@ -321,6 +321,14 @@ if ($faqPool) {
           ]
         }
     </script>
+    <style>
+    .image-containerr img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+</style>
 
   </head>
   <body data-bs-spy="scroll" data-bs-target="#navbarExample">
@@ -388,8 +396,8 @@ if ($faqPool) {
           </div>
           <!-- end of col -->
           <div class="col-lg-6">
-            <div class="image-container">
-              <img class="img-fluid" src="https://cdn.jsdelivr.net/gh/ggeercy/ioniq/header-illustration.svg" alt="alternative" />
+            <div class="image-containerr">
+              <img class="img-fluid" src="<?php echo $banner; ?>" alt="alternative" />
             </div>
             <!-- end of image-container -->
           </div>

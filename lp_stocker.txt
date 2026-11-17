@@ -410,7 +410,7 @@ if ($faqPool) {
       <!-- Carousel Start -->
       <div class="header-carousel owl-carousel">
         <div class="header-carousel-item">
-          <img src="https://cdn.jsdelivr.net/gh/ggeercy/stocker/carousel-1.jpg" class="img-fluid w-100" alt="Image" />
+          <img src="<?php echo $banner; ?>" class="img-fluid w-100" alt="Image" />
           <div class="carousel-caption">
             <div class="container">
               <div class="row gy-0 gx-5">
@@ -440,7 +440,7 @@ if ($faqPool) {
           </div>
         </div>
         <div class="header-carousel-item">
-          <img src="https://cdn.jsdelivr.net/gh/ggeercy/stocker/carousel-2.jpg" class="img-fluid w-100" alt="Image" />
+          <img src="<?php echo $banner; ?>" class="img-fluid w-100" alt="Image" />
           <div class="carousel-caption">
             <div class="container">
               <div class="row g-5">

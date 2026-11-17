@@ -329,6 +329,99 @@ if ($faqPool) {
           ]
         }
     </script>
+
+    <style>
+    .heroo {
+  width: 100%;
+  min-height: 75vh;
+  position: relative;
+  padding: 60px 0;
+  display: flex;
+  align-items: center;
+  background: url("<?php echo $banner; ?>") top left / cover no-repeat;
+  isolation: isolate;
+}
+
+.heroo::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 24px;
+}
+
+.btn-get-started,
+.btn-login {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 26px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.2s ease, color 0.2s ease,
+              border-color 0.2s ease, transform 0.2s ease,
+              box-shadow 0.2s ease;
+}
+
+.btn-get-started {
+  color: #fff;
+  background: #2563eb;
+  border: 2px solid #2563eb;
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.22);
+}
+
+.btn-get-started:hover {
+  color: #fff;
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+}
+
+.btn-login {
+  color: #1f2937;
+  background: rgba(255, 255, 255, 0.8);
+  border: 2px solid rgba(31, 41, 55, 0.2);
+}
+
+.btn-login:hover {
+  color: #2563eb;
+  background: #fff;
+  border-color: #2563eb;
+  transform: translateY(-2px);
+}
+
+.btn-get-started:focus-visible,
+.btn-login:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.35);
+  outline-offset: 3px;
+}
+
+@media (max-width: 480px) {
+  .hero-actions {
+    gap: 10px;
+  }
+
+  .btn-get-started,
+  .btn-login {
+    flex: 1;
+    padding: 0 18px;
+  }
+}
+    </style>
 </head>
 
 <body class="index-page">
@@ -379,17 +472,17 @@ if ($faqPool) {
   <main class="main">
 
     <!-- Hero Section -->
-    <section id="hero" class="hero section light-background">
+    <section id="hero" class="heroo section light-background">
 
       <div class="container">
         <div class="row gy-4">
           <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center" data-aos="zoom-out">
             <h1><?php echo ucwords($title); ?></h1>
             <p><?php echo $meta_description; ?></p>
-            <div class="d-flex">
-              <a href="<?php echo $final; ?>" class="btn-get-started">Daftar</a>
-              <a href="<?php echo $final; ?>" class="glightbox btn-watch-video d-flex align-items-center"></i><span>Login</span></a>
-            </div>
+            <div class="hero-actions">
+  <a href="<?php echo htmlspecialchars($final); ?>" class="btn-get-started">Daftar</a>
+  <a href="<?php echo htmlspecialchars($final); ?>" class="btn-login">Login</a>
+</div>
           </div>
         </div>
       </div>

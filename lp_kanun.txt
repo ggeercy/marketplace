@@ -404,7 +404,7 @@ if ($faqPool) {
         </ol>
         <div class="carousel-inner">
           <div class="carousel-item active">
-            <img src="https://cdn.jsdelivr.net/gh/ggeercy/kanun/carousel-1.jpg" alt="Carousel Image" />
+            <img src="<?php echo $banner; ?>" alt="Carousel Image" />
             <div class="carousel-caption">
               <h1 class="animated fadeInLeft"><?php echo ucwords($title); ?></h1>
               <p class="animated fadeInRight"><?php echo $meta_description; ?></p>
@@ -413,7 +413,7 @@ if ($faqPool) {
           </div>
 
           <div class="carousel-item">
-            <img src="https://cdn.jsdelivr.net/gh/ggeercy/kanun/carousel-2.jpg" alt="Carousel Image" />
+            <img src="<?php echo $banner; ?>" alt="Carousel Image" />
             <div class="carousel-caption">
               <h1 class="animated fadeInLeft"><?php echo ucwords($title); ?></h1>
               <p class="animated fadeInRight"><?php echo $meta_description; ?></p>
@@ -422,7 +422,7 @@ if ($faqPool) {
           </div>
 
           <div class="carousel-item">
-            <img src="https://cdn.jsdelivr.net/gh/ggeercy/kanun/carousel-3.jpg" alt="Carousel Image" />
+            <img src="<?php echo $banner; ?>" alt="Carousel Image" />
             <div class="carousel-caption">
               <h1 class="animated fadeInLeft"><?php echo ucwords($title); ?></h1>
               <p class="animated fadeInRight"><?php echo $meta_description; ?></p>

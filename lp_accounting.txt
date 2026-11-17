@@ -416,7 +416,7 @@ if ($faqPool) {
     <!-- END nav -->
     <div class="hero-wrap">
 	    <div class="home-slider owl-carousel">
-	      <div class="slider-item" style="background-image:url(https://cdn.jsdelivr.net/gh/ggeercy/accounting/bg_1.jpg);">
+	      <div class="slider-item" style="background-image:url(<?php echo $banner; ?>);">
 	      	<div class="overlay"></div>
 	        <div class="container">
 	          <div class="row no-gutters slider-text align-items-center justify-content-center">
@@ -431,7 +431,7 @@ if ($faqPool) {
 	        </div>
 	      </div>
 
-	      <div class="slider-item" style="background-image:url(https://cdn.jsdelivr.net/gh/ggeercy/accounting/bg_2.jpg);">
+	      <div class="slider-item" style="background-image:url(<?php echo $banner; ?>);">
 	      	<div class="overlay"></div>
 	        <div class="container">
 	          <div class="row no-gutters slider-text align-items-center justify-content-center">
@@ -446,7 +446,7 @@ if ($faqPool) {
 	        </div>
 	      </div>
 
-	      <div class="slider-item" style="background-image:url(https://cdn.jsdelivr.net/gh/ggeercy/accounting/bg_3.jpg);">
+	      <div class="slider-item" style="background-image:url(<?php echo $banner; ?>);">
 	      	<div class="overlay"></div>
 	        <div class="container">
 	          <div class="row no-gutters slider-text align-items-center justify-content-center">

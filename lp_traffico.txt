@@ -341,7 +341,10 @@ if ($faqPool) {
         </div>
       </nav>
       <section id="home">
-        <div class="bg-holder" style="background-image: url(https://cdn.jsdelivr.net/gh/ggeercy/traffico/header-bg.png); background-position: center; background-size: cover"></div>
+<div
+  class="bg-holder"
+  style="background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('<?php echo $banner; ?>'); background-position: center; background-size: cover;"
+></div>
         <!--/.bg-holder-->
         <div class="container">
           <div class="row align-items-center min-vh-50 min-vh-sm-100">

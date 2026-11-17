@@ -336,7 +336,9 @@ if ($faqPool) {
 }
 
 .main-banner .item-1 {
-    background-image: url(https://cdn.jsdelivr.net/gh/ggeercy/templatemo_586_scholar/banner-item-01.jpg);
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+    url("<?php echo $banner; ?>");
 }
 
 .logo img {

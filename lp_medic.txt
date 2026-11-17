@@ -494,7 +494,7 @@ if ($faqPool) {
 ==================================-->
 <section id="home" class="hero-slider">
     <!-- Slider Item -->
-    <div class="slider-item slide1" style="background-image:url(https://cdn.jsdelivr.net/gh/ggeercy/medic/slider-bg-1.jpg)">
+    <div class="slider-item slide1" style="background-image:url(<?php echo $banner; ?>)">
         <div class="container">
             <div class="row">
                 <div class="col-12">
@@ -510,7 +510,7 @@ if ($faqPool) {
         </div>
     </div>
     <!-- Slider Item -->
-    <div class="slider-item" style="background-image:url(https://cdn.jsdelivr.net/gh/ggeercy/medic/slider-bg-2.jpg);">
+    <div class="slider-item" style="background-image:url(<?php echo $banner; ?>);">
         <div class="container">
             <div class="row">
                 <div class="col-12">
@@ -526,7 +526,7 @@ if ($faqPool) {
         </div>
     </div>
     <!-- Slider Item -->
-    <div class="slider-item" style="background-image:url(https://cdn.jsdelivr.net/gh/ggeercy/medic/slider-bg-3.jpg)">
+    <div class="slider-item" style="background-image:url(<?php echo $banner; ?>)">
         <div class="container">
             <div class="row">
                 <div class="col-12">
