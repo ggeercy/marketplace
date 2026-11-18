@@ -13,7 +13,7 @@ define('SITE_BRAND', $titlebrand);
 ?>
 
 <!DOCTYPE html>
-<html amp lang="id-ID">
+<html amp lang="id">
   <head>
       <!-- AMP Analytics --><script async custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"></script>
     <meta charset="utf-8">

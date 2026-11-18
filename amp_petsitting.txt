@@ -13,7 +13,7 @@ define('SITE_BRAND', $titlebrand);
 ?>
 
 <!doctype html>
-<html ⚡ lang="id">
+<html amp lang="id">
 <head>
     <meta charset="utf-8" />
     <title><?php echo ucwords($title); ?></title>
